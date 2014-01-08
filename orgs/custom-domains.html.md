@@ -1,7 +1,6 @@
 ---
-title: About Domains, Subdomains and Routes
+title: About Domains, Subdomains, and Routes
 ---
-
 
 This page has information about how to specify the route (or URL) that Cloud Foundry uses to direct requests to an application. A route is made up of a _subdomain_ and a _domain_ that you can specify when you push an application. 
 
