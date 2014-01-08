@@ -17,7 +17,7 @@ The Cloud Controller manages a blob store for:
 
 - app packages - unstaged files that represent an application
 
-- droplets - the result of taking an app package and staging it (processesing a buildpack) and getting it ready to run
+- droplets - the result of taking an app package and staging it (processing a buildpack) and getting it ready to run
 
 The blob store uses the [Fog](http://fog.io/) Ruby gem such that it can use abstractions like Amazon S3 or an NFS-mounted file system for storage.
 
