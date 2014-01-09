@@ -11,8 +11,8 @@ Writing a service involves writing a service broker that obeys the API contract 
 Service brokers were previously called Service Gateways (GW).
 The protocol is entirely RESTful HTTP, with _bidirectional communication_. In addition to authentication there are six basic operations that take place, described in this document.
 An oversimplified example of making a broker that supports the 3 most basic operations can be found here: https://github.com/geapi/cf-service-example.
-           
-<%= image_tag("../../../../images/v1services.png", :width =>"960", :height =>"720", :style => 'background-color:#fff') %>
+
+<%= image_tag("../images/v1services.png", :width =>"960", :height =>"720", :style => 'background-color:#fff') %>
 
 ## <a id='authentication'></a>Authentication ##
 
@@ -124,7 +124,7 @@ To generate a `unique_id`, try this [Online GUID Generator](http://www.guidgener
 <tr>
   <td>tags</td>
   <td>array of objects</td>
-  <td>Used by buildpacks and application libraries to parse credentials from the <a href="../../../using/deploying-apps/environment-variable.html">VCAP_SERVICES environment variable</a>. Could also be used by frontend clients to filter marketplace services.</td>
+  <td>Used by buildpacks and application libraries to parse credentials from the VCAP_SERVICES environment variable</a>. Could also be used by frontend clients to filter marketplace services.</td>
 </tr>
 <tr>
   <td>documentation_url</td>

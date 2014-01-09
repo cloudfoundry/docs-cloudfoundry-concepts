@@ -13,7 +13,7 @@ In Cloud Foundry, domains are associated with spaces.
 
 A Cloud Foundry instance defines a default domain that is available to all spaces. For example, in the Pivotal-hosted instance of Cloud Foundry, the `cfapps.io` domain is automatically mapped to all spaces in all organizations.
 
-Cloud Foundry also supports _custom domains_ --- you can map a registered domain of your own to a space in Cloud Foundry, as described below. If you want to use SSL with a custom domain, see [Configure an SSL-Enabled Custom Domain](/docs/using/managing-apps/custom-domains/cloudflare.html).
+Cloud Foundry also supports _custom domains_ --- you can map a registered domain of your own to a space in Cloud Foundry, as described below. If you want to use SSL with a custom domain, see `Configure an SSL-Enabled Custom Domain`.
 
 ## <a id='map-domain'></a>Map a Custom Domain to a Space ##
 
@@ -39,7 +39,6 @@ cfapps.io      none
 example.com    jdoe
 </pre>
 
- 
 
 ## <a id='unmap-domain'></a>Unmap a Domain ##
 You can unmap a domain with the `cf unmap-domain` command.  In this example, the `example.com` domain is unmapped from the “development” space:
@@ -100,7 +99,7 @@ Binding myapp.example.com to myapp... OK
 
 ## <a id='assign-in-manifest'></a>Assign Subdomain in Manifest ##
 
-If you create or edit the manifest for an application, you can use the `host` (for subdomain) and ``domain` attributes to define the components of the application’s route. For more information, see [Application Manifests](../../deploying-apps/manifest.html).
+If you create or edit the manifest for an application, you can use the `host` (for subdomain) and ``domain` attributes to define the components of the application’s route. For more information, see [Application Manifests].
 
 ## <a id='list-routes'></a>List Routes ##
 
