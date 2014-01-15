@@ -1,22 +1,22 @@
 ---
 title: Droplet Execution Agent
-description: Manages the lifecycle of an application instance. Tracks started instances and broadcasts state messages. 
+description: Manages the lifecycle of an application instance. Tracks started instances and broadcasts state messages.
 ---
 
 The key functions of a Droplet Execution Agent (DEA) are:
 
 * Manage Warden containers --- The DEA stages applications and runs applications in [Warden](warden.html) containers.
 
-* Stage applications --- When a new application or a new version of an application is pushed to Cloud Foundry, the Cloud Controller selects a DEA from the pool of available DEAs to stage the application. The DEA uses the appropriate buildpack to stage the application --- the result of this process is a droplet. 
+* Stage applications --- When a new application or a new version of an application is pushed to Cloud Foundry, the Cloud Controller selects a DEA from the pool of available DEAs to stage the application. The DEA uses the appropriate buildpack to stage the application --- the result of this process is a droplet.
 
-* Run droplets --- A DEA manages the lifecycle of each application instance running in it, starting and stopping droplets upon request of the [Cloud Controller](./cloud-controller.html). The DEA monitors the state of a started application instance, and periodically broadcasts application state messages over [NATS](./messaging-nats.html) for consumption by the [Health Manager](./health-manager.html). 
+* Run droplets --- A DEA manages the lifecycle of each application instance running in it, starting and stopping droplets upon request of the [Cloud Controller](./cloud-controller.html). The DEA monitors the state of a started application instance, and periodically broadcasts application state messages over [NATS](./messaging-nats.html) for consumption by the [Health Manager](./health-manager.html).
 
 
 ## <a id='directory-server'></a>Directory Server ##
 
-When the DEA receives requests for directories and files, it redirects them to the Directory Server URL. The URL is signed by the DEA, and the Directory Server checks the validity of the URL with the DEA before serving it.  
+When the DEA receives requests for directories and files, it redirects them to the Directory Server URL. The URL is signed by the DEA, and the Directory Server checks the validity of the URL with the DEA before serving it.
 
-Configurable Directory Server behaviors are controlled by keys in the DEA's configuration file, `dea.yml`, described below in [DEA Configuration](#dea-configuration). 
+Configurable Directory Server behaviors are controlled by keys in the DEA's configuration file, `dea.yml`, described below in [DEA Configuration](#dea-configuration).
 
 The Directory Server is written in Go and can be found in the `go/` directory of the DEA source code repository. It is a replacement for the older directory server that was embedded in the DEA itself.
 
@@ -24,7 +24,7 @@ The Directory Server is written in Go and can be found in the `go/` directory of
 
 A DEA periodically checks the health of the applications running in it.
 
-If a URL is mapped to an application, the DEA attempts to connect to the port assigned to the application. If the application port is accepting connections, the DEA will consider that application state to be "Running". If there is no URL mapped to the application, the DEA checks the system process table for the application's process PID; if the PID exists, the DEA will consider that application state to be "Running". 
+If a URL is mapped to an application, the DEA attempts to connect to the port assigned to the application. If the application port is accepting connections, the DEA will consider that application state to be "Running". If there is no URL mapped to the application, the DEA checks the system process table for the application's process PID; if the PID exists, the DEA will consider that application state to be "Running".
 
 The DEA also checks for a `AppState` object for the application.
 
@@ -40,7 +40,7 @@ $ bin/dea config/dea.yml
 ## <a id='dea-configuration'></a>DEA Configuration ##
 
 
-DEA behavior is configured in `dea.yml`. 
+DEA behavior is configured in `dea.yml`.
 
 The following is a partial list of the keys that are read from the YAML file:
 
@@ -54,7 +54,7 @@ A sample `dea.yml` file follows:
 **Note:**  See https://github.com/cloudfoundry/dea_ng/blob/master/lib/dea/config.rb for optional configuration keys.
 
 
-``` 
+```
 
 # See src/lib/dea/config.rb for optional config values.
 
@@ -160,9 +160,9 @@ $ bundle exec rspec
 
 ## <a id='run-standalone'></a>Staging ##
 
-See the [How Applications Are Staged](./how-applications-are-staged.html) page for a description of the application staging flow used by DEA.
+See the [How Applications Are Staged](../how-applications-are-staged.html) page for a description of the application staging flow used by DEA.
 
-These are the stating messages that a DEA publishes on NATS: 
+These are the stating messages that a DEA publishes on NATS:
 
 - `staging.advertise` --- Stagers (now DEA's) broadcast their capacity/capability
 
