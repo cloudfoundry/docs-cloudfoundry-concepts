@@ -1,6 +1,5 @@
 ---
 title: Stacks
-description: Prebuilt file systems, including an operating system, that support running applications with certain characteristics.
 ---
 
 A stack is a prebuilt file system, including an operating system, that
