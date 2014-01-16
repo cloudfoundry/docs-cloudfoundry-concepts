@@ -19,10 +19,10 @@ together to provide identity management.
 
 The [Cloud Controller](./cloud-controller.html) is responsible for
 managing the lifecycle of applications.
-When a developer pushes an application to Cloud Foundry, they are
+When a developer pushes an application to Cloud Foundry, she is
 targeting the Cloud Controller.
 The Cloud Controller then stores the raw application bits,
-creates a record to track the application's meta data,
+creates a record to track the application metadata,
 and directs a DEA node to stage and run the application.
 The Cloud Controller also maintains records of
 organizations, spaces, services, service instances, user roles,
@@ -30,11 +30,11 @@ and more.
 
 ## Health Manager
 
-[Health manager](./health-manager.html) monitors applications, reconciles the current state (e.g. running, stopped, crashed) and expected state, and directs Cloud Controller to take action if they disagree.
+[Health manager](./health-manager.html) monitors applications, reconciles the current state (e.g. running, stopped, crashed) and expected state, and directs Cloud Controller to correct state mismatches.
 
 ## Application Execution (DEA)
 
-The [droplet execution agent](./execution-agent.html) manages application instances. Tracks started instances and broadcasts state messages.
+The [droplet execution agent](./execution-agent.html) manages application instances, tracks started instances, and broadcasts state messages.
 
 Application instances live inside [Warden](./warden.html) containers.
 Containerization ensures that application instances run in isolation,
@@ -45,25 +45,25 @@ get their fair share of resources, and are protected from noisy neighbors.
 The blob store holds:
 
 * Application code
-* Build packs
+* Buildpacks
 * Droplets
 
 ## Service Brokers
 
 Applications typically depend on [services](./services/) such as databases or third-party SaaS providers.
-When the developer provisions and binds a service to their
+When a developer provisions and binds a service to an
 application, the service broker for that service is responsible
 for providing the service instance.
 
 ## Message Bus
 
-Cloud Foundry uses [nats](./messaging-nats.html), a lightweight publish-subscribe and distributed queueing messaging system
+Cloud Foundry uses [nats](./messaging-nats.html), a lightweight publish-subscribe and distributed queueing messaging system,
 for internal communication between components.
 
 ## Logging and Statistics
 
 The sys log aggregator and collector gather logs and metrics from the
-components. Operators can use this information to monitor their instance of Cloud Foundry.
+components. Operators can use this information to monitor an instance of Cloud Foundry.
 
 The application log aggregator streams application logs to developers.
 
