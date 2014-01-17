@@ -2,6 +2,10 @@
 title: Architecture
 ---
 
+Cloud Foundry components include a self-service application execution engine, an automation engine for application deployment and lifecycle management, and a scriptable command line interface (CLI), as well as integration with development tools to ease deployment processes. Cloud Foundry has an open architecture that includes a buildpack mechanism for adding frameworks, an application services interface, and a cloud provider interface.
+
+Refer to the descriptions below for more information about Cloud Foundry components. Some descriptions include links to more detailed documentation.
+
 ![Cloud Foundry Architecture](/images/cf_architecture_block.png)
 
 ## Router
@@ -62,7 +66,7 @@ for internal communication between components.
 
 ## Logging and Statistics
 
-The sys log aggregator and collector gather logs and metrics from the
+The syslog aggregator and collector gather logs and metrics from the
 components. Operators can use this information to monitor an instance of Cloud Foundry.
 
 The application log aggregator streams application logs to developers.
