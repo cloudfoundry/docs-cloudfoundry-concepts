@@ -5,11 +5,11 @@ title: (Go)Router
 The router routes traffic coming into Cloud Foundry to the appropriate component: usually, [Cloud Controller](./cloud-controller.html) or a running application on a [DEA](./execution-agent.html) node. The router is implemented in Go.
 Implementing a custom router in Go gives the router full control over every connection, which makes it easier to support WebSockets and other types of traffic (for example, via HTTP CONNECT). A single process contains all routing logic, removing unnecessary latency.
 
-## Getting started
+# Getting started
 
-Refer to the following instructions for help getting started with gorouter in a standalone environment.
+Refer to the following instructions for help getting started with the gorouter in a standalone environment.
 
-### Setup
+## Setup
 
 <pre class="terminal">
 $ git clone https://github.com/cloudfoundry/gorouter.git
@@ -19,7 +19,7 @@ $ ./bin/go install router/router
 $ gem install nats
 </pre>
 
-### Start
+## Start
 
 <pre class="terminal">
 # Start NATS server in daemon mode
@@ -29,7 +29,7 @@ $ nats-server -d
 $ ./bin/router
 </pre>
 
-### Usage
+## Usage
 
 Gorouter receives route updates via [NATS](./messaging-nats.html). By default, routes that have not been updated in two minutes are pruned. Therefore, to maintain an active route, ensure that the route is updated at least every two minutes. The format of these route updates is as follows:
 
@@ -58,13 +58,13 @@ $ curl my_first_url.vcap.me:8080
 Hello!
 </pre>
 
-### Instrumentation
+## Instrumentation
 
 Gorouter provides `/varz` and `/healthz` http endpoints for monitoring.
 
-The `/routes` endpoint returns the entire routing table as JSON. Each route has an associated array of host:port entries.
+The `/routes` endpoint returns the entire routing table as JSON. Each route has an associated array of `host:port` entries.
 
-All of the endpoints require http basic authentication, credentials for which can be acquired through NATS. You can explicitly set the `port`, `user` and password (`pass` is the config attribute) in the gorouter.yml config file's `status` section.
+All of the endpoints require http basic authentication, credentials for which you can acquire through NATS. You can explicitly set the `port`, `user` and password (`pass` is the config attribute) in the gorouter.yml config file `status` section.
 
 ~~~yaml
 status:
@@ -73,7 +73,7 @@ status:
   pass: some_password
 ~~~
 
-Example interaction with curl:
+Example interaction with `curl`:
 
 <pre class="terminal">
 $ curl -vvv "http://someuser:somepass@127.0.0.1:8080/routes"
