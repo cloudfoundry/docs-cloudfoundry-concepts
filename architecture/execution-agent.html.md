@@ -1,30 +1,34 @@
 ---
 title: Droplet Execution Agent
-description: Manages the lifecycle of an application instance. Tracks started instances and broadcasts state messages.
 ---
 
 The key functions of a Droplet Execution Agent (DEA) are:
 
 * Manage Warden containers --- The DEA stages applications and runs applications in [Warden](warden.html) containers.
 
-* Stage applications --- When a new application or a new version of an application is pushed to Cloud Foundry, the Cloud Controller selects a DEA from the pool of available DEAs to stage the application. The DEA uses the appropriate buildpack to stage the application --- the result of this process is a droplet.
+* Stage applications --- When a new application or a new version of an application is pushed to Cloud Foundry, the Cloud Controller selects a DEA from the pool of available DEAs to stage the application. The DEA uses the appropriate buildpack to stage the application. The result of this process is a droplet.
 
 * Run droplets --- A DEA manages the lifecycle of each application instance running in it, starting and stopping droplets upon request of the [Cloud Controller](./cloud-controller.html). The DEA monitors the state of a started application instance, and periodically broadcasts application state messages over [NATS](./messaging-nats.html) for consumption by the [Health Manager](./health-manager.html).
 
 
 ## <a id='directory-server'></a>Directory Server ##
 
-When the DEA receives requests for directories and files, it redirects them to the Directory Server URL. The URL is signed by the DEA, and the Directory Server checks the validity of the URL with the DEA before serving it.
+When the DEA receives requests for directories and files, it redirects them to the Directory Server URL.
+The URL is signed by the DEA, and the Directory Server checks the validity of the URL with the DEA before serving it.
 
-Configurable Directory Server behaviors are controlled by keys in the DEA's configuration file, `dea.yml`, described below in [DEA Configuration](#dea-configuration).
+Configurable Directory Server behaviors are controlled by keys in the DEA configuration file, `dea.yml`, described below in [DEA Configuration](#dea-configuration).
 
-The Directory Server is written in Go and can be found in the `go/` directory of the DEA source code repository. It is a replacement for the older directory server that was embedded in the DEA itself.
+The Directory Server is written in Go and can be found in the `go/` directory of the DEA source code repository.
+It is a replacement for the older directory server that was embedded in the DEA itself.
 
 ## <a id='health-checks'></a> DEA Health Checks ##
 
 A DEA periodically checks the health of the applications running in it.
 
-If a URL is mapped to an application, the DEA attempts to connect to the port assigned to the application. If the application port is accepting connections, the DEA will consider that application state to be "Running". If there is no URL mapped to the application, the DEA checks the system process table for the application's process PID; if the PID exists, the DEA will consider that application state to be "Running".
+If a URL is mapped to an application, the DEA attempts to connect to the port assigned to the application.
+If the application port is accepting connections, the DEA considers that application state to be "Running."
+If there is no URL mapped to the application, the DEA checks the system process table for the application process PID.
+If the PID exists, the DEA considers that application state to be "Running."
 
 The DEA also checks for a `AppState` object for the application.
 
@@ -42,11 +46,11 @@ $ bin/dea config/dea.yml
 
 DEA behavior is configured in `dea.yml`.
 
-The following is a partial list of the keys that are read from the YAML file:
+The following is a partial list of the keys that the DEA reads from the YAML file:
 
 * `logging` --- A [Steno configuration](http://github.com/cloudfoundry/steno#from-yaml-file).
-* `nats_uri` --- A URI of the form `nats://host:port` that the DEA will use to connect to NATS.
-* `warden_socket` --- The path to a unix domain socket that the DEA will use to communicate to a warden server.
+* `nats_uri` --- A URI of the form `nats://host:port` that the DEA uses to connect to NATS.
+* `warden_socket` --- The path to a unix domain socket that the DEA uses to communicate to a warden server.
 
 
 A sample `dea.yml` file follows:
@@ -115,7 +119,7 @@ stacks:
 
 ```
 
-When contributing to DEA it is useful to run it as a standalone component. This section has instructions for doing so on Vagrant 1.1x.
+When you contribute to the DEA, it is useful to run it as a standalone component. This section has instructions for doing so on Vagrant 1.1x.
 
 Refer to the [Vagrant documentation](http://docs.vagrantup.com/v2/installation/index.html) for instructions on installing Vagrant.
 
@@ -134,7 +138,7 @@ $ rake test_vm
 
 VM creation is likely to take a while.
 
-If the `rake test_vm` step fails and you see an error similar to "undefined method 'configure' for Vagrant" or "found character that cannot start any token while scanning for the next token", you are using a unsupported version of Vagrant. Install Vagrant version 1.1 or higher.
+If the `rake test_vm` step fails and you see an error similar to "undefined method 'configure' for Vagrant" or "found character that cannot start any token while scanning for the next token," you are using a unsupported version of Vagrant. Install Vagrant version 1.1 or higher.
 
 <pre class="terminal">
 # initialize the test VM
@@ -160,21 +164,23 @@ $ bundle exec rspec
 
 ## <a id='run-standalone'></a>Staging ##
 
-See the [How Applications Are Staged](../how-applications-are-staged.html) page for a description of the application staging flow used by DEA.
+See the [How Applications Are Staged](../how-applications-are-staged.html) page for a description of the application staging flow the DEA uses.
 
 These are the stating messages that a DEA publishes on NATS:
 
-- `staging.advertise` --- Stagers (now DEA's) broadcast their capacity/capability
+- `staging.advertise` --- Stagers (now DEAs) broadcast their capacity/capability
 
 - `staging.locate` --- Stagers respond to any message on this subject with a
   `staging.advertise` message (CC uses this to bootstrap)
 
-- `staging.<uuid>.start` --- Stagers respond to requests on this subject to stage applicationss
+- `staging.<uuid>.start` --- Stagers respond to requests on this subject to stage applications
 
 - `staging` --- Stagers (in a queue group) respond to requests to stage an application
   (old protocol)
 
 ## <a id='logs'></a>Logs
 
-The DEA's logging is handled by [Steno](https://github.com/cloudfoundry/steno).  The DEA can be configured to log to a file, a syslog server or both. If neither is provided, it will log to its stdout. The logging level specifies the verbosity of the logs (e.g. `warn`, `info`, `debug`).
+[Steno](https://github.com/cloudfoundry/steno) handles the DEA logging.
+You can configure the DEA to log to a file, a syslog server, or both. If neither is provided, the DEA logs to its stdout.
+The logging level specifies the verbosity of the logs (e.g. `warn`, `info`, `debug`).
 

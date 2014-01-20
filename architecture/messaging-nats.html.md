@@ -63,7 +63,7 @@ NATS.subscribe('foo.>') { |msg, reply, sub| puts "Msg received on [#{sub}] : '#{
 ~~~ruby
 # All subscriptions with the same queue name will form a queue group
 # Each message will be delivered to only one subscriber per queue group, queuing semantics
-# You can have as many queue groups as you wish
+# You can have as many queue groups as you want
 # Normal subscribers will continue to work as expected.
 NATS.subscribe(subject, :queue => 'job.workers') { |msg| puts "Received '#{msg}'" }
 ~~~
