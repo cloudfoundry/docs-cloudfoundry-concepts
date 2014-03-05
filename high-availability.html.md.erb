@@ -69,13 +69,17 @@ First, consider the components whose availability affects the platform as a whol
 
 **HAProxy**:
 
-In production deployments, it is a good idea to use your own load-balancing infrastructure with an associated high-availability strategy and configuration.
-HAProxy is typically used for Cloud Foundry deployments where high availability is not a requirement.
+In production deployments, it is a good idea to use your own load-balancing infrastructure with an associated high-availability strategy and configuration. Otherwise, use HAProxy as an alternative load-balancing solution.
 
 **NATS**:
 
 Cloud Foundry continues to run any apps that are already running even when NATS is unavailable for short periods of time.
+The components publishing messages to and consuming messages from NATS are resilient
+to NATS failures. As soon as NATS recovers, operations such as health management and
+router updates resume and the whole Cloud Foundry system recovers.
+
 An appropriate strategy in a high availability Cloud Foundry deployment would be to leverage vSphere high availability features to ensure that vSphere keeps the NATS node running in the event of a hardware failure.
+You also can ensure that you enable the BOSH resurrector to recover the VM as quickly as possible.
 
 **NFS Server**:
 
