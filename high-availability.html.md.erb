@@ -78,25 +78,24 @@ The components publishing messages to and consuming messages from NATS are resil
 to NATS failures. As soon as NATS recovers, operations such as health management and
 router updates resume and the whole Cloud Foundry system recovers.
 
-An appropriate strategy in a high availability Cloud Foundry deployment would be to leverage vSphere high availability features to ensure that vSphere keeps the NATS node running in the event of a hardware failure.
-You also can ensure that you enable the BOSH resurrector to recover the VM as quickly as possible.
+Because NATS is deployed by BOSH, the BOSH resurrector will recover the VM if it becomes non-responsive.
 
 **NFS Server**:
 
-For some deployments, an appropriate strategy would be to use vSphere high availability features to immediately recover the VM where the NFS Server runs.
+For some deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover the VM where the NFS Server runs.
 In others, it would be preferable to run a scalable and redundant blobstore service. Contact Pivotal PSO if you need help.
 
 **SAML Login Server**:
 
-An appropriate strategy would be to leverage vSphere high availability features to quickly recover the VM where the SAML Login Server runs.
-You also can ensure that you enable the BOSH resurrector to recover the VM as quickly as possible.
+Because the Login Server is deployed by BOSH, the BOSH resurrector will recover the VM if it becomes non-responsive.
 
 Secondly, there are components whose availability does not affect that of the platform as a whole. For these, recovery by normal IT procedures should be sufficient even in a high availability Cloud Foundry deployment.
 
 **Syslog**:
 
-If it is important to avoid loss of logs, consider using vSphere to recover the Syslog VM quickly.
-Otherwise, an event that degrades availability of the Syslog VM causes a gap in logging, but otherwise Cloud Foundry continues to operate normally.
+An event that degrades availability of the Syslog VM causes a gap in logging, but otherwise Cloud Foundry continues to operate normally.
+
+Because Syslog is deployed by BOSH, the BOSH resurrector will recover the VM if it becomes non-responsive.
 
 **Collector**:
 
@@ -108,5 +107,6 @@ This component is active only during platform installation and upgrades.
 
 ### <a id='databases'></a>Databases ###
 
-For database services, plan to leverage vSphere high availability features and to configure backup and restore where possible.
+For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible.
+
 Contact Pivotal PSO if you require replicated databases and you need assistance.
