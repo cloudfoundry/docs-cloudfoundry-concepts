@@ -82,7 +82,7 @@ A stop command is triggered for each extra instance.
 The Health Manager is configured in the `health_manager.yml` file.
 See [example config file](https://github.com/cloudfoundry/health_manager/blob/master/config/health_manager.yml) for an explanation of all the configurable variables.
 
-## <a id='logging'></a>Heatlh Manager Logging ##
+## <a id='logging'></a>Health Manager Logging ##
 
 Health Manager uses [Steno](http://github.com/cloudfoundry/steno) to manage its logs.
 The `logging` key in `health_manager.yml` specifies the log level.
