@@ -8,7 +8,7 @@ title: Cloud Foundry Glossary
 | BOSH          | A deployment orchestration solution. |
 | CLI           | Command Line Interface |
 | DEA           | Droplet Execution Agent. The DEA is the component in Cloud Foundry responsible for staging and hosting applications. |
-| Domains       | A domain is a domain name like `acme.com` or `foo.net`. Domains can also be multi-level and contain sub-domains like the “store” in `store.acme.com`. Domain objects belong to an organization and are associated with zero or many spaces within the organization. Domain objects are not directly bound to apps. |
+| Domains       | A domain is a domain name like `acme.com` or `foo.net`. Domains can also be multi-level and contain sub-domains like the “store” in `store.acme.com`. Domain objects belong to an organization. Domain objects are not directly bound to apps. |
 | Droplet       | An archive within Cloud Foundry that contains the application ready to run on a DEA. A droplet is the result of the application staging process. |
 | Management    | You can manage spaces and organizations with the cf command line interface, the Cloud Controller API, and the Cloud Foundry Eclipse Plugin. |
 | Organizations | An organization is the top-most meta object within the Cloud Foundry infrastructure. If an account has administrative privileges on a Cloud Foundry instance, it can manage its organizations. |
