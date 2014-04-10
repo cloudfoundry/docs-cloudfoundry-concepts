@@ -8,7 +8,8 @@ The key functions of a Droplet Execution Agent (DEA) are:
 
 * Stage applications --- When a new application or a new version of an application is pushed to Cloud Foundry, the Cloud Controller selects a DEA from the pool of available DEAs to stage the application. The DEA uses the appropriate buildpack to stage the application. The result of this process is a droplet.
 
-* Run droplets --- A DEA manages the lifecycle of each application instance running in it, starting and stopping droplets upon request of the [Cloud Controller](./cloud-controller.html). The DEA monitors the state of a started application instance, and periodically broadcasts application state messages over [NATS](./messaging-nats.html) for consumption by the [Health Manager](./health-manager.html).
+* Run droplets --- A DEA manages the lifecycle of each application instance running in it, starting and stopping droplets upon request of the [Cloud Controller](./cloud-controller.html). The DEA monitors the state of a started application instance, and periodically broadcasts application state messages over [NATS](./messaging-nats.html) for consumption by
+HM9000.
 
 
 ## <a id='directory-server'></a>Directory Server ##
