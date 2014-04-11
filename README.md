@@ -7,4 +7,4 @@ compiled into a larger document with
 
 If you are looking for the open source documentation, see the
 [docs-book-cloudfoundry](http://github.com/cloudfoundry/docs-book-cloudfoundry)
-repo.
+repo for the complete list and information about the publishing process.
