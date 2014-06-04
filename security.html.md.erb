@@ -34,7 +34,7 @@ The Elastic Runtime router handles all inbound traffic to applications, routing 
 
 If the deployment is configured as recommended with the cluster on a VLAN, then all outbound traffic goes through two levels of network address translation: container IP address to DEA IP address, then DEA to the NAT provisioned to connect the VLAN with the public internet.
 
-Applications are prevented from connecting directly with other applications, or with system components, by the firewall rules specified in the deployment manifest.
+Applications are prevented from connecting directly with other applications, or with system components, by the firewall rules specified in the Operator-controlled BOSH deployment manifest.
 
 ### <a id='firewalls'></a>Firewalls ###
 
@@ -78,7 +78,7 @@ The VCAP_SERVICES environment variable contains credentials. It’s not stored b
 
 Authorization happens through the Cloud Controller, and access control is properly enforced through the Cloud Controller.
 
-User passwords are stored in the UAA database using a cryptographic hash function.
+User passwords are stored in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt), an adaptive cryptographic key derivation function for passwords.
 
 ### <a id='rbac'></a>Segmenting User Access with Orgs and Spaces ###
 
@@ -90,13 +90,13 @@ In order to even see the existence of an organization or space, a user must be a
 
 Cloud Foundry supports the following user roles:
 
-**Space Managers** can invite and manage users and enable features for a given space. Assign this role to managers or other users who need to administer the account.
+**Space Managers** can add and manage users and enable features for a given space. Assign this role to managers or other users who need to administer the account.
 
 **Space Developers** can create, delete, and manage applications and services, and have full access to all usage reports and logs. They can edit applications, including the number of instances and memory footprint.
 
 **Space Auditors** have view-only access to all space information, settings, reports, and logs. Assign this role to users who need to view but not edit the application space.
 
-**Org Managers** can invite/manage users, select/change their plan, and establish spending limits.
+**Org Managers** can add and manage users, select and change their resource quota plan, and establish spending limits.
 
 **Org Auditors** have read-only access to org info and reports.
 
@@ -113,17 +113,17 @@ Application containers each have two IP addresses; outbound traffic goes through
 * From inside the container to the DEA
 * From the DEA to the NAT router
 
-Firewall rule inside the DEAs should be configured to ensure that all packets from inside are dropped.
+Firewall rule inside the DEAs should be configured to ensure that all packets from inside are dropped or rejected.
 
 The manifest templates in cf-release implement these networking rules.
 
 ## <a id='containers'></a>Application Isolation with Containers ##
 
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a Warden container, and cannot interact with other applications or areas of the system. These Warden containers isolate processes, memory, and the file system, while host-based firewalls restrict applications from establishing local network connections. This restrictive operating environment is designed to ensure security and stability issues.
+Each application deployed to Cloud Foundry runs within its own self-contained environment, a Warden container, and are blocked from directly interacting with other applications or other Cloud Foundry system components. Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the Load Balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system, while host-based firewalls restrict applications from establishing local network connections. This restrictive operating environment is designed to ensure security and stability issues.
 
 Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host should not be aware of each others presence. This means that these containers are given their own Process ID (PID), namespace, network namespace, and mount namespace.
 
-Resource control is done by using Control Groups (cgroups). Every container is placed in its own control group, where it is configured to use an equal slice of CPU compared to other containers, and the maximum amount of memory it may use.
+Resource control is managed through the use of Control Groups (cgroups). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
 
 ### <a id='networking'></a>Networking ###
 
