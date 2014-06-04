@@ -22,9 +22,7 @@ Because of the limited number of contact points with the public internet, the su
 
 ### <a id='protocols'></a>Protocols ###
 
-All traffic from the public internet to the Cloud Controller and UAA happen over https. Inside the boundary of the system, components communicate over a pub-sub message bus, gnatsd.
-
-**Note**: See [https://github.com/apcera/gnatsd](https://github.com/apcera/gnatsd)
+All traffic from the public internet to the Cloud Controller and UAA happen over https. Inside the boundary of the system, components communicate over a pub-sub message bus, [gnatsd](https://github.com/apcera/gnatsd).
 
 ### <a id='application-traffic'></a>Application Traffic ###
 
@@ -70,9 +68,7 @@ Data stored on BOSH VMs is not encrypted by BOSH but may be encrypted by your Ia
 
 ## <a id='auth'></a>Authentication and Authorization ##
 
-Access Mechanisms: All user access to Cloud Foundry, including API, CLI, and the Web-based console, is authenticated through User Account and Authentication Server (UAA).
-
-**Note**: See [https://github.com/cloudfoundry/uaa](https://github.com/cloudfoundry/uaa)
+Access Mechanisms: All user access to Cloud Foundry, including API, CLI, and the Web-based console, is authenticated through User Account and Authentication Server [UAA](https://github.com/cloudfoundry/uaa)
 
 The UAA is the identity management service for Cloud Foundry. As an OAuth2 provider, the UAA issues tokens for client applications to use when they act on behalf of Cloud Foundry users. The UAA can also authenticate users with their Cloud Foundry credentials, and can act as an SSO service using those credentials, or others.
 
