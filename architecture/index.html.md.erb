@@ -16,17 +16,17 @@ Some descriptions include links to more detailed documentation.
 
 ![Cloud Foundry Architecture](/images/cf_architecture_block.png)
 
-## Router
+## <a id="router"></a>Router ##
 
 The [router](./router.html) routes incoming traffic to the appropriate
 component, usually the Cloud Controller or a running application on a DEA node.
 
-## Authentication
+## <a id="uaa"></a> Authentication ##
 
 The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to
 provide identity management.
 
-## Cloud Controller
+## <a id="cc"></a> Cloud Controller ##
 
 The [Cloud Controller](./cloud-controller.html) is responsible for managing the
 lifecycle of applications.
@@ -38,7 +38,7 @@ application.
 The Cloud Controller also maintains records of organizations, spaces, services,
 service instances, user roles, and more.
 
-## HM9000
+## <a id="hm9k"></a> HM9000 ##
 
 HM9000 has four core responsibilities:
 
@@ -52,7 +52,7 @@ HM9000 restarts applications whenever the DEA running an app shuts down for any 
 
 Refer to the [HM9000 readme](https://github.com/cloudfoundry/hm9000) for more information about the HM9000 architecture.
 
-## Application Execution (DEA)
+## <a id="dea"></a> Application Execution (DEA) ##
 
 The [Droplet Execution Agent](./execution-agent.html) manages application
 instances, tracks started instances, and broadcasts state messages.
@@ -61,7 +61,7 @@ Application instances live inside [Warden](./warden.html) containers.
 Containerization ensures that application instances run in isolation, get their
 fair share of resources, and are protected from noisy neighbors.
 
-## Blob Store
+## <a id="blob"></a> Blob Store ##
 
 The blob store holds:
 
@@ -69,20 +69,20 @@ The blob store holds:
 * Buildpacks
 * Droplets
 
-## Service Brokers
+## <a id="broker"></a> Service Brokers ##
 
 Applications typically depend on [services](../../services/) such as databases or
 third-party SaaS providers.
 When a developer provisions and binds a service to an application, the service
 broker for that service is responsible for providing the service instance.
 
-## Message Bus
+## <a id="nats"></a> Message Bus ##
 
 Cloud Foundry uses [NATS](./messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
 communication between components.
 
-## Logging and Statistics
+## <a id="metrics"></a> Logging and Statistics ##
 
 The metrics collector gather metrics from the components.
 Operators can use this information to monitor an instance of Cloud Foundry.
