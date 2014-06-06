@@ -34,7 +34,7 @@ The Elastic Runtime router handles all inbound traffic to applications, routing 
 
 If the deployment is configured as recommended with the cluster on a VLAN, then all outbound traffic goes through two levels of network address translation: container IP address to DEA IP address, then DEA to the NAT provisioned to connect the VLAN with the public internet.
 
-Applications are prevented from connecting directly with other applications, or with system components, by the firewall rules specified in the Operator-controlled BOSH deployment manifest.
+An applications can be communicate with if another application has its DEA IP port. This can be prevented using an IaaS Security Groups. In other cases, applications are prevented from connecting directly with other applications, or with system components, by the firewall rules specified in the operator-controlled BOSH deployment manifest.
 
 ### <a id='firewalls'></a>Firewalls ###
 
@@ -98,7 +98,11 @@ Cloud Foundry supports the following user roles:
 
 **Org Managers** can add and manage users, select and change their plan, and establish spending limits.
 
-**Org Auditors** have read-only access to org info and reports.
+**Org Auditors** have read-only access to org information and reports.
+
+## <a id='vuln-manage'></a>Software Vulnerability Management ##
+
+Cloud Foundry manages software vulnerability using stemcells and releases. New stemcells are created with patches for the latest security fixes to address any underlying operating system issues, while new Cloud Foundry releases are created with updates to address code issues.
 
 ## <a id='app-code'></a>Ensuring Application Code is Secured ##
 
@@ -106,7 +110,7 @@ Application developers push their code to Cloud Controller. It’s secured throu
 
 Cloud Controller stores application configuration (environment variables) in an encrypted database table.
 
-Applications code is then run inside a secure container utilizing cgroups, user access permissions, and a firewalled network which prevents communication with system components. The firewall rules are configured in the BOSH manifest.
+Applications code is then run inside a secure container utilizing [cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt), user access permissions, and a firewalled network which prevents communication with system components. The firewall rules are configured in the BOSH manifest.
 
 Application containers each have two IP addresses; outbound traffic goes through two NATs:
 
@@ -119,11 +123,11 @@ The manifest templates in cf-release implement these networking rules.
 
 ## <a id='containers'></a>Application Isolation with Containers ##
 
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a Warden container, and are blocked from directly interacting with other applications or other Cloud Foundry system components. Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the Load Balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system, while host-based firewalls restrict applications from establishing local network connections. This restrictive operating environment is designed to ensure security and stability issues.
+Each application deployed to Cloud Foundry runs within its own self-contained environment, a Warden container, and are blocked from directly interacting with other applications or other Cloud Foundry system components. Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the Load Balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system, while host-based firewalls restrict applications from establishing local network connections. This restrictive operating environment is designed for security and stability.
 
 Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host should not be aware of each others presence. This means that these containers are given their own Process ID (PID), namespace, network namespace, and mount namespace.
 
-Resource control is managed through the use of Control Groups (cgroups). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
+Resource control is managed through the use of Control Groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
 
 ### <a id='networking'></a>Networking ###
 
