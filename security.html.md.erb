@@ -34,7 +34,7 @@ The Elastic Runtime router handles all inbound traffic to applications, routing 
 
 If the deployment is configured as recommended with the cluster on a VLAN, then all outbound traffic goes through two levels of network address translation: container IP address to DEA IP address, then DEA to the NAT provisioned to connect the VLAN with the public internet.
 
-An applications can be communicate with if another application has its DEA IP port. This can be prevented using an IaaS Security Groups. In other cases, applications are prevented from connecting directly with other applications, or with system components, by the firewall rules specified in the operator-controlled BOSH deployment manifest.
+Applications are prevented from connecting directly with other applications, or with system components, by the firewall rules specified in the operator-controlled BOSH deployment manifest.
 
 ### <a id='firewalls'></a>Firewalls ###
 
@@ -127,7 +127,7 @@ Each application deployed to Cloud Foundry runs within its own self-contained en
 
 Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host should not be aware of each others presence. This means that these containers are given their own Process ID (PID), namespace, network namespace, and mount namespace.
 
-Resource control is managed through the use of Control Groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
+Resource control is managed through the use of Control Groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt)). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
 
 ### <a id='networking'></a>Networking ###
 
