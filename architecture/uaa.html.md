@@ -372,7 +372,7 @@ By default, the application looks for a UAA on `localhost:8080/uaa`, but you can
 In the application source code (`src/main/resources`), you will find multiple properties files pre-configured with different likely locations for those servers.
 They are all in the form `application-<UAA_PROFILE>.properties`.
 The naming convention adopted is that the `UAA_PROFILE` is `local` for the localhost deployment, `vcap` for a `vcap.me` deployment, and `staging` for a staging deployment.
-The profile names are double-barrelled (e.g. `local-vcap` when the login server is in a different location than the UAA server).
+The profile names are double-barreled (e.g. `local-vcap` when the login server is in a different location than the UAA server).
 
 #### Use Cases ####
 
