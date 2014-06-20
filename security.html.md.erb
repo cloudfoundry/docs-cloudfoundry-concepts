@@ -6,7 +6,7 @@ Cloud Foundry protects customers from security threats by applying security cont
 
 Cloud Foundry:
 
-* Implements role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the application spaces for which they have been granted access.
+* Implements role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access.
 * Ensures security of application bits in a multi-tenant environment.
 * Prevents possible denial of service attacks through resource starvation.
 
@@ -82,11 +82,11 @@ User passwords are stored in the UAA database using [bcrypt](http://en.wikipedia
 
 ### <a id='rbac'></a>Segmenting User Access with Orgs and Spaces ###
 
-Cloud Foundry uses role-based access control (RBAC), with each role granting permissions in either an organization or an application space.
+Cloud Foundry uses role-based access control (RBAC), with each role granting permissions in either an org or a space.
 
-Applications deployed to Cloud Foundry exist within an application space. In turn, spaces live in organizations.
+Applications deployed to Cloud Foundry exist within a space. In turn, spaces live in orgs.
 
-In order to even see the existence of an organization or space, a user must be a member of it.
+In order to even see the existence of an org or space, a user must be a member of it.
 
 Cloud Foundry supports the following user roles:
 
@@ -94,7 +94,7 @@ Cloud Foundry supports the following user roles:
 
 **Space Developers** can create, delete, and manage applications and services, and have full access to all usage reports and logs. They can edit applications, including the number of instances and memory footprint.
 
-**Space Auditors** have view-only access to all space information, settings, reports, and logs. Assign this role to users who need to view but not edit the application space.
+**Space Auditors** have view-only access to all space information, settings, reports, and logs. Assign this role to users who need to view but not edit the space.
 
 **Org Managers** can add and manage users, select and change their plan, and establish spending limits.
 
