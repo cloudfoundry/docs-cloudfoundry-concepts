@@ -1,32 +1,31 @@
 ---
-title: Organizations, Spaces, Roles, and Permissions
+title: Orgs, Spaces, Roles, and Permissions
 ---
 
 Cloud Foundry uses role-based access control (RBAC), with each role granting
-permissions in either an organization or an application space.
+permissions in either an org or a space.
 
-## <a id='organizations'></a>Organizations ##
+## <a id='orgs'></a>Orgs ##
 
-An organization, or org, consists of users grouped together for management
-purposes.
-All member of an org share a resource quota plan, services availability, and
-custom domains and routes.
+An org consists of users grouped together for management purposes.
+All members of an org share a resource quota plan, services availability, and
+custom domains.
 
 ## <a id='spaces'></a>Spaces ##
 
-All applications and services are scoped to an application space, or app space.
-Each org contains at least one app space.
-An app space provides a set of users access to a shared space for application
+Every application and service is scoped to a space.
+Each org contains at least one space.
+A space provides a set of users access to a shared location for application
 development, deployment, and maintenance.
-Each app space role applies only to a particular app space.
-By default, the org manager has app space manager permissions for all spaces
-within the organization.
+Each space role applies only to a particular space.
+By default, the org manager has space manager permissions for all spaces within
+the org.
 
 ## <a id='roles'></a>Roles and Permissions ##
 
 A user can have one or more roles.
 The combination of these roles defines the user’s overall permissions in the org
-and within specific app spaces in that org.
+and within specific spaces in that org.
 
 ### <a id='org-roles'></a>Org Roles and Permissions ###
 
@@ -34,64 +33,62 @@ and within specific app spaces in that org.
 
 Assign this role to managers or other users who need to administer the account.
 
-**Note**: By default, an org manager has space manager permissions for all app
+**Note**: By default, an org manager has space manager permissions for all
 spaces in the org.
 
 An Org Manager can:
 
 * Add and manage users
-* Select and change the plan
-* Establish spending limits
-* View and edit account billing information
-* View and edit user information and organization usage
-* Create, view, edit, and delete app spaces
-* Invite and manage users in app spaces
-* View status and usage of applications
-* Add domains and assign them to an app spaces
+* View and edit user email addresses and org roles
+* View and change the org quota
+* Create, view, edit, and delete spaces
+* Invite and manage users in spaces
+* View the status, number of instances, service bindings, and resource use of each application in every space in the org
+* Add domains
 
 ####Org Auditor ####
 
 Assign this role to people who need to view but not edit user information and
-organization usage information.
+org quota usage information.
 
-An Organization Auditor can:
+An Org Auditor can:
 
-* View user information and organization usage
+* View user email addresses and org roles
+* View the org quota
 
-### <a id='space-roles'></a>App Space Roles and Permissions ###
+### <a id='space-roles'></a>Space Roles and Permissions ###
 
-####App Space Manager ####
+####Space Manager ####
 
-Assign this role to managers or other users who need to administer an
-app space.
+Assign this role to managers or other users who need to administer a space.
 
-An App Space Manager can:
+A Space Manager can:
 
-* Add and manage users in the app space
-* View application status and resource usage in the app space
+* Add and manage users in the space
+* View the status, number of instances, service bindings, and resource use of each application in the space
 
-####App Space Developer ####
+####Space Developer ####
 
 Assign this role to application developers or other users who need to manage
-applications and services in an app space.
+applications and services in a space.
 
-An App Space Developer can:
+A Space Developer can:
 
 * Deploy an application
 * Start or stop an application
 * Rename an application
 * Delete an application
-* Create, view, edit, and delete services in an app space
+* Create, view, edit, and delete services in a space
 * Bind or unbind a service to an application
-* Rename an app space
-* View application status and resource usage in the app space
-* Set the number of instances and memory allocation for a deployed application
+* Rename a space
+* View the status, number of instances, service bindings, and resource use of each application in the space
+* Change the number of instances, memory allocation, and disk limit of each application in the space
 * Associate an internal or external URL with an application
 
-####App Space Auditor ####
+####Space Auditor ####
 
-Assign this role to people who need to view but not edit the app space.
+Assign this role to people who need to view but not edit the space.
 
-An App Space Auditor can:
+A Space Auditor can:
 
-* View application status and resource usage in the app space
+* View the status, number of instances, service bindings, and resource use of each application in the space
