@@ -56,7 +56,7 @@ The following is a partial list of the keys that the DEA reads from the YAML fil
 
 A sample `dea.yml` file follows:
 
-<p class="note"><strong>Note</strong>:  See https://github.com/cloudfoundry/dea_ng/blob/master/lib/dea/config.rb for optional configuration keys.</p>
+<p class="note"><strong>Note</strong>: See https://github.com/cloudfoundry/dea_ng/blob/master/lib/dea/config.rb for optional configuration keys.</p>
 
 
 ```

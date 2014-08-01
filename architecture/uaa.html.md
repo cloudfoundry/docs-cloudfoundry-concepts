@@ -162,7 +162,7 @@ $ rake bvt:run_uaa
 
 You can change the most common important settings with environment variables (see below), or with a custom `uaa.yml`.
 
-*Note:* You cannot use `MAVEN_OPTS` to set JVM system properties for the tests, but you can use it to set memory limits for the process, etc.
+<p class="note"><strong>Note</strong>: You cannot use <code>MAVEN_OPTS</code> to set JVM system properties for the tests, but you can use it to set memory limits for the process, etc.</p>
 
 ### <a id='custom-configuration'></a>Custom YAML Configuration ###
 
