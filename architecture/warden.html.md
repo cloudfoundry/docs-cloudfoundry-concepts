@@ -45,7 +45,7 @@ Run the setup routine, which compiles the C code bundled with Warden and sets up
 $ sudo bundle exec rake setup[config/linux.yml]
 </pre>
 
-*NOTE*: If `sudo` complains that `bundle` cannot be found, try `sudo env PATH=$PATH` to pass your current `PATH` to the `sudo` environment.
+<p class="note"><strong>NOTE</strong>: If <code>sudo</code> complains that <code>bundle</code> cannot be found, try <code>sudo env PATH=$PATH</code> to pass your current <code>PATH</code> to the <code>sudo</code> environment.</p>
 
 The setup routine sets up the file system for the containers at the directory path specified under the key `server -> container_rootfs_path` in the config file `config/linux.yml`.
 
@@ -112,6 +112,7 @@ This tool executes preconfigured hooks at different stages of the container star
 Warden manages the entire lifecyle of containers.
 The API allows users to create, configure, use, and destroy containers.
 Additionally, Warden can automatically clean up unused containers when needed.
+
 ### Create
 
 Every container is identified by its _handle_, which Warden returns upon creating it.
@@ -146,7 +147,7 @@ Warden uses a line-based JSON protocol to communicate with its clients, which it
 Each command invocation is formatted as a JSON array, where the first element is the command name and subsequent elements can be any JSON object.
 Warden responds to the following commands:
 
-### `create [CONFIG]`
+### create [CONFIG]
 
 Creates a new container.
 
@@ -154,7 +155,7 @@ Returns the container handle, which is used to identify the container.
 
 The optional `CONFIG` parameter is a hash that specifies configuration options used during container creation. The supported options are:
 
-#### `bind_mounts`
+#### bind\_mounts
 
 If supplied, this specifies a set of paths to be bind mounted inside the container.
 The value must be an array. The elements in this array specify the bind mounts to execute, and are executed in order.
@@ -176,16 +177,16 @@ Every element must be of the form:
 ]
 ~~~
 
-#### `grace_time`
+#### grace\_time
 
 If specified, this setting overrides the default time period during which no client references a container before the container is destroyed.
 The value can either be the number of seconds as floating point number or integer, or the `null` value to completely disable the grace time.
 
-#### `disk_size_mb`
+#### disk\_size\_mb
 
 If specified, this setting overrides the default size of the container scratch filesystem. The value is expected to be an integer number.
 
-### `spawn HANDLE SCRIPT [OPTS]`
+### spawn HANDLE SCRIPT [OPTS]
 
 Run the script `SCRIPT` in the container identified by `HANDLE`.
 
@@ -194,25 +195,25 @@ Also, the connection that issued the command may disconnect and reconnect later,
 
 The optional `OPTS` parameter is a hash that specifies options modifying the command being run. The supported options are:
 
-#### `privileged`
+#### privileged
 
 If true, this specifies that the script should be run as root.
 
-### `link HANDLE JOB_ID`
+### link HANDLE JOB\_ID
 
 Reap the script identified by `JOB_ID`, running in the container identified by `HANDLE`.
 
 Returns a three-element tuple containing the integer exit status, a string containing its `STDOUT` and a string containing its `STDERR`.
 These elements may be `null` when they cannot be determined (e.g. the script could not be executed, was killed, etc.).
 
-### `stream HANDLE JOB_ID`
+### stream HANDLE JOB\_ID
 
 Stream `STDOUT` and `STDERR` of scripts identified by `JOB_ID`, running in the container identified by `HANDLE`.
 
 Returns a two-element tuple containing the type of stream: `STDOUT` or `STDERR` as the first element, and a chunk of the stream as the second element.
 Returns an empty tuple when no more data is available in the stream.
 
-### `limit HANDLE (mem) [VALUE]`
+### limit HANDLE (mem) [VALUE]
 
 Set or get resource limits for the container identified by `HANDLE`.
 
@@ -220,20 +221,20 @@ The following resources can be limited:
 
 * The memory limit is specified in number of bytes. It is enforced using the control group associated with the container. When a container exceeds this limit, the kernel kills one or more of its processes. Additionally, the Warden is notified that an OOM happened. The Warden subsequently tears down the container.
 
-### `net HANDLE in`
+### net HANDLE in
 
 Forward a port on the external interface of the host to the container identified by `HANDLE`.
 
 Returns the port number that is mapped to the container. This port number is the same on the inside of the container.
 
-### `net HANDLE out ADDRESS[/MASK][:PORT]`
+### net HANDLE out ADDRESS[/MASK][:PORT]
 
 Allow traffic from the container identified by `HANDLE` to the network address specified by `ADDRESS`.
 Additionally, the address may be masked to allow a network of addresses, and a port to only allow traffic to a specific port.
 
 Returns `ok`.
 
-### `copy HANDLE in SRC_PATH DST_PATH`
+### copy HANDLE in SRC\_PATH DST\_PATH
 
 Copy the contents at `SRC_PATH` on the host to `DST_PATH` in the container identified by `HANDLE`.
 
@@ -244,7 +245,7 @@ If `SRC_PATH` contains a trailing `/`, only the contents of the directory are co
 Otherwise, the outermost directory, along with its contents, is copied.
 The unprivileged user will own the files in the container.
 
-### `copy HANDLE out SRC_PATH DST_PATH [OWNER]`
+### copy HANDLE out SRC\_PATH DST\_PATH [OWNER]
 
 Copy the contents at `SRC_PATH` in the container identified by `HANDLE` to `DST_PATH` on the host.
 
@@ -254,7 +255,7 @@ Its semantics are identical to `copy HANDLE in` except with respect to file owne
 By default, root owns the files on the host.
 If you supply the `OWNER` argument (in the form of `USER:GROUP`), files on the host will be chowned to this user/group after the copy has completed.
 
-### `stop HANDLE`
+### stop HANDLE
 
 Stop processes running inside the container identified by `HANDLE`.
 
@@ -262,7 +263,7 @@ Returns `ok`.
 
 Because this takes down all processes, unfinished scripts will likely terminate without an exit status being available.
 
-### `destroy HANDLE`
+### destroy HANDLE
 
 Stop processes and destroy all resources associated with the container identified `HANDLE`.
 
