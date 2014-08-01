@@ -52,8 +52,12 @@ Such a message can be sent to both the `router.register` subject to register URI
 
 <pre class="terminal">
 $ nohup ruby -rsinatra -e 'get("/") { "Hello!" }' &
-$ nats-pub 'router.register' '{"host":"127.0.0.1","port":4567,"uris":["my_first_url.vcap.me","my_second_url.vcap.me"],"tags":{"another_key":"another_value","some_key":"some_value"}}'
-Published [router.register] : '{"host":"127.0.0.1","port":4567,"uris":["my_first_url.vcap.me","my_second_url.vcap.me"],"tags":{"another_key":"another_value","some_key":"some_value"}}'
+$ nats-pub 'router.register' '{"host":"127.0.0.1","port":4567,
+	"uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
+	"tags":{"another_key":"another_value","some_key":"some_value"}}'
+Published [router.register] : '{"host":"127.0.0.1","port":4567,
+	"uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
+	"tags":{"another_key":"another_value","some_key":"some_value"}}'
 $ curl my_first_url.vcap.me:8080
 Hello!
 </pre>
@@ -93,5 +97,6 @@ $ curl -vvv "http://someuser:somepass@127.0.0.1:8080/routes"
 < Date: Mon, 25 Mar 2013 20:31:27 GMT
 < Transfer-Encoding: chunked
 <
-{"0295dd314aaf582f201e655cbd74ade5.cloudfoundry.me":["127.0.0.1:34567"],"03e316d6aa375d1dc1153700da5f1798.cloudfoundry.me":["127.0.0.1:34568"]}
+{"0295dd314aaf582f201e655cbd74ade5.cloudfoundry.me":["127.0.0.1:34567"],
+"03e316d6aa375d1dc1153700da5f1798.cloudfoundry.me":["127.0.0.1:34568"]}
 </pre>
