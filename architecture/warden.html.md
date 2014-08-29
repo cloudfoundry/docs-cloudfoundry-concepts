@@ -141,7 +141,7 @@ Once all resources the container used have been released, its files are removed 
 ## Networking
 
 
-### Interface
+## Interface
 
 Warden uses a line-based JSON protocol to communicate with its clients, which it does over a Unix socket located at `/tmp/warden.sock` by default.
 Each command invocation is formatted as a JSON array, where the first element is the command name and subsequent elements can be any JSON object.
