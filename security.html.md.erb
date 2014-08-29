@@ -153,7 +153,7 @@ The cf-release provides a way to redirect cf component logs to a standard syslog
 
 * In order to reduce the possibility of unauthorized access to the VMs within your BOSH managed cloud it is recommended that you deploy within a VLAN that limits network traffic to individual VMs.
 
-* The firewall rules that prevent applications inside a warden container from communicating with system components are configured in the BOSH manifest with the `allow_networks` and `deny_networks` properties.
+* The firewall rules that prevent applications inside a Warden container from communicating with system components are configured in the BOSH manifest with the `allow_networks` and `deny_networks` properties.
 
 * You can configure UAA clients and users in the BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.
 

@@ -109,7 +109,7 @@ This tool executes preconfigured hooks at different stages of the container star
 
 ## Container Lifecycle
 
-Warden manages the entire lifecyle of containers.
+Warden manages the entire lifecycle of containers.
 The API allows users to create, configure, use, and destroy containers.
 Additionally, Warden can automatically clean up unused containers when needed.
 
@@ -141,7 +141,7 @@ Once all resources the container used have been released, its files are removed 
 ## Networking
 
 
-## Interface
+### Interface
 
 Warden uses a line-based JSON protocol to communicate with its clients, which it does over a Unix socket located at `/tmp/warden.sock` by default.
 Each command invocation is formatted as a JSON array, where the first element is the command name and subsequent elements can be any JSON object.

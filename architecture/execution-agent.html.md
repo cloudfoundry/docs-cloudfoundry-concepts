@@ -51,7 +51,7 @@ The following is a partial list of the keys that the DEA reads from the YAML fil
 
 * `logging` --- A [Steno configuration](http://github.com/cloudfoundry/steno#from-yaml-file).
 * `nats_uri` --- A URI of the form `nats://host:port` that the DEA uses to connect to NATS.
-* `warden_socket` --- The path to a unix domain socket that the DEA uses to communicate to a warden server.
+* `warden_socket` --- The path to a unix domain socket that the DEA uses to communicate to a Warden server.
 
 
 A sample `dea.yml` file follows:
