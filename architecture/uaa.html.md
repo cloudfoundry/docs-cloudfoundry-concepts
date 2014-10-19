@@ -256,7 +256,9 @@ $ ./gradlew run
 </pre>
 
 
-<!-- *** Note to Reviewers: Should this next section be included? Are the field values correct?  *** -->
+### Note to Reviewers: 
+
+Should this next section be included? Are the field values correct?  
 
 To bootstrap a microcloud type environment, you need an admin client; there is a database initializer component that inserts one.
 If the default profile is active (i.e. not `postgresql`), there is also a `cf` client so that the gem login works out of the box.
@@ -314,10 +316,12 @@ The profile names are double-barreled (e.g. `local-vcap` when the login server i
         GET /app
 
 
-<!-- *** Note to Reviewers: Should this next section be included, with a note that the login_server is in 
+### Question for Reviewers: 
+
+Should this next section be included, with a note that the login_server is in 
 	a different location now. Or should this just be a pointer to the README file for the login_server
 	rather than duplicate the content? Personally, I think a pointer is sufficient and better because
-	then the info does not have to be maintained in two different places *** --> 
+	then the info does not have to be maintained in two different places.
 
 
 ### <a id='login-application'></a>Login Application ###
