@@ -20,7 +20,7 @@ $ ./gradlew run
 </pre>
 
 If successful, the three apps will all be running together on a single instance of Tomcat
-listening on port 8080, with endpoints `/uaa`, `/app`, and `/api`..
+listening on port 8080, with endpoints `/uaa`, `/app`, and `/api`.
 
 ### <a id='deploy'></a>Deploy to Cloud Foundry ###
 
@@ -34,6 +34,7 @@ $ cf start myuaa
 </pre>
 
 In the steps above, replace:
+
 * `myuaa` with a unique application name
 * `1.8.0` with the appropriate version label from your build
 
@@ -101,7 +102,7 @@ You should see your username and the client id of the original token grant on st
 
 ### <a id='demo-hosted'></a>Remote Command Line Usage ###
 
-The command line example in the previous section should work against the Pivotal Web Services UAA, although token encoding is unnecessary as you will not have the client secret.
+The command line example in the previous section should work against the Pivotal <%=vars.product_full%> UAA, although token encoding is unnecessary as you will not have the client secret.
 
 In this case, there is no need to run a local uaa server.
 Ask the external login endpoint to tell you about the system:
@@ -132,7 +133,8 @@ This authenticates and obtains an access token from the server using the OAuth2 
 
 ## <a id='integration'></a>Integration tests ##
 
-You can run the integration tests with
+You can run the integration tests with the following command:
+
 <pre class="terminal">
 $ ./gradlew integrationTest
 </pre>
@@ -143,7 +145,8 @@ You can set the environment variable `CLOUD_FOUNDRY_CONFIG_PATH` to a directory 
 
 ### <a id='custom-configuration'></a>Custom YAML Configuration ###
 
-To modify the runtime parameters you can provide a `uaa.yml`, e.g.
+To modify the runtime parameters you can provide a `uaa.yml`, as shown in the following example:
+
 <pre class="terminal">
 $ cat > /tmp/uaa.yml
 uaa:
@@ -154,22 +157,21 @@ uaa:
     email: dev@cloudfoundry.org
 </pre>
 
-then from `uaa/uaa`
+Then from `uaa/uaa`:
 
 <pre class="terminal">
     $ CLOUD_FOUNDRY_CONFIG_PATH=/tmp ./gradlew test
 </pre>
 
-The webapp looks for a Yaml file in the following locations
+The webapp looks for a YAML file in the following locations
 (later entries override earlier ones) when it starts up.
 
-<pre class="terminal">
+```yaml
     classpath:uaa.yml
     file:${CLOUD_FOUNDRY_CONFIG_PATH}/uaa.yml
     file:${UAA_CONFIG_FILE}
     ${UAA_CONFIG_URL}
-</pre>
-
+```
 
 ### <a id='gradle-test'></a>Test with PostgreSQL or MySQL ##
 
@@ -193,7 +195,7 @@ The database configuration for the common and scim modules is located at `common
 
 ## <a id='projects'></a>UAA Projects ##
 
-There are actually several projects here: the main `uaa` server application, and some samples:
+There are actually several projects here&#8212;the main `uaa` server application, and some samples:
 
 * `common` is a module containing a JAR with all the business logic.  It is used in
 the webapps below.
@@ -210,7 +212,7 @@ the webapps below.
 ## <a id='uaa-server'></a>UAA Server ##
 
 The authentication service is `uaa`. It is a plain Spring MVC webapp.
-Deploy as normal in Tomcat or your container of choice, or execute `./gradlew run` to run it directly from `uaa` directory in the source tree.  When running with Gradle, it listens on port 8080 and the URL is `http://localhost:8080/uaa`.
+Deploy as normal in Tomcat or your container of choice, or execute `./gradlew run` to run it directly from the `uaa` directory in the source tree. When running with Gradle, it listens on port 8080 and the URL is `http://localhost:8080/uaa`.
 
 The UAA Server supports the APIs defined in the UAA-APIs document. To summarize:
 
@@ -250,17 +252,13 @@ spring_profiles: postgresql,default
 
 To use PostgreSQL instead of HSQL:
 
-<pre class="terminal>
+<pre class="terminal">
 $ echo "spring_profiles: postgresql,default" > src/main/resources/uaa.yml
 $ ./gradlew run
 </pre>
 
 
-### Note to Reviewers: 
-
-Should this next section be included? Are the field values correct?  
-
-To bootstrap a microcloud type environment, you need an admin client; there is a database initializer component that inserts one.
+To bootstrap a microcloud-type environment, you need an admin client; there is a database initializer component that inserts one.
 If the default profile is active (i.e. not `postgresql`), there is also a `cf` client so that the gem login works out of the box.
 You can override the default settings and add additional clients in `uaa.yml`:
 
@@ -315,62 +313,7 @@ The profile names are double-barreled (e.g. `local-vcap` when the login server i
 
         GET /app
 
-
-### Question for Reviewers: 
-
-Should this next section be included, with a note that the login_server is in 
-	a different location now. Or should this just be a pointer to the README file for the login_server
-	rather than duplicate the content? Personally, I think a pointer is sufficient and better because
-	then the info does not have to be maintained in two different places.
-
-
 ### <a id='login-application'></a>Login Application ###
 
-A user interface for authentication.
-The UAA can also authenticate user accounts, but only if it manages them itself, and it only provides a basic UI.
-You can brand and customize the login app for non-native authentication and for more complicated UI flows, like user registration and password reset.
+The Cloud Foundry Login Server handles authentication in Cloud Foundry and delegates all other identity management tasks to the UAA. It also provides OAuth2 endpoints issuing tokens to client apps for Cloud Foundry. For more information, refer to the [Cloud Foundry Login Server GitHub repo README](https://github.com/cloudfoundry/login-server).
 
-The login application is itself an OAuth2 endpoint provider, but delegates those features to the UAA server.
-Therefore, configuration for the login application consists of locating the UAA through its OAuth2 endpoint URLs and registering the login application itself as a client of the UAA.
-There is a `login.yml` for the UAA locations, such as for a local `vcap` instance:
-
-```yaml
-uaa:
-  url: http://uaa.vcap.me
-  token:
-    url: http://uaa.vcap.me/oauth/token
-  login:
-    url: http://uaa.vcap.me/login.do
-```
-
-There is also an environment variable (or Java System property), `LOGIN_SECRET`, for the client secret that the app uses when it authenticates itself with the UAA.
-The login app is registered by default in the UAA only if there are no active Spring profiles.
-In the UAA, the registration is located in the `oauth-clients.xml` config file:
-
-```yaml
-id: login
-secret: loginsecret
-authorized-grant-types: client_credentials
-authorities: ROLE_LOGIN
-resource-ids: oauth
-```
-
-#### Use Cases ####
-
-1. Authenticate
-
-        GET /login
-
-    The sample app presents a form login interface for the backend UAA, and also an OpenID widget so the user can authenticate using Google credentials or others.
-
-2. Approve OAuth2 token grant
-
-        GET /oauth/authorize?client_id=app&response_type=code...
-
-    Standard OAuth2 Authorization Endpoint. The UAA handles client credentials and all other features in the back end, and the login application is used to render the UI (see `access_confirmation.jsp`).
-
-3. Obtain access token
-
-        POST /oauth/token
-
-    Standard OAuth2 Authorization Endpoint passed through to the UAA.
