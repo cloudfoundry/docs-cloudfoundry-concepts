@@ -9,8 +9,8 @@ It has endpoints for managing user accounts and for registering OAuth2 clients, 
 
 ## <a id='quickstart'></a>Quick Start ##
 
-The simplest way to get started is to fetch the UAA from Git, and then build and run all of the 
-components that comprise the UAA and the example programs (uaa, samples/api, and samples/app) 
+The simplest way to get started is to fetch the UAA from Git, and then build and run all of the
+components that comprise the UAA and the example programs (uaa, samples/api, and samples/app)
 with a single invocation of gradle:
 
 <pre class="terminal">
@@ -315,5 +315,51 @@ The profile names are double-barreled (e.g. `local-vcap` when the login server i
 
 ### <a id='login-application'></a>Login Application ###
 
-The Cloud Foundry Login Server handles authentication in Cloud Foundry and delegates all other identity management tasks to the UAA. It also provides OAuth2 endpoints issuing tokens to client apps for Cloud Foundry. For more information, refer to the [Cloud Foundry Login Server GitHub repo README](https://github.com/cloudfoundry/login-server).
+A user interface for authentication.
+The UAA can also authenticate user accounts, but only if it manages them itself,
+and it only provides a basic UI.
+You can brand and customize the login app for non-native authentication and for more complicated UI flows, like user registration and password reset.
 
+The login application is itself an OAuth2 endpoint provider, but delegates those features to the UAA server.
+Therefore, configuration for the login application consists of locating the UAA through its OAuth2 endpoint URLs and registering the login application itself as a client of the UAA.
+There is a `login.yml` for the UAA locations, such as for a local `vcap` instance:
+
+```yaml
+uaa:
+  url: http://uaa.vcap.me
+  token:
+    url: http://uaa.vcap.me/oauth/token
+  login:
+    url: http://uaa.vcap.me/login.do
+```
+
+There is also an environment variable (or Java System property), `LOGIN_SECRET`, for the client secret that the app uses when it authenticates itself with the UAA.
+The login app is registered by default in the UAA only if there are no active Spring profiles.
+In the UAA, the registration is located in the `oauth-clients.xml` config file:
+
+```yaml
+id: login
+secret: loginsecret
+authorized-grant-types: client_credentials
+authorities: ROLE_LOGIN
+resource-ids: oauth
+```
+
+#### Use Cases ####
+
+1. Authenticate
+
+        GET /login
+
+    The sample app presents a form login interface for the backend UAA, and also an OpenID widget so the user can authenticate using Google credentials or others.
+
+2. Approve OAuth2 token grant
+
+        GET /oauth/authorize?client_id=app&response_type=code...
+
+    Standard OAuth2 Authorization Endpoint. The UAA handles client credentials and all other features in the back end, and the login application is used to render the UI (see `access_confirmation.jsp`).
+
+3. Obtain access token
+
+        POST /oauth/token
+    Standard OAuth2 Authorization Endpoint passed through to the UAA.
