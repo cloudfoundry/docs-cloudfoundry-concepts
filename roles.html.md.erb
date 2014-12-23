@@ -10,10 +10,14 @@ permissions in either an org or a space.
 An org consists of users grouped together for management purposes.
 All members of an org share a resource quota plan, services availability, and
 custom domains.
+An org is the toplevel unit to organize spaces, users and domains.
 
 ## <a id='spaces'></a>Spaces ##
 
 Every application and service is scoped to a space.
+Spaces are grouped by orgs. Hereby they are a lower level unit to organize
+applications, services and users (through their role. A user can have a
+specific role within a given space.).
 Each org contains at least one space.
 A space provides a set of users access to a shared location for application
 development, deployment, and maintenance.
@@ -22,6 +26,8 @@ Each space role applies only to a particular space.
 ## <a id='roles'></a>Roles and Permissions ##
 
 A user can have one or more roles.
+OrgManager, BillingManager and OrgAuditor are valid
+roles for orgs, while SpaceManager, SpaceDeveloper and SpaceAuditor are valid for spaces.
 The combination of these roles defines the user’s overall permissions in the org
 and within specific spaces in that org.
 
