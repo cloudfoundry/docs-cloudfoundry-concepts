@@ -1,8 +1,39 @@
 ---
-title: Scaling Cloud Foundry
+title: Zero Downtime Deployment and Scaling in CF
 ---
 
 To increase the capacity and availability of the Cloud Foundry platform, you can scale a deployment up using the strategies described below.
+
+<!-- It is important to have enough space so that if one piece of your deployment goes down, the entire deployment is still up.
+
+A deployment has zero downtime when it remains running even if parts of the deployment go down. -->
+
+## <a id='zero-downtime'></a>Zero Downtime Deployment ##
+
+This section describes the required configurations for achieving a zero downtime deployment.
+
+####Application instances####
+
+Deploy at least two instances of every application.
+
+####Components####
+
+Scale your components as described in the [Scaling Platform Availability](#availability) section below. Components should be distributed across two or more <%=vars.az%> (AZs).
+
+####Space####
+
+Ensure that you allocate and maintain enough of the following:
+
+* Free space on DEAs so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if <%=vars.max_in_flight%> is down, all instances of apps can be placed on the remaining DEAs.
+* Free space to handle one AZ going down if deploying in multiple AZs.
+
+####Resource pools####
+
+Configure your <%=vars.pools_link%> according to the requirements of your deployment.
+
+<%=vars.om_resurrector_header%>
+<%=vars.om_resurrector_text%>
 
 ## <a id='capacity'></a>Scaling Platform Capacity ##
 
@@ -50,15 +81,63 @@ To scale the Cloud Foundry platform for high availability, the actions you take 
 You can think of components that support multiple instances as scalable processes.
 If you are already scaling the number of instances of such components to increase platform capacity, you need to scale further to achieve the redundancy required for high availability.
 
-There are seven scalable processes:
-
-* DEA: More DEAs add application capacity.
-* Cloud Controller: More Cloud Controllers help with API request volume.
-* Health Manager: Scaling to two Health Managers is sufficient.
-* Router: Additional routers help bring more available bandwidth to ingress and egress.
-* Doppler: Deploying additional dopplers splits traffic across them.
-* Loggregator Traffic Controller: Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round robin manner.
-* UAA: Scaling to two UAAs is sufficient.
+<table border="1" class="nice">
+	<tr>
+		<th><strong>Component</strong></th>
+		<th><strong>Number</strong></th>
+		<th><strong>Notes</strong></th>
+	</tr>
+	<tr>
+		<td>Load Balancer</td>
+		<td>1</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><a href="./architecture/messaging-nats.html">NATS Server</a></td>
+		<td>&ge; 2</td>
+		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
+	</tr>
+	<tr>
+		<td><a href="./architecture/#hm9k">HM9000</a></td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><a href="./architecture/cloud-controller.html">Cloud Controller</a></td>
+		<td>&ge; 2</td>
+		<td>More Cloud Controllers help with API request volume.</td>
+	</tr>
+	<tr>
+		<td><a href="./architecture/router.html">Gorouter</a></td>
+		<td>&ge; 2</td>
+		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
+	</tr>
+	<tr>
+		<td>Collector</td>
+		<td>1</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><a href="./architecture/uaa.html">UAA</a></td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><a href="./architecture/execution-agent.html">DEA</a></td>
+		<td>&ge; 3</td>
+		<td>More DEAs add application capacity.</td>
+	</tr>
+	<tr>
+		<td><a href="../devguide/deploy-apps/streaming-logs.html">Doppler</a></td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Dopplers splits traffic across them.</td>
+	</tr>
+	<tr>
+		<td><a href="./architecture/#metrics">Loggregator Traffic Controller</a></td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round robin manner.</td>
+	</tr>
+</table>
 
 ### <a id='single-node'></a>Single-node processes ###
 
@@ -72,6 +151,8 @@ First, consider the components whose availability affects the platform as a whol
 In production deployments, it is a good idea to use your own load-balancing infrastructure with an associated high-availability strategy and configuration. Otherwise, use HAProxy as an alternative load-balancing solution.
 
 **NATS**:
+
+You might run NATS as a single-node process if you lack the resources to deploy two stable NATS servers.
 
 Cloud Foundry continues to run any apps that are already running even when NATS is unavailable for short periods of time.
 The components publishing messages to and consuming messages from NATS are resilient
