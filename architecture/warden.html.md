@@ -63,36 +63,20 @@ $ bundle exec bin/warden
 
 ## Implementation for Linux
 
-Isolation is achieved by namespacing kernel resources that would otherwise be shared.
-The intended level of isolation is set such that multiple containers present on the same host should not be aware of each other's presence.
-This means that these containers are given their own Process ID (PID) namespace, network namespace, and mount namespace.
+Each application deployed to Cloud Foundry runs within its own self-contained environment, a Linux Warden container. Cloud Foundry operators can configure whether contained applications can or cannot directly interact with other applications or other Cloud Foundry system components. 
 
-Resource control is handled using [Control Groups](http://kernel.org/doc/Documentation/cgroups/cgroups.txt).
-Each container is placed in its own control group, where it is configured to use an equal slice of CPU compared to other containers, and the maximum amount of memory it may use is set.
+Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the Load Balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system. Each Warden container also provides a dedicated virtual network interface that establishes IP filtering rules for the app, which are derived from network traffic rules. This restrictive operating environment is designed for security and stability.
 
-The following sections give a brief summary of the techniques used to implement the Linux backend for Warden.
-You can find a more detailed description in the `root/linux` directory of this repository.
+Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host are not aware of each other’s presence. This means that these containers are given their own Process ID (PID), namespace, network namespace, and mount namespace.
+Resource control is managed through the use of Linux  Control Groups ([cgroups](http://kernel.org/doc/Documentation/cgroups/cgroups.txt)). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
 
 ### Networking
 
-Every container is assigned a network interface which is one side of a virtual ethernet pair created on the host.
-The other side of the virtual ethernet pair is only visible on the host (from the root namespace).
-The pair is configured to use IPs in a small and static subnet.
-Traffic from and to the container can be forwarded using NATs.
-Additionally, you can filter and shape all traffic as needed, using readily available tools such as `iptables`.
+The DEA for each Warden container assigns a dedicated virtual network interface that is one side of a virtual ethernet pair created on the host. The other side of the virtual ethernet pair is only visible on the host from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic to and from the container is forwarded using NAT. Operators can configure global and container-specific network traffic rules that become Linux iptable rules to filter and log outbound network traffic.
 
 ### Filesystem
 
-Every container gets a private root filesystem.
-This filesystem is created by stacking a read-only filesytem and a read-write filesystem.
-This is implemented using `aufs` on Ubuntu versions from 10.04 to 11.10 and `overlayfs` on Ubuntu 12.04.
-
-The read-only filesystem contains the minimal set of Ubuntu packages and Warden-specific modifications common to all containers.
-The read-write filesystem stores files overriding container-specific settings when necessary.
-Because all writes are applied to the read-write filesystem, containers can share the same read-only base filesystem.
-
-The read-write filesystem is created by formatting a large sparse file.
-Because the size of this file is fixed, the filesystem that it contains cannot grow beyond this initial size.
+Every container gets a private root filesystem. For Linux containers, this filesystem is created by stacking a read-only base filesystem and a container-specific read-write filesystem, commonly known as an overlay filesystem. The read-only filesystem contains the minimal set of Linux packages and Warden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write filesystem. The read-write filesystem is unique to each container and is created by formatting a large sparse file of a fixed size. This fixed size prevents the read-write filesystem from overflowing into unallocated space.
 
 ### Difference with LXC
 
