@@ -48,7 +48,7 @@ Cloud Foundry implements network traffic rules using Linux iptables on the compo
 
 Operators can use either of the following to configure these rules:
 
-* Cloud Foundry <%=vars.app_sec_groups%>: An Application Security Group (ASG) consists of a list of access rules to control application outbound traffic. Operators can define Cloud Foundry ASGs both in a manifest and on the cf Command Line Interface (CLI), however, Cloud Foundry ASGs defined in a manifest are valid only until operators update them on the CLI. For this reason, <%=vars.pcf_rec%> recommends that you use the CLI to create and bind Cloud Foundry ASGs to the running and staging deployment phases for greater flexibility.
+* Cloud Foundry <%=vars.app_sec_groups%>: An Application Security Group (ASG) consists of a list of access rules to control application outbound traffic. Operators can define Cloud Foundry ASGs both in a manifest and on the cf Command Line Interface (CLI), however, Cloud Foundry ASGs defined in a manifest are valid only until operators update them on the CLI. For this reason, <%=vars.pcf_rec%> recommends that operators use the CLI to create and bind Cloud Foundry ASGs to the running and staging deployment phases for greater flexibility.
 
 * <%=vars.dea_properties%>: Operators can configure the `allow_networks` and `deny_networks` parameters for DEAs to prohibit communication between system components and applications. Any subsequent Cloud Foundry ASG configurations will overwrite these configurations.
 
