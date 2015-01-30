@@ -127,7 +127,7 @@ Resource control is managed using Linux Control Groups ([cgroups](https://www.ke
 
 ### <a id='networking'></a>Networking ###
 
-The [DEA](./architecture/execution-agent.html) for each Warden container assigns the container a dedicated virtual network interface. This interface is one side of a virtual ethernet pair created on the host VM. The other side of the virtual ethernet pair is only visible on the host from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic to and from the container is forwarded using NAT. Operators can configure global and container-specific <%=net_traffic_rules%> that become Linux iptable rules to filter and log outbound network traffic.
+The [DEA](./architecture/execution-agent.html) for each Warden container assigns the container a dedicated virtual network interface. This interface is one side of a virtual ethernet pair created on the host VM. The other side of the virtual ethernet pair is only visible on the host from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic to and from the container is forwarded using NAT. Operators can configure global and container-specific <%=vars.net_traffic_rules%> that become Linux iptable rules to filter and log outbound network traffic.
 
 ## <a id='logging'></a>Security Event Logging and Auditing ##
 
