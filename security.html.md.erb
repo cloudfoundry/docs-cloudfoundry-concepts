@@ -2,167 +2,164 @@
 title: Cloud Foundry Security
 ---
 
-Cloud Foundry protects customers from security threats by applying security controls and by isolating customer applications and data.
+<%=vars.pcf_rec%> protects customers from security threats by applying security controls and by isolating customer applications and data.
 
 Cloud Foundry:
 
 * Implements role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access.
+
 * Ensures security of application bits in a multi-tenant environment.
+
 * Prevents possible denial of service attacks through resource starvation.
 
 Before you read this document you may want to become familiar with the [general system architecture](./architecture/index.html).
 
 ## <a id='system-boundaries'></a>System Boundaries and Access ##
 
-In a typical deployment of Cloud Foundry, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a proxy that maps to one or more routers, a NAT VM for outbound requests, and a jumpbox to access the BOSH Director.
+As the image below shows, in a typical deployment of Cloud Foundry, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more Cloud Foundry routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
+
+<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you also install a NAT VM for outbound requests and jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
   <%= image_tag("images/security/sysbound1.png") %>
 
-Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
-
 ### <a id='protocols'></a>Protocols ###
 
-All traffic from the public internet to the Cloud Controller and UAA happen over https. Inside the boundary of the system, components communicate over a pub-sub message bus, [gnatsd](https://github.com/apcera/gnatsd).
+All traffic from the public internet to the Cloud Controller and UAA happens over HTTPS. Inside the boundary of the system, components communicate over a publish-subscribe (pub-sub) message bus, [NATS](http://nats.io/), and also HTTP.
 
 ### <a id='application-traffic'></a>Application Traffic ###
 
-The App Container IP address is allocated when the application instance is started. The application is also assigned an arbitrary port. (The application can determine which port to listen on from the VCAP\_APP\_PORT environment variable provided in the container environment.)
+When an app instance starts, the DEA allocates an IP address and also assigns an arbitrary port to the Application Container. The application uses the PORT environment variable provided in the container environment to determine which port to listen on. Because the DEA assigns a random value to the PORT environment variable, the value is generally unique for each application instance.
+
+The router handles all inbound traffic to applications, routing traffic to one of the application instances.
+
+A DEA has a single IP address. If you configure the deployment with the cluster on a VLAN, as recommended, then all traffic goes through the following levels of network address translation:
+
+* Inbound: From the load balancer through the router to the DEA, then from the DEA to the App Container.
+
+* Outbound: From the App Container to the DEA, then to the gateway on the DEA virtual network interface. This gateway might be a NAT to external networks depending on your IaaS.
+
+The image below shows traffic flow through the recommended deployment configuration.
 
   <%= image_tag("images/security/sysbound2.png") %>
 
-The Elastic Runtime router handles all inbound traffic to applications, routing traffic to one of the application instances.
+### <a id='network-traffic'></a>Network Traffic Rules ###
 
-If the deployment is configured as recommended with the cluster on a VLAN, then all outbound traffic goes through two levels of network address translation: container IP address to DEA IP address, then DEA to the NAT provisioned to connect the VLAN with the public internet.
+Cloud Foundry implements network traffic rules using Linux iptables on the component VMs. Operators can configure rules to prevent system access from external networks and between internal components, and to restrict applications from establishing connections over the DEA network interface.
 
-Applications are prevented from connecting directly with other applications, or with system components, by the firewall rules specified in the operator-controlled BOSH deployment manifest.
+Operators can use either of the following to configure these rules:
 
-### <a id='firewalls'></a>Firewalls ###
+* BOSH MANIFEST: Operators can configure the BOSH manifest to prohibit communication between system components and applications. For your convenience, Cloud Foundry provides a number of predefined parameters. You should evaluate these parameters for your deployment on a case-by-case basis.
 
-Cloud Foundry uses firewalls to restrict access to systems from external networks and between internal components.
+* Cloud Foundry [Application Security Groups](../adminguide/app-sec-groups.html): An Application Security Group consists of a list of access rules to control application outbound traffic. Operators can configure rules by creating and binding security groups to apps using the cf Command Line Interface (CLI).
 
-The firewall rules that prevent applications inside a Warden container from communicating with system components are configured in the BOSH manifest with the `allow_networks` and `deny_networks` properties. For convenience, Cloud Foundry provides a number of predefined firewall rules; these firewall rules should be reviewed and evaluated for necessity and desirability to an organization on a case-by-case base.
+<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you use Cloud Foundry Application Security Groups to specify egress access rules for your applications. This functionality enables you to more securely restrict application outbound traffic to predefined routes.</p>
 
-Cloud Foundry firewalls also restrict customer applications from establishing localhost connections over the loopback network interface to further isolate customer applications. These firewalls can be configured to further limit inbound and outbound connections as needed.
-
-#### <a id='spoofing'></a>Spoofing ####
-
-Managed firewalls prevent IP, MAC, and ARP spoofing between VMs within Cloud Foundry.
-
-Cloud Foundry uses application isolation, operating system restrictions, and encrypted connections to further ensure risk is mitigated.
+#### Spoofing ####
+If an IP, MAC, or ARP spoofing attack bypasses the physical firewall for your deployment, Cloud Foundry network traffic rules help prevent the attack from accessing application containers. Cloud Foundry uses application isolation, operating system restrictions, and encrypted connections to further mitigate risk.
 
 ### <a id='bosh'></a>BOSH ###
 
-Elastic runtime and associated services are deployed with BOSH. The BOSH Director is the core orchestrating component in BOSH. The BOSH Director controls VM creation and deployment, as well as other software and service lifecycle events.
+Operators deploy Cloud Foundry with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
 
-Communication to the BOSH Director is secured over https. Authentication is through password security. The BOSH Director should be deployed on a subnet that is not publicly accessible. Operators access the BOSH Director from a jumpbox on the subnet or through a VPN.
+<p class="note"><strong>Note</strong>: CLOUD FOUNDRY recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
 
-BOSH launches VMs and communicates with those VMs over NATS, a publish-subscribe messaging system. NATS cannot be accessed from outside Cloud Foundry, thus ensuring published message can only originate from a component within your deployment.
+BOSH includes the following functionality for security:
 
-BOSH provides a mechanism for operators to access the VMs.
+* Communicates with the VMs it launches over NATS. Because NATS cannot be accessed from outside Cloud Foundry, this ensures that published messages can only originate from a component within your deployment.
 
-BOSH provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with BOSH.
+* Provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with BOSH.
 
-BOSH allows you to set up individual log in accounts for each operator. BOSH operators have **root** access.
+* Allows you to set up individual login accounts for each operator. BOSH operators have root access.
 
-Data stored on BOSH VMs is not encrypted by BOSH but may be encrypted by your IaaS layer.
+<p class="note"><strong>Note</strong>: BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
 
 ## <a id='auth'></a>Authentication and Authorization ##
 
-Access Mechanisms: All user access to Cloud Foundry, including API, CLI, and Apps Manager, is authenticated through User Account and Authentication Server [UAA](https://github.com/cloudfoundry/uaa)
+[User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for the Elastic Runtime platform and its various components.
 
-The UAA is the identity management service for Cloud Foundry. As an OAuth2 provider, the UAA issues tokens for client applications to use when they act on behalf of Cloud Foundry users. The UAA can also authenticate users with their Cloud Foundry credentials, and can act as an SSO service using those credentials, or others.
+UAA acts as an [OAuth2](https://oauth.io/) Authorization Server and issues access tokens for applications that request platform resources. The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by UAA.
 
-All sensitive credentials are encrypted.
+Operators can configure the identity store in UAA. If users register an account with the Cloud Foundry platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the Cloud Foundry platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the Cloud Foundry platform.
 
-The VCAP_SERVICES environment variable contains credentials. It’s not stored but rather is constructed from sensitive data that is encrypted in the Cloud Controller Database.
+### <a id='rbac'></a>Managing User Access with Role-Based Access Control ###
 
-Authorization happens through the Cloud Controller, and access control is properly enforced through the Cloud Controller.
+Applications that users deploy to Cloud Foundry exist within a space. Spaces exist within orgs. To view and access an org or a space, a user must be a member of it. Cloud Foundry uses role-based access control (RBAC), with each role granted permissions to either an org or a specified space. For more information on roles and permissions, refer to the [Orgs, Spaces, Roles, and Permissions](roles.html) topic.
 
-User passwords are stored in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt), an adaptive cryptographic key derivation function for passwords.
+For more information, see the following topics:
 
-### <a id='rbac'></a>Segmenting User Access with Orgs and Spaces ###
+* [Understanding Apps Manager Permissions](../console/dev-console-permissions.html)
 
-Cloud Foundry uses role-based access control (RBAC), with each role granting permissions in either an org or a space.
+* [Managing User Spaces in Accounts using the Apps Manager](../console/manage-accounts.html)
 
-Applications deployed to Cloud Foundry exist within a space. In turn, spaces live in orgs.
+## <a id='service-broker'></a>Security for Service Broker Integration ##
 
-In order to even see the existence of an org or space, a user must be a member of it.
+The Cloud Controller [authenticates](../services/api.html) every request with the Service Broker API using HTTP or HTTPS, depending on which protocol you specify during broker registration. The Cloud Controller rejects any broker registration that does not contain a username and password.
 
-Cloud Foundry supports the following user roles:
+Service instances bound to an app contain credential data. Users specify the binding credentials for [user-provided service instances](../devguide/services/user-provided.html), while third-party brokers specify the binding credentials for [managed service instances](../devguide/services/managed.html). The VCAP_SERVICES environment variable contains credential information for any service bound to an app. Cloud Foundry constructs this value from encrypted data that it stores in the Cloud Controller Database (CCDB).
 
-**Space Managers** can add and manage users and enable features for a given space. Assign this role to managers or other users who need to administer the account.
+<p class="note"><strong>Note</strong>: The selected third-party broker controls how securely to communicate managed service credentials.</p>
 
-**Space Developers** can create, delete, and manage applications and services, and have full access to all usage reports and logs. They can edit applications, including the number of instances and memory footprint.
-
-**Space Auditors** have view-only access to all space information, settings, reports, and logs. Assign this role to users who need to view but not edit the space.
-
-**Org Managers** can add and manage users, select and change their plan, and establish spending limits.
-
-**Org Auditors** have read-only access to org information and reports.
+A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. Cloud Foundry does not store this secret in the CCDB. Instead, Cloud Foundry passes the secret to the UAA component for verification using HTTP or HTTPS.
 
 ## <a id='vuln-manage'></a>Software Vulnerability Management ##
 
-Cloud Foundry manages software vulnerability using stemcells and releases. New stemcells are created with patches for the latest security fixes to address any underlying operating system issues, while new Cloud Foundry releases are created with updates to address code issues.
+Cloud Foundry manages software vulnerability using releases and BOSH stemcells. New Cloud Foundry releases are created with updates to address code issues, while new stemcells are created with patches for the latest security fixes to address any underlying operating system issues.
 
-## <a id='app-code'></a>Ensuring Application Code is Secured ##
+## <a id='app-artifacts'></a>Ensuring Security for Application Artifacts ##
 
-Application developers push their code to Cloud Controller. It’s secured through OAUTH2 (the UAA) and SSL (communication happens over https). Cloud Controller has role based permissions such that only authorized users are allowed to access that application.
+Cloud Foundry secures both the code and the configuration of an application using the following functionality:
 
-Cloud Controller stores application configuration (environment variables) in an encrypted database table.
+* Application developers push their code using the [Cloud Foundry API](http://apidocs.cloudfoundry.org/). Cloud Foundry secures each call to the CF API using the [UAA](#auth) and SSL.
 
-Applications code is then run inside a secure container utilizing [cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt), user access permissions, and a firewalled network which prevents communication with system components. The firewall rules are configured in the BOSH manifest.
+* The Cloud Controller uses [RBAC](#rbac) to ensure that only authorized users can access a particular application.
 
-Application containers each have two IP addresses; outbound traffic goes through two NATs:
+* The Cloud Controller stores the configuration for an application in an encrypted database table. This configuration data includes user-specified environment variables and service credentials for any services bound to the app.
 
-* From inside the container to the DEA
-* From the DEA to the NAT router
+* Cloud Foundry runs the app inside a secure container. For more information, see the [Application Isolation with Containers](#containers) section.
 
-Firewall rule inside the DEAs should be configured to ensure that all packets from inside are dropped or rejected.
-
-The manifest templates in cf-release implement these networking rules.
+* Cloud Foundry operators can configure network traffic rules to control inbound communication to and outbound communication from an app. For more information, see the [Network Traffic Rules](#network-traffic) section.
 
 ## <a id='containers'></a>Application Isolation with Containers ##
 
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a Warden container, and are blocked from directly interacting with other applications or other Cloud Foundry system components. Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the Load Balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system, while host-based firewalls restrict applications from establishing local network connections. This restrictive operating environment is designed for security and stability.
+Each application deployed to Cloud Foundry runs within its own self-contained environment, a Linux [Warden container](./architecture/warden.html). Cloud Foundry operators can configure whether contained applications can directly interact with other applications or other Cloud Foundry system components.
 
-Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host should not be aware of each others presence. This means that these containers are given their own Process ID (PID), namespace, network namespace, and mount namespace.
+Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the load balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system. Each Warden container also provides a dedicated virtual network interface that establishes IP filtering rules for the app, which are derived from network traffic rules. This restrictive operating environment is designed for security and stability.
 
-Resource control is managed through the use of Control Groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt)). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
+Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host cannot detect each other. This means that each container is given its own Process ID (PID), namespace, network namespace, and mount namespace.
+
+Resource control is managed using Linux Control Groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt)). Each container is placed in its own cgroup, which requires the container to use a fair share of CPU compared to the relative CPU share of other containers. This placement also determines the maximum amount of memory the container may use.
 
 ### <a id='networking'></a>Networking ###
 
-Every container is assigned a network interface which is one side of a virtual ethernet pair created on the host. The other side of the virtual ethernet pair is only visible on the host, from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic from and to the container can be forwarded using NAT. Additionally, all traffic can be filtered and shaped as needed, using readily available tools such as iptables.
+The [DEA](./architecture/execution-agent.html) for each Warden container assigns the container a dedicated virtual network interface. This interface is one side of a virtual ethernet pair created on the host VM. The other side of the virtual ethernet pair is only visible on the host from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic to and from the container is forwarded using NAT. Operators can configure global and container-specific [network traffic rules](../adminguide/app-sec-groups.html#eval-sequence) that become Linux iptable rules to filter and log outbound network traffic.
 
-### <a id='filesystems'></a>Filesystem ###
+## <a id='logging'></a>Security Event Logging and Auditing ##
 
-Every container gets a private root filesystem. This filesystem is created by stacking a read-only filesystem and a read-write filesystem. This is implemented by using aufs on Ubuntu versions from 10.04 up to 11.10, and overlayfs on Ubuntu 12.04.
+For operators, Cloud Foundry provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform.
+Additionally, operators can redirect Cloud Foundry component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
 
-The read-only filesystem contains the minimal set of Ubuntu packages and Warden-specific modifications common to all containers. The read-write filesystem stores files overriding container-specific settings when necessary. Because all writes are applied to the read-write filesystem, containers can share the same read-only base filesystem.
+For users, Cloud Foundry records an audit trail of all relevant API invocations of an app. The CLI command `cf events` returns this information.
 
-The read-write filesystem is created by formatting a large sparse file. Because the size of this file is fixed, the filesystem that it contains cannot grow beyond this initial size.
+## <a id='recommendations'></a>Running a Secure Deployment ##
 
-## <a id='logging'></a>Security Event Logging / Auditing ##
+To help run a secure deployment, <%=vars.pcf_rec%> recommends the following:
 
-BOSH provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with BOSH.
+* Configure UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.
 
-The cf-release provides a way to redirect Cloud Foundry component logs to a standard syslog server through a property in cf-release for syslog server: `syslog_aggregator`.
+* Deploy within a VLAN that limits network traffic to individual VMs. This reduce the possibility of unauthorized access to the VMs within your BOSH-managed cloud.
 
-## <a id='recommendations'></a>Tips for Running a Secure Deployment ##
+* Enable HTTPS for applications and SSL database connections to protect sensitive data transmitted to and from applications.
 
-* Ensure that your jumpbox is secure.
+* Ensure that the jumpbox is secure, along with the load balancer and NAT VM.
 
-* In order to reduce the possibility of unauthorized access to the VMs within your BOSH managed cloud it is recommended that you deploy within a VLAN that limits network traffic to individual VMs.
+* Encrypt stored files and data within databases to meet your data security requirements. Deploy using industry standard encryption and the best practices for your language or framework.
 
-* The firewall rules that prevent applications inside a Warden container from communicating with system components are configured in the BOSH manifest with the `allow_networks` and `deny_networks` properties.
+* Prohibit promiscuous network interfaces on the trusted network.
 
-* You can configure UAA clients and users in the BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.
+* Review and monitor data sharing and security practices with third-party services that you use to provide additional functionality to your application.
 
-* Promiscuous network interfaces should not be allowed on the trusted network.
+* Store SSH keys securely to prevent disclosure, and promptly replace lost or compromised keys.
 
-* Encrypt Data in Transit: Enable HTTPS for applications and SSL database connections to protect sensitive data transmitted to and from applications.
+* Use Cloud Foundry’s RBAC model to restrict your users’ access to only what is necessary to complete their tasks.
 
-* Encrypt Sensitive Data at Rest: Customers with sensitive data can encrypt stored files and data within databases to meet their data security requirements. Data encryption can be deployed using industry standard encryption and the best practices for your language or framework.
-
-* Authentication: To prevent unauthorized account access use a strong passphrase for both your Cloud Foundry user account and SSH keys, store SSH keys securely to prevent disclosure, replace keys if lost or disclosed, and use Cloud Foundry’s RBAC model to restrict user access to only what is necessary to complete their tasks.
-
-* Third-Party Services: In developing your application on Cloud Foundry, you may choose to use third party services for added functionality. Review and monitor data sharing and security practices with these providers.
+* Use a strong passphrase for both your Cloud Foundry user account and SSH keys.
