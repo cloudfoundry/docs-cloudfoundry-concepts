@@ -1,5 +1,5 @@
 ---
-title: Cloud Foundry Security
+title: Understanding Cloud Foundry Security
 ---
 
 <%=vars.pcf_rec%> protects customers from security threats by applying security controls and by isolating customer applications and data.
@@ -12,13 +12,13 @@ Cloud Foundry:
 
 * Prevents possible denial of service attacks through resource starvation.
 
-Before you read this document you may want to become familiar with the [general system architecture](./architecture/index.html).
+Before you read this document you might want to become familiar with the [general system architecture](./architecture/index.html).
 
 ## <a id='system-boundaries'></a>System Boundaries and Access ##
 
 As the image below shows, in a typical deployment of Cloud Foundry, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more Cloud Foundry routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
 
-<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you also install a NAT VM for outbound requests and jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
+<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
   <%= image_tag("images/security/sysbound1.png") %>
 
@@ -128,6 +128,10 @@ Resource control is managed using Linux Control Groups ([cgroups](https://www.ke
 ### <a id='networking'></a>Networking ###
 
 The [DEA](./architecture/execution-agent.html) for each Warden container assigns the container a dedicated virtual network interface. This interface is one side of a virtual ethernet pair created on the host VM. The other side of the virtual ethernet pair is only visible on the host from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic to and from the container is forwarded using NAT. Operators can configure global and container-specific <%=vars.net_traffic_rules%> that become Linux iptable rules to filter and log outbound network traffic.
+
+### <a id='filesystem'></a>Filesystem ###
+
+Every container includes a private root filesystem. For Linux containers, this filesystem is created by stacking a read-only base filesystem and a container-specific read-write filesystem, commonly known as an overlay filesystem. The read-only filesystem contains the minimal set of Linux packages and Warden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write filesystem. The read-write filesystem is unique to each container and is created by formatting a large sparse file of a fixed size. This fixed size prevents the read-write filesystem from overflowing into unallocated space.
 
 ## <a id='logging'></a>Security Event Logging and Auditing ##
 
