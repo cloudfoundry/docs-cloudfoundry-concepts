@@ -10,7 +10,7 @@ This topic also describes the requirements for a zero downtime deployment. A zer
 
 This section describes the required configurations for achieving a zero downtime deployment.
 
-####Application instances####
+####Application Instances####
 
 Deploy at least two instances of every application.
 
@@ -39,7 +39,7 @@ You can scale platform capacity vertically by adding memory and disk, or horizon
 
 <%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
 
-### <a id='tradeoffs'></a>Tradeoffs and benefits ###
+### <a id='tradeoffs'></a>Trade-offs and Benefits ###
 
 The nature of a particular application should determine whether you scale vertically or horizontally.
 
@@ -74,7 +74,7 @@ To scale the Cloud Foundry platform for high availability, the actions you take 
 
 <p class="note"><strong>Note</strong>: Data services may have single points of failure depending on their configuration.</p>
 
-### <a id='processes'></a>Scalable processes ###
+### <a id='processes'></a>Scalable Processes ###
 
 You can think of components that support multiple instances as scalable processes.
 If you are already scaling the number of instances of such components to increase platform capacity, you need to scale further to achieve the redundancy required for high availability.
@@ -137,7 +137,7 @@ If you are already scaling the number of instances of such components to increas
 	</tr>
 </table>
 
-### <a id='single-node'></a>Single-node processes ###
+### <a id='single-node'></a>Single-node Processes ###
 
 You can think of components that do not support multiple instances as single-node processes.
 Since you cannot increase the number of instances of these components, you should choose a different strategy for dealing with events that degrade availability.
