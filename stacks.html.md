@@ -102,4 +102,4 @@ last uploaded: Wed Apr 8 23:40:57 UTC 2015
 #0  running  2015-04-08 04:41:54 PM  0.0%  57.3M of 1G  128.8M of 1G
 ```
 
-For API information, review the Stacks section of the [Cloud Foundry API Documentation](http://www.google.com/url?q=http%3A%2F%2Fapidocs.cloudfoundry.org%2F205%2F&sa=D&sntz=1&usg=AFQjCNHnOnqRn9IAYBhGl0LxCr49qLwwGQ).
+For API information, review the Stacks section of the [Cloud Foundry API Documentation](http://apidocs.cloudfoundry.org/205/).
