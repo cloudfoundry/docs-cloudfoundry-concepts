@@ -4,17 +4,17 @@ title: Stacks
 
 A stack is a prebuilt root filesystem (rootfs) which works in tandem with a buildpack and is used to support running applications.
 
-<p class="note"><strong>Note</strong>:You must ensure compatibility for buildpacks on the stacks they are running against.</p>
+<p class="note"><strong>Note</strong>: You must ensure compatibility for buildpacks on the stacks they are running against.</p>
 
 ##Building Stacks
 
-DEAs can support multiple stacks.The scripts for building the available Cloud Foundry stacks (and later for building other stacks) reside in the [stacks](http://github.com/cloudfoundry/stacks) project.
+DEAs can support multiple stacks. The scripts for building the available Cloud Foundry stacks (and later for building other stacks) reside in the [stacks](http://github.com/cloudfoundry/stacks) project.
 
 ##Available Stacks
 
 ###The cflinuxfs2 Stack
 
-The cflinuxfs2 stack is derived from Ubuntu Trusty 14.04, and will be the new default stack for newly pushed applications.
+The cflinuxfs2 stack is derived from Ubuntu Trusty 14.04.
 
 ###The lucid64 stack
 
@@ -102,4 +102,4 @@ last uploaded: Wed Apr 8 23:40:57 UTC 2015
 #0  running  2015-04-08 04:41:54 PM  0.0%  57.3M of 1G  128.8M of 1G
 ```
 
-For API information, review the Stacks section of the [Cloud Foundry API Documentation](http://apidocs.cloudfoundry.org/205/).
+For API information, review the Stacks section of the [Cloud Foundry API Documentation](http://apidocs.cloudfoundry.org).
