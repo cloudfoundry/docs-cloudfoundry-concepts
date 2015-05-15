@@ -125,6 +125,11 @@ Isolation is achieved by namespacing kernel resources that would otherwise be sh
 
 Resource control is managed using Linux Control Groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt)). Each container is placed in its own cgroup, which requires the container to use a fair share of CPU compared to the relative CPU share of other containers. This placement also determines the maximum amount of memory the container may use.
 
+<p class="note">
+	<strong>Note</strong>
+	: The need to namespace kernel resources to maintain container isolation currently rules out using RedHat Linux OS for stemcells, as.... <br>[[ more info here? is there a one-sentence version of why RHEL doesn't work? Maybe a list of supported Linux distributions?--is RHEL the only one that doesn't work?) ]]
+</p>
+
 ### <a id='networking'></a>Networking ###
 
 The [DEA](./architecture/execution-agent.html) for each Warden container assigns the container a dedicated virtual network interface. This interface is one side of a virtual ethernet pair created on the host VM. The other side of the virtual ethernet pair is only visible on the host from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic to and from the container is forwarded using NAT. Operators can configure global and container-specific <%=vars.net_traffic_rules%> that become Linux iptable rules to filter and log outbound network traffic.
