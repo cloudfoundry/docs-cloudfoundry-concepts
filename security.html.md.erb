@@ -127,7 +127,7 @@ Resource control is managed using Linux Control Groups ([cgroups](https://www.ke
 
 <p class="note">
 	<strong>Note</strong>
-	: The need to namespace kernel resources to maintain container isolation currently rules out using RedHat Linux OS for stemcells. <br>[[ more info here? is there a one-sentence version of why RHEL doesn't work? Maybe a list of supported Linux distributions?--is RHEL the only one that doesn't work?) ]]
+	: BOSH does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
 </p>
 
 ### <a id='networking'></a>Networking ###
