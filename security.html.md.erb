@@ -126,8 +126,7 @@ Isolation is achieved by namespacing kernel resources that would otherwise be sh
 Resource control is managed using Linux Control Groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt)). Each container is placed in its own cgroup, which requires the container to use a fair share of CPU compared to the relative CPU share of other containers. This placement also determines the maximum amount of memory the container may use.
 
 <p class="note">
-	<strong>Note</strong>
-	: BOSH does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
+	<strong>Note</strong>: BOSH does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
 </p>
 
 ### <a id='networking'></a>Networking ###
