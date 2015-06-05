@@ -63,12 +63,20 @@ $ bundle exec bin/warden
 
 ## Implementation for Linux
 
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a Linux Warden container. Cloud Foundry operators can configure whether contained applications can or cannot directly interact with other applications or other Cloud Foundry system components. 
+Each application deployed to Cloud Foundry runs within its own self-contained environment, a Linux Warden container. Cloud Foundry operators can configure whether contained applications can or cannot directly interact with other applications or other Cloud Foundry system components.
 
 Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the Load Balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system. Each Warden container also provides a dedicated virtual network interface that establishes IP filtering rules for the app, which are derived from network traffic rules. This restrictive operating environment is designed for security and stability.
 
 Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host are not aware of each other’s presence. This means that these containers are given their own Process ID (PID), namespace, network namespace, and mount namespace.
 Resource control is managed through the use of Linux  Control Groups ([cgroups](http://kernel.org/doc/Documentation/cgroups/cgroups.txt)). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
+
+### CPU
+
+Each container is placed in its own cgroup, which requires the container to use a fair share of CPU compared to the relative CPU share of other containers.
+
+CPU shares do not work as direct percentages of total CPU usage. Instead, they provide a relative share of CPU usage in a given time window. For example, if cgroup A has 10 shares and cgroup B has 30, if their processes are both requesting lots of CPU usage, the kernel will grant 10/40 = 25% time to A and 30/40 = 75% time to B. If B is idle, A may receive up to all the CPU. Shares per cgroup range from 2 to 1024, with 1024 the default. Both Diego apps and DEA apps scale the number of allocated shares linearly with the amount of memory, with an app instance requesting 8G of memory getting that upper limit of 1024 shares. Diego also guarantees a minimum of 10 shares per app instance.
+
+This prevents oversubscription by a single application and the starving of CPU to other containers.
 
 ### Networking
 
