@@ -16,17 +16,17 @@ Some descriptions include links to more detailed documentation.
 
 ![Cloud Foundry Architecture](../images/cf_architecture_block.png)
 
-## <a id="router"></a>Router ##
+## <a id='router'></a>Router ##
 
 The [router](./router.html) routes incoming traffic to the appropriate
 component, usually the Cloud Controller or a running application on a DEA node.
 
-## <a id="uaa"></a> Authentication ##
+## <a id='uaa'></a> Authentication ##
 
 The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to
 provide identity management.
 
-## <a id="cc"></a> Cloud Controller ##
+## <a id='cc'></a> Cloud Controller ##
 
 The [Cloud Controller](./cloud-controller.html) is responsible for managing the
 lifecycle of applications.
@@ -38,7 +38,7 @@ application.
 The Cloud Controller also maintains records of orgs, spaces, services,
 service instances, user roles, and more.
 
-## <a id="hm9k"></a> HM9000 ##
+## <a id='hm9k'></a> HM9000 ##
 
 HM9000 has four core responsibilities:
 
@@ -47,12 +47,16 @@ HM9000 has four core responsibilities:
 * Reconcile the actual state of applications with their expected state. For instance, if fewer than expected instances are running, HM9000 will instruct the Cloud Controller to start the appropriate number of instances.
 * Direct Cloud Controller to take action to correct any discrepancies in the state of applications.
 
-HM9000 is essential to ensuring that apps running on Cloud Foundry remain available.
-HM9000 restarts applications whenever the DEA running an app shuts down for any reason, when Warden kills the app because it violated a quota, or when the application process exits with a non-zero exit code.
+HM9000 is essential to ensuring that apps running on Cloud Foundry remain
+available.
+HM9000 restarts applications whenever the DEA running an app shuts down for any
+reason, when Warden kills the app because it violated a quota, or when the
+application process exits with a non-zero exit code.
 
-Refer to the [HM9000 readme](https://github.com/cloudfoundry/hm9000) for more information about the HM9000 architecture.
+Refer to the [HM9000 readme](https://github.com/cloudfoundry/hm9000) for more
+information about the HM9000 architecture.
 
-## <a id="dea"></a> Application Execution (DEA) ##
+## <a id='dea'></a> Application Execution (DEA) ##
 
 The [Droplet Execution Agent](./execution-agent.html) manages application
 instances, tracks started instances, and broadcasts state messages.
@@ -61,7 +65,7 @@ Application instances live inside [Warden](./warden.html) containers.
 Containerization ensures that application instances run in isolation, get their
 fair share of resources, and are protected from noisy neighbors.
 
-## <a id="blob"></a> Blob Store ##
+## <a id='blob'></a> Blob Store ##
 
 The blob store holds:
 
@@ -69,20 +73,20 @@ The blob store holds:
 * Buildpacks
 * Droplets
 
-## <a id="broker"></a> Service Brokers ##
+## <a id='broker'></a> Service Brokers ##
 
-Applications typically depend on [services](../../services/) such as databases or
-third-party SaaS providers.
+Applications typically depend on <%= vars.services %> such as databases
+or third-party SaaS providers.
 When a developer provisions and binds a service to an application, the service
 broker for that service is responsible for providing the service instance.
 
-## <a id="nats"></a> Message Bus ##
+## <a id='nats'></a> Message Bus ##
 
 Cloud Foundry uses [NATS](./messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
 communication between components.
 
-## <a id="metrics"></a> Logging and Statistics ##
+## <a id='metrics'></a> Logging and Statistics ##
 
 The metrics collector gather metrics from the components.
 Operators can use this information to monitor an instance of Cloud Foundry.
