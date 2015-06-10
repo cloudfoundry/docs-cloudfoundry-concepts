@@ -2,7 +2,8 @@
 title: Understanding Cloud Foundry Security
 ---
 
-<%=vars.pcf_rec%> protects customers from security threats by applying security controls and by isolating customer applications and data.
+<%=vars.pcf_rec%> protects customers from security threats by applying security 
+controls and by isolating customer applications and data.
 
 Cloud Foundry:
 
@@ -12,7 +13,7 @@ Cloud Foundry:
 
 * Prevents possible denial of service attacks through resource starvation.
 
-Before you read this document you might want to become familiar with the [general system architecture](./architecture/index.html).
+Before you read this document, you might want to review the [general system architecture](./architecture/index.html).
 
 ## <a id='system-boundaries'></a>System Boundaries and Access ##
 
@@ -89,7 +90,7 @@ Applications that users deploy to Cloud Foundry exist within a space. Spaces exi
 
 ## <a id='service-broker'></a>Security for Service Broker Integration ##
 
-The Cloud Controller [authenticates](../services/api.html) every request with the Service Broker API using HTTP or HTTPS, depending on which protocol you specify during broker registration. The Cloud Controller rejects any broker registration that does not contain a username and password.
+The Cloud Controller authenticates every request with the Service Broker API using HTTP or HTTPS, depending on which protocol that you specify during broker registration. The Cloud Controller rejects any broker registration that does not contain a username and password.
 
 Service instances bound to an app contain credential data. Users specify the binding credentials for [user-provided service instances](../devguide/services/user-provided.html), while third-party brokers specify the binding credentials for [managed service instances](../devguide/services/managed.html). The VCAP_SERVICES environment variable contains credential information for any service bound to an app. Cloud Foundry constructs this value from encrypted data that it stores in the Cloud Controller Database (CCDB).
 
@@ -164,6 +165,6 @@ To help run a secure deployment, <%=vars.pcf_rec%> recommends the following:
 
 * Store SSH keys securely to prevent disclosure, and promptly replace lost or compromised keys.
 
-* Use Cloud Foundry’s RBAC model to restrict your users’ access to only what is necessary to complete their tasks.
+* Use Cloud Foundry’s RBAC model to restrict your users' access to only what is necessary to complete their tasks.
 
 * Use a strong passphrase for both your Cloud Foundry user account and SSH keys.
