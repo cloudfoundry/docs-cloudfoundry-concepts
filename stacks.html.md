@@ -16,10 +16,6 @@ DEAs can support multiple stacks. The scripts for building the available Cloud F
 
 The cflinuxfs2 stack is derived from Ubuntu Trusty 14.04.
 
-###The lucid64 stack
-
-The lucid64 stack is derived from Ubuntu Lucid 10.04. This stack will reach end of support for security fixes on April 29th, 2015.
-
 ##CLI Commands
 
 Use the `cf stacks` command to list all the stacks available in a deployment.
@@ -30,7 +26,6 @@ Getting stacks in org My-Org / space development as developer@sample-app.com...
 OK
 
 name         description
-lucid64      Ubuntu 10.04 on x86-64
 cflinuxfs2   Cloud Foundry Linux-based filesystem
 ```
 
