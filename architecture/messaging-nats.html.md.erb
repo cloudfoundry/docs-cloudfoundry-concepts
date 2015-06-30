@@ -5,7 +5,7 @@ description: Lightweight publish-subscribe and distributed queueing messaging sy
 
 This information was adapted from the [NATS](https://github.com/derekcollison/nats) README. NATS is a lightweight publish-subscribe and distributed queueing messaging system written in Ruby.
 
-## Getting Started
+## <a id='install'></a>Install NATS ##
 
 <pre class="terminal">
 $ gem install nats
@@ -16,7 +16,7 @@ $ nats-sub foo &
 $ nats-pub foo 'Hello World!'
 </pre>
 
-## Basic Usage
+## <a id='basic-usage'></a>Basic Usage ##
 
 ~~~ruby
 require "nats/client"
@@ -45,7 +45,7 @@ NATS.start do
 end
 ~~~
 
-## Wildcard Subscriptions
+## <a id='wildcard'></a>Wildcard Subscriptions ##
 
 ~~~ruby
 # "*" matches any token, at any level of the subject.
@@ -58,7 +58,7 @@ NATS.subscribe('*.bar.*')   { |msg, reply, sub| puts "Msg received on [#{sub}] :
 NATS.subscribe('foo.>') { |msg, reply, sub| puts "Msg received on [#{sub}] : '#{msg}'" }
 ~~~
 
-## Queues Groups
+## <a id='queues-groups'></a>Queues Groups ##
 
 ~~~ruby
 # All subscriptions with the same queue name will form a queue group
@@ -68,7 +68,8 @@ NATS.subscribe('foo.>') { |msg, reply, sub| puts "Msg received on [#{sub}] : '#{
 NATS.subscribe(subject, :queue => 'job.workers') { |msg| puts "Received '#{msg}'" }
 ~~~
 
-## Advanced Usage
+## <a id='advanced-usage'></a>Advanced Usage ##
+
 ~~~ruby
 # Publish with closure, callback fires when server has processed the message
 NATS.publish('foo', 'You done?') { puts 'msg processed!' }
