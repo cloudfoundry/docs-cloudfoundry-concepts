@@ -8,21 +8,21 @@ The primary goal of Warden is to provide a simple API for managing isolated envi
 These isolated environments, or _containers_, can be limited in terms of CPU usage, memory usage, disk usage, and network access.
 The only currently supported OS is Linux.
 
-## Components
+## <a id='components'></a>Components ##
 
-This repository contains the following components:
+The [Warden](https://github.com/cloudfoundry/warden) repository in GitHub contains the following components:
 
-* `warden`: server
-* `warden-protocol`: protocol definition, used by both the server and clients
-* `warden-client`: client (Ruby)
-* `em-warden-client`: client (Ruby's EventMachine)
+* `warden`: Server
+* `warden-protocol`: Protocol definition, used by both the server and clients
+* `warden-client`: Client (Ruby)
+* `em-warden-client`: Client (Ruby's EventMachine)
 
-## Getting Started
+## <a id='intro'></a>Getting Started ##
 
-This short guide assumes Ruby 1.9 and Bundler are already available.
+This guide assumes Ruby 1.9 and Bundler are already available.
 Ensure that Ruby 1.9 has GNU readline library support through the 'libreadline-dev' package and zlib support through the 'zlib1g-dev' package.
 
-#### Install the right kernel
+### <a id='kernel'></a>Install Kernel ###
 
 If you are running Ubuntu 10.04 (Lucid), make sure the backported Natty kernel is installed.
 After installing, reboot the system before continuing.
@@ -31,66 +31,121 @@ After installing, reboot the system before continuing.
 $ sudo apt-get install -y linux-image-generic-lts-backport-natty
 </pre>
 
-#### Install dependencies
+### <a id='kernel'></a>Install Dependencies ###
 
 <pre class="terminal">
 $ sudo apt-get install -y build-essential debootstrap
 </pre>
 
-#### Setup Warden
+### <a id='set-up-warden'></a>Set up Warden ###
 
-Run the setup routine, which compiles the C code bundled with Warden and sets up the base file system for Linux containers.
+Run the `setup` routine. The `setup` routine compiles the C code bundled with Warden and sets up the base file system for Linux containers.
 
 <pre class="terminal">
 $ sudo bundle exec rake setup[config/linux.yml]
 </pre>
 
-<p class="note"><strong>Note</strong>: If <code>sudo</code> complains that <code>bundle</code> cannot be found, try <code>sudo env PATH=$PATH</code> to pass your current <code>PATH</code> to the <code>sudo</code> environment.</p>
+<p class="note"><strong>Note</strong>: If <code>sudo</code> complains that <code>bundle</code> cannot be found, use <code>sudo env PATH=$PATH</code> to pass your current <code>PATH</code> to the <code>sudo</code> environment.</p>
 
-The setup routine sets up the file system for the containers at the directory path specified under the key `server -> container_rootfs_path` in the config file `config/linux.yml`.
+The `setup` routine sets up the file system for the containers at the directory path specified under the key `server -> container_rootfs_path` in the config file `config/linux.yml`.
 
-#### Run Warden
+### <a id='run-warden'></a>Run Warden ###
 
 <pre class="terminal">
 $ sudo bundle exec rake warden:start[config/linux.yml]
 </pre>
 
-#### Interact with Warden
+### <a id='interact--warden'></a>Interact with Warden ###
 
 <pre class="terminal">
 $ bundle exec bin/warden
 </pre>
 
-## Implementation for Linux
+## <a id='linux'></a>Linux Implementation ##
 
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a Linux Warden container. Cloud Foundry operators can configure whether contained applications can or cannot directly interact with other applications or other Cloud Foundry system components.
+Each application deployed to Cloud Foundry runs within its own self-contained
+environment, a Linux Warden container.
+Cloud Foundry operators can configure whether contained applications can or
+cannot directly interact with other applications or other Cloud Foundry system
+components.
 
-Applications are typically allowed to invoke other applications in Cloud Foundry by leaving the system and re-entering through the Load Balancer positioned in front of the Cloud Foundry routers. The Warden containers isolate processes, memory, and the file system. Each Warden container also provides a dedicated virtual network interface that establishes IP filtering rules for the app, which are derived from network traffic rules. This restrictive operating environment is designed for security and stability.
+Applications are typically allowed to invoke other applications in Cloud Foundry
+by leaving the system and re-entering through the Load Balancer positioned in
+front of the Cloud Foundry routers.
+The Warden containers isolate processes, memory, and the file system.
+Each Warden container also provides a dedicated virtual network interface that
+establishes IP filtering rules for the app, which are derived from network
+traffic rules.
+This restrictive operating environment is designed for security and stability.
 
-Isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host are not aware of each other’s presence. This means that these containers are given their own Process ID (PID), namespace, network namespace, and mount namespace.
-Resource control is managed through the use of Linux  Control Groups ([cgroups](http://kernel.org/doc/Documentation/cgroups/cgroups.txt)). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
+Isolation is achieved by namespacing kernel resources that would otherwise be
+shared.
+The intended level of isolation is set such that multiple containers present on
+the same host are not aware of each other's presence.
+This means that these containers are given their own Process ID (PID),
+namespace, network namespace, and mount namespace.
 
-### CPU
+Resource control is managed through the use of Linux Control Groups
+([cgroups](http://kernel.org/doc/Documentation/cgroups/cgroups.txt)).
+Every container is placed in its own control group, where it is configured to
+use a fair share of CPU compared to other containers and their relative CPU
+share, and the maximum amount of memory it may use.
 
-Each container is placed in its own cgroup, which requires the container to use a fair share of CPU compared to the relative CPU share of other containers.
+### <a id='cpu'></a>CPU ###
 
-CPU shares do not work as direct percentages of total CPU usage. Instead, they provide a relative share of CPU usage in a given time window. For example, if cgroup A has 10 shares and cgroup B has 30, if their processes are both requesting lots of CPU usage, the kernel will grant 10/40 = 25% time to A and 30/40 = 75% time to B. If B is idle, A may receive up to all the CPU. Shares per cgroup range from 2 to 1024, with 1024 the default. Both Diego apps and DEA apps scale the number of allocated shares linearly with the amount of memory, with an app instance requesting 8G of memory getting that upper limit of 1024 shares. Diego also guarantees a minimum of 10 shares per app instance.
+Each container is placed in its own cgroup, which requires the container to use
+a fair share of CPU compared to the relative CPU share of other containers.
 
-This prevents oversubscription by a single application and the starving of CPU to other containers.
+CPU shares do not work as direct percentages of total CPU usage.
+Instead, they provide a relative share of CPU usage in a given time window.
 
-### Networking
+For example, if cgroup A has 10 shares and cgroup B has 30, and if their
+processes are both requesting lots of CPU usage, the kernel will grant 10/40 =
+25% time to A and 30/40 = 75% time to B.
 
-The DEA for each Warden container assigns a dedicated virtual network interface that is one side of a virtual ethernet pair created on the host. The other side of the virtual ethernet pair is only visible on the host from the root namespace. The pair is configured to use IPs in a small and static subnet. Traffic to and from the container is forwarded using NAT. Operators can configure global and container-specific network traffic rules that become Linux iptable rules to filter and log outbound network traffic.
+If B is idle, A may receive up to all the CPU.
+Shares per cgroup range from 2 to 1024, with 1024 the default.
+Both Diego apps and DEA apps scale the number of allocated shares linearly with
+the amount of memory, with an app instance requesting 8G of memory getting the
+upper limit of 1024 shares.
+Diego also guarantees a minimum of 10 shares per app instance.
 
-### Filesystem
+This prevents oversubscription by a single application and the starving of CPU
+to other containers.
 
-Every container gets a private root filesystem. For Linux containers, this filesystem is created by stacking a read-only base filesystem and a container-specific read-write filesystem, commonly known as an overlay filesystem. The read-only filesystem contains the minimal set of Linux packages and Warden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write filesystem. The read-write filesystem is unique to each container and is created by formatting a large sparse file of a fixed size. This fixed size prevents the read-write filesystem from overflowing into unallocated space.
+### <a id='linux'></a>Networking ###
 
-### Difference with LXC
+The DEA for each Warden container assigns a dedicated virtual network interface
+that is one side of a virtual ethernet pair created on the host.
+The other side of the virtual ethernet pair is only visible on the host from the
+root namespace.
+The pair is configured to use IPs in a small and static subnet.
+Traffic to and from the container is forwarded using NAT.
+Operators can configure global and container-specific network traffic rules that
+become Linux iptable rules to filter and log outbound network traffic.
+
+### <a id='filesystem'></a>Filesystem ###
+
+Every container receives a private root filesystem.
+For Linux containers, this filesystem is created by stacking a read-only base
+filesystem and a container-specific read-write filesystem, commonly known as an
+overlay filesystem.
+
+The read-only filesystem contains the minimal set of Linux packages and
+Warden-specific modifications common to all containers.
+Containers can share the same read-only base filesystem because all writes are
+applied to the read-write filesystem.
+
+The read-write filesystem is unique to each container and is created by
+formatting a large sparse file of a fixed size.
+This fixed size prevents the read-write filesystem from overflowing into
+unallocated space.
+
+### <a id='lxc-difference'></a>Difference with LXC ###
 
 The _Linux Containers_ or _LXC_ project has goals that are similar to those of Warden: isolation and resource control.
 They both use the same Linux kernel primitives to achieve their goals.
-In fact, early versions of Warden even **used LXC**.
+Early versions of Warden used LXC.
 
 The major difference between the two projects is that LXC is explicitly tied to Linux, while you can implement Warden backends for any operating system that implements some way of isolating environments.
 It is a daemon that manages containers and can be controlled via a simple API rather than a set of tools that are individually executed.
@@ -99,16 +154,16 @@ While the Linux backend for Warden was initially implemented with LXC, the curre
 Because Warden relies on a very small subset of the functionality that LXC offers, we decided to create a tool that only implements the functionality we need in under 1k LOC of C code.
 This tool executes preconfigured hooks at different stages of the container start process, such that required resources can be set up without worrying about concurrency issues. These hooks make the start process more transparent, allowing for easier debugging when parts of this process are not working as expected.
 
-## Container Lifecycle
+## <a id='container-lifecycle'></a>Container Lifecycle ##
 
 Warden manages the entire lifecycle of containers.
 The API allows users to create, configure, use, and destroy containers.
 Additionally, Warden can automatically clean up unused containers when needed.
 
-### Create
+### <a id='create'></a>Create ###
 
 Every container is identified by its _handle_, which Warden returns upon creating it.
-It is a hexadecimal representation of the IP address that is allocated for the container.
+The handle is a hexadecimal representation of the IP address that is allocated for the container.
 Regardless of whether the backend providing the container functionality supports networking, Warden allocates an IP address to identify a container.
 
 Once a container is created and its handle is returned to the caller, it is immediately ready for use.
@@ -118,28 +173,27 @@ If Warden is configured to clean up containers after activity, it will use the n
 If the number of connections referencing the container drops to zero, the container will automatically be destroyed after a preconfigured interval.
 If in the mean time the container is referenced again, this timer is cancelled.
 
-### Use
+### <a id='use'></a>Use ###
 
 The container can be used by running arbitrary scripts, copying files in and out, modifying firewall rules and modifying resource limits.
-Refer to the "Interface" section for a complete list of operations.
+Refer to the [Interface](#interface) section for a complete list of operations.
 
-### Destroy
+### <a id='destroy'></a>Destroy ###
 
-When a container is destroyed -- either per user request, or automatically after being idle -- Warden first kills all unprivileged processes running inside the container.
+When a container is destroyed, either per user request, or automatically after being idle, Warden first kills all unprivileged processes running inside the container.
 These processes first receive a `TERM` signal, followed several seconds later by a `KILL` signal if they have not yet exited.
 When these processes have terminated, Warden sends a `KILL` to the root of the container process tree.
 Once all resources the container used have been released, its files are removed and it is considered destroyed.
 
-## Networking
+## <a id='networking'></a>Networking ##
 
-
-## Interface
+### <a id='interface'></a>Interface ###
 
 Warden uses a line-based JSON protocol to communicate with its clients, which it does over a Unix socket located at `/tmp/warden.sock` by default.
 Each command invocation is formatted as a JSON array, where the first element is the command name and subsequent elements can be any JSON object.
 Warden responds to the following commands:
 
-### create [CONFIG]
+#### create [CONFIG] ####
 
 Creates a new container.
 
@@ -147,7 +201,7 @@ Returns the container handle, which is used to identify the container.
 
 The optional `CONFIG` parameter is a hash that specifies configuration options used during container creation. The supported options are:
 
-#### bind\_mounts
+##### bind\_mounts #####
 
 If supplied, this specifies a set of paths to be bind mounted inside the container.
 The value must be an array. The elements in this array specify the bind mounts to execute, and are executed in order.
@@ -169,16 +223,16 @@ Every element must be of the form:
 ]
 ~~~
 
-#### grace\_time
+##### grace\_time #####
 
 If specified, this setting overrides the default time period during which no client references a container before the container is destroyed.
 The value can either be the number of seconds as floating point number or integer, or the `null` value to completely disable the grace time.
 
-#### disk\_size\_mb
+##### disk\_size\_mb #####
 
 If specified, this setting overrides the default size of the container scratch filesystem. The value is expected to be an integer number.
 
-### spawn HANDLE SCRIPT [OPTS]
+#### spawn HANDLE SCRIPT [OPTS] ####
 
 Run the script `SCRIPT` in the container identified by `HANDLE`.
 
@@ -187,25 +241,25 @@ Also, the connection that issued the command may disconnect and reconnect later,
 
 The optional `OPTS` parameter is a hash that specifies options modifying the command being run. The supported options are:
 
-#### privileged
+##### privileged #####
 
 If true, this specifies that the script should be run as root.
 
-### link HANDLE JOB\_ID
+#### link HANDLE JOB\_ID ####
 
 Reap the script identified by `JOB_ID`, running in the container identified by `HANDLE`.
 
 Returns a three-element tuple containing the integer exit status, a string containing its `STDOUT` and a string containing its `STDERR`.
 These elements may be `null` when they cannot be determined (e.g. the script could not be executed, was killed, etc.).
 
-### stream HANDLE JOB\_ID
+#### stream HANDLE JOB\_ID ####
 
 Stream `STDOUT` and `STDERR` of scripts identified by `JOB_ID`, running in the container identified by `HANDLE`.
 
 Returns a two-element tuple containing the type of stream: `STDOUT` or `STDERR` as the first element, and a chunk of the stream as the second element.
 Returns an empty tuple when no more data is available in the stream.
 
-### limit HANDLE (mem) [VALUE]
+#### limit HANDLE (mem) [VALUE] ####
 
 Set or get resource limits for the container identified by `HANDLE`.
 
@@ -213,20 +267,20 @@ The following resources can be limited:
 
 * The memory limit is specified in number of bytes. It is enforced using the control group associated with the container. When a container exceeds this limit, the kernel kills one or more of its processes. Additionally, the Warden is notified that an OOM happened. The Warden subsequently tears down the container.
 
-### net HANDLE in
+#### net HANDLE in ####
 
 Forward a port on the external interface of the host to the container identified by `HANDLE`.
 
 Returns the port number that is mapped to the container. This port number is the same on the inside of the container.
 
-### net HANDLE out ADDRESS[/MASK][:PORT]
+#### net HANDLE out ADDRESS[/MASK][:PORT] ####
 
 Allow traffic from the container identified by `HANDLE` to the network address specified by `ADDRESS`.
 Additionally, the address may be masked to allow a network of addresses, and a port to only allow traffic to a specific port.
 
 Returns `ok`.
 
-### copy HANDLE in SRC\_PATH DST\_PATH
+#### copy HANDLE in SRC\_PATH DST\_PATH ####
 
 Copy the contents at `SRC_PATH` on the host to `DST_PATH` in the container identified by `HANDLE`.
 
@@ -237,7 +291,7 @@ If `SRC_PATH` contains a trailing `/`, only the contents of the directory are co
 Otherwise, the outermost directory, along with its contents, is copied.
 The unprivileged user will own the files in the container.
 
-### copy HANDLE out SRC\_PATH DST\_PATH [OWNER]
+#### copy HANDLE out SRC\_PATH DST\_PATH [OWNER] ####
 
 Copy the contents at `SRC_PATH` in the container identified by `HANDLE` to `DST_PATH` on the host.
 
@@ -247,7 +301,7 @@ Its semantics are identical to `copy HANDLE in` except with respect to file owne
 By default, root owns the files on the host.
 If you supply the `OWNER` argument (in the form of `USER:GROUP`), files on the host will be chowned to this user/group after the copy has completed.
 
-### stop HANDLE
+#### stop HANDLE ####
 
 Stop processes running inside the container identified by `HANDLE`.
 
@@ -255,7 +309,7 @@ Returns `ok`.
 
 Because this takes down all processes, unfinished scripts will likely terminate without an exit status being available.
 
-### destroy HANDLE
+#### destroy HANDLE ####
 
 Stop processes and destroy all resources associated with the container identified `HANDLE`.
 
@@ -263,12 +317,12 @@ Returns `ok`.
 
 Because everything related to the container is destroyed, artifacts from running an earlier script should be copied out before calling `destroy`.
 
-## Configuration
+## <a id='configuration'></a>Configuration ##
 
 You can configure Warden by passing a configuration file when it starts.
 Refer to `config/linux.yml` in the repository for an example configuration.
 
-## System prerequisites
+## <a id='prerequisties'></a>System Prerequisites ##
 
 Warden runs on Ubuntu 10.04 and higher.
 
@@ -283,7 +337,7 @@ Other dependencies are:
 
 Run `rake setup` for further Warden bootstrapping.
 
-## Hacking
+## <a id='hacking'></a>Hacking ##
 
 The included tests create and destroy real containers, so they require system prerequisites to be in place.
 They need to be run as root if the backend to be tested requires it.
