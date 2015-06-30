@@ -15,13 +15,16 @@ The Cloud Controller database has been tested with Postgres.
 
 The Cloud Controller manages a blob store for the following:
 
-* **Resources**: Files that are uploaded to the Cloud Controller with a unique SHA such that they can be reused without re-uploading the file
+* **Resources**: Files that are uploaded to the Cloud Controller with a unique
+    SHA such that they can be reused without re-uploading the file
 
 * **App Packages**: Unstaged files that represent an application
 
-* **Droplets**: Result of taking an app package, staging it by processing a buildpack, and preparing it to run
+* **Droplets**: Result of taking an app package, staging it by processing a
+    buildpack, and preparing it to run
 
-The blob store uses the [Fog](http://fog.io/) Ruby gem such that it can use abstractions like Amazon S3 or an NFS-mounted file system for storage.
+The blob store uses the [Fog](http://fog.io/) Ruby gem such that it can use
+abstractions like Amazon S3 or an NFS-mounted file system for storage.
 
 ## <a id='nats'></a>NATS Messaging ##
 
