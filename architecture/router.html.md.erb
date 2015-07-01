@@ -5,11 +5,10 @@ title: (Go)Router
 The router routes traffic coming into Cloud Foundry to the appropriate component: usually, [Cloud Controller](./cloud-controller.html) or a running application on a [DEA](./execution-agent.html) node. The router is implemented in Go.
 Implementing a custom router in Go gives the router full control over every connection, which makes it easier to support WebSockets and other types of traffic (for example, via HTTP CONNECT). A single process contains all routing logic, removing unnecessary latency.
 
-# Getting started
+Refer to the following instructions for help getting started with the gorouter
+in a standalone environment.
 
-Refer to the following instructions for help getting started with the gorouter in a standalone environment.
-
-## Setup
+## <a id='setup'></a>Setup ##
 
 <pre class="terminal">
 $ git clone https://github.com/cloudfoundry/gorouter.git
@@ -19,7 +18,7 @@ $ ./bin/go install router/router
 $ gem install nats
 </pre>
 
-## Start
+### <a id='start'></a>Start ###
 
 <pre class="terminal">
 # Start NATS server in daemon mode
@@ -29,7 +28,7 @@ $ nats-server -d
 $ ./bin/router
 </pre>
 
-## Usage
+## <a id='use'></a>Usage ##
 
 Gorouter receives route updates via [NATS](./messaging-nats.html). By default, routes that have not been updated in two minutes are pruned. Therefore, to maintain an active route, ensure that the route is updated at least every two minutes. The format of these route updates is as follows:
 
@@ -62,7 +61,7 @@ $ curl my_first_url.vcap.me:8080
 Hello!
 </pre>
 
-## Instrumentation
+## <a id='instrumentation'></a>Instrumentation ##
 
 Gorouter provides `/varz` and `/healthz` http endpoints for monitoring.
 

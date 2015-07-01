@@ -2,15 +2,23 @@
 title: Droplet Execution Agent
 ---
 
-The key functions of a Droplet Execution Agent (DEA) are:
+A Droplet Execution Agent (DEA) performs the following key functions:
 
-* Manage Warden containers --- The DEA stages applications and runs applications in [Warden](warden.html) containers.
+* **Manage Warden containers**: The DEA stages applications and runs
+    applications in [Warden](./warden.html) containers.
 
-* Stage applications --- When a new application or a new version of an application is pushed to Cloud Foundry, the Cloud Controller selects a DEA from the pool of available DEAs to stage the application. The DEA uses the appropriate buildpack to stage the application. The result of this process is a droplet.
+* **Stage applications**: When a new application or a new version of an
+    application is pushed to Cloud Foundry, the Cloud Controller selects a DEA
+    from the pool of available DEAs to stage the application.
+    The DEA uses the appropriate buildpack to stage the application.
+    The result of this process is a droplet.
 
-* Run droplets --- A DEA manages the lifecycle of each application instance running in it, starting and stopping droplets upon request of the [Cloud Controller](./cloud-controller.html). The DEA monitors the state of a started application instance, and periodically broadcasts application state messages over [NATS](./messaging-nats.html) for consumption by
-HM9000.
-
+* **Run droplets**: A DEA manages the lifecycle of each application instance
+    running in it, starting and stopping droplets upon request of the [Cloud
+    Controller](./cloud-controller.html).
+    The DEA monitors the state of a started application instance, and
+    periodically broadcasts application state messages over
+    [NATS](./messaging-nats.html) for consumption byHM9000.
 
 ## <a id='directory-server'></a>Directory Server ##
 
@@ -33,10 +41,9 @@ If the PID exists, the DEA considers that application state to be "Running."
 
 The DEA also checks for a `AppState` object for the application.
 
-
 ## <a id='usage'></a>Usage ##
 
-You can run the dea executable at the command line by passing the path to the DEA configuration file:
+You can run the `dea` executable at the command line by passing the path to the DEA configuration file:
 
 <pre class="terminal">
 $ bin/dea config/dea.yml
@@ -44,26 +51,23 @@ $ bin/dea config/dea.yml
 
 ## <a id='dea-configuration'></a>DEA Configuration ##
 
-
-DEA behavior is configured in `dea.yml`.
+DEA behavior is configured in the `dea.yml` file.
 
 The following is a partial list of the keys that the DEA reads from the YAML file:
 
-* `logging` --- A [Steno configuration](http://github.com/cloudfoundry/steno#from-yaml-file).
-* `nats_uri` --- A URI of the form `nats://host:port` that the DEA uses to connect to NATS.
-* `warden_socket` --- The path to a unix domain socket that the DEA uses to communicate to a Warden server.
-
+* `logging`: A [Steno configuration](http://github.com/cloudfoundry/steno#from-yaml-file)
+* `nats_uri`: A URI of the form `nats://host:port` that the DEA uses to connect to NATS
+* `warden_socket`: The path to a UNIX domain socket that the DEA uses to communicate to a Warden server.
 
 A sample `dea.yml` file follows:
 
 <p class="note"><strong>Note</strong>: See <a href='https://github.com/cloudfoundry/dea_ng/blob/master/lib/dea/config.rb'>https://github.com/cloudfoundry/dea_ng/blob/master/lib/dea/config.rb</a> for optional configuration keys.</p>
 
-
 ```yaml
 
 # See src/lib/dea/config.rb for optional config values.
 
-# Base directory for dea, application directories, dea temp files, etc. are all relative to this.
+# Base directory for dea. Application directories, DEA temp files, etc. are all relative to this.
 base_dir: /tmp/dea_ng
 
 logging:
@@ -116,15 +120,13 @@ stacks:
 #   after_start: path/to/script
 #   before_stop: path/to/script
 #   after_stop: path/to/script
-## <a id='run-standalone'></a>Running the DEA Standalone ##
-
 ```
 
-When you contribute to the DEA, it is useful to run it as a standalone component. This section has instructions for doing so on Vagrant 1.1x.
+## <a id='run-standalone'></a>Running the DEA Standalone ##
+
+When you contribute to the DEA, we recommend that you run it as a standalone component. Follow the instructions below for running the DEA as a standalone component on Vagrant 1.1x.
 
 Refer to the [Vagrant documentation](http://docs.vagrantup.com/v2/installation/index.html) for instructions on installing Vagrant.
-
-Follow these steps to set up DEA to run locally on your computer:
 
 <pre class="terminal">
 $ git clone http://github.com/cloudfoundry/dea_ng
@@ -137,9 +139,7 @@ $ vagrant --version
 $ rake test_vm
 </pre>
 
-VM creation is likely to take a while.
-
-If the `rake test_vm` step fails and you see an error similar to "undefined method 'configure' for Vagrant" or "found character that cannot start any token while scanning for the next token," you are using a unsupported version of Vagrant. Install Vagrant version 1.1 or higher.
+Failure of the `rake test_vm` step followed by an error similar to "undefined method 'configure' for Vagrant" or "found character that cannot start any token while scanning for the next token" can result from using an unsupported version of Vagrant. Ensure you have installed Vagrant version 1.1 or higher.
 
 <pre class="terminal">
 # initialize the test VM
@@ -163,25 +163,28 @@ $ foreman start > /tmp/foreman.log &
 $ bundle exec rspec
 </pre>
 
-## <a id='run-standalone'></a>Staging ##
+## <a id='staging'></a>Staging ##
 
-See the [How Applications Are Staged](../how-applications-are-staged.html) page for a description of the application staging flow the DEA uses.
+See the [How Applications Are Staged](../how-applications-are-staged.html) topic
+for a description of the application staging flow that the DEA uses.
 
-These are the stating messages that a DEA publishes on NATS:
+A DEA publishes the following staging messages on NATS:
 
-- `staging.advertise` --- Stagers (now DEAs) broadcast their capacity/capability
+* `staging.advertise`: Stagers broadcast their capacity/capability.
 
-- `staging.locate` --- Stagers respond to any message on this subject with a
-  `staging.advertise` message (CC uses this to bootstrap)
+* `staging.locate`: Stagers respond to any message on this subject with a
+    `staging.advertise` message. CC uses this to bootstrap.
 
-- `staging.<uuid>.start` --- Stagers respond to requests on this subject to stage applications
+* `staging.UUID.start`: Stagers respond to requests on this subject to stage
+    applications.
 
-- `staging` --- Stagers (in a queue group) respond to requests to stage an application
-  (old protocol)
+* `staging`: Stagers, in a queue group, respond to requests to stage an
+    application. Note: This is an old protocol.
 
 ## <a id='logs'></a>Logs
 
 [Steno](https://github.com/cloudfoundry/steno) handles the DEA logging.
-You can configure the DEA to log to a file, a syslog server, or both. If neither is provided, the DEA logs to its stdout.
-The logging level specifies the verbosity of the logs (e.g. `warn`, `info`, `debug`).
-
+DEA logs to STDOUT by default. You can configure the DEA to log to a file, a
+syslog server, or both.
+The logging level specifies the verbosity of the logs, for example `warn`,
+`info`, or `debug`.
