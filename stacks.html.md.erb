@@ -6,23 +6,24 @@ A stack is a prebuilt root filesystem (rootfs) which works in tandem with a buil
 
 <p class="note"><strong>Note</strong>: You must ensure compatibility for buildpacks on the stacks they are running against.</p>
 
-##Building Stacks
+##<a id='building-stacks'></a>Building Stacks ##
 
-DEAs can support multiple stacks. The scripts for building the available Cloud Foundry stacks (and later for building other stacks) reside in the [stacks](http://github.com/cloudfoundry/stacks) project.
+A Droplet Execution Agent (DEA) can support multiple stacks.
+The scripts for building the available Cloud Foundry stacks and for building other stacks reside in the GitHub [Stacks](http://github.com/cloudfoundry/stacks) project.
 
-##Available Stacks
+##<a id='available-stacks'></a>Available Stacks ##
 
-###The cflinuxfs2 Stack
+###<a id='cflinuxfs2'></a>cflinuxfs2 Stack ###
 
 The cflinuxfs2 stack is derived from Ubuntu Trusty 14.04.
 
-##CLI Commands
+##<a id='cli-commands'></a>CLI Commands ##
 
 Use the `cf stacks` command to list all the stacks available in a deployment.
 
 ```
 $ cf stacks
-Getting stacks in org My-Org / space development as developer@sample-app.com...
+Getting stacks in org MY-ORG / space development as developer@example.com...
 OK
 
 name         description
@@ -35,7 +36,7 @@ Use the `cf push APPNAME -s STACKNAME` to change your stack and restage your app
 $ cf push testappmx1 -s cflinuxfs2
 Using stack cflinuxfs2...
 OK
-Creating app testappmx1 in org pivotal-pubtools / space test-acceptance as developer@sample-app.com...
+Creating app testappmx1 in org MY-ORG / space development as developer@example.com...
 OK
 
 Creating route testappmx1.cfapps.io...
@@ -50,7 +51,7 @@ Uploading 13.4M, 544 files
 Done uploading
 OK
 
-Starting app testappmx1 in org pivotal-application-tools / space test-acceptance as developer@sample-app.com...
+Starting app testappmx1 in org MY-ORG / space development as developer@example.com...
 -----> Downloaded app package (21M)
 -------> Buildpack version 1.3.0
 -----> Compiling Ruby/Rack
@@ -71,7 +72,6 @@ Starting app testappmx1 in org pivotal-application-tools / space test-acceptance
       Cleaning up the bundler cache.
 ###### WARNING:
       No Procfile detected, using the default web server (webrick)
-       https://devcenter.heroku.com/articles/ruby-default-web-server
 
 -----> Uploading droplet (45M)
 
@@ -79,12 +79,11 @@ Starting app testappmx1 in org pivotal-application-tools / space test-acceptance
 
 App started
 
-
 OK
 
 App testappmx1 was started using this command `bundle exec rackup config.ru -p $PORT`
 
-Showing health and status for app testappmx1 in org pivotal-application-tools / space test-acceptance as developer@sample-app.com...
+Showing health and status for app testappmx1 in org MY-ORG / space development as developer@example.com...
 OK
 
 requested state: started
