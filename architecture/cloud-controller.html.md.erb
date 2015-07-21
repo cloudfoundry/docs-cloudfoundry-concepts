@@ -15,7 +15,7 @@ DEAs broadcast their availability to the cloud controller via a NATS message cal
 
 The cloud controller collects these advertisements in a construct called a pool. When the cloud controller is called upon to find a DEA to run an app, it runs through the following steps, using criteria (minimum thresholds for disk, memory, etc.) specific to the app that the chosen DEA will run:
 
-1. It removes the expired DEA advertisements from the pool
+1. It removes the expired DEA advertisements from the pool.
 1. It filters the remaining advertisements to include only those:
     * with adequate disk
     * with adequate memory
