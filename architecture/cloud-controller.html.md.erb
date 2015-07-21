@@ -7,6 +7,37 @@ clients to access the system.
 The Cloud Controller maintains a database with tables for orgs, spaces, apps,
 services, service instances, user roles, and more.
 
+## <a id='database'></a> Droplet Execution Agent (DEA) Placement Algorithm ##
+
+Whenever Cloud Foundry needs to spin up a new instance of an app, the cloud controller is responsible for selecting a droplet execution agent (DEA) to run it.
+
+DEAs broadcast their availability to the cloud controller via a NATS message called an Advertisement, which contains a ‘stats’ hash with information about their available memory, available disk, and the stack which the DEA is running, as well as an expiration time.
+
+The cloud controller collects these advertisements in a construct called a pool. When the cloud controller is called upon to find a DEA to run an app, it runs through the following steps, using criteria specific to the app that the chosen DEA will run:
+
+1. It removes the expired DEA advertisements from the pool
+1. It filters the remaining advertisements to include only those:
+    * with adequate disk
+    * with adequate memory
+    * running the required stack (linux or windows)
+1. It then narrows its search to DEAs running in the availability zone with the fewest running instances (according to the information provided by the advertisements in the pool).
+1. It then narrows its search to DEAs with the fewest running instances.
+1. It then narrows its search to the top half of the DEAs, sorted by memory.
+1. It then randomly selects one of the remaining DEAs.
+
+###Considerations
+
+It is important to note that cloud controllers uses this algorithm to balance new app instances between DEAs when the new app instances are created, but do not balance already-running apps. 
+
+For example, suppose a set of apps are running on DEAs in two AZs, and one AZ temporarily goes down. While the second AZ is down, all instances will be placed on the remaining AZ. After the second AZ comes back online, new instances will be allocated to DEAs there, since the algorithm favors DEAs in the zone with the fewest running instances. However, instances running on the first AZ will not be moved to the other AZ, so the imbalance will persist.
+
+An imbalance may also result from a deploy where DEAs have had a change to their source code or stemcell.
+
+It is possible to rebalance the DEAs between AZs in two ways:
+    * Restarting the app, which may result in a brief  down-time.
+    * Terminating and restarting half of the instances one by one, which shouldn’t cause any down-time.
+
+
 ## <a id='database'></a>Database (CC_DB) ##
 
 The Cloud Controller database has been tested with Postgres.
