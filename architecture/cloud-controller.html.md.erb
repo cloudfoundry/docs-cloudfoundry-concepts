@@ -11,7 +11,7 @@ services, service instances, user roles, and more.
 
 Whenever Cloud Foundry needs to spin up a new instance of an app, the cloud controller is responsible for selecting a droplet execution agent (DEA) to run it.
 
-DEAs broadcast their availability to the cloud controller via a NATS message called an Advertisement, which contains a ‘stats’ hash with information about their available memory, available disk, and the stack which the DEA is running, as well as an expiration time.
+DEAs broadcast their availability to the cloud controller via a NATS message called an `advertisement`, which contains a `stats` hash with information about their available memory, available disk, and the stack which the DEA is running, as well as an expiration time.
 
 The cloud controller collects these advertisements in a construct called a pool. When the cloud controller is called upon to find a DEA to run an app, it runs through the following steps, using criteria (minimum thresholds for disk, memory, etc.) specific to the app that the chosen DEA will run:
 
