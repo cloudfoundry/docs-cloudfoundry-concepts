@@ -13,7 +13,7 @@ Whenever Cloud Foundry needs to spin up a new instance of an app, the cloud cont
 
 DEAs broadcast their availability to the cloud controller via a NATS message called an Advertisement, which contains a ‘stats’ hash with information about their available memory, available disk, and the stack which the DEA is running, as well as an expiration time.
 
-The cloud controller collects these advertisements in a construct called a pool. When the cloud controller is called upon to find a DEA to run an app, it runs through the following steps, using criteria specific to the app that the chosen DEA will run:
+The cloud controller collects these advertisements in a construct called a pool. When the cloud controller is called upon to find a DEA to run an app, it runs through the following steps, using criteria (minimum thresholds for disk, memory, etc.) specific to the app that the chosen DEA will run:
 
 1. It removes the expired DEA advertisements from the pool
 1. It filters the remaining advertisements to include only those:
