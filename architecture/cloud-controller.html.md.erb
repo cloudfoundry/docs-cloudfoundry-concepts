@@ -9,7 +9,7 @@ services, service instances, user roles, and more.
 
 ## <a id='database'></a> Droplet Execution Agent (DEA) Placement Algorithm ##
 
-Whenever Cloud Foundry needs to spin up a new instance of an app, the cloud controller is responsible for selecting a droplet execution agent (DEA) to run it.
+Whenever Cloud Foundry needs to spin up a new instance of an app, the cloud controller is responsible for [selecting a droplet execution agent (DEA) to run it](https://github.com/cloudfoundry/cloud_controller_ng/blob/2b1d38cba944086fa545d621a37ce4089b8e239e/lib/cloud_controller/dea/pool.rb#L44-L50).
 
 DEAs broadcast their availability to the cloud controller via a NATS message called an `advertisement`, which contains a `stats` hash with information about their available memory, available disk, and the stack which the DEA is running, as well as an expiration time.
 
@@ -20,9 +20,14 @@ The cloud controller collects these advertisements in a construct called a pool.
     * with adequate disk
     * with adequate memory
     * running the required stack (linux or windows)
+
+    <%= image_tag '../images/dea_placement_algorithm/dea_criteria_filter.png' %>
 1. It then narrows its search to DEAs running in the availability zone with the fewest running instances (according to the information provided by the advertisements in the pool).
-1. It then narrows its search to DEAs with the fewest running instances.
+    <%= image_tag '../images/dea_placement_algorithm/dea_az_select.png' %>
+1. It then narrows its search to the DEAs with the fewest running instances.
+    <%= image_tag '../images/dea_placement_algorithm/dea_select_instance_count.png' %>
 1. It then narrows its search to the top half of the DEAs, sorted by memory.
+    <%= image_tag '../images/dea_placement_algorithm/dea_top_half_memory.png' %>
 1. It then randomly selects one of the remaining DEAs.
 
 ###Considerations
