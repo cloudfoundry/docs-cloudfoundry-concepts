@@ -35,7 +35,7 @@ Diego interfaces with [doppler](https://github.com/cloudfoundry/loggregator) to 
 
 ## <a id='conclusion'></a>Bringing it all together
 
-Diego is made of very many disparate components.  Ensuring that these components work together correctly is a challenge addressed by these entities:
+Diego is a complex system with many moving parts. The interactions and high-level behavior of an entire Diego runtime deployment can be monitored and tested using the following releases:
 
 - [**Runtime-Schema**](https://github.com/cloudfoundry-incubator/runtime-schema)
     - encodes all communication between Diego components and the BBS.  The Receptor, Rep, and Converger are the primary consumers of Runtime-Schema.

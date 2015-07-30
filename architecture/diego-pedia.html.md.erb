@@ -2,7 +2,7 @@
 title: Diego Components
 ---
 
-## <a id='diagram'></a>Bird's Eye View
+# <a id='diagram'></a>Overview
 
 The following diagram illustrates the major components of Diego and how they interact with other components of the Cloud Foundry ecosystem.
 
@@ -16,96 +16,168 @@ The red region brings in [Cloud Controller](https://github.com/cloudfoundry/clou
 
 The roles and responsibilities of these components are described below.
 
+# Components
 
-## <a id='components'></a>Components
-
-### <a id='cf-components'></a>Cloud Foundry Components
+## <a id='cf-components'></a>Cloud Foundry Components
 
 These components are parts of [Cloud Foundry](https://github.com/cloudfoundry/cf-release) that interact closely with Diego:
 
-- [**Cloud Controller**](https://github.com/cloudfoundry/cloud_controller_ng) (CC)
-    - provides an API for staging and running apps.
-    - implements all the object modelling around apps (permissions, buildpack selection, service binding, etc...).
-    - Developers interact with the cloud controller via the [CLI](https://github.com/cloudfoundry/cli)
-- [**Doppler**](https://github.com/cloudfoundry/loggregator)
-    - aggregates and streams logs to developers
-- [**Router**](https://github.com/cloudfoundry/gorouter)
-    - routes incoming network traffic to processes within the CF installation
-    - this includes routing traffic to both developer apps running within Garden containers and CF components such as CC.
+### <a id='cloud-controller'></a>Cloud Controller
 
-### <a id='bridge-components'></a>CC-Bridge Components
+- provides an API for staging and running apps.
+
+- implements all the object modelling around apps (permissions, buildpack selection, service binding, etc...).
+
+- Developers interact with the cloud controller via the [CLI](https://github.com/cloudfoundry/cli)
+
+[**Cloud Controller on GitHub**](https://github.com/cloudfoundry/cloud_controller_ng) (CC)
+
+### <a id='doppler'></a>Doppler
+
+- aggregates and streams logs to developers
+
+[**Doppler on GitHub**](https://github.com/cloudfoundry/loggregator)
+
+### <a id='router'></a>Router
+
+- routes incoming network traffic to processes within the CF installation
+
+- this includes routing traffic to both developer apps running within Garden containers and CF components such as CC.
+
+[**Router on GitHub**](https://github.com/cloudfoundry/gorouter)
+
+## <a id='bridge-components'></a>CC-Bridge Components
 
 The CC-Bridge components provide an interface between Diego and the Cloud Controller.  They serve, primarily, to translate app-specific notions into Diego's more generic language of LRPs and tasks:
 
-- [**Stager**](https://github.com/cloudfoundry-incubator/stager)
-    - receives staging requests from CC
-    - translates these requests into generic Tasks and submits the Tasks to the Receptor
-    - instructs the Cell (via the Task actions) to inject a platform-specific binary to perform the actual staging process (see [below](#platform-specific-components))
-    - sends a response to CC when a Task is completed (succesfully or otherwise).
-- [**Nsync**](https://github.com/cloudfoundry-incubator/nsync)
-    - listens for desired app requests and updates/creates the desired LRPs via the Receptor.
-    - periodically polls CC for all desired apps to ensure the desired state known to Diego is up-to-date.
-- [**TPS**](https://github.com/cloudfoundry-incubator/tps)
-    - provides the CC with information about currently running `LRPs`.
-    - this information is used by the CC to responds to `cf apps` and `cf app X` requests.
-- [**File-Server**](https://github.com/cloudfoundry-incubator/file-server)
-    - mediates uploads bound for the CC coming from the Executor.  Translating the Executor's simple HTTP POST into the complex multipart-form upload required by CC.
-    - serves static assets used by our various components.  In particular, it serves the App Lifecycle binaries (see [below](#app-lifecycles)).
+### <a id='stager'></a>Stager
 
-### <a id='cell-components'></a>Diego Cell Components
+- receives staging requests from CC
 
-These Diego components deal with running and maintaining generic Tasks and LRPs:
+- translates these requests into generic Tasks and submits the Tasks to the Receptor
 
-- [**Receptor**](https://github.com/cloudfoundry-incubator/receptor) implements a RESTful [HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md) that allows consumers of Diego to:
-    - request Task and DesiredLRPs
-    - fetch information about currently running Tasks and LRP instances
-- [**Rep**](https://github.com/cloudfoundry-incubator/rep)
-    - represents a Cell and mediates all communication with the BBS by:
-        - ensuring the set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Cell
-        - maintaining the presence of the Cell in the BBS.  Should the Cell fail catastrophically, the Converger will automatically move the missing instances to other Cells.
-    - participates in [auctions](https://github.com/cloudfoundry-incubator/auction) to accept Tasks/LRPs
-    - runs Tasks/LRPs by asking its in-process Executor to create a container and run generic action recipes in said container.
-- [**Executor**](https://github.com/cloudfoundry-incubator/executor)
-    - the Executor doesn't know about the Task vs LRP distinction.  It is primarily responsible for implementing the generic executor actions detailed in the [API documentation](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md)
-    - the Executor streams Stdout and Stderr to the metron-agent running on the Cell.  These then get forwarded to Loggregator.
-- [**Garden**](https://github.com/cloudfoundry-incubator/garden)
-    - provides a platform-independent server/client to manage garden containers
-    - defines an interface to be implemented by container-runners (e.g. [garden-linux](https://github.com/cloudfoundry-incubator/garden-linux))
-- [**Metron**](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron)
-    - Forwards application logs and application/Diego metrics to [doppler](https://github.com/cloudfoundry/loggregator)
+- instructs the Cell (via the Task actions) to inject a platform-specific binary to perform the actual staging process (see [below](#platform-specific-components))
 
-Note that there is a specificity gradient across the Rep/Executor/Garden.  The Rep is concerned with Tasks and LRPs and knows details about their lifecycles.  The Executor knows nothing about Tasks/LRPs but merely knows how to manage a collection of containers and run actions in these containers.  Garden, in turn, knows nothing about actions and simply provides a concrete implementation of a platform-specific containerization technology that can run arbitrary commands in containers.
+- sends a response to CC when a Task is completed (succesfully or otherwise).
+
+[**Stager on GitHub**](https://github.com/cloudfoundry-incubator/stager)
+
+### <a id='nsync'></a>Nsync
+
+- listens for desired app requests and updates/creates the desired LRPs via the Receptor.
+
+- periodically polls CC for all desired apps to ensure the desired state known to Diego is up-to-date.
+
+[**Nsync on GitHub**](https://github.com/cloudfoundry-incubator/nsync)
+
+### <a id='tps'></a>TPS
+
+- provides the CC with information about currently running `LRPs`.
+
+- this information is used by the CC to responds to `cf apps` and `cf app X` requests.
+
+[**TPS on GitHub**](https://github.com/cloudfoundry-incubator/tps)
+
+### <a id='file-server'></a>File Server
+
+- mediates uploads bound for the CC coming from the Executor.  Translating the Executor's simple HTTP POST into the complex multipart-form upload required by CC.
+
+- serves static assets used by our various components.  In particular, it serves the App Lifecycle binaries (see [below](#app-lifecycles)).
+
+[**File-Server on GitHub**](https://github.com/cloudfoundry-incubator/file-server)
+
+## <a id='cell-components'></a>Diego Cell Components
+
+These Diego components deal with running and maintaining generic Tasks and LRPs.
+
+There is a specificity gradient across the Rep/Executor/Garden.  The Rep is concerned with Tasks and LRPs and knows details about their lifecycles.  The Executor knows nothing about Tasks/LRPs but merely knows how to manage a collection of containers and run actions in these containers.  Garden, in turn, knows nothing about actions and simply provides a concrete implementation of a platform-specific containerization technology that can run arbitrary commands in containers.
 
 Only the Rep and the Receptor communicate with the BBS and participate in inter-Cell communication.
 
-### <a id='brain-components'></a> Diego Brain Components
+### <a id=''></a> Receptor
 
-- [**Auctioneer**](https://github.com/cloudfoundry-incubator/auctioneer)
-    - holds auctions for Tasks and ActualLRP instances.
-    - auctions are run using the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over HTTP and is between the Auctioneer and the Cell Reps.
-    - maintains a lock in the BBS such that ***only one*** auctioneer may handles auctions at a time.
-- [**Converger**](https://github.com/cloudfoundry-incubator/converger)
-    - maintains a lock in the BBS to ensure that ***only one*** converger performs convergence.  This is primarily for performance considerations.  Convergence should be idempotent.
-    - uses the converge methods in the runtime-schema/bbs to ensure eventual consistency and fault tolerance for Tasks and LRPs
-    - when converging LRPs, the converger uses identifies which actions need to take place to bring DesiredLRP state and ActualLRP state into accord.  Two actions are possible:
+- implements a RESTful [HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md) that allows consumers of Diego to:
+
+- request Task and DesiredLRPs
+
+- fetch information about currently running Tasks and LRP instances
+
+[**Receptor on GitHub**](https://github.com/cloudfoundry-incubator/receptor)
+
+### <a id=''></a> Rep
+
+- represents a Cell and mediates all communication with the BBS by:
+    - ensuring the set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Cell
+    - maintaining the presence of the Cell in the BBS.  Should the Cell fail catastrophically, the Converger will automatically move the missing instances to other Cells.
+
+- participates in [auctions](https://github.com/cloudfoundry-incubator/auction) to accept Tasks/LRPs
+
+- runs Tasks/LRPs by asking its in-process Executor to create a container and run generic action recipes in said container.
+
+[**Rep on GitHub**](https://github.com/cloudfoundry-incubator/rep)
+
+### <a id=''></a> Executor
+
+- the Executor doesn't know about the Task vs LRP distinction.  It is primarily responsible for implementing the generic executor actions detailed in the [API documentation](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md)
+
+- the Executor streams Stdout and Stderr to the metron-agent running on the Cell.  These then get forwarded to Loggregator.
+
+[**Executor on GitHub**](https://github.com/cloudfoundry-incubator/executor)
+
+### <a id=''></a> Garden
+
+- provides a platform-independent server/client to manage garden containers
+
+- defines an interface to be implemented by container-runners (e.g. [garden-linux](https://github.com/cloudfoundry-incubator/garden-linux))
+
+[**Garden on GitHub**](https://github.com/cloudfoundry-incubator/garden)
+
+### <a id=''></a> Metron
+
+- Forwards application logs and application/Diego metrics to [doppler](https://github.com/cloudfoundry/loggregator)
+
+[**Metron on GitHub**](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron)
+
+## <a id='brain-components'></a> Diego Brain Components
+
+
+### <a id=''></a> Auctioneer
+
+[**Auctioneer**](https://github.com/cloudfoundry-incubator/auctioneer)
+
+- holds auctions for Tasks and ActualLRP instances.
+- auctions are run using the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over HTTP and is between the Auctioneer and the Cell Reps.
+- maintains a lock in the BBS such that ***only one*** auctioneer may handles auctions at a time.
+
+### <a id=''></a> Converger
+
+[**Converger**](https://github.com/cloudfoundry-incubator/converger)
+
+- maintains a lock in the BBS to ensure that ***only one*** converger performs convergence.  This is primarily for performance considerations.  Convergence should be idempotent.
+- uses the converge methods in the runtime-schema/bbs to ensure eventual consistency and fault tolerance for Tasks and LRPs
+- when converging LRPs, the converger uses identifies which actions need to take place to bring DesiredLRP state and ActualLRP state into accord.  Two actions are possible:
         - if an instance is missing, a start auction is sent.
         - if an extra instance is identified, a stop message is sent to the Rep on the Cell hosting the instance.
-    - in addition, the converger watches out for any potentially missed messages.  For example, if a Task has been in the PENDING state for too long it's possible that the request to hold an auction for the Task never made it to the Auctioneer.  In this case the Converger is responsible for resending the auction message.
-- [**Metrics-Server**](https://github.com/cloudfoundry-incubator/runtime-metrics-server)
-    - reads metrics from the BBS and publishes them to Doppler.
+- in addition, the converger watches out for any potentially missed messages.  For example, if a Task has been in the PENDING state for too long it's possible that the request to hold an auction for the Task never made it to the Auctioneer.  In this case the Converger is responsible for resending the auction message.
 
-### <a id='shim-like-components'></a>Additional (shim-like) components
+### <a id=''></a> Metrics
+
+[**Metrics-Server**](https://github.com/cloudfoundry-incubator/runtime-metrics-server)
+
+- reads metrics from the BBS and publishes them to Doppler.
+
+## <a id='shim-like-components'></a>Additional (shim-like) components
 
 - [**Route-Emitter**](https://github.com/cloudfoundry-incubator/route-emitter)
-    - monitors DesiredLRP state and ActualLRP state via the Receptor.  When a change is detected, the Route-Emitter emits route registration/unregistration messages to the [router](https://github.com/cloudfoundry/gorouter)
-    - periodically emits the entire routing table to the router.
-    - someday the route-emitter will be a part of the router, which will communicate with the Receptor to compute the routing table.
+- monitors DesiredLRP state and ActualLRP state via the Receptor.  When a change is detected, the Route-Emitter emits route registration/unregistration messages to the [router](https://github.com/cloudfoundry/gorouter)
+- periodically emits the entire routing table to the router.
+- someday the route-emitter will be a part of the router, which will communicate with the Receptor to compute the routing table.
 
-### <a id='platform-specific-components'></a>Platform-Specific Components
+## <a id='platform-specific-components'></a>Platform-Specific Components
 
 Diego is largely platform-agnostic.  All platform-specific concerns are delegated to two types of components: the *garden backends* and the *app lifecycles*.
 
-#### <a id='garden-backends'></a>Garden Backends
+### <a id='garden-backends'></a>Garden Backends
 
 [**Garden**](https://github.com/cloudfoundry-incubator/garden) contains a set of interfaces each platform-specific backend must implement. These interfaces contain methods to perform the following actions:
 
@@ -121,7 +193,7 @@ Current implementations:
 
 - [**Garden-Linux**](https://github.com/cloudfoundry-incubator/garden-linux) provides a linux-specific implementation of a Garden interface.
 
-#### <a id='app-lifecycles'></a>App Lifecycles
+### <a id='app-lifecycles'></a>App Lifecycles
 
 Each App Lifecycle provides a set of binaries that manage a *Cloud Foundry*-specific application lifecycle.  There are three binaries:
 
@@ -134,7 +206,7 @@ Current implementations:
 - [**Buildpack-App-Lifecycle**](https://github.com/cloudfoundry-incubator/buildpack-app-lifecycle) implements a traditional buildpack-based lifecycle.
 - [**Docker-App-Lifecycle**](https://github.com/cloudfoundry-incubator/docker-app-lifecycle) implements a docker-based lifecycle.
 
-### <a id='other-components'></a>Other Components
+## <a id='other-components'></a>Other Components
 
 - [**ETCD**](https://github.com/coreos/etcd)
     - is the consistent store at the heart of diego
