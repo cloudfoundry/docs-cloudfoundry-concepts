@@ -20,7 +20,7 @@ Diego schedules and runs **Tasks** and **Long Running Processes**:
 
 > A **Long Running Process**, (LRP) such as an app, is meant to run until explicitly terminated, and may have multiple instances.  
 
-Diego maintains a representation of the desired and actual LRPs, and moves the total state of actual LRPs toward the total state of desired LRPs by creating or destroying LRPs as needed, or by replacing LRPs in the face of crashes and network failures.
+Diego maintains a representation of the desired and actual LRPs, and moves the total state of actual LRPs toward the total state of desired LRPs by creating and destroying LRPs if requirements change, or in response to crashes or network failures.
 
 Diego's Receptor components recieve requests to add or delete LRP instances, such as app instances, using a [RESTful HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
 
