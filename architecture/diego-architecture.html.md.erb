@@ -8,9 +8,9 @@ See [Diego Components](./diego-pedia.html) for a glossary of Cloud Foundry compo
 
 Diego is the next-generation runtime powering Cloud Foundry (CF). However Diego is abstracted away from CF. CF consumes Diego via the [Receptor API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
 
-For now, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)'s domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with a Diego component called the [Receptor](#cell-components).
+For now, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)'s domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with a Diego component called the [Receptor](./diego-pedia.html#cell-components).
 
-The process of staging and running a CF application is complex and filled with platform and implementation-specific details.  We encapsulate these concerns in a triad of binaries known collectively as the [App Lifecycle](#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
+The process of staging and running a CF application is complex and filled with platform and implementation-specific details.  We encapsulate these concerns in a triad of binaries known collectively as the [App Lifecycle](./diego-pedia.html#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
 
 ## <a id='what-do'></a>What Does Diego Do?
 
