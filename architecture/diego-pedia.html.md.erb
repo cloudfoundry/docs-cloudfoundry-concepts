@@ -56,7 +56,7 @@ The CC-Bridge components provide an interface between Diego and the Cloud Contro
 
 - translates these requests into generic Tasks and submits the Tasks to the Receptor
 
-- instructs the Cell (via the Task actions) to inject a platform-specific binary to perform the actual staging process (see [below](#platform-specific-components))
+- instructs the Cell (via the Task actions) to inject a [platform-specific binary](#platform-specific) to perform the actual staging process
 
 - sends a response to CC when a Task is completed (succesfully or otherwise).
 
@@ -82,7 +82,7 @@ The CC-Bridge components provide an interface between Diego and the Cloud Contro
 
 - mediates uploads bound for the CC coming from the Executor.  Translating the Executor's simple HTTP POST into the complex multipart-form upload required by CC.
 
-- serves static assets used by our various components.  In particular, it serves the App Lifecycle binaries (see [below](#app-lifecycles)).
+- serves static assets used by our various components.  In particular, it serves the [App Lifecycle binaries](#app-lifecycles).
 
 [**File-Server on GitHub**](https://github.com/cloudfoundry-incubator/file-server)
 
@@ -182,7 +182,7 @@ Reads metrics from the BBS and publishes them to Doppler.
 
 [**Route-Emitter on GitHub**](https://github.com/cloudfoundry-incubator/route-emitter)
 
-## <a id='platform-specific-components'></a>Platform-Specific Components
+## <a id='platform-specific'></a>Platform-Specific Components
 
 Diego is largely platform-agnostic.  All platform-specific concerns are delegated to two types of components: the *garden backends* and the *app lifecycles*.
 
