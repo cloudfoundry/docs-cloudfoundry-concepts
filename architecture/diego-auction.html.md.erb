@@ -2,6 +2,59 @@
 title: How Diego Allocates Work
 ---
 
-The Diego Auction is the process by which Diego allocates tasks and long running processes (LRPs) to cells, which will execute them. The auction replaces the [Cloud Controller DEA placement algorithm](./cloud-controller.html#dea-placement), which performed this function in the pre-Diego Cloud Foundry architecture.
+The Diego Auction is the process by which [Diego](./diego-architecture.html) allocates tasks and long running processes (LRPs) to [Cells](./diego-pedia.html#cell-components), which execute them. The auction replaces the [Cloud Controller DEA placement algorithm](./cloud-controller.html#dea-placement), which performed this function in the pre-Diego Cloud Foundry architecture.
 
 [Auction on GitHub](https://github.com/cloudfoundry-incubator/auction)
+
+## <a id='initiate'></a>Initiating an Auction
+
+An [Auctioneer](./diego-pedia.html#auctioneer) initiates an auction when it receives a request to allocate a batch of work (tasks and LRPs) either from:
+
+- A Cell [Receptor](./diego-pedia.html#receptor), in response to a request from the Cloud Controller via the CC-Bridge.
+
+- A [Converger](./diego-pedia.html#converger), in response to a mismatch between the desired LRPs and actual LRPs as represented in the BBS(./diego-pedia.html#bbs).
+
+Only one auction can take place at a time.
+
+## <a id='fetch-info'></a>Querying the Cells
+
+The Auctioneer queries the state of each Cell via a request to the Cell [Rep](./diego-pedia.html#rep). The information provided by the Rep includes:
+
+- the Cell's available capacity
+- the Cell's stack
+- the set of Actual LRPs currently running on the Cell
+
+## <a id='prioritizing'></a>Prioritizing Work to be Auctioned
+
+When the Auctioneer receives a batch of work it must strategically decide the order in which to distributed it. 
+
+Two pitfalls must be avoided: 
+
+* The Auctioneer could incorrectly fill the Cells with small units of work before attempting to place large units of work. As a result, these large units could fail to place even if there is sufficient capacity in the cluster. 
+
+* The Auctioneer could incorrectly prioritize large units of work over small units of work. As a result, each Cell could be filled with a single large app, preventing smaller apps from having any instances running.
+
+To avoid these bad results, the Auctioneer first sorts the batch of work into priority groups. Within each priority group, work is sorted in order of decreasing memory demand so that larger units of work are placed first.
+
+## <a id='allocating'></a>Allocating Work
+
+The Auctioneer calculates the distribution of Actual LRPs across available Cells.
+
+For each Task and LRP in the batch, The Auctioneer does the following:
+
+1. It filters the pool of candidate cells to those with the correct stack and sufficient resources to host the actual LRP.
+
+1. It chooses the winning cell by optimizing for the following, in increasing priority:
+	1. an even distribution of memory, disk, and container usage across Cells (all with equal weighting)
+	1. minimizing colocation of ActualLRP instances of a given DesiredLRP on the same Cell (takes precedence over the distribution of memory/disk/etc.).
+	1. minimizing colocation of ActualLRP instances of a given DesiredLRP in the same Availability Zone
+
+After calculating the distribution of Tasks and LRPs to Cells, the Auctioneer submits requests to the Cells to execute their allotted work.
+
+Any work that could not be allocated is carried over into the next batch.
+
+If a Cell responds by saying the work can not be performed, the Auctioneer carries the failed work over into the next batch.
+
+If a Cell fails to respond, for example if a connection times out, the Auctioneer does *not* carry the work over into the next batch. In this case the Auctioneer defers to the Converger to figure out what to do.
+
+Any work carried over into the next batch is merged with work that came in during the previous auction, and the loop is repeated.
