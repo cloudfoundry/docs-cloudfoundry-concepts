@@ -24,7 +24,7 @@ The Auctioneer queries the state of each Cell via a request to the Cell [Rep](./
 - the Cell's stack
 - the set of Actual LRPs currently running on the Cell
 
-## <a id='prioritizing'></a>Prioritizing Work to be Auctioned
+## <a id='prioritizing'></a>Prioritizing the Work to be Auctioned
 
 When the Auctioneer receives a batch of work it must strategically decide the order in which to distributed it. 
 
@@ -34,7 +34,42 @@ Two pitfalls must be avoided:
 
 * The Auctioneer could incorrectly prioritize large units of work over small units of work. As a result, each Cell could be filled with a single large app, preventing smaller apps from having any instances running.
 
-To avoid these bad results, the Auctioneer first sorts the batch of work into priority groups. Within each priority group, work is sorted in order of decreasing memory demand so that larger units of work are placed first.
+To avoid these bad results, the Auctioneer first sorts the batch of LRPs to allocate into priority groups based on their global indices. Each LRP has an index for its type, which is unique across a deplyment. Within each priority group, work is sorted in order of decreasing memory demand so that larger units of work are placed first.
+
+For example, suppose a batch contains the following 5 LRPS:
+
+<table border='1' class='nice'>
+	<tr>
+		<th>LRP type</th>
+		<th>LRP index</th>
+	</tr>
+		<td>type 1</td>
+		<td>0</td>
+	<tr>
+		<td>type 1</td>
+		<td>1</td>
+	</tr>
+		<td>type 1</td>
+		<td>2</td>
+	<tr>
+		<td>type 2</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>type 2</td>
+		<td>1</td>
+	</tr>
+</table>
+
+The Auctioneer would allocate the LRPs in the following order:
+
+* Type 1/ Index 0
+* Type 2/ Index 0
+* Type 1/ Index 1
+* Type 2/ Index 1
+* Type 1/ Index 2
+
+This sorting by index ensures that LRPs of each type are placed before all of the LRPs of any type are, preventing both large and small LRPs from dominating the allocation process.
 
 ## <a id='allocating'></a>Allocating Work
 
