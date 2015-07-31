@@ -7,7 +7,7 @@ clients to access the system.
 The Cloud Controller maintains a database with tables for orgs, spaces, apps,
 services, service instances, user roles, and more.
 
-## <a id='database'></a> Droplet Execution Agent (DEA) Placement Algorithm ##
+## <a id='dea-placement'></a> Droplet Execution Agent (DEA) Placement Algorithm ##
 
 Whenever Cloud Foundry needs to spin up a new instance of an app, the cloud controller is responsible for [selecting a droplet execution agent (DEA) to run it](https://github.com/cloudfoundry/cloud_controller_ng/blob/2b1d38cba944086fa545d621a37ce4089b8e239e/lib/cloud_controller/dea/pool.rb#L44-L50).
 
