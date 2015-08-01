@@ -8,15 +8,11 @@ See [Diego Components](./diego-pedia.html) for a glossary of Cloud Foundry compo
 
 Diego is the next-generation runtime powering Cloud Foundry (CF).
 
-Diego schedules and runs **Tasks** and **Long Running Processes**:
+Diego schedules and runs **[Tasks](./diego-pedia.html#tasks)** and **[Long Running Processes](./diego-pedia.html#lrps)**:
 
-- A **Task** is a one-off job and is guaranteed to be run at most once.
+Diego maintains a representation of the total set of desired and actual LRPs for a Cloud Foundry deployment, and constantly steers the set of actual LRPs toward matching the set of desired LRPs by creating and destroying LRPs as requirements change or in response to crashes or network failures.
 
-- A **Long Running Process**, (LRP) such as an app, is meant to run until explicitly terminated, and may have multiple instances.  
-
-Diego maintains a representation of the desired and actual LRPs, and moves the total state of actual LRPs toward the total state of desired LRPs by creating and destroying LRPs if requirements change, or in response to crashes or network failures.
-
-Diego's Receptor components recieve requests to add or delete LRP instances, such as app instances, using a [RESTful HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
+Diego's [Receptor](./diego-pedia.html#receptor) components recieve requests to add or delete LRP instances, such as app instances, via a [RESTful HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
 
 Receptors manipulate Diego's representation of its desired LRPs in the [Bulletin Board System \(BBS\)](./diego-pedia.html#bbs), an up-to-date cache of the state of the Diego cluster, including: 
 
@@ -24,28 +20,27 @@ Receptors manipulate Diego's representation of its desired LRPs in the [Bulletin
 
 - Running LRP instances
 
-- Inflight Tasks
+- In-flight Tasks
 
-The [Converger](./diego-pedia.html#converger) operates on the BBS periodically and broadcasts requests to start or stop LRPs as needed, based on a comparison of desired and actual LRPs.
+The [Converger](./diego-pedia.html#converger) periodically reads from the BBS and broadcasts requests to start or stop LRPs as needed, based on a comparison of the desired and actual LRPs.
 
-The Diego Brain's [Auctioneer](./diego-pedia.html#auctioneer) distributes Tasks and LRPs to the cluster of Diego Cells via an [auction](./diego-auction.html) involving the Cell [Rep](./diego-pedia.html#rep)s.  
+The Diego Brain's [Auctioneer](./diego-pedia.html#auctioneer) distributes Tasks and LRPs to the cluster of Diego [Cells](./diego-pedia.html#cell-components) in a process called the [Auction](./diego-auction.html).
 
 See [The Diego Auction](./diego-auction.html) for more information about how tasks and LRPs are distributed in Diego.
 
 Once a Task or LRP is assigned to a Cell, the [Executor](./diego-pedia.html#executor) spins up a [Garden](./diego-pedia.html#garden) container and executes the specified work, which is encoded as a generic, platform-independent, recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
 
-Diego interfaces with [Doppler](./diego-pedia.html#doppler) to provide real-time streaming logs for all Tasks/LRPs.  Diego also interfaces with [Gorouter](./diego-pedia.html#router) to automatically route web traffic to running LRP instances.
+Diego streams logs to Loggregator's [Doppler](./diego-pedia.html#doppler) component to provide real-time logs for all Tasks and LRPs.  Diego also interfaces with [Gorouter](./diego-pedia.html#router) to automatically route web traffic to running LRP instances.
 
-Diego is packaged up as a bosh release called [**Diego-Release**](https://github.com/cloudfoundry-incubator/diego-release).
-
+Diego is packaged up as the bosh release: [**Diego-Release**](https://github.com/cloudfoundry-incubator/diego-release).
 
 ## <a id='diego-cf'></a> Diego and Cloud Foundry
 
 Diego is abstracted away from the Cloud Controller and other Cloud Foundry components such as the Loggregator and the Router. Non-Diego CF components consume Diego via the [Receptor API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
 
-Presently, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](./diego-pedia.html#cloud-controller)'s domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with a Diego component called the [Receptor](./diego-pedia.html#receptor).
+Presently, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](./diego-pedia.html#cloud-controller)'s domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the Diego Cell's [Receptor](./diego-pedia.html#receptor) component.
 
-The process of staging and running a CF application is complex and filled with platform and implementation-specific details.  We encapsulate these concerns in a triad of binaries known collectively as the [App Lifecycle](./diego-pedia.html#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
+The process of staging and running a CF application is complex and filled with platform and implementation-specific details. These concerns are encapsulated in a triad of binaries known collectively as the [App Lifecycle](./diego-pedia.html#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
 
 ## <a id='conclusion'></a>Working Together
 
@@ -53,7 +48,7 @@ Diego is a complex system with many moving parts. The interactions and high-leve
 
 ### <a id='inigo'></a>Inigo
 
-Inigo is an integration test suite that launches the Diego components and excercises them through various test cases, including component failures and other exceptional cases.  As such, Inigo *validates* that a given set of component versions are mutually compatible, that the system of these components is robust, and that the performance of the system degrades gracefully.
+Inigo is an integration test suite that launches the Diego components and excercises them through various test cases, including component failures and other exceptional cases.  As such, Inigo validates that a given set of component versions are mutually compatible, and that the system of these components is robust and degrades gracefully in its performance.
 
 [**Inigo on GitHub**](https://github.com/cloudfoundry-incubator/inigo)
 
@@ -61,7 +56,10 @@ Inigo is an integration test suite that launches the Diego components and excerc
 
 The Auction package encodes the behavioral details around the [auction](./diego-auction.html).
 
-It includes a simulation test suite that validates the correctness and performance of the auction algorithm.  The simulation can be run for different algorithms, at different scales.  The simulation can either be run in-process (for quick feedback loops) or across multiple processes (to understand the role of communication in the auction) or even across multiple machines in a cloud-like infrastructure (to understand the impact of latency on the auction).
+It includes a simulation test suite that validates the optimality and performance of the auction algorithm.  The simulation can be run for different algorithm variants at different scales.  The simulation can be run in several ways: 
+- In-process, for quick feedback loops
+- Across multiple processes, to reveal the role of communication in the auction
+- Across multiple machines in a cloud-like infrastructure, to reveal the impact of latency on the auction
 
 The [Auctioneer](./diego-pedia.html#auctioneer) and [Rep](./diego-pedia.html#rep) components use the Auction package to participate in the [auction](./diego-auction.html).
 
@@ -73,7 +71,7 @@ DAT is a suite of acceptance-level tests that run against a deployment of CF rel
 
 These tests exercise a number of happy-path test cases across the entire stack.
 
-Use the cf cli to run the tests.
+Use the CF CLI to run the tests.
 
 [**Diego-Acceptance-Tests on GitHub**](https://github.com/cloudfoundry-incubator/diego-acceptance-tests)
 
