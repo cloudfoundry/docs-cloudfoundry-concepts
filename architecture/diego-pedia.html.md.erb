@@ -7,11 +7,11 @@ title: Diego Components
 
 The following diagram illustrates the major components of Diego and how they interact with other components of the Cloud Foundry ecosystem.
 
-Components in the blue region are part of the Diego core and handle the running and monitoring of Tasks and LRPs.  These components all live in the [Diego-Release](https://github.com/cloudfoundry-incubator/diego-release) BOSH release.
+Components in the blue region are part of the Diego core and handle the running and monitoring of Tasks and LRPs.  These components are contained in the [Diego-Release](https://github.com/cloudfoundry-incubator/diego-release) BOSH release.
 
-Components in the yellow region bring support for streaming logs and routing to Diego containers.  Some of these components live in [Diego-Release](https://github.com/cloudfoundry-incubator/diego-release) while others live in [CF-Release](https://github.com/cloudfoundry/cf-release).  The [Lattice](https://github.com/pivotal-cf-experimental/lattice) distribution includes these components and offers developers an easy-to-install environment for interacting with Diego.
+Components in the yellow region bring support for streaming logs and routing to Diego containers.  Some of these components are contained in [Diego-Release](https://github.com/cloudfoundry-incubator/diego-release) while others live in [CF-Release](https://github.com/cloudfoundry/cf-release).  The [Lattice](https://github.com/pivotal-cf-experimental/lattice) distribution includes these components and offers developers an easy-to-install environment for interacting with Diego.
 
-The red region brings in [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng) and the CC-Bridge.  As the diagram shows, the CC-Bridge merely interfaces with the Receptor translating app-specific messages from the CC to the more generic language of Tasks and LRPs.
+The red region brings in [Cloud Controller](#cloud-controller) and the CC-Bridge.  As the diagram shows, the CC-Bridge merely interfaces with the Receptor translating app-specific messages from the CC to the more generic language of Tasks and LRPs.
 
 [![Diego Overview](../images/diego/diego-overview.png)](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
@@ -19,22 +19,20 @@ The red region brings in [Cloud Controller](https://github.com/cloudfoundry/clou
 
 The following are units of work that must be performed in a deployment. Diego receives instructions about what processes to run, allocates the work strategically across its available cells via an [auction](./diego-auction.html), and monitors the situation continuously to keep everything running as smoothly as possible.
 
+Logs from all processes are streamed out to Loggregator's [Doppler](#doppler) component
+
 ### <a id='tasks'></a>Tasks
 
-* One-off jobs (guaranteed to run only once)
-
-* examples:
-	- example 1
-	- example 2
+* Short-running
+* One-off (guaranteed to run only once)
+* Includes staging tasks
 
 ### <a id='lrps'></a>Long Running Processes (LRPs)
 
-* Ongoing jobs
+* Ongoing
 * Can have multiple instances
-* Require monitoring
+* Includes application instances
 * Entire sets of desired and actual LRPs are represented in the [BBS](#bbs)
-* examples:
-	- running applications
 
 ## <a id='cf-components'></a>Cloud Foundry Components
 
@@ -102,7 +100,7 @@ The CC-Bridge components provide an interface between Diego and the Cloud Contro
 
 ### <a id='tps'></a>TPS
 
-- Provides the CC with information about currently running `LRPs`.
+- Provides the CC with information about currently running LRPs.
 
 - This information is used by the CC to responds to `cf apps` and `cf app X` requests.
 
@@ -169,7 +167,7 @@ Only the Rep and the Receptor communicate with the BBS and participate in inter-
 
 ### <a id='metron'></a> Metron
 
-Forwards application logs and application/Diego metrics to [doppler](https://github.com/cloudfoundry/loggregator)
+Forwards application logs and application/Diego metrics to [Loggregator's Doppler component](https://github.com/cloudfoundry/loggregator)
 
 [**Metron on GitHub**](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron)
 
@@ -203,7 +201,7 @@ Forwards application logs and application/Diego metrics to [doppler](https://git
 
 ### <a id='metrics'></a> Metrics
 
-Reads metrics from the BBS and publishes them to Doppler.
+Reads metrics from the BBS and publishes them to Loggregator.
 
 [**Metrics-Server on GitHub**](https://github.com/cloudfoundry-incubator/runtime-metrics-server)
 
