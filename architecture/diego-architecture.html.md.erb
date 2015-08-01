@@ -56,9 +56,12 @@ Inigo is an integration test suite that launches the Diego components and excerc
 
 The Auction package encodes the behavioral details around the [auction](./diego-auction.html).
 
-It includes a simulation test suite that validates the optimality and performance of the auction algorithm.  The simulation can be run for different algorithm variants at different scales.  The simulation can be run in several ways: 
+It includes a simulation test suite that validates the optimality and performance of the auction algorithm. The simulation can be run for different algorithm variants at different scales. The simulation can be run in several ways: 
+
 - In-process, for quick feedback loops
+
 - Across multiple processes, to reveal the role of communication in the auction
+
 - Across multiple machines in a cloud-like infrastructure, to reveal the impact of latency on the auction
 
 The [Auctioneer](./diego-pedia.html#auctioneer) and [Rep](./diego-pedia.html#rep) components use the Auction package to participate in the [auction](./diego-auction.html).
