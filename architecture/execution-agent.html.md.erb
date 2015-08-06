@@ -16,9 +16,10 @@ A Droplet Execution Agent (DEA) performs the following key functions:
 * **Run droplets**: A DEA manages the lifecycle of each application instance
     running in it, starting and stopping droplets upon request of the [Cloud
     Controller](./cloud-controller.html).
-    The DEA monitors the state of a started application instance, and
+    The DEA monitors the state of a started application instance, and 
     periodically broadcasts application state messages over
-    [NATS](./messaging-nats.html) for consumption byHM9000.
+    [NATS](./messaging-nats.html) for consumption by the 
+    [HM9000](./index.html#hm9k).
 
 ## <a id='directory-server'></a>Directory Server ##
 
@@ -181,7 +182,7 @@ A DEA publishes the following staging messages on NATS:
 * `staging`: Stagers, in a queue group, respond to requests to stage an
     application. Note: This is an old protocol.
 
-## <a id='logs'></a>Logs
+## <a id='logs'></a>Logs ##
 
 [Steno](https://github.com/cloudfoundry/steno) handles the DEA logging.
 DEA logs to STDOUT by default. You can configure the DEA to log to a file, a
