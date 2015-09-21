@@ -2,19 +2,19 @@
 title: Diego Architecture
 ---
 
-See [Diego Components](./diego-pedia.html) for a glossary of Cloud Foundry components related to Diego.
+See [Diego Components](../diego-components.html) for a glossary of Cloud Foundry components related to Diego.
 
 ## <a id='what-is'></a>What is Diego?
 
 Diego is the next-generation runtime powering Cloud Foundry (CF).
 
-Diego schedules and runs **[Tasks](./diego-pedia.html#tasks)** and **[Long Running Processes](./diego-pedia.html#lrps)(LRPs)**:
+Diego schedules and runs **[Tasks](../diego-components.html#tasks)** and **[Long Running Processes](../diego-components.html#lrps)(LRPs)**:
 
 Diego maintains a representation of the total set of desired and actual LRPs for a Cloud Foundry deployment, and constantly steers the set of actual LRPs toward matching the set of desired LRPs by creating and destroying LRPs as requirements change or in response to crashes or network failures.
 
-Diego's [Receptor](./diego-pedia.html#receptor) components recieve requests to add or delete LRP instances, such as app instances, via a [RESTful HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
+Diego's [Receptor](../diego-components.html#receptor) components receive requests to add or delete LRP instances, such as app instances, via a [RESTful HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
 
-Receptors manipulate Diego's representation of its desired LRPs in the [Bulletin Board System \(BBS\)](./diego-pedia.html#bbs), an up-to-date cache of the state of the Diego cluster, including: 
+Receptors manipulate Diego's representation of its desired LRPs in the [Bulletin Board System \(BBS\)](../diego-components.html#bbs), an up-to-date cache of the state of the Diego cluster, including: 
 
 - Desired LRPs 
 
@@ -22,15 +22,15 @@ Receptors manipulate Diego's representation of its desired LRPs in the [Bulletin
 
 - In-flight Tasks
 
-The [Converger](./diego-pedia.html#converger) periodically reads from the BBS and broadcasts requests to start or stop LRPs as needed, based on a comparison of the desired and actual LRPs.
+The [Converger](../diego-components.html#converger) periodically reads from the BBS and broadcasts requests to start or stop LRPs as needed, based on a comparison of the desired and actual LRPs.
 
-The Diego Brain's [Auctioneer](./diego-pedia.html#auctioneer) distributes Tasks and LRPs to the cluster of Diego [Cells](./diego-pedia.html#cell-components) in a process called the [Auction](./diego-auction.html).
+The Diego Brain's [Auctioneer](../diego-components.html#auctioneer) distributes Tasks and LRPs to the cluster of Diego [Cells](../diego-components.html#cell-components) in a process called the [Auction](../diego-auction.html).
 
-See [The Diego Auction](./diego-auction.html) for more information about how tasks and LRPs are distributed in Diego.
+See [The Diego Auction](../diego-auction.html) for more information about how tasks and LRPs are distributed in Diego.
 
-Once a Task or LRP is assigned to a Cell, the [Executor](./diego-pedia.html#executor) spins up a [Garden](./diego-pedia.html#garden) container and executes the specified work, which is encoded as a generic, platform-independent, recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
+Once a Task or LRP is assigned to a Cell, the [Executor](../diego-components.html#executor) spins up a [Garden](../diego-components.html#garden) container and executes the specified work, which is encoded as a generic, platform-independent, recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
 
-Diego streams logs to Loggregator's [Doppler](./diego-pedia.html#doppler) component to provide real-time logs for all Tasks and LRPs.  Diego also interfaces with [Gorouter](./diego-pedia.html#router) to automatically route web traffic to running LRP instances.
+Diego streams logs to Loggregator's [Doppler](../diego-components.html#doppler) component to provide real-time logs for all Tasks and LRPs.  Diego also interfaces with [Gorouter](../diego-components.html#router) to automatically route web traffic to running LRP instances.
 
 Diego is packaged up as the bosh release: [**Diego-Release**](https://github.com/cloudfoundry-incubator/diego-release).
 
@@ -38,9 +38,9 @@ Diego is packaged up as the bosh release: [**Diego-Release**](https://github.com
 
 Diego is abstracted away from the Cloud Controller and other Cloud Foundry components such as the Loggregator and the Router. Non-Diego CF components consume Diego via the [Receptor API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
 
-Presently, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](./diego-pedia.html#cloud-controller)'s domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the Diego Cell's [Receptor](./diego-pedia.html#receptor) component.
+Presently, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](../diego-components.html#cloud-controller)'s domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the Diego Cell's [Receptor](../diego-components.html#receptor) component.
 
-The process of staging and running a CF application is complex and filled with platform and implementation-specific details. These concerns are encapsulated in a triad of binaries known collectively as the [App Lifecycle](./diego-pedia.html#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
+The process of staging and running a CF application is complex and filled with platform and implementation-specific details. These concerns are encapsulated in a triad of binaries known collectively as the [App Lifecycle](../diego-components.html#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
 
 ## <a id='conclusion'></a>Working Together
 
@@ -64,7 +64,7 @@ It includes a simulation test suite that validates the optimality and performanc
 
 - Across multiple machines in a cloud-like infrastructure, to reveal the impact of latency on the auction
 
-The [Auctioneer](./diego-pedia.html#auctioneer) and [Rep](./diego-pedia.html#rep) components use the Auction package to participate in the [auction](./diego-auction.html).
+The [Auctioneer](../diego-components.html#auctioneer) and [Rep](../diego-components.html#rep) components use the Auction package to participate in the [auction](./diego-auction.html).
 
 [**Auction on GitHub**](https://github.com/cloudfoundry-incubator/auction)
 
