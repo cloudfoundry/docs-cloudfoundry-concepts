@@ -24,9 +24,9 @@ Receptors manipulate Diego's representation of its desired LRPs in the [Bulletin
 
 The [Converger](../diego-components.html#converger) periodically reads from the BBS and broadcasts requests to start or stop LRPs as needed, based on a comparison of the desired and actual LRPs.
 
-The Diego Brain's [Auctioneer](../diego-components.html#auctioneer) distributes Tasks and LRPs to the cluster of Diego [Cells](../diego-components.html#cell-components) in a process called the [Auction](../diego-auction.html).
+The Diego Brain's [Auctioneer](../diego-components.html#auctioneer) distributes Tasks and LRPs to the cluster of Diego [Cells](../diego-components.html#cell-components) in a process called the [Auction](./diego-auction.html).
 
-See [The Diego Auction](../diego-auction.html) for more information about how tasks and LRPs are distributed in Diego.
+See [The Diego Auction](./diego-auction.html) for more information about how tasks and LRPs are distributed in Diego.
 
 Once a Task or LRP is assigned to a Cell, the [Executor](../diego-components.html#executor) spins up a [Garden](../diego-components.html#garden) container and executes the specified work, which is encoded as a generic, platform-independent, recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
 
