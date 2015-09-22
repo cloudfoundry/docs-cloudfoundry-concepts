@@ -2,23 +2,23 @@
 title: How Diego Allocates Work
 ---
 
-The Diego Auction is the process by which [Diego](./diego-architecture.html) allocates tasks and long running processes (LRPs) to [Cells](../diego-components.html#cell-components), which execute them. The auction replaces the [Cloud Controller DEA placement algorithm](./cloud-controller.html#dea-placement), which performed this function in the pre-Diego Cloud Foundry architecture.
+The Diego Auction is the process by which [Diego](./diego-architecture.html) allocates tasks and long running processes (LRPs) to [Cells](./diego-components.html#cell-components), which execute them. The auction replaces the [Cloud Controller DEA placement algorithm](./cloud-controller.html#dea-placement), which performed this function in the pre-Diego Cloud Foundry architecture.
 
 [Auction on GitHub](https://github.com/cloudfoundry-incubator/auction)
 
 ## <a id='initiate'></a>Initiating an Auction
 
-An [Auctioneer](../diego-components.html#auctioneer) initiates an auction when it receives a request to allocate a batch of work (tasks and LRPs) either from:
+An [Auctioneer](./diego-components.html#auctioneer) initiates an auction when it receives a request to allocate a batch of work (tasks and LRPs) either from:
 
-- A Cell [Receptor](../diego-components.html#receptor), in response to a request from the Cloud Controller via the CC-Bridge.
+- A Cell [Receptor](./diego-components.html#receptor), in response to a request from the Cloud Controller via the CC-Bridge.
 
-- A [Converger](../diego-components.html#converger), in response to a mismatch between the desired LRPs and actual LRPs as represented in the BBS(../diego-components.html#bbs).
+- A [Converger](./diego-components.html#converger), in response to a mismatch between the desired LRPs and actual LRPs as represented in the BBS(./diego-components.html#bbs).
 
 Only one auction can take place at a time.
 
 ## <a id='fetch-info'></a>Querying the Cells
 
-The Auctioneer queries the state of each Cell via a request to the Cell [Rep](../diego-components.html#rep). The information provided by the Rep includes:
+The Auctioneer queries the state of each Cell via a request to the Cell [Rep](./diego-components.html#rep). The information provided by the Rep includes:
 
 - the Cell's available capacity
 - the Cell's stack
