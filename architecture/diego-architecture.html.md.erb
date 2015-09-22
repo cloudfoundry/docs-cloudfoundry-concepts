@@ -8,7 +8,7 @@ See [Diego Components](../diego-components.html) for a glossary of Cloud Foundry
 
 Diego is the next-generation runtime powering Cloud Foundry (CF).
 
-Diego schedules and runs **[Tasks](../diego-components.html#tasks)** and **[Long Running Processes](../diego-components.html#lrps)(LRPs)**:
+Diego schedules and runs **Tasks** and **Long Running Processes (LRPs)**:
 
 Diego maintains a representation of the total set of desired and actual LRPs for a Cloud Foundry deployment, and constantly steers the set of actual LRPs toward matching the set of desired LRPs by creating and destroying LRPs as requirements change or in response to crashes or network failures.
 
@@ -28,9 +28,9 @@ The Diego Brain's [Auctioneer](../diego-components.html#auctioneer) distributes 
 
 See [The Diego Auction](./diego-auction.html) for more information about how tasks and LRPs are distributed in Diego.
 
-Once a Task or LRP is assigned to a Cell, the [Executor](../diego-components.html#executor) spins up a [Garden](../diego-components.html#garden) container and executes the specified work, which is encoded as a generic, platform-independent, recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
+Once a Task or LRP is assigned to a Cell, the Executor spins up a Garden container and executes the specified work, which is encoded as a generic, platform-independent, recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
 
-Diego streams logs to Loggregator's [Doppler](../diego-components.html#doppler) component to provide real-time logs for all Tasks and LRPs.  Diego also interfaces with [Gorouter](../diego-components.html#router) to automatically route web traffic to running LRP instances.
+Diego streams logs to Loggregator's Doppler component to provide real-time logs for all Tasks and LRPs.  Diego also interfaces with the Gorouter to automatically route web traffic to running LRP instances.
 
 Diego is packaged up as the bosh release: [**Diego-Release**](https://github.com/cloudfoundry-incubator/diego-release).
 
@@ -38,9 +38,9 @@ Diego is packaged up as the bosh release: [**Diego-Release**](https://github.com
 
 Diego is abstracted away from the Cloud Controller and other Cloud Foundry components such as the Loggregator and the Router. Non-Diego CF components consume Diego via the [Receptor API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md).
 
-Presently, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](../diego-components.html#cloud-controller)'s domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the Diego Cell's [Receptor](../diego-components.html#receptor) component.
+Presently, there is a translation layer called the CC-Bridge that converts the Cloud Controller's domain-specific requests to stage and run applications into requests terms that Diego understands: Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the Diego Cell's [Receptor](../diego-components.html#receptor) component.
 
-The process of staging and running a CF application is complex and filled with platform and implementation-specific details. These concerns are encapsulated in a triad of binaries known collectively as the [App Lifecycle](../diego-components.html#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
+The process of staging and running a CF application is complex and filled with platform and implementation-specific details. These concerns are encapsulated in a triad of binaries known collectively as the App Lifecycle. The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
 
 ## <a id='conclusion'></a>Working Together
 
@@ -48,7 +48,7 @@ Diego is a complex system with many moving parts. The interactions and high-leve
 
 ### <a id='inigo'></a>Inigo
 
-Inigo is an integration test suite that launches the Diego components and excercises them through various test cases, including component failures and other exceptional cases.  As such, Inigo validates that a given set of component versions are mutually compatible, and that the system of these components is robust and degrades gracefully in its performance.
+Inigo is an integration test suite that launches the Diego components and exercises them through various test cases, including component failures and other exceptional cases.  As such, Inigo validates that a given set of component versions are mutually compatible, and that the system of these components is robust and degrades gracefully in its performance.
 
 [**Inigo on GitHub**](https://github.com/cloudfoundry-incubator/inigo)
 
