@@ -2,7 +2,7 @@
 title: Diego Components
 ---
 
-This document describes the components that make up Diego, the next-generation container management system for Cloud Foundry (CF).
+This topic describes the components that make up Diego, the next-generation container management system for Cloud Foundry (CF).
 
 For an overview of the high-level structure of Diego, see the [Diego Architecture](./diego-architecture.html) topic.
 
@@ -22,19 +22,19 @@ This table describes the major areas in the image above:
 </tr>
 <tr>
   <td>Blue</td>
-  <td>Running and monitoring Tasks and Long Running Processes (LRPs)</td>
+  <td>Running and monitoring <a href="./diego-auction.html#processes">Tasks and Long Running Processes</a> (LRPs)</td>
   <td><a href="https://github.com/cloudfoundry-incubator/diego-release">Diego Release</a></td>
   <td><a href="#core"></a></td>
 </tr>
 <tr>
   <td>Red</td>
   <td>Translating app-specific messages from the Cloud Controller to the <a href="#bbs">Bulletin Board System</a> (BBS)</td>
-  <td><a href="https://github.com/cloudfoundry-incubator/diego-design-notes#cc-bridge-components"><a href="#bridge-components">Diego CC-Bridge Components</a></td>
+  <td><a href="https://github.com/cloudfoundry-incubator/diego-design-notes#cc-bridge-components">Diego CC-Bridge Components</a></td>
   <td></td>
 </tr>
 <tr>
   <td>Yellow</td>
-  <td>Supporting streaming logs and routing to containers that Diego manages</td>
+  <td>Supporting streaming logs and routing to containers managed by Diego</td>
   <td><a href="https://github.com/cloudfoundry-incubator/diego-release">Diego Release</a> and <a href="https://github.com/cloudfoundry/cf-release">CF-Release</a></td>
   <td>The <a href="https://github.com/cloudfoundry-incubator/lattice">Lattice</a> distribution includes these components and offers developers an environment for interacting with Diego.</td>
   </td>
@@ -53,7 +53,7 @@ Diego Brain components distribute Tasks and LRPs to Diego [Cells](#cell-componen
 #### Auctioneer ####
 
 - Uses the [auction](https://github.com/cloudfoundry-incubator/auction) package
-to run [Diego auctions](./diego-auction.html) for Tasks and `ActualLRP` instances
+to run [Diego Auctions](./diego-auction.html) for Tasks and LRPs
 
 - Communicates with Cell [Reps](#rep) over HTTP
 
@@ -64,7 +64,7 @@ Refer to the [Auctioneer repo](https://github.com/cloudfoundry-incubator/auction
 <a id='converger'></a>
 #### Converger ####
 
-- Uses converge methods from the Runtime-Schema to analyze snapshots of the [BBS](#bbs) to ensure consistency and fault tolerance for Tasks and LRPs
+- Uses converge methods from the [Runtime Schema](https://github.com/cloudfoundry-incubator/runtime-schema) to analyze snapshots from the [BBS](#bbs) to ensure consistency and fault tolerance for Tasks and LRPs
 
 - Acts to keep `DesiredLRP` count and `ActualLRP` count synchronized in the following ways:
     - If the `DesiredLRP` count exceeds the `ActualLRP` count, the Converger requests a start auction from the [Auctioneer](#auctioneer)
@@ -72,7 +72,7 @@ Refer to the [Auctioneer repo](https://github.com/cloudfoundry-incubator/auction
 
 - Monitors for potentially missed messages, resending them if necessary
 
-- Maintains a lock in the [BBS](#bbs) that limits converger performance to one Converger at a time
+- Maintains a lock in the [BBS](#bbs) that limits converge methods to one Converger at a time
 
 Refer to the [Converger repo](https://github.com/cloudfoundry-incubator/converger) on GitHub for more information.
 
@@ -93,13 +93,13 @@ Diego Cell components manage and maintain Tasks and LRPs.
 <a id='rep'></a>
 #### Rep ####
 
-- Represents a Cell in [Diego auctions](./diego-auction.html) for Tasks and LRPs
+- Represents a Cell in [Diego Auctions](./diego-auction.html) for Tasks and LRPs
 
-- Mediates all communication between the Cell and the [Bulletin Board System](#bbs) (BBS)
+- Mediates all communication between the Cell and the BBS
 
-- Ensures synchronization between the set of Tasks and `ActualLRPs` in the [BBS](#bbs) with the containers present on the Cell
+- Ensures synchronization between the set of Tasks and LRPs in the BBS with the containers present on the Cell
 
-- Maintains the presence of the Cell in the [BBS](#bbs)
+- Maintains the presence of the Cell in the BBS
 
 - Runs Tasks and LRPs by asking the in-process [Executor](#executor) to create a container and `RunAction` recipes
 
@@ -134,12 +134,12 @@ Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/deve
 
 ##<a id='bridge-components'></a>CC-Bridge Components ##
 
-CC-Bridge components translate app-specific requests from the Cloud Controller to the [BBS](#bbs). These components include the following:
+CC-Bridge components translate app-specific requests from the Cloud Controller to the BBS. These components include the following:
 
 <a id='stager'></a>
 ### Stager ###
 
-- Translates staging requests from the Cloud Controller into generic Tasks
+- Translates staging requests from the Cloud Controller into generic Tasks and LRPs
 
 - Sends a response to the Cloud Controller when a Task completes
 
@@ -148,9 +148,9 @@ Refer to the [Stager repo](https://github.com/cloudfoundry-incubator/stager) on 
 <a id='nsync'></a>
 ### Nsync ###
 
-- Consumes app requests to update the `DesiredLRPs` count and submits it to the [Converger](#converger) through the [BBS](#bbs)
+- Consumes app requests to update the `DesiredLRPs` count and submits the count to the [Converger](#converger) through the BBS
 
-- Periodically polls Cloud Controller for each app to ensure Diego has current desired state 
+- Periodically polls the Cloud Controller for each app to ensure that Diego has the current desired state 
 
 Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on GitHub for more information.
 
@@ -166,7 +166,7 @@ Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub
 
 - Mediates uploads from the [Executor](#executor) to the Cloud Controller  
 
-- Translates simple HTTP POST requests from the [Executor](#executor) into complex multipart-form uploads for the Cloud Controller
+- Translates simple HTTP POST requests from the Executor into complex multipart-form uploads for the Cloud Controller
 
 Refer to the [CC-Uploader repo](https://github.com/cloudfoundry-incubator/cc-uploader) on GitHub for more information.
 
@@ -232,7 +232,7 @@ Refer to the [Consul repo](https://github.com/hashicorp/consul) on GitHub for mo
 <a id='consuladapter'></a>
 ### Consuladapter ###
 
-Consuladapter provides a driver for interfacing with etcd
+Consuladapter provides a driver for interfacing with etcd.
 
 Refer to the [Consuladapter repo](https://github.com/cloudfoundry-incubator/consuladapter) on GitHub for more information.
 
@@ -241,6 +241,6 @@ Refer to the [Consuladapter repo](https://github.com/cloudfoundry-incubator/cons
 
 - Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to the Cloud Foundry  [GoRouter](https://github.com/cloudfoundry/gorouter) when it detects changes
 
-- Periodically emits the entire routing table to the router
+- Periodically emits the entire routing table to the GoRouter
 
 Refer to the [Route-Emitter repo](https://github.com/cloudfoundry-incubator/route-emitter) on GitHub for more information.

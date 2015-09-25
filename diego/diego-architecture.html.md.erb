@@ -2,7 +2,7 @@
 title: Diego Architecture
 ---
 
-This documents provides an overview of the high-level structure of Diego, the next-generation container management system for Cloud Foundry (CF). 
+This topic provides an overview of the high-level structure of Diego, the next-generation container management system for Cloud Foundry (CF). 
 
 * To deploy Diego, see the GitHub [Diego-Release](https://github.com/cloudfoundry-incubator/diego-release).
 * For more information about the major components of Diego and how they interact with other Cloud Foundry components, see the [Diego Components](./diego-components.html) topic.
@@ -19,11 +19,11 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP. 
 
-1. The BBS provides Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer). 
+1. The BBS submits the Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer). 
 
 1. The Auctioneer distributes these Tasks and LRPs to [Cells](./diego-components.html#cell-components) through an Auction.
 
-1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](./diego-components.html#executor) creates a [Garden](./diego-components.html#garden) container in the cell. The Task or LRP runs in the container.
+1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](./diego-components.html#executor) creates a [Garden](./diego-components.html#garden) container in the Cell. The Task or LRP runs in the container.
 
 1. The BBS also tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger). The Converger periodically analyzes this information and corrects discrepancies, ensuring that Diego is eventually consistent.
 
