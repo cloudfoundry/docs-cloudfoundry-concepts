@@ -4,7 +4,7 @@ title: Diego Components
 
 This document describes the components that make up Diego, the next-generation container management system for Cloud Foundry (CF).
 
-For an overview of Diego, see the [Diego Architecture](./diego-architecture.html) topic.
+For an overview of the high-level structure of Diego, see the [Diego Architecture](./diego-architecture.html) topic.
 
 The diagram below illustrates the primary Diego components and how they interact with other Cloud Foundry components. 
 
@@ -43,7 +43,7 @@ This table describes the major areas in the image above:
 
 ##<a id='core'></a>Diego Core Components##
 
-Components in the Diego core run and monitor Tasks and Long Running Processes (LRPs). The core consists of three major areas: the [Brain](#brain-components), the [Bulletin Board System](#bbs) (BBS), and the [Cells](#cell-components).
+Components in the Diego core run and monitor [Tasks](./diego-auction.html#task) and [Long Running Processes](./diego-auction.html#lrp) (LRPs). The core consists of three major areas: the [Brain](#brain-components), the [Bulletin Board System](#bbs) (BBS), and the [Cells](#cell-components).
 
 ###<a id='brain-components'></a>Diego Brain ###
 

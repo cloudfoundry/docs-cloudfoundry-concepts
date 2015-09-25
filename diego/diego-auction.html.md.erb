@@ -6,17 +6,29 @@ The Diego Auction is the process by which [Diego](./diego-architecture.html) all
 
 [Auction on GitHub](https://github.com/cloudfoundry-incubator/auction)
 
-## <a id='initiate'></a>Initiating an Auction
+##<a id='processes'></a>Tasks and Long Running Processes
+
+Diego runs and monitors two types of processes: **Tasks** and **Long Running Processes** (LRPs). 
+
+* <a id='task'></a>**Tasks**: Tasks run once, for a finite amount of time.
+   
+    Example Tasks: Making a database schema change, bulk importing data to initialize a database, setting up a connected service
+
+* <a id='lrp'></a>**Long Running Processes** (LRPs): LRPs run continuously, for an indefinite time. LRPs only terminate if stopped or killed, or in the case of failure. Diego can run multiple instances of any LRP.
+    
+	Example LRPs: A web-server, a service that continuously accepts input and processes it, an application
+
+##<a id='initiate'></a>Initiating an Auction
 
 An [Auctioneer](./diego-components.html#auctioneer) initiates an auction when it receives a request to allocate a batch of work (tasks and LRPs) either from:
 
 - A Cell [Rep](./diego-components.html#rep), in response to a request from the Cloud Controller via the CC-Bridge.
 
-- A [Converger](./diego-components.html#converger), in response to a mismatch between the desired LRPs and actual LRPs as represented in the BBS(./diego-components.html#bbs).
+- The [Converger](./diego-components.html#converger), in response to a mismatch between the desired LRPs and actual LRPs as represented in the BBS(./diego-components.html#bbs).
 
 Only one auction can take place at a time.
 
-## <a id='fetch-info'></a>Querying the Cells
+##<a id='fetch-info'></a>Querying the Cells
 
 The Auctioneer queries the state of each Cell via a request to the Cell [Rep](./diego-components.html#rep). The information provided by the Rep includes:
 
@@ -24,7 +36,7 @@ The Auctioneer queries the state of each Cell via a request to the Cell [Rep](./
 - the Cell's stack
 - the set of Actual LRPs currently running on the Cell
 
-## <a id='prioritizing'></a>Prioritizing the Work to be Auctioned
+##<a id='prioritizing'></a>Prioritizing the Work to be Auctioned
 
 When the Auctioneer receives a batch of work it must strategically decide the order in which to distributed it. 
 
@@ -71,7 +83,7 @@ The Auctioneer would allocate the LRPs in the following order:
 
 This sorting by index ensures that LRPs of each type are placed before all of the LRPs of any type are, preventing both large and small LRPs from dominating the allocation process.
 
-## <a id='allocating'></a>Allocating Work
+##<a id='allocating'></a>Allocating Work
 
 The Auctioneer calculates the distribution of Actual LRPs across available Cells.
 

@@ -17,7 +17,7 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. The Cloud Controller passes requests to stage and run applications to [CC-Bridge](./diego-components.html#bridge-components).
 
-1. CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP. 
+1. CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP. 
 
 1. The BBS provides Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer). 
 
@@ -29,20 +29,6 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. [Metron Agents](./diego-components.html#metron-agent) forward application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
  
-## <a id='processes'></a>Tasks and Long Running Processes
-
-Diego runs and monitors two types of processes: **Tasks** and **Long Running Processes** (LRPs). 
-
-* <a id='task'></a>**Tasks**: Tasks run once, for a finite amount of time.
-   
-    Example Tasks: Making a database schema change, bulk importing data to initialize a database, setting up a connected service
-
-* <a id='lrp'></a>**Long Running Processes** (LRPs): LRPs run continuously, for an indefinite time. LRPs only terminate if stopped or killed, or in the case of failure. Diego can run multiple instances of any LRP.
-    
-	Example LRPs: A web-server, a service that continuously accepts input and processes it, an application
-
-For more information about how Diego schedules Tasks and LRPs, see the [the Diego Auction](./diego-auction.html). 
-
 ## <a id='monitoring'></a>Monitoring and Testing
 
 You can monitor and test runtime deployment using the following releases:
