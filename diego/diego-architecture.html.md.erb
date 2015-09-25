@@ -9,7 +9,7 @@ This documents provides an overview of the high-level structure of Diego, the ne
 
 ##<a id='overview'></a>Overview
 
-In a Cloud Foundry deployment without Diego, the Cloud Controller schedules and manages applications on the [Droplet Execution Agents](../architecture/execution-agent.html) (DEAs). Diego replaces the DEAs and the [Health Manager](../architecture/index.html#hm9k), and assumes application scheduling and management responsibility from the Cloud Controller.
+In a Cloud Foundry deployment without Diego, the [Cloud Controller](../architecture/cloud-controller.html) schedules and manages applications on the [Droplet Execution Agents](../architecture/execution-agent.html) (DEAs). Diego replaces the DEAs and the [Health Manager](../architecture/index.html#hm9k), and assumes application scheduling and management responsibility from the Cloud Controller.
 
 Refer to the diagram and descriptions below for information about the way Diego handles application requests.
 
@@ -21,13 +21,13 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. The BBS provides Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer). 
 
-1. The Auctioneer distributes these Tasks and LRPs to the cluster of [Diego Cells](./diego-components.html#cell) through an Auction. The Auction queries, then assigns Task or LRPs to Cell [Reps](./diego-components.html#rep).
+1. The Auctioneer distributes these Tasks and LRPs to [Cells](./diego-components.html#cell-components) through an Auction.
 
-1. Once the Auction assigns a Task or LRP to a Cell, an in-process [Executor](./diego-components.html#executor) creates a Garden container and executes the Task or LRP in the container.
+1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](./diego-components.html#executor) creates a [Garden](./diego-components.html#garden) container in the cell. The Task or LRP runs in the container.
 
 1. The BBS also tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger). The Converger periodically analyzes this information and corrects discrepancies, ensuring that Diego is eventually consistent.
 
-1. [Metron Agents](./diego-components.html#metron-agents) forward application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component 
+1. [Metron Agents](./diego-components.html#metron-agent) forward application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
  
 ## <a id='processes'></a>Tasks and Long Running Processes
 
@@ -41,7 +41,7 @@ Diego runs and monitors two types of processes: **Tasks** and **Long Running Pro
     
 	Example LRPs: A web-server, a service that continuously accepts input and processes it, an application
 
-For more information about how Diego schedules Tasks and LRPs, see [The Diego Auction](./diego-auction.html). 
+For more information about how Diego schedules Tasks and LRPs, see the [the Diego Auction](./diego-auction.html). 
 
 ## <a id='monitoring'></a>Monitoring and Testing
 
@@ -49,19 +49,19 @@ You can monitor and test runtime deployment using the following releases:
 
 ###Inigo
 
-Inigo is an integration test suite that launches the Diego components through various test cases, including component failures and other exceptional scenarios. Inigo validates a given set of component versions to ensure they are mutually compatible, and that the system of these components is robust and performance degrades gracefully.
+Inigo is an integration test suite that launches the Diego components through various test cases, including component failures and other exceptional scenarios. Inigo validates a given set of component versions to ensure mutual compatibility, robustness, and that in failure conditions performance degrades gracefully.
 
 Refer to the [Inigo repo](https://github.com/cloudfoundry-incubator/inigo) on GitHub for more information.
 
 ###Auction
 
-Diego allocates tasks and long running processes (LRPs) to the executing cells using the [Diego Auction](./diego-auction.html). 
+Diego allocates Tasks and LRPs to the executing cells using the [Diego Auction](./diego-auction.html). 
 
-The Auction package encodes behavioral details for the Diego Auction. It includes a simulation test suite that validates the optimal performance of the auction algorithm. You can run the simulation for different algorithm variants at various scales. The simulation can be run in several ways:
+The Auction package encodes behavioral details for the Diego Auction. It includes a simulation test suite that validates the optimal performance of the auction algorithm. You can run the simulation for different algorithm variants at various scales, and in the following ways:
 
 - In-process, for quick feedback loops
 
-- Across multiple processes, to reveal the role of communication in the auction
+- Across multiple processes, to reveal the impact of communication in the auction
 
 - Across multiple machines in a cloud-like infrastructure, to reveal the impact of latency on the auction
 
@@ -69,16 +69,6 @@ Refer to the [Auction repo](https://github.com/cloudfoundry-incubator/inigo) on 
 
 ###Diego Acceptance Tests
 
-Diego Acceptance Tests (DAT) is a suite of acceptance-level tests that run against CF and Diego deployment releases. The purpose of DAT is to execute a number of happy-path test cases across the entire stack.
+Diego Acceptance Tests (DAT) is a suite of acceptance-level tests that run against Cloud Foundry and Diego deployment releases. The purpose of DAT is to execute a number of "happy-path" test cases across an entire deployment.
 
 Refer to the [Diego Acceptance Test  repo](https://github.com/cloudfoundry-incubator/diego-acceptance-tests) on GitHub for more information.
-
-###Runtime-Schema
-
-The Runtime-Schema encodes all communication between Diego components and the BBS. The BBS, Rep, and Converger are the primary consumers of Runtime-Schema.
-
-Access to the consistent store is mediated via the BBS. The BBS is comprised of several domain-specific sub-BBS packages. Each Diego component is then given view into the BBS (implemented as a Golang interface) to clarify the role and responsibility of the component.
-
-The models by which components communicate are encoded in the models package.
-
-Refer to the [Runtime Schema  repo](https://github.com/cloudfoundry-incubator/runtime-schema) on GitHub for more information.
