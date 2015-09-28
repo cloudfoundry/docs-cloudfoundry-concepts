@@ -25,27 +25,27 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](./diego-components.html#executor) creates a [Garden](./diego-components.html#garden) container in the Cell. The Task or LRP runs in the container.
 
-1. The BBS also tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger). The Converger periodically analyzes this information and corrects discrepancies, ensuring that Diego is eventually consistent.
+1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger). The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
-1. [Metron Agents](./diego-components.html#metron-agent) forward application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
+1. [Metron Agents](./diego-components.html#metron-agent) forward application logs, errors, and metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
  
 ## <a id='monitoring'></a>Monitoring and Testing
 
-You can monitor and test runtime deployment using the following releases:
+The following releases monitor and test runtime deployment:
 
 ###Inigo
 
-Inigo is an integration test suite that launches the Diego components through various test cases, including component failures and other exceptional scenarios. Inigo validates a given set of component versions to ensure mutual compatibility, robustness, and that in failure conditions performance degrades gracefully.
+Inigo is an integration test suite that launches the Diego components through various test cases, including component failures and other exceptional scenarios. Inigo validates a given set of component versions to ensure mutual compatibility, robustness, and graceful performance degradation in failure conditions.
 
 Refer to the [Inigo repo](https://github.com/cloudfoundry-incubator/inigo) on GitHub for more information.
 
 ###Auction
 
-Diego allocates Tasks and LRPs to the executing cells using the [Diego Auction](./diego-auction.html). 
+The Auction package encodes behavioral details about Task and LRP allocation to cells during an [Auction](./diego-auction.html). 
 
 The Auction package encodes behavioral details for the Diego Auction. It includes a simulation test suite that validates the optimal performance of the auction algorithm. You can run the simulation for different algorithm variants at various scales, and in the following ways:
 
-- In-process, for quick feedback loops
+- In-process, for short feedback loops
 
 - Across multiple processes, to reveal the impact of communication in the auction
 
@@ -55,6 +55,6 @@ Refer to the [Auction repo](https://github.com/cloudfoundry-incubator/inigo) on 
 
 ###Diego Acceptance Tests
 
-Diego Acceptance Tests (DAT) is a suite of acceptance-level tests that run against Cloud Foundry and Diego deployment releases. The purpose of DAT is to execute a number of "happy-path" test cases across an entire deployment.
+Diego Acceptance Tests (DAT) is a suite of acceptance-level tests that run against Cloud Foundry and Diego deployment releases. DAT executes a number of "happy-path" test cases across an entire deployment.
 
 Refer to the [Diego Acceptance Test  repo](https://github.com/cloudfoundry-incubator/diego-acceptance-tests) on GitHub for more information.
