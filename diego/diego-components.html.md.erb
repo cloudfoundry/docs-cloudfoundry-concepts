@@ -9,7 +9,7 @@ For an overview of the high-level structure of Diego, see the [Diego Architectur
 The diagram below illustrates the primary Diego components and how they interact with other Cloud Foundry components. 
 
 ![Diego Overview](../images/diego/diego-overview.png)
-[Enlarge image](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
+</br>[Enlarge image](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
 This table describes the major areas in the image above:
 
@@ -43,7 +43,13 @@ This table describes the major areas in the image above:
 
 ##<a id='core'></a>Diego Core Components##
 
-Components in the Diego core run and monitor [Tasks](./diego-auction.html#task) and [Long Running Processes](./diego-auction.html#lrp) (LRPs). The core consists of three major areas: the [Brain](#brain-components), the [Bulletin Board System](#bbs) (BBS), and the [Cells](#cell-components).
+Components in the Diego core run and monitor [Tasks](./diego-auction.html#task) and [Long Running Processes](./diego-auction.html#lrp) (LRPs). The core consists of the following major areas: 
+
+* [Brain](#brain-components)
+* [Cells](#cell-components)
+* [Database VMs](#database-vms)
+* [Access VMs](#access-vms)
+* [Consul](#consul)
 
 ###<a id='brain-components'></a>Diego Brain ###
 
@@ -78,14 +84,6 @@ Refer to the [Converger repo](https://github.com/cloudfoundry-incubator/converge
 
 ---
 
-###<a id='bbs'></a>Diego Bulletin Board System ###
-
-The Bulletin Board System (BBS) maintains a real-time representation of the state of the Diego cluster, including all desired LRPs, running LRP instances, and in-flight Tasks. The BBS accepts submissions, updates, and requests for Tasks and LRPs from clients through an RPC-style API over HTTP.
-
-Refer to the [Bulletin Board System repo](https://github.com/cloudfoundry-incubator/bbs) on GitHub for more information.
-
----
-
 ###<a id='cell-components'></a>Diego Cell Components ###
 
 Diego Cell components manage and maintain Tasks and LRPs.
@@ -107,6 +105,8 @@ Refer to the [Rep repo](https://github.com/cloudfoundry-incubator/rep) on GitHub
 
 <a id='executor'></a>
 #### Executor ####
+
+- Runs as a logical process inside the [Rep](#rep)
 
 - Implements the generic Executor actions detailed in the [API documentation](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md)
 
@@ -132,6 +132,57 @@ Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/deve
 
 ---
 
+###<a id='database-vms'></a>Database VMs ###
+
+<a id='bbs'></a>
+#### Diego Bulletin Board System ####
+
+- Maintains a real-time representation of the state of the Diego cluster, including all desired LRPs, running LRP instances, and in-flight Tasks
+
+- Provides an RPC-style API over HTTP to [Diego Core](#core) components abd external clients, including the SSH Proxy, CC-Bridge, and Route Emitter
+
+Refer to the [Bulletin Board System repo](https://github.com/cloudfoundry-incubator/bbs) on GitHub for more information.
+
+<a id='etcd'></a>
+#### ETCD ####
+
+- Provides a consistent key-value data store to Diego
+
+---
+
+###<a id='access-vms'></a>Access VMs ###
+
+<a id='file-server'></a>
+#### File Server ####
+
+- Serves static assets used by various Diego components, particularly the [App Lifecycle binaries](#app-lifecycles)
+
+Refer to the [File Server repo](https://github.com/cloudfoundry-incubator/file-server) on GitHub for more information.
+
+<a id='ssh-proxy'></a>
+#### SSH Proxy ####
+
+- Brokers connections between SSH clients and SSH servers running inside instance containers
+
+Refer to the [Diego SSH repo](https://github.com/cloudfoundry-incubator/diego-ssh) on GitHub for more information.
+
+---
+
+###<a id='consul'></a>Consul ###
+
+- Provides dynamic service registration and load balancing through DNS resolution
+
+- Provides a consistent key-value store for maintenance of distributed locks and component presence
+
+Refer to the [Consul repo](https://github.com/hashicorp/consul) on GitHub for more information.
+
+<a id='consuladapter'></a>
+#### Consuladapter ####
+
+Consuladapter provides a driver for interfacing with etcd.
+
+Refer to the [Consuladapter repo](https://github.com/cloudfoundry-incubator/consuladapter) on GitHub for more information.
+
 ##<a id='bridge-components'></a>CC-Bridge Components ##
 
 CC-Bridge components translate app-specific requests from the Cloud Controller to the BBS. These components include the following:
@@ -145,22 +196,6 @@ CC-Bridge components translate app-specific requests from the Cloud Controller t
 
 Refer to the [Stager repo](https://github.com/cloudfoundry-incubator/stager) on GitHub for more information.
 
-<a id='nsync'></a>
-### Nsync ###
-
-- Consumes app requests to update the `DesiredLRPs` count and submits the count to the [Converger](#converger) through the BBS
-
-- Periodically polls the Cloud Controller for each app to ensure that Diego has the current desired state 
-
-Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on GitHub for more information.
-
-<a id='tps'></a>
-### TPS ###
-
-The TPS provides the Cloud Controller with information about currently running LRPs to respond to `cf apps` and `cf app APP_NAME` requests
-
-Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub for more information.
-
 <a id='cc-uploader'></a>
 ### CC-Uploader ###
 
@@ -170,12 +205,26 @@ Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub
 
 Refer to the [CC-Uploader repo](https://github.com/cloudfoundry-incubator/cc-uploader) on GitHub for more information.
 
-<a id='file-server'></a>
-### File Server ###
+<a id='nsync'></a>
+### Nsync ###
 
-- Serves static assets used by various Diego components
+- Listens for app requests to update the `DesiredLRPs` count and updates `DesiredLRPs` through the BBS
 
-Refer to the [File Server repo](https://github.com/cloudfoundry-incubator/file-server) on GitHub for more information.
+- Periodically polls the Cloud Controller for each app to ensure that Diego has the current desired state 
+
+Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on GitHub for more information.
+
+<a id='tps'></a>
+### TPS ###
+
+- Provides the Cloud Controller with information about currently running LRPs to respond to `cf apps` and `cf app APP_NAME` requests
+
+- Monitors `ActualLRP` activity for crashes and reports them the Cloud Controller
+
+Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub for more information.
+
+
+
 
 ##<a id='platform-specific'></a>Platform-specific Components ##
 
@@ -220,21 +269,6 @@ App Lifecycles implement deployment strategies. Each App Lifecycle contains the 
 
 ##<a id='other-components'></a>Other Components ##
 
-<a id='consul'></a>
-### Consul ###
-
-- Provides dynamic service registration and load balancing through DNS resolution
-
-- Provides a consistent key-value store for maintenance of distributed locks and component presence
-
-Refer to the [Consul repo](https://github.com/hashicorp/consul) on GitHub for more information.
-
-<a id='consuladapter'></a>
-### Consuladapter ###
-
-Consuladapter provides a driver for interfacing with etcd.
-
-Refer to the [Consuladapter repo](https://github.com/cloudfoundry-incubator/consuladapter) on GitHub for more information.
 
 <a id='route-emitter'></a>
 ### Route-Emitter ###
