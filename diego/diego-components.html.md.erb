@@ -29,7 +29,7 @@ This table describes the major areas in the image above:
 <tr>
   <td>Red</td>
   <td>Translating app-specific messages from the Cloud Controller to the <a href="#bbs">Bulletin Board System</a> (BBS)</td>
-  <td><a href="https://github.com/cloudfoundry-incubator/diego-design-notes#cc-bridge-components">Diego CC-Bridge Components</a></td>
+  <td><a href="https://github.com/cloudfoundry-incubator/diego-design-notes#cc-bridge-components">Diego Cloud Controller Bridge (CC-Bridge) Components</a></td>
   <td></td>
 </tr>
 <tr>
@@ -183,9 +183,9 @@ Consuladapter provides a driver for interfacing with etcd.
 
 Refer to the [Consuladapter repo](https://github.com/cloudfoundry-incubator/consuladapter) on GitHub for more information.
 
-##<a id='bridge-components'></a>CC-Bridge Components ##
+##<a id='bridge-components'></a>Cloud Controller Bridge Components ##
 
-CC-Bridge components translate app-specific requests from the Cloud Controller to the BBS. These components include the following:
+The Cloud Controller Bridge (CC-Bridge) components translate app-specific requests from the Cloud Controller to the BBS. These components include the following:
 
 <a id='stager'></a>
 ### Stager ###

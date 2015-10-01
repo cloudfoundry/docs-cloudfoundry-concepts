@@ -15,9 +15,9 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 <%= image_tag("../images/diego/diego-flow.png") %>
 
-1. The Cloud Controller passes requests to stage and run applications to [CC-Bridge](./diego-components.html#bridge-components).
+1. The Cloud Controller passes requests to stage and run applications to the  [Cloud Controller Bridge](./diego-components.html#bridge-components) (CC-Bridge).
 
-1. CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP. 
+1. The CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP. 
 
 1. The BBS submits the Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer). 
 
