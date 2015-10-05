@@ -58,8 +58,7 @@ Diego Brain components distribute Tasks and LRPs to Diego [Cells](#cell-componen
 <a id='auctioneer'></a>
 #### Auctioneer ####
 
-- Uses the [auction](https://github.com/cloudfoundry-incubator/auction) package
-to run [Diego Auctions](./diego-auction.html) for Tasks and LRPs
+- Uses the [auction package](https://github.com/cloudfoundry-incubator/auction) to run [Diego Auctions](./diego-auction.html) for Tasks and LRPs
 
 - Communicates with Cell [Reps](#rep) over HTTP
 
@@ -126,7 +125,7 @@ Refer to the [Garden repo](https://github.com/cloudfoundry-incubator/garden) on 
 <a id='metron-agent'></a>
 #### Metron Agent ####
 
-Forwards application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component 
+Forwards application logs, errors, and application and Diego metrics to the [Loggregator](../../loggregator/architecture.html) Doppler component 
 
 Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron) on GitHub for more information.
 

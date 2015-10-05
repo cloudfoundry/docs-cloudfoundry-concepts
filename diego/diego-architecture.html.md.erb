@@ -21,13 +21,13 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. The BBS submits the Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer). 
 
-1. The Auctioneer distributes these Tasks and LRPs to [Cells](./diego-components.html#cell-components) through an Auction.
+1. The Auctioneer distributes these Tasks and LRPs to [Cells](./diego-components.html#cell-components) through an [Auction](./diego-auction.html).
 
 1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](./diego-components.html#executor) creates a [Garden](./diego-components.html#garden) container in the Cell. The Task or LRP runs in the container.
 
 1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger). The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
-1. [Metron Agents](./diego-components.html#metron-agent) forward application logs, errors, and metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
+1. [Metron Agents](./diego-components.html#metron-agent) forward application logs, errors, and metrics to the  [Loggregator](../../loggregator/architecture.html) Doppler component.
  
 ## <a id='monitoring'></a>Monitoring and Testing
 
@@ -41,9 +41,7 @@ Refer to the [Inigo repo](https://github.com/cloudfoundry-incubator/inigo) on Gi
 
 ###Auction
 
-The Auction package encodes behavioral details about Task and LRP allocation to cells during an [Auction](./diego-auction.html). 
-
-The Auction package encodes behavioral details for the Diego Auction. It includes a simulation test suite that validates the optimal performance of the auction algorithm. You can run the simulation for different algorithm variants at various scales, and in the following ways:
+The [auction package](https://github.com/cloudfoundry-incubator/auction) encodes behavioral details about Task and LRP allocation to cells during a Diego [Auction](./diego-auction.html). It includes a simulation test suite that validates the optimal performance of the auction algorithm. You can run the simulation for different algorithm variants at various scales, and in the following ways:
 
 - In-process, for short feedback loops
 
