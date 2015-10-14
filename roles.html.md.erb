@@ -7,26 +7,32 @@ permissions in either an org or a space.
 
 ## <a id='orgs'></a>Orgs ##
 
-An org is a development account that an individual or multiple collaborators can own and use. All collaborators access an org with user accounts. Collaborators in an org share a resource quota plan, applications, services availability, and
-custom domains.
+An org is a development account that an individual or multiple collaborators 
+can own and use. 
+All collaborators access an org with user accounts. 
+Collaborators in an org share a resource quota plan, applications, services 
+availability, and custom domains.
 
 ## <a id='users'></a>User Accounts ##
 
-A user account represents an individual person within the context of a Cloud Foundry installation. A user can have different roles in different spaces within an org, governing what level and type of access they have within that space.
+A user account represents an individual person within the context of a Cloud 
+Foundry installation. 
+A user can have different roles in different spaces within an org, governing 
+what level and type of access they have within that space.
 
 ## <a id='spaces'></a>Spaces ##
 
 Every application and service is scoped to a space.
 Each org contains at least one space.
-A space provides a set of users access to a shared location for application
+A space provides users with access to a shared location for application 
 development, deployment, and maintenance.
 Each space role applies only to a particular space.
 
 ## <a id='roles'></a>Roles and Permissions ##
 
 A user can have one or more roles.
-The combination of these roles defines the user’s overall permissions in the org
-and within specific spaces in that org.
+The combination of these roles defines the user’s overall permissions in the 
+org and within specific spaces in that org.
 
 ### <a id='org-roles'></a>Org Roles and Permissions ###
 
@@ -34,7 +40,7 @@ and within specific spaces in that org.
 
 Assign this role to managers or other users who need to administer the account.
 
-An Org Manager can:
+An Org Manager can do the following:
 
 * Add and manage users
 * View users and edit org roles
@@ -51,10 +57,23 @@ An Org Manager can:
 Assign this role to people who need to view but not edit user information and
 org quota usage information.
 
-An Org Auditor can:
+An Org Auditor can do the following:
 
 * View users and org roles
 * View the org quota
+
+####Billing Manager ####
+
+Assign this role to people who need to create and manage billing account and payment information. 
+
+A Billing Manager can do the following:
+
+* Set the org spending limit
+* Create and set payment information
+* Read invoices and payment history
+* Create and edit the invoice notification email addresses
+
+<p class="note"><strong>Note</strong>: The Billing Manager role is only relevant for Cloud Foundry environments deployed with a billing engine.</p>
 
 ### <a id='space-roles'></a>Space Roles and Permissions ###
 
@@ -62,7 +81,7 @@ An Org Auditor can:
 
 Assign this role to managers or other users who need to administer a space.
 
-A Space Manager can:
+A Space Manager can do the following:
 
 * Add and manage users in the space
 * View the status, number of instances, service bindings, and resource use of each application in the space
@@ -72,7 +91,7 @@ A Space Manager can:
 Assign this role to application developers or other users who need to manage
 applications and services in a space.
 
-A Space Developer can:
+A Space Developer can do the following:
 
 * Deploy an application
 * Start or stop an application
@@ -89,6 +108,6 @@ A Space Developer can:
 
 Assign this role to people who need to view but not edit the space.
 
-A Space Auditor can:
+A Space Auditor can do the following:
 
 * View the status, number of instances, service bindings, and resource use of each application in the space
