@@ -4,12 +4,21 @@ title: Diego Architecture
 
 This topic provides an overview of the high-level structure of Diego, the next-generation container management system for Cloud Foundry (CF). 
 
-* To deploy Diego, see the GitHub [Diego-Release](https://github.com/cloudfoundry-incubator/diego-release).
+<% if vars.product_full=="Cloud Foundry" %>
+
+* To deploy Diego, see the GitHub [Diego-Release](https://github.com/cloudfoundry-incubator/diego-release)
+
+<% elsif vars.product_full=="Elastic Runtime" %>
+
+* See [Diego for PCF Overview](../../opsguide/diego-overview.html) for details on setting up Diego.
+
+<% end %>
+
 * For more information about the major components of Diego and how they interact with other Cloud Foundry components, see the [Diego Components](./diego-components.html) topic.
 
 ##<a id='overview'></a>Overview
 
-In a Cloud Foundry deployment without Diego, the [Cloud Controller](../architecture/cloud-controller.html) schedules and manages applications on the [Droplet Execution Agents](../architecture/execution-agent.html) (DEAs). Diego replaces the DEAs and the [Health Manager](../architecture/index.html#hm9k), and assumes application scheduling and management responsibility from the Cloud Controller.
+In a Cloud Foundry deployment without Diego, the [Cloud Controller](../architecture/cloud-controller.html) schedules and manages applications on the [Droplet Execution Agents](../architecture/execution-agent.html) (DEAs). Diego replaces the DEAs and the [Health Manager (HM9000)](../architecture/index.html#hm9k), and assumes application scheduling and management responsibility from the Cloud Controller.
 
 Refer to the diagram and descriptions below for information about the way Diego handles application requests.
 
@@ -19,17 +28,17 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. The CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP. 
 
-1. The BBS submits the Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer). 
+1. The BBS submits the Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer), part of the [Diego Brain](./diego-components.html#brain-components). 
 
 1. The Auctioneer distributes these Tasks and LRPs to [Cells](./diego-components.html#cell-components) through an [Auction](./diego-auction.html).
 
 1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](./diego-components.html#executor) creates a [Garden](./diego-components.html#garden) container in the Cell. The Task or LRP runs in the container.
 
-1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger). The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
+1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger), part of the [Diego Brain](./diego-components.html#brain-components). The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
-1. [Metron Agents](./diego-components.html#metron-agent) forward application logs, errors, and metrics to the  [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
+1. [Metron Agents](./diego-components.html#metron-agent), part of the Cells, forward application logs, errors, and metrics to the  [Loggregator](../../loggregator/architecture.html) [Doppler](../../loggregator/architecture.html#doppler) component.
  
-## <a id='monitoring'></a>Monitoring and Testing
+##<a id='monitoring'></a>Monitoring and Testing
 
 The following releases monitor and test runtime deployment:
 
