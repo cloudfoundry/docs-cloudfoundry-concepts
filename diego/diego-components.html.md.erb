@@ -2,7 +2,7 @@
 title: Diego Components
 ---
 
-This topic describes the components that make up Diego, the next-generation container management system for Cloud Foundry (CF).
+This topic describes the components that make up the Diego container management system for Cloud Foundry (CF).
 
 For an overview of the high-level structure of Diego, see the [Diego Architecture](./diego-architecture.html) topic.
 
@@ -29,14 +29,19 @@ This table describes the major areas in the image above:
 <tr>
   <td>Red</td>
   <td>Translating app-specific messages from the Cloud Controller to the <a href="#bbs">Bulletin Board System</a> (BBS)</td>
-  <td><a href="https://github.com/cloudfoundry-incubator/diego-design-notes#cc-bridge-components">Diego Cloud Controller Bridge (CC-Bridge) Components</a></td>
+  <td>
+    <a href="https://github.com/cloudfoundry-incubator/stager">Stager</a>
+    <a href="https://github.com/cloudfoundry-incubator/cc-uploader">CC-Uploader</a>
+    <a href="https://github.com/cloudfoundry-incubator/nsync">Nsync</a>
+    <a href="https://github.com/cloudfoundry-incubator/tps">TPS</a>
+  </td>
   <td></td>
 </tr>
 <tr>
   <td>Yellow</td>
   <td>Supporting streaming logs and routing to containers managed by Diego</td>
   <td><a href="https://github.com/cloudfoundry-incubator/diego-release">Diego Release</a> and <a href="https://github.com/cloudfoundry/cf-release">CF-Release</a></td>
-  <td>The <a href="https://github.com/cloudfoundry-incubator/lattice">Lattice</a> distribution includes these components and offers developers an environment for interacting with Diego.</td>
+  <td>The <a href="https://github.com/cloudfoundry-incubator/lattice">Lattice</a> open source project distribution includes these components and offers developers an environment for interacting with Diego.</td>
   </td>
 </tr>
 </table>
@@ -205,15 +210,13 @@ Refer to the [Stager repo](https://github.com/cloudfoundry-incubator/stager) on 
 
 Refer to the [CC-Uploader repo](https://github.com/cloudfoundry-incubator/cc-uploader) on GitHub for more information.
 
-
 ###<a id='nsync'></a>Nsync ###
 
 - Listens for app requests to update the `DesiredLRPs` count and updates `DesiredLRPs` through the BBS
 
-- Periodically polls the Cloud Controller for each app to ensure that Diego has the current desired state 
+- Periodically polls the Cloud Controller for each app to ensure that Diego maintains accurate `DesiredLRPs` counts
 
 Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on GitHub for more information.
-
 
 ###<a id='tps'></a>TPS ###
 
@@ -223,11 +226,7 @@ Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on Gi
 
 Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub for more information.
 
-
-
-
 ##<a id='platform-specific'></a>Platform-specific Components ##
-
 
 ###<a id='backends'></a>Garden Backends ###
 
@@ -244,11 +243,9 @@ Garden contains a set of interfaces that each platform-specific backend must imp
 
 Refer to the [Garden repo](https://github.com/cloudfoundry-incubator/garden) on GitHub for more information.
 
-
 ####<a id='backend-implementations'></a>Current Implementations ####
 
 - [Garden-Linux](https://github.com/cloudfoundry-incubator/garden-linux) provides a Linux-specific implementation of a Garden interface.
-
 
 ###<a id='app-lifecycles'></a>App Lifecycles ###
 
@@ -271,8 +268,8 @@ App Lifecycles implement deployment strategies. Each App Lifecycle contains the 
 
 ###<a id='route-emitter'></a>Route-Emitter ###
 
-- Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to the Cloud Foundry  [GoRouter](https://github.com/cloudfoundry/gorouter) when it detects changes
+- Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to the Cloud Foundry  [router](https://github.com/cloudfoundry/gorouter) when it detects changes
 
-- Periodically emits the entire routing table to the GoRouter
+- Periodically emits the entire routing table to the Cloud Foundry router
 
 Refer to the [Route-Emitter repo](https://github.com/cloudfoundry-incubator/route-emitter) on GitHub for more information.
