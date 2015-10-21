@@ -60,9 +60,9 @@ Components in the Diego core run and monitor [Tasks](./diego-auction.html#task) 
 
 Diego Brain components distribute Tasks and LRPs to Diego [Cells](#cell-components), and correct discrepancies between `ActualLRP` and `DesiredLRP` counts to ensure fault-tolerance and long-term consistency. The Diego Brain consists of the [Auctioneer](#auctioneer) and the [Converger](#converger).
 
+<a id='auctioneer'></a>
 
-
-####<a id='auctioneer'></a>Auctioneer ####
+####Auctioneer ####
 
 - Uses the [auction package](https://github.com/cloudfoundry-incubator/auction) to run [Diego Auctions](./diego-auction.html) for Tasks and LRPs
 
@@ -71,7 +71,6 @@ Diego Brain components distribute Tasks and LRPs to Diego [Cells](#cell-componen
 - Maintains a lock in the [BBS](#bbs) that restricts auctions to one Auctioneer at a time
 
 Refer to the [Auctioneer repo](https://github.com/cloudfoundry-incubator/auctioneer) on GitHub for more information.
-
 
 ####<a id='converger'></a>Converger ####
 
@@ -188,7 +187,7 @@ Consuladapter provides a driver for interfacing with etcd.
 
 Refer to the [Consuladapter repo](https://github.com/cloudfoundry-incubator/consuladapter) on GitHub for more information.
 
-##<a id='bridge-components'></a>Cloud Controller Bridge Components ##
+##<a id='bridge-comonents'></a>Cloud Controller Bridge Components ##
 
 The Cloud Controller Bridge (CC-Bridge) components translate app-specific requests from the Cloud Controller to the BBS. These components include the following:
 
