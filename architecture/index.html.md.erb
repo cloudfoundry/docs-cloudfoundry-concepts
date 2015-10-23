@@ -21,7 +21,7 @@ Some descriptions include links to more detailed documentation.
 The [router](./router.html) routes incoming traffic to the appropriate
 component, usually the Cloud Controller or a running application on a DEA node.
 
-## <a id='uaa'></a> Authentication ##
+## <a id='uaa'></a> OAuth2 Server (UAA) and Login Server ##
 
 The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to
 provide identity management.
@@ -38,7 +38,7 @@ application.
 The Cloud Controller also maintains records of orgs, spaces, services,
 service instances, user roles, and more.
 
-## <a id='hm9k'></a> HM9000 ##
+## <a id='hm9k'></a> Health Manager (HM9000) ##
 
 HM9000 has four core responsibilities:
 
@@ -80,13 +80,13 @@ or third-party SaaS providers.
 When a developer provisions and binds a service to an application, the service
 broker for that service is responsible for providing the service instance.
 
-## <a id='nats'></a> Message Bus ##
+## <a id='nats'></a> Message Bus (NATS) ##
 
 Cloud Foundry uses [NATS](./messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
 communication between components.
 
-## <a id='metrics'></a> Logging and Statistics ##
+## <a id='metrics'></a> Metrics Collector and App Log Aggregator: Logging and Statistics ##
 
 The metrics collector gather metrics from the components.
 Operators can use this information to monitor an instance of Cloud Foundry.
