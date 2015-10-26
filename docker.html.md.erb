@@ -53,13 +53,14 @@ $ cf disable-feature-flag diego_docker
 
 ##<a id='caveats'></a>Docker Caveats ##
 
+This section contains known issues and limitations with running Docker images in Cloud Foundry.
 
-Diego only supports secure registries bearing certificates signed by a common CA. Diego does not currently support self-signed certificates..
+* Diego only supports secure registries bearing certificates signed by a common Certificate Authority (CA). Diego does not currently support self-signed certificates.
 
-Diego only supports V1 Docker registries.  We will transition to supporting only V2 registries soon.  Docker intents to deprecate the V1 API in early December.
+* Diego currently only supports V1 Docker registries.
 
-Diego is susceptible to recently disclosed Docker CVEs (e.g. CVE-2014-8178).  We will address these in a subsequent release. 
+* Diego is currently susceptible to recently disclosed Docker CVEs (e.g. CVE-2014-8178).
 
-Diego does not support fetching images from private repositories.  We will address this in a subsequent release.
+* Diego does not currently support fetching images from private repositories.  
 
-Diego requires the source registry for a docker image be available when creating new application instances.  If the registry goes down Diego will be unable to (re)start your application.  We will address this in a subsequent release.
+* Diego currently requires that the source registry for a Docker image is  available when creating new application instances. If the registry is unavailable, Diego cannot start or restart applications.
