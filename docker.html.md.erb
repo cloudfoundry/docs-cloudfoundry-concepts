@@ -1,0 +1,65 @@
+---
+title: Using Docker in Cloud Foundry
+---
+
+This topic describes Docker image support in Cloud Foundry with Diego and outlines how Cloud Foundry uses Diego to run Docker images. For more information about Diego, see the [Diego Architecture](./diego/diego-architecture.html) topic.
+
+A Docker image consists of a collection of layers. Each layer consists of one or both of the following:
+
+* Raw bits to download and mount. These bits form the file system.
+* Metadata that describes commands, users, and environment for the layer. This metadata includes the `ENTRYPOINT` and `CMD` directives, and is specified in the Dockerfile.
+
+##<a id='create-container'></a>Creating Containers with Garden-Linux ##
+
+Diego uses [Garden-Linux](https://github.com/cloudfoundry-incubator/garden-linux) to construct Linux containers. Garden-Linux builds Linux containers with the same kernel resource isolation features used by all Linux containers: **namespaces** and **cgroups**. 
+
+Linux container creation requires that a file system is mounted as the root file system of the container. Garden-Linux supports mounting Docker images as root file systems for the containers it constructs. Garden-Linux fetches and caches the individual layers associated with a Docker image, then combines and mounts them as the root file system, using the same libraries that power Docker.
+
+This process yields a container with contents that exactly match the contents of the associated Docker image. 
+
+##<a id='run-monitor'></a>Running and Monitoring Processes with Diego ##
+
+Once Garden-Linux creates a container, Diego runs and monitors the processes inside of it. 
+
+To determine which processes to run, the [Cloud Controller](./architecture/cloud-controller.html) fetches the metadata associated with the Docker image and returns it to the Cloud Controller. The Cloud Controller uses this metadata to perform the following actions:
+
+  * Runs the start command as the user specified in the Docker image
+  * Instructs Diego and the [Gorouter](./architecture/router.html) to route traffic to the lowest-numbered port exposed in the Docker image
+
+<p class='note'><strong>Note</strong>: When launching an application on Diego, the Cloud Controller honors any user-specified overrides such as a custom start command or custom environment variables.</p>
+
+##<a id='multi-tenant'></a>Docker in a Multi-Tenant World ##
+
+Since Docker allows users to fully specify the contents of their root file systems, the attack surface area for a Docker-based container running on Diego is somewhat higher than that of a buildpack application, which runs on a trusted root filesystem.
+
+The Garden-Linux team has implemented a host of features to allow the platform to run Docker images more securely in a multi-tenant context. In particular, Cloud Foundry uses the `user-namespacing` feature found on modern Linux kernels to ensure that uses cannot gain escalated privileges on the host even if they escalate privileges within a container.
+
+The Cloud Controller always runs Docker containers on Diego with user namespaces enabled. This security restriction prevents certain features, such as the ability to mount FuseFS devices, from working in Docker containers.
+
+To mitigate security concerns, Cloud Foundry recommends that you run only trusted Docker containers on the platform. By default, the Cloud Controller does not allow Docker-based applications to run on the platform. 
+
+To allow Docker-based applications to run, a Cloud Controller administrator can enable the `diego_docker` feature flag with the following command:
+<pre class='terminal'>
+$ cf enable-feature-flag diego_docker
+</pre>
+
+To disallow Docker-based applications, a Cloud Controller administrator can run the following command:
+
+<pre class='terminal'>
+$ cf disable-feature-flag diego_docker
+</pre>
+
+<p class='note'><strong>Note</strong>: Disabling the <code>diego-docker</code> feature flag stops all Docker-based apps in your deployment within a few convergence cycles, on the order of a minute.</p>
+
+##<a id='caveats'></a>Docker Caveats ##
+
+
+Diego only supports secure registries bearing certificates signed by a common CA. Diego does not currently support self-signed certificates..
+
+Diego only supports V1 Docker registries.  We will transition to supporting only V2 registries soon.  Docker intents to deprecate the V1 API in early December.
+
+Diego is susceptible to recently disclosed Docker CVEs (e.g. CVE-2014-8178).  We will address these in a subsequent release. 
+
+Diego does not support fetching images from private repositories.  We will address this in a subsequent release.
+
+Diego requires the source registry for a docker image be available when creating new application instances.  If the registry goes down Diego will be unable to (re)start your application.  We will address this in a subsequent release.
