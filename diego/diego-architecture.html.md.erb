@@ -36,7 +36,7 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger), part of the [Diego Brain](./diego-components.html#brain-components). The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
-1. [Metron Agents](./diego-components.html#metron-agent), part of the Cells, forward application logs, errors, and metrics to the  [Loggregator](../../loggregator/architecture.html) [Doppler](../../loggregator/architecture.html#doppler) component.
+1. [Metron Agents](./diego-components.html#metron-agent), part of the Cells, forward application logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
  
 ##<a id='monitoring'></a>Monitoring and Testing
 
