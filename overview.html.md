@@ -4,7 +4,7 @@ title: Cloud Foundry Overview
 
 ## What is an open PaaS?
 
-Each generation of computing ushers in a new application platform. In the cloud era, the application platform will be delivered as a service, often described as Platform as a Service (PaaS). PaaS makes it much easier to deploy, run, and scale applications.
+Each generation of computing brings with it a new application platform. In the cloud era, the application platform will be delivered as a service, often described as Platform as a Service (PaaS). PaaS makes it much easier to deploy, run, and scale applications.
 
 Not all PaaS offerings are created equal. Some have limited language and framework support, do not deliver key application services needed for cloud applications, or restrict deployment to a single cloud. By offering an open PaaS, you get a choice of clouds for deployment, frameworks for development, and application services for running your application. And as an open source project, there is a community both contributing and supporting Cloud Foundry.
 
