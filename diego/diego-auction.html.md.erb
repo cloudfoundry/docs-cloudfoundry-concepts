@@ -2,106 +2,92 @@
 title: How Diego Allocates Work
 ---
 
-The Diego Auction is the process by which [Diego](./diego-architecture.html) allocates tasks and long running processes (LRPs) to [Cells](./diego-components.html#cell-components), which execute them. The auction replaces the [Cloud Controller DEA placement algorithm](../architecture/cloud-controller.html#dea-placement), which performed this function in the pre-Diego Cloud Foundry architecture.
+The [Diego](./diego-architecture.html) Auction balances application processes, also called jobs, over the virtual machines in an installation. When new processes need to be allocated to VMs, the Diego Auction determines which ones should run on which machines, to balance the load and optimize application availability and resilience. This topic explains how the Diego Auction works at a conceptual level.
+
+The Diego Auction replaces the [Cloud Controller DEA placement algorithm](../architecture/cloud-controller.html#dea-placement), which performed this function in the pre-Diego Cloud Foundry architecture.
 
 [Auction on GitHub](https://github.com/cloudfoundry-incubator/auction)
 
 ##<a id='processes'></a>Tasks and Long Running Processes
 
-Diego runs and monitors two types of processes: **Tasks** and **Long Running Processes** (LRPs). 
+The Diego Auction distinguishes between two types of jobs: **Tasks** and **Long-Running Processes** (LRPs).
 
-* <a id='task'></a>**Tasks**: Tasks run once, for a finite amount of time.
-   
-    Example Tasks: Making a database schema change, bulk importing data to initialize a database, setting up a connected service
+* <a id='task'></a>**Tasks** run once, for a finite amount of time. A common example is a staging task that compiles an app's dependencies to form the droplet that runs the app on the platform. Other examples of tasks include making a database schema change, bulk importing data to initialize a database, and setting up a connected service.
 
-* <a id='lrp'></a>**Long Running Processes** (LRPs): LRPs run continuously, for an indefinite time. LRPs only terminate if stopped or killed, or in the case of failure. Diego can run multiple instances of any LRP.
-    
-	Example LRPs: A web-server, a service that continuously accepts input and processes it, an application
+* <a id='lrp'></a>**Long-Running Processes** run continuously, for an indefinite time. LRPs terminate only if stopped or killed, or if they crash. Examples include web servers, and other applications and services that continuously accept and process input. To make high-demand LRPs more available, Diego may allocate multiple instances of the same application to run simultaneously on different VMs.
 
-##<a id='initiate'></a>Initiating an Auction
+Each auction distributes a **batch** of work that consists of Tasks and LRPs that need to be allocated to VMs. These can include newly-created jobs, jobs left unallocated in the previous auction, and processes left orphaned by failed VMs. Diego does not redistribute processes already running on VMs, and only one auction can take place at a time. 
 
-An [Auctioneer](./diego-components.html#auctioneer) initiates an auction when it receives a request to allocate a batch of work (tasks and LRPs) either from:
+##<a id='order'></a>Ordering the Auction Batch
 
-- A Cell [Rep](./diego-components.html#rep), in response to a request from the Cloud Controller via the CC-Bridge.
+The Diego Auction algorithm allocates processes to VM resources to fulfill the following outcomes, in decreasing **priority** order:
 
-- The [Converger](./diego-components.html#converger), in response to a mismatch between the desired LRPs and actual LRPs as represented in the BBS(./diego-components.html#bbs).
+1. Keep at least one instance of each LRPs up and running
 
-Only one auction can take place at a time.
+1. Run all of the current Tasks
 
-##<a id='fetch-info'></a>Querying the Cells
+1. Optimize the total desired LRP load over the remaining available virtual machine resources, by spreading multiple LRP instances broadly across VMs and their Availability Zones
 
-The Auctioneer queries the state of each Cell via a request to the Cell [Rep](./diego-components.html#rep). The information provided by the Rep includes:
+To accomplish this, each auction begins with the [Auctioneer](./diego-components.html#auctioneer) module organizing the batch processes into a priority order. First, the Auctioneer sorts all processes in decreasing order of memory load, so that larger units of work are placed first. Some of these processes may be duplicates that Diego allocates to scale high-demand LRPs.
 
-- the Cell's available capacity
-- the Cell's stack
-- the set of Actual LRPs currently running on the Cell
+The Auctioneer then builds a stack of LRP instances by cycling through the LRPs in decreasing order of load, and adding instances of each onto the stack until all LRPs reach their desired scale.
 
-##<a id='prioritizing'></a>Prioritizing the Work to be Auctioned
+For example, if the process LRP-A has a scale of 3 and a load of 2, and process LRP-B has scale 2 and load 5, the Auctioneer would create instances as follows:
 
-When the Auctioneer receives a batch of work it must strategically decide the order in which to distributed it. 
-
-Two pitfalls must be avoided: 
-
-* The Auctioneer could incorrectly fill the Cells with small units of work before attempting to place large units of work. As a result, these large units could fail to place even if there is sufficient capacity in the cluster. 
-
-* The Auctioneer could incorrectly prioritize large units of work over small units of work. As a result, each Cell could be filled with a single large app, preventing smaller apps from having any instances running.
-
-To avoid these bad results, the Auctioneer first sorts the batch of LRPs to allocate into priority groups based on their global indices. Each LRP has an index for its type, which is unique across a deployment. Within each priority group, work is sorted in order of decreasing memory demand so that larger units of work are placed first.
-
-For example, suppose a batch contains the following 5 LRPS:
-
-<table border='1' class='nice'>
-	<tr>
-		<th>LRP type</th>
-		<th>LRP index</th>
-	</tr>
-		<td>type 1</td>
-		<td>0</td>
-	<tr>
-		<td>type 1</td>
-		<td>1</td>
-	</tr>
-		<td>type 1</td>
-		<td>2</td>
-	<tr>
-		<td>type 2</td>
-		<td>0</td>
-	</tr>
-	<tr>
-		<td>type 2</td>
-		<td>1</td>
-	</tr>
+<table border="1" class="nice" >
+<tr>
+  <th width=25%><strong>Process</strong></th>
+  <th width=25%><strong>Scale</strong></th>
+  <th width=25%><strong>Load</strong></th>
+  <th width=25%><strong>Instances</strong></th>
+</tr>
+<tr>
+  <td>LRP-A</td>
+  <td>3</td>
+  <td><img src="../images/diego/diego-job-2.png"></td>
+  <td><img src="../images/diego/diego-LRP-A-instances.png"></td>
+</tr>
+<tr>
+  <td>LRP-B</td>
+  <td>2</td>
+  <td><img src="../images/diego/diego-job-5.png"></td>
+  <td><img src="../images/diego/diego-LRP-B-instances.png"></td>
+</tr>
 </table>
 
-The Auctioneer would allocate the LRPs in the following order:
+The Auctioneer would then order the instances like this:
 
-* Type 1/ Index 0
-* Type 2/ Index 0
-* Type 1/ Index 1
-* Type 2/ Index 1
-* Type 1/ Index 2
+![LRP Stack](../images/diego/diego-LRP-stack.png)
 
-This sorting by index ensures that LRPs of each type are placed before all of the LRPs of any type are, preventing both large and small LRPs from dominating the allocation process.
+The Auctioneer then builds an ordering for all processes, both LRPs and Tasks. Reflecting the priority order above, first instances of LRPs are first priority, Tasks are next, and additional LRP instances follow. Adding one-time Task-A (load = 4) and Task-B (load = 3) to the above example, the priority order becomes:
 
-##<a id='allocating'></a>Allocating Work
+![Auction Stack](../images/diego/diego-auction-stack.png)
 
-The Auctioneer calculates the distribution of Actual LRPs across available Cells.
+##<a id='auction'></a>Auctioning the Batch to the Cells
 
-For each Task and LRP in the batch, The Auctioneer does the following:
+With all processes sorted in priority order, the Auctioneer allocates each in turn to one of the installation’s VMs. This is the auction part. Facilitating this process, each VM operates within a [Cell](./diego-components.html#cell) that monitors and allocates the machine’s operation. Each Cell has a [Cell Rep](./diego-components.html#rep) that communicates with the Cloud Controller through the CC-Bridge, and participates in the auction on behalf of the virtual machine that the Cell contains.
 
-1. It filters the pool of candidate cells to those with the correct stack and sufficient resources to host the actual LRP.
+Starting with the highest-priority process in the stack, the Auctioneer polls all the Cells on their fitness to run the currently-auctioned process. Cells “bid” to host each process according to the following priorities, in decreasing order:
 
-1. It chooses the winning cell by optimizing for the following, in increasing priority:
-	1. an even distribution of memory, disk, and container usage across Cells (all with equal weighting)
-	1. minimizing colocation of ActualLRP instances of a given DesiredLRP on the same Cell (takes precedence over the distribution of memory/disk/etc.).
-	1. minimizing colocation of ActualLRP instances of a given DesiredLRP in the same Availability Zone
+1. The cell must have the correct software stack to host the process, and sufficient resources given its allocation so far during this auction.
 
-After calculating the distribution of Tasks and LRPs to Cells, the Auctioneer submits requests to the Cells to execute their allotted work.
+1. Allocate LRP instances into an Availability Zone that’s not already hosting other instances of the same LRP. Availability Zones are segments of network infrastructure designated by the cloud operator at deployment, to facilitate broad app availability and fault tolerance.
 
-Any work that could not be allocated is carried over into the next batch.
+1. Within an Availability Zone, allocate LRP instances to a Cell that’s not already hosting other instances of the same LRP.
 
-If a Cell responds by saying the work can not be performed, the Auctioneer carries the failed work over into the next batch.
+1. Distribute total load evenly across all cells. In other words, all other things being equal, allocate the process to the cell that has lightest load so far.
 
-If a Cell fails to respond, for example if a connection times out, the Auctioneer does *not* carry the work over into the next batch. In this case the Auctioneer defers to the Converger to figure out what to do.
+To allocate our example processes into Cells A, B, C, and D, with available load capacities of 6, 7, 8, and 9, respectively, and deployed into two Availability Zones, the Auctioneer might distribute the work as follows:
 
-Any work carried over into the next batch is merged with work that came in during the previous auction, and the loop is repeated.
+![Auction Results](../images/diego/diego-auction-results.png)
+
+If the Auctioneer reaches the end of the stack, having distributed all processes to the Cells, it submits requests to the Cells to execute their allotted work. If the Cells ran out of capacity to handle all processes in the stack, the Auctioneer carries the unallocated processes over and merges it into the next auction batch, to be allocated (hopefully) next time.
+
+##<a id='order'></a>Triggering Another Auction
+
+The Cloud Controller initiates new auctions to re-balance the cloud’s workload under two conditions: 1) When the actual number of running instances of LRPs doesn’t match the number desired, and 2) When a Cell fails, and its failure condition triggers an auction request via the CC-Bridge.
+
+In the first case, the Cloud Controller’s BBS module monitors the number of instances of each LRP that are currently running. The [Converger](./diego-components.html#converger) module periodically compares this number with the desired number of LRP instances, as configured by the user. If the actual number falls short of what’s desired, the Converger triggers a new auction. In the case of a surplus of process instances, the Converger kills the extra instances and initiates another auction.
+
+After any auction, if a Cell responds to its work request by saying that it cannot perform the work after all, the Auctioneer carries the failed work over into the next batch. If the Cell fails to respond entirely, for example if a connection times out, the Auctioneer does not automatically hold the work over into the next batch, because the Cell may be running it anyway and the system doesn’t want to double-assign. Instead, it defers to the Converger to continue monitoring the states of the Cells, and re-assign unassigned work later if needed.
+
