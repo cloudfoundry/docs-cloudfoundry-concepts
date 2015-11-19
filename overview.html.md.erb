@@ -32,8 +32,4 @@ Cloud Foundry components communicate with each other internally using the [NATS]
 
 Typical applications depend on free or metered <% if vars.product_full == "Elastic Runtime" %> [services](../services/overview.html) <% elsif vars.product_full == "Pivotal Web Services (PWS)" %> [services](../marketplace) <% elsif vars.product_full == "Cloud Foundry" %> [services](../services/overview.html) <% end %> such as databases or third-party APIs. To incorporate these into an application, a developer writes a Service Broker, an API that publishes to the Cloud Controller the ability to list service offerings, provision the service, and enable applications to make calls out to it.
 
-## Who should use Cloud Foundry?
-
-Cloud Foundry is ideal for any developer interested in removing the cost and complexity of configuring infrastructure for their applications. Cloud Foundry allows developers to deploy and scale their applications without being locked in to a single cloud. Developers can deploy their applications to Cloud Foundry using their existing tools and with zero modification to their code.
-
 
