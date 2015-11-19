@@ -16,7 +16,7 @@ Clouds balance their processing loads over multiple machines, optimizing for eff
 
 1. The [BOSH](http://bosh.io) system creates and deploys virtual machines (VMs) on top of a physical computing infrastructure, and deploys and runs Cloud Foundry on top of this cloud. To configure the deployment, it follows a manifest document.
 
-1. The CF [Cloud Controller](./cloud-controller.html) runs the applications and other processes on the cloud’s VMs, balancing demand and managing app lifecycles.
+1. The CF [Cloud Controller](./architecture/cloud-controller.html) runs the applications and other processes on the cloud’s VMs, balancing demand and managing app lifecycles.
 
 1. The [(Go)router](./architecture/router.html) routes incoming traffic from the world to the VMs that are running the applications that the traffic demands, usually working with a customer-provided load balancer.
 
