@@ -65,7 +65,7 @@ The Auctioneer then builds an ordering for all processes, both LRPs and Tasks. R
 
 ##<a id='auction'></a>Auctioning the Batch to the Cells
 
-With all processes sorted in priority order, the Auctioneer allocates each in turn to one of the installation’s VMs. This is the auction part. Facilitating this process, each VM operates within a [Cell](./diego-components.html#cell) that monitors and allocates the machine’s operation. Each Cell has a [Cell Rep](./diego-components.html#rep) that communicates with the Cloud Controller through the CC-Bridge, and participates in the auction on behalf of the virtual machine that the Cell contains.
+With all processes sorted in priority order, the Auctioneer allocates each in turn to one of the installation’s VMs. This is the auction part. Facilitating this process, each VM operates within a [Cell](./diego-components.html#cell-components) that monitors and allocates the machine’s operation. Each Cell has a [Cell Rep](./diego-components.html#rep) that communicates with the Cloud Controller through the CC-Bridge, and participates in the auction on behalf of the virtual machine that the Cell contains.
 
 Starting with the highest-priority process in the stack, the Auctioneer polls all the Cells on their fitness to run the currently-auctioned process. Cells “bid” to host each process according to the following priorities, in decreasing order:
 
