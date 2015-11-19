@@ -79,7 +79,7 @@ Starting with the highest-priority process in the stack, the Auctioneer polls al
 
 To allocate our example processes into Cells A, B, C, and D, with available load capacities of 6, 7, 8, and 9, respectively, and deployed into two Availability Zones, the Auctioneer might distribute the work as follows:
 
-![Auction Results](../images/diego/diego-auction-results.png)
+![Auction Process](../images/diego/diego-auction-process.png)
 
 If the Auctioneer reaches the end of the stack, having distributed all processes to the Cells, it submits requests to the Cells to execute their allotted work. If the Cells ran out of capacity to handle all processes in the stack, the Auctioneer carries the unallocated processes over and merges it into the next auction batch, to be allocated (hopefully) next time.
 
