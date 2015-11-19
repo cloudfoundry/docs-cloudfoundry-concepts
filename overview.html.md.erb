@@ -30,6 +30,6 @@ As the cloud operates, the Cloud Controller VM, router VM, and all VMs running a
 
 Cloud Foundry components communicate with each other internally using the [NATS](./architecture/messaging-nats.html) messaging system.
 
-Typical applications depend on free or metered <% if vars.product_full == "Elastic Runtime" %> [services](../services/overview.html) <% elsif vars.product_full == "Pivotal Web Services (PWS)" %> [services](../marketplace) <% elsif vars.product_full == "Cloud Foundry" %> [services](../services/overview.html) <% end %> such as databases or third-party APIs. To incorporate these into an application, a developer writes a Service Broker, an API that publishes to the Cloud Controller the ability to list service offerings, provision the service, and enable applications to make calls out to it.
+Typical applications depend on free or metered <% if vars.product_full == "Elastic Runtime" %> [services](../services/overview.html) <% elsif vars.product_full == "Pivotal Web Services (PWS)" %> [services](../marketplace/) <% elsif vars.product_full == "Cloud Foundry" %> [services](../services/overview.html) <% end %> such as databases or third-party APIs. To incorporate these into an application, a developer writes a Service Broker, an API that publishes to the Cloud Controller the ability to list service offerings, provision the service, and enable applications to make calls out to it.
 
 
