@@ -59,7 +59,7 @@ The Auctioneer would then order the instances like this:
 
 ![LRP Sequence](../images/diego/diego-LRP-stack.png)
 
-The Auctioneer then builds an ordering for all jobs, both LRPs and Tasks. Reflecting the priority order above, first instances of LRPs are first priority, Tasks are next, and additional LRP instances follow. Adding one-time Task-A (load = 4) and Task-B (load = 3) to the above example, the priority order becomes:
+The Auctioneer then builds an ordering for all jobs, both LRPs and Tasks. Reflecting the priority order above, first instances of LRPs are first priority, Tasks are next, and additional LRP instances follow. Adding one-time Task-C (load = 4) and Task-D (load = 3) to the above example, the priority order becomes:
 
 ![Auction Sequence](../images/diego/diego-auction-stack.png)
 
@@ -77,7 +77,7 @@ Starting with the highest-priority job in the ordered sequence, the Auctioneer p
 
 1. Distribute total load evenly across all cells. In other words, all other things being equal, allocate the job to the cell that has lightest load so far.
 
-To allocate our example jobs into Cells A, B, C, and D, with available load capacities of 6, 7, 8, and 9, respectively, and deployed into two Availability Zones, the Auctioneer might distribute the work as follows:
+To allocate our example jobs into Cells 1, 2, 3, and 4, with available load capacities of 6, 7, 8, and 9, respectively, and deployed into two Availability Zones, the Auctioneer might distribute the work as follows:
 
 ![Auction Process](../images/diego/diego-auction-process.png)
 
