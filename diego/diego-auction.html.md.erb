@@ -2,6 +2,8 @@
 title: How Diego Allocates Work
 ---
 
+<strong><%= modified_date %></strong>
+
 The [Diego](./diego-architecture.html) Auction balances application processes, also called jobs, over the virtual machines in an installation. When new processes need to be allocated to VMs, the Diego Auction determines which ones should run on which machines, to balance the load and optimize application availability and resilience. This topic explains how the Diego Auction works at a conceptual level.
 
 The Diego Auction replaces the [Cloud Controller DEA placement algorithm](../architecture/cloud-controller.html#dea-placement), which performed this function in the pre-Diego Cloud Foundry architecture.

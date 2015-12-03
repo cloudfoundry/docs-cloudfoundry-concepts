@@ -2,7 +2,9 @@
 title: Diego Architecture
 ---
 
-This topic provides an overview of the high-level structure of Diego, the next-generation container management system for Cloud Foundry (CF). 
+<strong><%= modified_date %></strong>
+
+This topic provides an overview of the high-level structure of Diego, the next-generation container management system for Cloud Foundry (CF).
 
 <% if vars.product_full=="Cloud Foundry" %>
 
@@ -26,9 +28,9 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. The Cloud Controller passes requests to stage and run applications to the  [Cloud Controller Bridge](./diego-components.html#bridge-components) (CC-Bridge).
 
-1. The CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP. 
+1. The CC-Bridge translates staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then  submits these to the [Bulletin Board System](./diego-components.html#bbs) (BBS) through an RPC-style API over HTTP.
 
-1. The BBS submits the Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer), part of the [Diego Brain](./diego-components.html#brain-components). 
+1. The BBS submits the Tasks and LRPs to the [Auctioneer](./diego-components.html#auctioneer), part of the [Diego Brain](./diego-components.html#brain-components).
 
 1. The Auctioneer distributes these Tasks and LRPs to [Cells](./diego-components.html#cell-components) through an [Auction](./diego-auction.html).
 
@@ -37,7 +39,7 @@ Refer to the diagram and descriptions below for information about the way Diego 
 1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger), part of the [Diego Brain](./diego-components.html#brain-components). The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
 1. [Metron Agents](./diego-components.html#metron-agent), part of the Cells, forward application logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
- 
+
 ##<a id='monitoring'></a>Monitoring and Testing
 
 The following releases monitor and test runtime deployment:

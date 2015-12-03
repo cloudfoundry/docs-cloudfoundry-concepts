@@ -2,6 +2,8 @@
 title: Cloud Controller
 ---
 
+<strong><%= modified_date %></strong>
+
 The Cloud Controller is written in Ruby and provides REST API endpoints for
 clients to access the system.
 The Cloud Controller maintains a database with tables for orgs, spaces, apps,
@@ -32,7 +34,7 @@ The cloud controller collects these advertisements in a construct called a pool.
 
 ###Considerations
 
-It is important to note that the cloud controller uses this algorithm to balance new app instances between DEAs when the new app instances are created, but do not balance already-running apps. 
+It is important to note that the cloud controller uses this algorithm to balance new app instances between DEAs when the new app instances are created, but do not balance already-running apps.
 
 For example, suppose a set of apps are running on DEAs in two AZs, and one AZ temporarily goes down. While the second AZ is down, all instances will be placed on the remaining AZ. After the second AZ comes back online, new instances will be allocated to DEAs there, since the algorithm favors DEAs in the zone with the fewest running instances. However, instances running on the first AZ will not be moved to the other AZ, so the imbalance will persist.
 

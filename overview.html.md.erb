@@ -2,6 +2,8 @@
 title: Cloud Foundry Overview
 ---
 
+<strong><%= modified_date %></strong>
+
 ## The Industry-Standard Cloud Platform
 
 Cloud platforms let anyone deploy network applications or services and make them available to the world in a few minutes. When an app becomes popular, the cloud easily scales it to handle more traffic, replacing with a few keystrokes the build-out and migration efforts that once took months.
@@ -26,7 +28,7 @@ To organize user access to the cloud and to control resource use, a cloud operat
 
 Cloud Foundry uses the git system on [github](http://github.org) to version-control all source code, buildpacks, documentation, and everything else. Developers on the platform also use github, for their own applications, custom configurations, etc.
 
-As the cloud operates, the Cloud Controller VM, router VM, and all VMs running applications continuously generate logs and metrics. The <%=vars.loggregator_name_or_link%> system corrals this information into structured, usable form. This high-volume stream of event data, the Firehose, can be tapped in full, or else directed to specific uses by applying Nozzles---for example to monitor system internals or analyze user behavior. 
+As the cloud operates, the Cloud Controller VM, router VM, and all VMs running applications continuously generate logs and metrics. The <%=vars.loggregator_name_or_link%> system corrals this information into structured, usable form. This high-volume stream of event data, the Firehose, can be tapped in full, or else directed to specific uses by applying Nozzles---for example to monitor system internals or analyze user behavior.
 
 Cloud Foundry components communicate with each other internally using the [NATS](./architecture/messaging-nats.html) messaging system.
 

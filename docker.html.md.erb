@@ -2,6 +2,8 @@
 title: Using Docker in Cloud Foundry
 ---
 
+<strong><%= modified_date %></strong>
+
 This topic describes Docker image support in Cloud Foundry with Diego and outlines how Cloud Foundry uses Diego to run Docker images. For more information about Diego, see the [Diego Architecture](./diego/diego-architecture.html) topic.
 
 A Docker image consists of a collection of layers. Each layer consists of one or both of the following:
@@ -11,15 +13,15 @@ A Docker image consists of a collection of layers. Each layer consists of one or
 
 ##<a id='create-container'></a>Creating Containers with Garden-Linux ##
 
-Diego uses [Garden-Linux](https://github.com/cloudfoundry-incubator/garden-linux) to construct Linux containers. Garden-Linux builds Linux containers with the same kernel resource isolation features used by all Linux containers: **namespaces** and **cgroups**. 
+Diego uses [Garden-Linux](https://github.com/cloudfoundry-incubator/garden-linux) to construct Linux containers. Garden-Linux builds Linux containers with the same kernel resource isolation features used by all Linux containers: **namespaces** and **cgroups**.
 
 Linux container creation requires that a file system is mounted as the root file system of the container. Garden-Linux supports mounting Docker images as root file systems for the containers it constructs. Garden-Linux fetches and caches the individual layers associated with a Docker image, then combines and mounts them as the root file system, using the same libraries that power Docker.
 
-This process yields a container with contents that exactly match the contents of the associated Docker image. 
+This process yields a container with contents that exactly match the contents of the associated Docker image.
 
 ##<a id='run-monitor'></a>Running and Monitoring Processes with Diego ##
 
-Once Garden-Linux creates a container, Diego runs and monitors the processes inside of it. 
+Once Garden-Linux creates a container, Diego runs and monitors the processes inside of it.
 
 To determine which processes to run, the [Cloud Controller](./architecture/cloud-controller.html) fetches the metadata associated with the Docker image and returns it to the Cloud Controller. The Cloud Controller uses this metadata to perform the following actions:
 
@@ -36,7 +38,7 @@ The Garden-Linux team has implemented a host of features to allow the platform t
 
 The Cloud Controller always runs Docker containers on Diego with user namespaces enabled. This security restriction prevents certain features, such as the ability to mount FuseFS devices, from working in Docker containers.
 
-To mitigate security concerns, Cloud Foundry recommends that you run only trusted Docker containers on the platform. By default, the Cloud Controller does not allow Docker-based applications to run on the platform. 
+To mitigate security concerns, Cloud Foundry recommends that you run only trusted Docker containers on the platform. By default, the Cloud Controller does not allow Docker-based applications to run on the platform.
 
 To allow Docker-based applications to run, a Cloud Controller administrator can enable the `diego_docker` feature flag with the following command:
 <pre class='terminal'>
@@ -61,6 +63,6 @@ This section contains known issues and limitations with running Docker images in
 
 * Diego is currently susceptible to recently disclosed Docker CVEs (e.g. CVE-2014-8178).
 
-* Diego does not currently support fetching images from private repositories.  
+* Diego does not currently support fetching images from private repositories.
 
 * Diego currently requires that the source registry for a Docker image is  available when creating new application instances. If the registry is unavailable, Diego cannot start or restart applications.

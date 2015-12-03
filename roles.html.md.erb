@@ -2,36 +2,38 @@
 title: Orgs, Spaces, Roles, and Permissions
 ---
 
+<strong><%= modified_date %></strong>
+
 Cloud Foundry uses role-based access control (RBAC), with each role granting
 permissions in either an org or a space.
 
 ## <a id='orgs'></a>Orgs ##
 
-An org is a development account that an individual or multiple collaborators 
-can own and use. 
-All collaborators access an org with user accounts. 
-Collaborators in an org share a resource quota plan, applications, services 
+An org is a development account that an individual or multiple collaborators
+can own and use.
+All collaborators access an org with user accounts.
+Collaborators in an org share a resource quota plan, applications, services
 availability, and custom domains.
 
 ## <a id='users'></a>User Accounts ##
 
-A user account represents an individual person within the context of a Cloud 
-Foundry installation. 
-A user can have different roles in different spaces within an org, governing 
+A user account represents an individual person within the context of a Cloud
+Foundry installation.
+A user can have different roles in different spaces within an org, governing
 what level and type of access they have within that space.
 
 ## <a id='spaces'></a>Spaces ##
 
 Every application and service is scoped to a space.
 Each org contains at least one space.
-A space provides users with access to a shared location for application 
+A space provides users with access to a shared location for application
 development, deployment, and maintenance.
 Each space role applies only to a particular space.
 
 ## <a id='roles'></a>Roles and Permissions ##
 
 A user can have one or more roles.
-The combination of these roles defines the user’s overall permissions in the 
+The combination of these roles defines the user’s overall permissions in the
 org and within specific spaces in that org.
 
 ### <a id='org-roles'></a>Org Roles and Permissions ###
@@ -64,7 +66,7 @@ An Org Auditor can do the following:
 
 ####Billing Manager ####
 
-Assign this role to people who need to create and manage billing account and payment information. 
+Assign this role to people who need to create and manage billing account and payment information.
 
 A Billing Manager can do the following:
 

@@ -2,11 +2,13 @@
 title: Diego Components
 ---
 
+<strong><%= modified_date %></strong>
+
 This topic describes the components that make up the Diego container management system for Cloud Foundry (CF).
 
 For an overview of the high-level structure of Diego, see the [Diego Architecture](./diego-architecture.html) topic.
 
-The diagram below illustrates the primary Diego components and how they interact with other Cloud Foundry components. 
+The diagram below illustrates the primary Diego components and how they interact with other Cloud Foundry components.
 
 ![Diego Overview](../images/diego/diego-overview.png)
 </br>[Enlarge image](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
@@ -48,7 +50,7 @@ This table describes the major areas in the image above:
 
 ##<a id='core'></a>Diego Core Components##
 
-Components in the Diego core run and monitor [Tasks](./diego-auction.html#task) and [Long Running Processes](./diego-auction.html#processes) (LRPs). The core consists of the following major areas: 
+Components in the Diego core run and monitor [Tasks](./diego-auction.html#task) and [Long Running Processes](./diego-auction.html#processes) (LRPs). The core consists of the following major areas:
 
 * [Brain](#brain-components)
 * [Cells](#cell-components)
@@ -130,7 +132,7 @@ Refer to the [Garden repo](https://github.com/cloudfoundry-incubator/garden) on 
 
 ####<a id='metron-agent'></a>Metron Agent ####
 
-Forwards application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component 
+Forwards application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component
 
 Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron) on GitHub for more information.
 
@@ -203,7 +205,7 @@ Refer to the [Stager repo](https://github.com/cloudfoundry-incubator/stager) on 
 
 ###<a id='cc-uploader'></a>CC-Uploader ###
 
-- Mediates uploads from the [Executor](#executor) to the Cloud Controller  
+- Mediates uploads from the [Executor](#executor) to the Cloud Controller
 
 - Translates simple HTTP POST requests from the Executor into complex multipart-form uploads for the Cloud Controller
 
@@ -254,7 +256,7 @@ App Lifecycles implement deployment strategies. Each App Lifecycle contains the 
 
 - The **Launcher**, which runs a CF application. The [CC-Bridge](#bridge-components) sets the Launcher as the Action on the `DesiredLRP` for the application. The Launcher executes the start command with the correct system context, including working directory and environment variables.
 
-- The **Healthcheck**, which performs a status check on running CF application from inside the container. The [CC-Bridge](#bridge-components) sets the Healthcheck as the Monitor action on the `DesiredLRP` for the application. 
+- The **Healthcheck**, which performs a status check on running CF application from inside the container. The [CC-Bridge](#bridge-components) sets the Healthcheck as the Monitor action on the `DesiredLRP` for the application.
 
 
 ####<a id='lifecycle-implementations'></a>Current Implementations ####

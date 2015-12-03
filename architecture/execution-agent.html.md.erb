@@ -2,6 +2,8 @@
 title: Droplet Execution Agent
 ---
 
+<strong><%= modified_date %></strong>
+
 A Droplet Execution Agent (DEA) performs the following key functions:
 
 * **Manage Warden containers**: The DEA stages applications and runs
@@ -16,9 +18,9 @@ A Droplet Execution Agent (DEA) performs the following key functions:
 * **Run droplets**: A DEA manages the lifecycle of each application instance
     running in it, starting and stopping droplets upon request of the [Cloud
     Controller](./cloud-controller.html).
-    The DEA monitors the state of a started application instance, and 
+    The DEA monitors the state of a started application instance, and
     periodically broadcasts application state messages over
-    [NATS](./messaging-nats.html) for consumption by the 
+    [NATS](./messaging-nats.html) for consumption by the
     [HM9000](./index.html#hm9k).
 
 ## <a id='directory-server'></a>Directory Server ##
