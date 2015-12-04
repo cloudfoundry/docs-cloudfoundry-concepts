@@ -81,9 +81,11 @@ To scale the Cloud Foundry platform for high availability, the actions you take 
 You can think of components that support multiple instances as scalable processes.
 If you are already scaling the number of instances of such components to increase platform capacity, you need to scale further to achieve the redundancy required for high availability.
 
+**If you are using DEAs:**
+
 <table border="1" class="nice">
 	<tr>
-		<th><strong>Component</strong></th>
+		<th><strong>Job</strong></th>
 		<th><strong>Number</strong></th>
 		<th><strong>Notes</strong></th>
 	</tr>
@@ -140,12 +142,102 @@ If you are already scaling the number of instances of such components to increas
 	<tr>
 		<td><a href="../devguide/deploy-apps/streaming-logs.html">Doppler Server (formerly Loggregator Server)</a></td>
 		<td>&ge; 2</td>
-		<td>Deploying additional Doppler servers splits traffic across them.</td>
+		<td>Deploying additional Doppler servers splits traffic across them. Pivotal recommends you have at least two per Availability Zone.</td>
 	</tr>
 	<tr>
 		<td>Loggregator Traffic Controller</td>
 		<td>&ge; 2</td>
-		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner.</td>
+		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Pivotal recommends you have at least two per Availability Zone.</td>
+	</tr>
+	<tr>
+		<td>etcd</td>
+		<td>&ge; 3</td>
+		<td>Must be set to an odd number.</td>
+	</tr>
+</table>
+
+**If you are using DIEGO:**
+
+<table border="1" class="nice">
+	<tr>
+		<th><strong>Job</strong></th>
+		<th><strong>Number</strong></th>
+		<th><strong>Notes</strong></th>
+	</tr>
+	<tr>
+		<td>Diego Cell</td>
+		<td>&ge; 3</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Diego Brain</td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Diego BBS</td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number.</td>
+	</tr>
+	<tr>
+		<td>DEA</td>
+		<td>0</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Consul</td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number.</td>
+	</tr>
+	<tr>
+		<td>MySQL Server</td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number.</td>
+	</tr>
+	<tr>
+		<td>MySQL Proxy</td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>NATS Server</td>
+		<td>&ge; 2</td>
+		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
+	</tr>
+	<tr>
+		<td>Cloud Controller</td>
+		<td>&ge; 2</td>
+		<td>Cloud Controllers help with API request volume.</td>
+	</tr>
+	<tr>
+		<td>Router</td>
+		<td>&ge; 2</td>
+		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
+	</tr>
+	<tr>
+		<td>UAA</td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Doppler Server</td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Doppler servers splits traffic across them. Pivotal recommends to have at least two per Availability Zone.</td>
+	</tr>
+	<tr>
+		<td>Loggregator TC</td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Pivotal recommends to have at least two per Availability Zone.</td>
+	</tr>
+	<tr>
+		<td>etcd</td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number.</td>
+	</tr>
+	<tr>
+		<td>Health Manager</td>
+		<td>0</td>
+		<td></td>
 	</tr>
 </table>
 
