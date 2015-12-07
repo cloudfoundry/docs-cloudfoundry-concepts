@@ -53,6 +53,17 @@ $ cf disable-feature-flag diego_docker
 
 <p class='note'><strong>Note</strong>: Disabling the <code>diego-docker</code> feature flag stops all Docker-based apps in your deployment within a few convergence cycles, on the order of a minute.</p>
 
+##<a id='push-docker'></a>Pushing a Docker image 
+
+Make sure you are using the latest version of cf CLI. See the [Getting Started with the cf CLI](https://docs.pivotal.io/pivotalcf/devguide/installcf/whats-new-v6.html) for installation instructions. 
+
+Run the following command to push a Docker image: 
+
+<code>cf push -o <docker-image-ref></code>
+
+<p class='note'><strong>Note</strong>: If you are still using the Diego-Beta plugin, the following command will still work: <code>cf docker-push my-app cloudfoundry/lattice-app.</code></p>
+
+
 ##<a id='caveats'></a>Docker Caveats ##
 
 This section contains known issues and limitations with running Docker images in Cloud Foundry.
@@ -66,3 +77,5 @@ This section contains known issues and limitations with running Docker images in
 * Diego does not currently support fetching images from private repositories.
 
 * Diego currently requires that the source registry for a Docker image is  available when creating new application instances. If the registry is unavailable, Diego cannot start or restart applications.
+
+
