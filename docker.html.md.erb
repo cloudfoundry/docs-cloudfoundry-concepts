@@ -55,13 +55,15 @@ $ cf disable-feature-flag diego_docker
 
 ##<a id='push-docker'></a>Pushing a Docker image 
 
-Make sure you are using the latest version of cf CLI. See the [Getting Started with the cf CLI](https://docs.pivotal.io/pivotalcf/devguide/installcf/whats-new-v6.html) for installation instructions. 
+The following command will only work if you are running CLI 6.13.0 or later versions. See the [Getting Started with the cf CLI](https://docs.pivotal.io/pivotalcf/devguide/installcf/whats-new-v6.html) for installation instructions.
 
 Run the following command to push a Docker image: 
 
-<code>cf push -o <docker-image-ref></code>
+<code>cf push lattice-app -o images/lattice-app</code>
 
-<p class='note'><strong>Note</strong>: If you are still using the Diego-Beta plugin, the following command will still work: <code>cf docker-push my-app cloudfoundry/lattice-app.</code></p>
+where the image is from an accessible Docker Registry such as the [lattice-app on Docker Hub](https://hub.docker.com/r/cloudfoundry/lattice-app/).
+
+<p class='note'><strong>Note</strong>: If you are still using the Diego-Beta plugin with version cf CLI 6.12.4 or earlier, the following command will still work: <code>cf docker-push my-app cloudfoundry/lattice-app. The plugin should remain functional if the CLI is upgraded to 6.13.0 or later.</code></p>
 
 
 ##<a id='caveats'></a>Docker Caveats ##
@@ -70,7 +72,7 @@ This section contains known issues and limitations with running Docker images in
 
 * Diego only supports secure registries bearing certificates signed by a common Certificate Authority (CA). Diego does not currently support self-signed certificates.
 
-* Diego currently only supports V1 Docker registries.
+* Diego currently only supports v2 Docker registries. 
 
 * Diego is currently susceptible to recently disclosed Docker CVEs (e.g. CVE-2014-8178).
 
