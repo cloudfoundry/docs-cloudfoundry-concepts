@@ -55,7 +55,7 @@ $ cf disable-feature-flag diego_docker
 
 ##<a id='push-docker'></a>Pushing a Docker image 
 
-The following command will only work if you are running CLI 6.13.0 or later versions. See the [Getting Started with the cf CLI](https://docs.pivotal.io/pivotalcf/devguide/installcf/whats-new-v6.html) for installation instructions.
+Ensure you are running CLI 6.13.0 or a later version. See the [Getting Started with the cf CLI](https://docs.pivotal.io/pivotalcf/devguide/installcf/whats-new-v6.html) for installation instructions.
 
 Run the following command to push a Docker image: 
 
@@ -63,7 +63,7 @@ Run the following command to push a Docker image:
 
 where the image is from an accessible Docker Registry such as the [lattice-app on Docker Hub](https://hub.docker.com/r/cloudfoundry/lattice-app/).
 
-<p class='note'><strong>Note</strong>: If you are still using the Diego-Beta plugin with version cf CLI 6.12.4 or earlier, the following command will still work: <code>cf docker-push my-app cloudfoundry/lattice-app. The plugin should remain functional if the CLI is upgraded to 6.13.0 or later.</code></p>
+<p class='note'><strong>Note</strong>: If you are still using the Diego-Beta plugin with version cf CLI 6.12.4 or earlier, use: <code>cf docker-push my-app cloudfoundry/lattice-app</code>. The plugin will work if the CLI is upgraded to cf CLI 6.13.0 or later.</code></p>
 
 
 ##<a id='caveats'></a>Docker Caveats ##
