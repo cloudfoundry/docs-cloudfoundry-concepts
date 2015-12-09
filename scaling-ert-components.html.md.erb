@@ -2,50 +2,52 @@
 title: Scaling instances in Resource Config for Elastic Runtime
 ---
 
-This topic discusses how to scale instances in Resource Config of Elastic Runtime for various scenarios. To increase the capacity and availability of the Cloud Foundry platform, and to decrease the chances of downtime, you can scale a deployment up using the strategies described below. 
+<strong><%= modified_date %></strong>
 
-For further information on this topic, see [Zero Downtime Deployment and Scaling in CF](http://docs.pivotal.io/pivotalcf/concepts/high-availability.html) topic.
+This topic discusses how to scale instances in Elastic Runtime for different deployment scenarios. To increase the capacity and availability of the Cloud Foundry platform, and to decrease the chances of downtime, you can scale a deployment up using the instructions below. 
 
-<h2>Navigate to the Resource Config tab in Elastic Runtime</h2>
+For further information on this topic, see [Zero Downtime Deployment and Scaling in CF](http://docs.pivotal.io/pivotalcf/concepts/high-availability.html).
+
+<p class='note'><strong>Note</strong>: If you are looking to make a standard Diego or CF configuration high availabiilty, refer to the Zero Downtime Deployment and Scaling in CF topic above.</p>
+
+##<a id='core'></a>Scaling instances in Resource Config##
 
 1. Navigate to the Pivotal Cloud Foundry® Operations Manager Installation Dashboard.
 
 1. Click the Elastic Runtime tile in the Installation Dashboard.
 
-1. Navigate to the Resource Config tab
+1. **Select Resource Config**. Scale instances for:
 
-1. Scaling instances for the following scenarios are outlined below:
+  * [Using Diego with no DEAs](#diego-nodeas)
+  * [Using External Databases](#external-databases)
+  * [Using MySQL only](#mysql-only)
+  * [Using External Blobstore - S3](#external-blobstore)
+  * [Using External LB instead of HAProxy](#external-lb)
+  * [Using Ops Metrics](#ops-metric)
 
-  * Using Diego, no DEAs
-  * Make Diego HA
-  * CF HA
-  * Use External DBs
-  * Not using Postgres DBs (MySQL only)
-  * Using External Blobstore (S3)
-  * Using External LB instead of HAProxy
-  * Using Ops Metrics
+<%= image_tag("images/scaling-ert.png") %>
 
-Use Diego, no DEAs
+###<a id='diego-nodeas'></a>Using Diego with no DEAs ###
 
 <table border="1" class="nice" >
   <tr>
-    <th width=8%><strong>Instance Name</strong></th>
-    <th width=35%><strong>Instance Count</strong></th>
+    <th width=8%><strong>Job</strong></th>
+    <th width=8%><strong>Instance Count</strong></th>
     <th width=22%><strong>Notes</strong></th>
   </tr>
   <tr>
     <td>Diego Cell</td>
-    <td>≥ 3</td>
+    <td>&ge; 3</td>
     <td></td>
   </tr>
   <tr>
     <td>Diego Brain</td>
-    <td>≥ 1</td>
+    <td>&ge; 1</td>
     <td></td>
   </tr>
   <tr>
     <td>Diego Bulletin Board System</td>
-    <td>≥ 1</td>
+    <td>&ge; 1</td>
     <td></td>
   </tr>
   <tr>
@@ -55,7 +57,7 @@ Use Diego, no DEAs
   </tr>
   <tr>
     <td>Consul</td>
-    <td>≥ 1</td>
+    <td>&ge; 1</td>
     <td></td>
   </tr>
   <tr>
@@ -63,167 +65,15 @@ Use Diego, no DEAs
     <td>0</td>
     <td>You will be able to zero out this component starting with ERT 1.6.3</td>
   </tr>
+</table>
 
 
-Make Diego HA
-
-<table border="1" class="nice" >
-  <tr>
-    <th width=8%><strong>Instance Name</strong></th>
-    <th width=35%><strong>Instance Count</strong></th>
-    <th width=22%><strong>Notes</strong></th>
-  </tr>
-  <tr>
-    <td>Diego Cell</td>
-    <td>≥ 3</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Diego Brain</td>
-    <td>≥ 2</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Diego Bulletin Board System</td>
-    <td>≥ 3</td>
-    <td>must be odd #'ed</td>
-  </tr>
-  <tr>
-    <td>DEA</td>
-    <td>0</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Consul</td>
-    <td>≥ 3</td>
-    <td>must be odd #'ed</td>
-  </tr>
-  <tr>
-    <td>MySQL Server</td>
-    <td>≥ 3</td>
-    <td>must be odd #'ed</td>
-  </tr>
-  <tr>
-    <td>MySQL Proxy</td>
-    <td>≥ 2</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>NATS Server</td>
-    <td>≥ 2</td>
-    <td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
-  </tr>
-  <tr>
-    <td>Cloud Controller</td>
-    <td>≥ 2</td>
-    <td>More Cloud Controllers help with API request volume.</td>
-  </tr>
-  <tr>
-    <td>Router</td>
-    <td>≥ 2</td>
-    <td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
-  </tr>
-  <tr>
-    <td>UAA</td>
-    <td>≥ 2</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Doppler Server</td>
-    <td>≥ 2</td>
-    <td>Deploying additional Doppler servers splits traffic across them, recommended to have at least two per AZ.</td>
-  </tr>
-  <tr>
-    <td>Loggregator TC</td>
-    <td>≥ 2</td>
-    <td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner, recommended to have at least 2 per AZ.</td>
-  </tr>
-  <tr>
-    <td>etcd</td>
-    <td>≥ 3</td>
-    <td>must be odd #'ed</td>
-  </tr>
-  <tr>
-    <td>etcd</td>
-    <td>≥ 3</td>
-    <td>must be odd #'ed</td>
-  </tr>
-  <tr>
-    <td>Health Manager</td>
-    <td>0</td>
-    <td>You will be able to zero out this component starting with ERT 1.6.3</td>
-  </tr>
-
-Make CF HA
+###<a id='external-databases'></a>Using External Databases  ###
 
 <table border="1" class="nice" >
   <tr>
-    <th width=8%><strong>Instance Name</strong></th>
-    <th width=35%><strong>Instance Count</strong></th>
-    <th width=22%><strong>Notes</strong></th>
-  </tr>
-  <tr>
-    <td>MySQL Server</td>
-    <td>≥ 3</td>
-    <td>must be odd #'ed</td>
-  </tr>
-  <tr>
-    <td>MySQL Proxy</td>
-    <td>≥ 2</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>NATS Server</td>
-    <td>≥ 2</td>
-    <td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
-  </tr>
-  <tr>
-    <td>HM9000</td>
-    <td>≥ 2</td>
-    <td>Assuming you use the DEAs instead of Diego</td>
-  </tr>
-  <tr>
-    <td>Cloud Controller</td>
-    <td>≥ 2</td>
-    <td>More Cloud Controllers help with API request volume.</td>
-  </tr>
-  <tr>
-    <td>Router</td>
-    <td>≥ 2</td>
-    <td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
-  </tr>
-  <tr>
-    <td>UAA</td>
-    <td>≥ 2</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>DEA</td>
-    <td>≥ 3</td>
-    <td>Assuming you use the DEAs instead of Diego</td>
-  </tr>
-  <tr>
-    <td>Doppler Server</td>
-    <td>≥ 2</td>
-    <td>Deploying additional Doppler servers splits traffic across them, recommended to have at least two per AZ.</td>
-  </tr>
-  <tr>
-    <td>Loggregator TC</td>
-    <td>≥ 2</td>
-    <td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner, recommended to have at least two per AZ.</td>
-  </tr>
-  <tr>
-    <td>etcd</td>
-    <td>≥ 3</td>
-    <td>must be odd #'ed</td>
-  </tr>
-
-Use External Databases
-
-<table border="1" class="nice" >
-  <tr>
-    <th width=8%><strong>Instance Name</strong></th>
-    <th width=35%><strong>Instance Count</strong></th>
+    <th width=8%><strong>Job</strong></th>
+    <th width=8%><strong>Instance Count</strong></th>
     <th width=22%><strong>Notes</strong></th>
   </tr>
   <tr>
@@ -251,23 +101,25 @@ Use External Databases
     <td>0</td>
     <td></td>
   </tr>
+</table>
 
-Not Using Postgres Databases (MySQL only)
+
+###<a id='mysql-only'></a>Using MySQL only  ###
 
 <table border="1" class="nice" >
   <tr>
-    <th width=8%><strong>Instance Name</strong></th>
-    <th width=35%><strong>Instance Count</strong></th>
+    <th width=8%><strong>Job</strong></th>
+    <th width=8%><strong>Instance Count</strong></th>
     <th width=22%><strong>Notes</strong></th>
   </tr>
   <tr>
     <td>MySQL server</td>
-    <td>≥ 1</td>
-    <td>must be odd #'ed</td>
+    <td>&ge; 1</td>
+    <td>Must be set to an odd number.</td>
   </tr>
   <tr>
     <td>MySQL Proxy</td>
-    <td>≥ 1</td>
+    <td>&ge; 1</td>
     <td></td>
   </tr>
   <tr>
@@ -285,13 +137,14 @@ Not Using Postgres Databases (MySQL only)
     <td>0</td>
     <td></td>
   </tr>
+</table>
 
-Using External Blobstore (S3)
+###<a id='external-blobstore'></a>Using External Blobstore (S3)   ###
 
 <table border="1" class="nice" >
   <tr>
-    <th width=8%><strong>Instance Name</strong></th>
-    <th width=35%><strong>Instance Count</strong></th>
+    <th width=8%><strong>Job</strong></th>
+    <th width=8%><strong>Instance Count</strong></th>
     <th width=22%><strong>Notes</strong></th>
   </tr>
   <tr>
@@ -299,13 +152,14 @@ Using External Blobstore (S3)
     <td>0</td>
     <td></td>
   </tr>
+</table>
 
-Using External LB instead of HAProxy
+###<a id='external-lb'></a>Using External LB instead of HAProxy    ###
 
 <table border="1" class="nice" >
   <tr>
-    <th width=8%><strong>Instance Name</strong></th>
-    <th width=35%><strong>Instance Count</strong></th>
+    <th width=8%><strong>Job</strong></th>
+    <th width=8%><strong>Instance Count</strong></th>
     <th width=22%><strong>Notes</strong></th>
   </tr>
   <tr>
@@ -316,10 +170,25 @@ Using External LB instead of HAProxy
   <tr>
     <td>Router</td>
     <td></td>
-    <td>For AWS, set the ELB name in the Router's "External Load Balancer" field</td>
+    <td>For AWS, set the ELB name in the Router's "External Load Balancer" field.</td>
   </tr>
   <tr>
     <td>Diego Brain</td>
     <td></td>
-    <td>Assuming you have Diego SSH feature enabled, for AWS, set the SSH ELB name in the Router's "External Load Balancer" field)</td>
+    <td>If you have the Diego SSH feature enabled, for AWS, set the SSH ELB name in the Router's "External Load Balancer" field.</td>
   </tr>
+</table>
+
+###<a id='ops-metric'></a>Using Ops Metric    ###
+<table border="1" class="nice" >
+  <tr>
+    <th width=8%><strong>Job</strong></th>
+    <th width=8%><strong>Instance Count</strong></th>
+    <th width=22%><strong>Notes</strong></th>
+  </tr>
+  <tr>
+    <td>Collector</td>
+    <td>0</td>
+    <td>Must have Ops Metrics tile added to PCF before you scale this up. See [Adding and Deleting Products](http://docs.pivotal.io/pivotalcf/customizing/add-delete.html).</td>
+  </tr>
+</table>
