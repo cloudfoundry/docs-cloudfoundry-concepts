@@ -268,18 +268,6 @@ Because NATS is deployed by BOSH, the BOSH resurrector will recover the VM if it
 For some deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover the VM where the NFS Server runs.
 In others, it would be preferable to run a scalable and redundant blobstore service. Contact Pivotal PSO if you need help.
 
-**SAML Login Server**:
-
-Because the Login Server is deployed by BOSH, the BOSH resurrector will recover the VM if it becomes non-responsive.
-
-Secondly, there are components whose availability does not affect that of the platform as a whole. For these, recovery by normal IT procedures should be sufficient even in a high availability Cloud Foundry deployment.
-
-**Syslog**:
-
-An event that degrades availability of the Syslog VM causes a gap in logging, but otherwise Cloud Foundry continues to operate normally.
-
-Because Syslog is deployed by BOSH, the BOSH resurrector will recover the VM if it becomes non-responsive.
-
 **Collector**:
 
 This component is not in the critical path for any operation.
@@ -288,12 +276,8 @@ This component is not in the critical path for any operation.
 
 This component is active only during platform installation and upgrades.
 
-**Etcd**:
-
-Etcd is a highly-available key value store used for shared configuration and service discovery. You can find more information about running etcd on single nodes in the [etcd GitHub repository](https://github.com/cloudfoundry/etcd#running-a-single-node).
-
 ### <a id='databases'></a>Databases ###
 
-For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible.
+For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. See [Scaling instances in Resource Config for Elastic Runtime](../concepts/scaling-ert-components.html) for more configuration options. 
 
-Contact Pivotal PSO if you require replicated databases or any assistance.
+Contact Pivotal PSO if you require replicated databases or any assistance. 
