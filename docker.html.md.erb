@@ -32,7 +32,7 @@ To determine which processes to run, the [Cloud Controller](./architecture/cloud
 
 ##<a id='multi-tenant'></a>Docker in a Multi-Tenant World ##
 
-Since Docker allows users to fully specify the contents of their root file systems, the attack surface area for a Docker-based container running on Diego is somewhat higher than that of a buildpack application, which runs on a trusted root filesystem.
+Since Docker allow users to fully specify the contents of their root file systems, the attack surface area for a Docker-based container running on Diego is somewhat higher than that of a buildpack application, which runs on a trusted root filesystem.
 
 The Garden-Linux team has implemented a host of features to allow the platform to run Docker images more securely in a multi-tenant context. In particular, Cloud Foundry uses the `user-namespacing` feature found on modern Linux kernels to ensure that uses cannot gain escalated privileges on the host even if they escalate privileges within a container.
 
@@ -53,17 +53,19 @@ $ cf disable-feature-flag diego_docker
 
 <p class='note'><strong>Note</strong>: Disabling the <code>diego-docker</code> feature flag stops all Docker-based apps in your deployment within a few convergence cycles, on the order of a minute.</p>
 
-##<a id='push-docker'></a>Pushing a Docker image 
+##<a id='push-docker'></a>Pushing a Docker image with the CF CLI
 
-Ensure you are running CLI 6.13.0 or a later version. See [Getting Started with the cf CLI](https://docs.pivotal.io/pivotalcf/devguide/installcf/whats-new-v6.html) for installation instructions.
+Follow these instructions to deploy updated or new Docker images using Cloud Foundry.
 
-Run the following command to push a Docker image: 
+Ensure that you are running cf CLI 6.13.0 or a later version. See [Getting Started with the cf CLI](https://docs.pivotal.io/pivotalcf/devguide/installcf/whats-new-v6.html) for installation instructions.
 
-<code>cf push lattice-app -o images/lattice-app</code>
+Run `cf push lattice-app -o MY-DOCKER-IMAGE` to deploy a Docker image. Replace MY-DOCKER-IMAGE with the name of an image from an accessible Docker Registry. 
 
-where the image is from an accessible Docker Registry such as the [lattice-app on Docker Hub](https://hub.docker.com/r/cloudfoundry/lattice-app/).
+For example, the following command pushes the lattice-app on Docker Hub to Cloud Foundry: 
 
-<p class='note'><strong>Note</strong>: See <a href= 'https://github.com/cloudfoundry-incubator/diego-design-notes/blob/master/docker-support.md'>Docker Support in CF + Diego</a> for information about pushing a docker image with an earlier version cf CLI.</p>
+<pre class='terminal'>$ cf push lattice-app -o images/lattice-app</pre>
+
+<p class='note'><strong>Note</strong>: See <a href= 'https://github.com/cloudfoundry-incubator/diego-design-notes/blob/master/docker-support.md'>Docker Support in CF + Diego</a> for information about pushing a docker image with an earlier version of the cf CLI.</p>
 
 
 ##<a id='caveats'></a>Docker Caveats ##
