@@ -67,7 +67,6 @@ For example, the following command pushes the lattice-app on Docker Hub to Cloud
 
 <p class='note'><strong>Note</strong>: See <a href= 'https://github.com/cloudfoundry-incubator/diego-design-notes/blob/master/docker-support.md'>Docker Support in CF + Diego</a> for information about pushing a docker image with an earlier version of the cf CLI.</p>
 
-
 ##<a id='caveats'></a>Docker Caveats ##
 
 This section contains known issues and limitations with running Docker images in Cloud Foundry.
@@ -76,10 +75,6 @@ This section contains known issues and limitations with running Docker images in
 
 * Diego currently only supports v2 Docker registries. 
 
-* Diego is currently susceptible to recently disclosed Docker CVEs (e.g. CVE-2014-8178).
-
 * Diego does not currently support fetching images from private repositories.
 
 * Diego currently requires that the source registry for a Docker image be available when creating new application instances. If the registry is unavailable, Diego cannot start or restart applications.
-
-
