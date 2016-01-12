@@ -4,18 +4,18 @@ title: Cloud Controller
 
 <strong><%= modified_date %></strong>
 
-The Cloud Controller is written in Ruby and provides REST API endpoints for
-clients to access the system.
+The Cloud Controller provides REST API endpoints for clients to access the 
+system.
 The Cloud Controller maintains a database with tables for orgs, spaces, apps,
 services, service instances, user roles, and more.
 
-## <a id='dea-placement'></a> Droplet Execution Agent (DEA) Placement Algorithm ##
+##<a id='dea-placement'></a>Droplet Execution Agent (DEA) Placement Algorithm ##
 
-Whenever Cloud Foundry needs to spin up a new instance of an app, the cloud controller is responsible for [selecting a droplet execution agent (DEA) to run it](https://github.com/cloudfoundry/cloud_controller_ng/blob/2b1d38cba944086fa545d621a37ce4089b8e239e/lib/cloud_controller/dea/pool.rb#L44-L50).
+Whenever Cloud Foundry needs to spin up a new instance of an app, the Cloud Controller is responsible for [selecting a droplet execution agent (DEA) to run it](https://github.com/cloudfoundry/cloud_controller_ng/blob/2b1d38cba944086fa545d621a37ce4089b8e239e/lib/cloud_controller/dea/pool.rb#L44-L50).
 
-DEAs broadcast their availability to the cloud controller via a NATS message called an `advertisement`, which contains a `stats` hash with information about their available memory, available disk, and the stack which the DEA is running, as well as an expiration time.
+DEAs broadcast their availability to the Cloud Controller through a NATS message called an `advertisement`, which contains a `stats` hash with information about their available memory, available disk, the stack which the DEA runs, and an expiration time.
 
-The cloud controller collects these advertisements in a construct called a pool. When the cloud controller is called upon to find a DEA to run an app, it runs through the following steps, using criteria (minimum thresholds for disk, memory, etc.) specific to the app that the chosen DEA will run:
+The Cloud Controller collects these advertisements in a construct called a pool. When the Cloud Controller needs to find a DEA to run an app, it runs through the following steps, using criteria (minimum thresholds for disk, memory, etc.) specific to the app that the chosen DEA will run:
 
 1. It removes the expired DEA advertisements from the pool.
 1. It filters the remaining advertisements to include only those:
@@ -32,9 +32,9 @@ The cloud controller collects these advertisements in a construct called a pool.
     <%= image_tag '../images/dea_placement_algorithm/dea_top_half_memory.png' %>
 1. It then randomly selects one of the remaining DEAs.
 
-###Considerations
+### Considerations
 
-It is important to note that the cloud controller uses this algorithm to balance new app instances between DEAs when the new app instances are created, but do not balance already-running apps.
+It is important to note that the Cloud Controller uses this algorithm to balance new app instances between DEAs when the new app instances are created, but do not balance already-running apps.
 
 For example, suppose a set of apps are running on DEAs in two AZs, and one AZ temporarily goes down. While the second AZ is down, all instances will be placed on the remaining AZ. After the second AZ comes back online, new instances will be allocated to DEAs there, since the algorithm favors DEAs in the zone with the fewest running instances. However, instances running on the first AZ will not be moved to the other AZ, so the imbalance will persist.
 
@@ -46,11 +46,11 @@ It is possible to rebalance the DEAs between AZs in two ways:
   <li>Terminating and restarting half of the instances one by one.</li>
 </ul>
 
-## <a id='database'></a>Database (CC_DB) ##
+##<a id='database'></a>Database (CC_DB) ##
 
 The Cloud Controller database has been tested with Postgres.
 
-## <a id='blob-store'></a>Blob Store ##
+##<a id='blob-store'></a>Blob Store ##
 
 The Cloud Controller manages a blob store for the following:
 
@@ -65,7 +65,7 @@ The Cloud Controller manages a blob store for the following:
 The blob store uses the [Fog](http://fog.io/) Ruby gem such that it can use
 abstractions like Amazon S3 or an NFS-mounted file system for storage.
 
-## <a id='nats'></a>NATS Messaging ##
+##<a id='nats'></a>NATS Messaging ##
 
 The Cloud Controller interacts with other core components of the Cloud Foundry
 platform using the NATS message bus.
@@ -80,7 +80,7 @@ interactions:
 * Instructing Service Gateways to handle provisioning, unprovisioning, binding,
     and unbinding operations for services
 
-## <a id='testing'></a>Testing ##
+##<a id='testing'></a>Testing ##
 
 By default `rspec` runs a test suite with the SQLite in-memory database.
 Specify a connection string using the `DB_CONNECTION` environment variable to
