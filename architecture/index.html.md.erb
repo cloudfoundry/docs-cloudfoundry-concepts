@@ -18,17 +18,24 @@ Some descriptions include links to more detailed documentation.
 
 ![Cloud Foundry Architecture](../images/cf_architecture_block.png)
 
-## <a id='router'></a>Router ##
+
+## <a id='routing'></a>Routing
+
+### <a id='router'></a>Router
 
 The [router](./router.html) routes incoming traffic to the appropriate
 component, usually the Cloud Controller or a running application on a DEA node.
 
-## <a id='uaa'></a> OAuth2 Server (UAA) and Login Server ##
+## <a id='authentication'></a>Authentication
+
+### <a id='uaa'></a> OAuth2 Server (UAA) and Login Server
 
 The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to
 provide identity management.
 
-## <a id='cc'></a> Cloud Controller ##
+## <a id='app-lifecycle'></a>App Lifecycle
+
+### <a id='cc'></a> Cloud Controller
 
 The [Cloud Controller](./cloud-controller.html) is responsible for managing the
 lifecycle of applications.
@@ -40,34 +47,15 @@ application.
 The Cloud Controller also maintains records of orgs, spaces, services,
 service instances, user roles, and more.
 
-## <a id='hm9k'></a> Health Manager (HM9000) ##
+### <a id='nsync-converger'></a> nsync, Converger, and Cell Reps
 
-HM9000 has four core responsibilities:
+In pre-Diego CF architecture, this function was performed by the [Health Manager (HM9000)](../diego/dea-vs-diego.html#hm9k).
 
-* Monitor applications to determine their state (e.g. running, stopped, crashed, etc.), version, and number of instances.  HM9000 updates the actual state of an application based on heartbeats and `droplet.exited` messages issued by the DEA running the application.
-* Determine applications' expected state, version, and number of instances. HM9000 obtains the desired state of an application from a dump of the Cloud Controller database.
-* Reconcile the actual state of applications with their expected state. For instance, if fewer than expected instances are running, HM9000 will instruct the Cloud Controller to start the appropriate number of instances.
-* Direct Cloud Controller to take action to correct any discrepancies in the state of applications.
+![Cloud Foundry Architecture](../images/diego/app-monitor-sync-diego.png)
 
-HM9000 is essential to ensuring that apps running on Cloud Foundry remain
-available.
-HM9000 restarts applications whenever the DEA running an app shuts down for any
-reason, when Warden kills the app because it violated a quota, or when the
-application process exits with a non-zero exit code.
+## <a id='app-storage-execution'></a>App Storage and Execution
 
-Refer to the [HM9000 readme](https://github.com/cloudfoundry/hm9000) for more
-information about the HM9000 architecture.
-
-## <a id='dea'></a> Application Execution (DEA) ##
-
-The [Droplet Execution Agent](./execution-agent.html) manages application
-instances, tracks started instances, and broadcasts state messages.
-
-Application instances live inside [Warden](./warden.html) containers.
-Containerization ensures that application instances run in isolation, get their
-fair share of resources, and are protected from noisy neighbors.
-
-## <a id='blob'></a> Blob Store ##
+### <a id='blob'></a> Blob Store
 
 The blob store holds:
 
@@ -75,20 +63,28 @@ The blob store holds:
 * Buildpacks
 * Droplets
 
-## <a id='broker'></a> Service Brokers ##
+### <a id='diego-cell'></a> Diego Cell
+
+In pre-Diego CF architecture, this function was performed by the [DEA](../diego/dea-vs-diego.html#dea).
+
+## <a id='services'></a>Services
+
+### <a id='broker'></a> Service Brokers
 
 Applications typically depend on <%= vars.services %> such as databases
 or third-party SaaS providers.
 When a developer provisions and binds a service to an application, the service
 broker for that service is responsible for providing the service instance.
 
-## <a id='nats'></a> Message Bus (NATS) ##
+## <a id='messaging'></a>Messaging
 
-Cloud Foundry uses [NATS](./messaging-nats.html), a lightweight
-publish-subscribe and distributed queueing messaging system, for internal
-communication between components.
+### <a id='bbs-consul'></a> BBS and Consul
 
-## <a id='metrics'></a> Metrics Collector and App Log Aggregator: Logging and Statistics ##
+In pre-Diego CF architecture, this function was performed exclusively by the [NATS Message Bus](../diego/dea-vs-diego.html#nats).
+
+## <a id='metrics-logging'></a>Metrics and Logging
+
+### <a id='metrics'></a> Metrics Collector and App Log Aggregator: Logging and Statistics
 
 The metrics collector gather metrics from the components.
 Operators can use this information to monitor an instance of Cloud Foundry.
