@@ -1,0 +1,96 @@
+---
+title: DEA / Diego Differences
+---
+
+This topic provides 
+If you’re moving from DEA to Diego and you want to know how the responsibilities formerly handled by DEA components are handled by Diego components:
+
+##<a id='design'></a>High-Level Design
+
+Under the DEA architecture, there was no distinction between processes that run once and processes that run continuously. Under Diego, processes are broken into tasks (that run once) and long-running processes (LRPs that run continuously), and are treated differently. 
+
+In a Cloud Foundry deployment without Diego, the [Cloud Controller](../architecture/cloud-controller.html) schedules and manages applications on the [Droplet Execution Agents](../architecture/execution-agent.html) (DEAs). Diego replaces the DEAs and the [Health Manager (HM9000)](../architecture/index.html#hm9k), and assumes application scheduling and management responsibility from the Cloud Controller.
+
+DEA Placement Algorithm vs Diego Auction [link to Diego Auction doc]
+
+DEA was written in Ruby. Diego is written in Go.
+
+##<a id='component'></a>Component Names and Functions
+
+
+### <a id='dea'></a> Application Execution: DEA and Warden &rarr; Diego Cell and Garden
+
+In pre-Diego releases of Cloud Foundry, the [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) component manages application
+instances, tracks started instances, and broadcasts state messages. These functions are now performed by the [Diego cell](../architecture/index.html#diego-cell).
+
+Application instances live inside [Warden](../architecture/warden.html) containers, which are analogous to [Garden](../diego/diego-components.html#cell-components) containers in Diego architecture.
+Containerization ensures that application instances run in isolation, get their
+fair share of resources, and are protected from noisy neighbors.
+
+### <a id='hm9k'></a>Health Manager (HM9000) &rarr; nsync, Converger, and Cell Rep
+
+The function of the Health Monitor (HM9000) component in pre-Diego releases of Cloud Foundry has been replaced by the coordinated actions of the [nsync, Converger, and Cell Reps](../architecture/index.html#nsync-converger). In pre-Diego architecture, the Health Monitor (HM9000) has four core responsibilities:
+
+* Monitor applications to determine their state (e.g. running, stopped, crashed, etc.), version, and number of instances.  HM9000 updates the actual state of an application based on heartbeats and `droplet.exited` messages issued by the DEA running the application.
+* Determine applications' expected state, version, and number of instances. HM9000 obtains the desired state of an application from a dump of the Cloud Controller database.
+* Reconcile the actual state of applications with their expected state. For instance, if fewer than expected instances are running, HM9000 will instruct the Cloud Controller to start the appropriate number of instances.
+* Direct Cloud Controller to take action to correct any discrepancies in the state of applications.
+
+HM9000 is essential to ensuring that apps running on Cloud Foundry remain
+available.
+HM9000 restarts applications whenever the DEA running an app shuts down for any
+reason, when Warden kills the app because it violated a quota, or when the
+application process exits with a non-zero exit code.
+
+Refer to the [HM9000 readme](https://github.com/cloudfoundry/hm9000) for more
+information about the HM9000 architecture.
+
+###Cloud Controller
+
+### <a id='nats'></a> Message Bus (NATS)
+
+Cloud Foundry uses [NATS](./messaging-nats.html), a lightweight
+publish-subscribe and distributed queueing messaging system, for internal
+communication between components.
+
+##<a id='table'></a>DEA / Diego Differences Summary
+
+<table><tbody>
+<tr>
+<th>Function</th>
+<th>DEA architecture</th>
+<th>Diego architecture</th>
+<th>&Delta; notes</th></tr>
+<tr>
+<td>Source code language</td>
+<td>Ruby</td>
+<td>Go</td>
+<td></td></tr>
+<tr>
+<td>Low-level manager and API protocol for creating, configuring (for max CPU usage, memory, etc.), destroying, monitoring, and addressing isolated containers on a VM.</td>
+<td>Warden</td>
+<td>Garden and platform-specific Garden backends</td>
+<td>Warden is Linux-only, Garden backend is abstracted to support multiple OSs </td></tr>
+<tr>
+<td>mid-level manager on VM that runs apps as directed and communicates &ldquo;heartbeat&rdquo; and other state messages</td>
+<td>DEA</td>
+<td>Diego Cell</td>
+<td>one of these runs on each VM that runs apps (as opposed to special-purpose VMs like Cloud Controller)</td></tr>
+<tr>
+<td>process that monitors application instances to ensure enough are running</td>
+<td>Health Manager (HM9000)</td>
+<td>nSync (syncs between CC and Diego) and Converger&nbsp;(syncs within Diego)</td>
+<td></td></tr>
+<tr><td>process types, used to inform how they&rsquo;re allocated to VMs</td>
+<td>applications (no distinction made)</td>
+<td>tasks and long-running processes (LRPs)</td>
+<td></td></tr>
+<tr><td>algorithm used to allocate processes to VMs</td>
+<td>DEA Placement Algorithm</td>
+<td>Diego Auction</td>
+<td></td></tr>
+<tr><td>CF component that routes external traffic to/from applications</td>
+<td>Router</td>
+<td>Gorouter</td>
+<td></td></tr></tbody></table>
+
