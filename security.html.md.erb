@@ -61,11 +61,11 @@ Applications that users deploy to Cloud Foundry exist within a space. Spaces exi
 
 ## <a id='containers'></a>Application Isolation with Containers ##
 
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a Garden container that isolates processes, memory, and the file system. (Garden is the platform-independent successor to [Warden](./architecture/warden.html).) Cloud Foundry operators can configure whether contained applications can directly interact with other applications or other Cloud Foundry system components.
+Each application deployed to Cloud Foundry runs within its own self-contained environment, a [Garden container](./diego/diego-components.html#garden) that isolates processes, memory, and the file system.  Cloud Foundry operators can configure whether contained applications can directly interact with other applications or other Cloud Foundry system components.
 
 Applications are typically allowed to invoke other applications in Cloud Foundry only by leaving the system and re-entering through the load balancer positioned in front of the Cloud Foundry routers. To isolate applications and control outgoing traffic, each Garden container uses a dedicated virtual network interface (VNI) that consists of a pair of ethernet addresses, one visible to the application instance running in the container, and the other visible to the host VM’s root namespace. The pair is configured to use IPs in a small and static subnet.
 
-This restrictive operating environment is designed for security and stability. If a spoofing attack bypasses the physical firewall for your deployment, Cloud Foundry network <%=vars.net_traffic_rules%> help prevent the attack from accessing application containers.
+This restrictive operating environment is designed for security and stability. If a spoofing attack bypasses the physical firewall for your deployment, Cloud Foundry <%=vars.net_traffic_rules%> help prevent the attack from accessing application containers.
 
 ### <a id='application-traffic'></a>Application Traffic ###
 
@@ -89,11 +89,9 @@ Admins can configure these rules at two levels. Application Security Groups appl
 
 To target applications with specific network traffic rules, <%=vars.app_sec_groups%> (ASGs) define traffic rules for individual containers, using Linux IPTables. The rules specify the protocols, addresses, and ports that are allowed for outgoing traffic. The cell uses these rules to filter and log outbound network traffic.
 
-While applications are first staging for deployment, they may need to handshake more broadly across the network, so admins can define looser traffic rules for when apps are first staged and deployed than for when they run.
+When applications are first staging, they need traffic rules loose enough to let them pull resources in from across the network. Once they are running, the traffic rules can be more restrictive and secure. So admins can define one ASG for when an app stages, and different one for when it runs.
 
-Operators can define ASGs both in a manifest and on the cf Command Line Interface (CLI), however, ASGs defined in a manifest are valid only until operators update them on the cf CLI. For this reason, <%=vars.pcf_rec%> recommends that operators use the cf CLI to create and bind ASGs to the running and staging deployment phases for greater flexibility. 
-
-To provide granular control in securing a deployment, an administrator can assign ASGs to apply across a Cloud Foundry deployment, or to specific spaces or orgs within a deployment.
+To provide granular control in securing a deployment, an administrator can assign ASGs to apply across a Cloud Foundry deployment, or to specific spaces or orgs within a deployment. You define ASGs on the cf CLI using `cf create-security-group` and `cf bind-security-group`. <%=vars.manifest_vs_cli_asg%>
 
 #### <a id='container-rules'></a>Host-level Network Properties ####
 
@@ -148,7 +146,7 @@ Additionally, operators can redirect Cloud Foundry component logs to a standard 
 
 For users, Cloud Foundry records an audit trail of all relevant API invocations of an app. The CLI command `cf events` returns this information.
 
-## <a id='recommendations'></a>Running a Secure Deployment ##
+## <a id='recommendations'></a>Recommendations for Running a Secure Deployment ##
 
 To help run a secure deployment, <%=vars.pcf_rec%> recommends the following:
 
