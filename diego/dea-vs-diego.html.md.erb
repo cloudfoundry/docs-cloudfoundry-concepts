@@ -2,8 +2,7 @@
 title: DEA / Diego Differences
 ---
 
-This topic provides 
-If you’re moving from DEA to Diego and you want to know how the responsibilities formerly handled by DEA components are handled by Diego components:
+This topic describes changed or deprecated components in pre-Diego releases of Cloud Foundry&reg; and the newer components and roles that replace them. This information should help people who are familiar with Cloud Foundry's DEA-based architecture and want to learn what has changed under the new architecture and how it works.
 
 ##<a id='design'></a>High-Level Design
 
@@ -18,14 +17,32 @@ DEA was written in Ruby. Diego is written in Go.
 ##<a id='component'></a>Component Names and Functions
 
 
-### <a id='dea'></a> Application Execution: DEA and Warden &rarr; Diego Cell and Garden
+### <a id='dea'></a>DEA &rarr; Diego Cell
 
 In pre-Diego releases of Cloud Foundry, the [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) component manages application
 instances, tracks started instances, and broadcasts state messages. These functions are now performed by the [Diego cell](../architecture/index.html#diego-cell).
 
+### <a id='warden'></a> Warden &rarr; Garden
+
 Application instances live inside [Warden](../architecture/warden.html) containers, which are analogous to [Garden](../diego/diego-components.html#cell-components) containers in Diego architecture.
 Containerization ensures that application instances run in isolation, get their
 fair share of resources, and are protected from noisy neighbors.
+
+For network security, pre-Diego releases of Cloud Foundry support `allow` and `deny`rules that govern outbound traffic from all Warden containers running on the same DEA. Newer releases use container-specific Application Security Groups (ASGs) to restrict traffic at a more granular level. Cloud Foundry recommends using ASGs exclusively, but when a deployment defines both Warden rules and ASGs, they are evaluated in a strict priority order.
+
+Cloud Foundry returns an allow, deny, or reject result for the first rule that matches the outbound traffic request parameters, and does not evaluate any lower-priority rules.
+Cloud Foundry evaluates the network traffic rules for an application in the following order:
+
+1. **Security Groups**: The rules described by the Default Staging set, the
+Default Running set, and all security groups bound to the space.
+1. **Warden ALLOW rules**: Any Warden Server configuration `allow` rules.
+Set Warden Server configuration rules in the Droplet Execution Agent (DEA)
+configuration section of your deployment manifest.
+1. **Warden DENY rules**: Any Warden Server configuration `deny` rules.
+Set Warden Server configuration rules in the DEA configuration section of your
+deployment manifest.
+1. **Hard-coded REJECT rule**: Cloud Foundry returns a `reject` result for all
+outbound traffic from a container if not allowed by a higher-priority rule.
 
 ### <a id='hm9k'></a>Health Manager (HM9000) &rarr; nsync, Converger, and Cell Rep
 
