@@ -89,7 +89,7 @@ Admins can configure these rules at two levels. Application Security Groups appl
 
 To target applications with specific network traffic rules, <%=vars.app_sec_groups%> (ASGs) define traffic rules for individual containers, using Linux IPTables. The rules specify the protocols, addresses, and ports that are allowed for outgoing traffic. Because they are “allow” rules, their order of evaluation is unimportant when multiple application security groups apply to the same space, org, or deployment. The cell uses these rules to filter and log outbound network traffic.
 
-When applications are first staging, they need traffic rules loose enough to let them pull resources in from across the network. Once they are running, the traffic rules can be more restrictive and secure. To distinguish between these two security needs, admins can define one ASG for when an app stages, and different one for when it runs.
+When applications are first staging, they need traffic rules loose enough to let them pull resources in from across the network. Once they are running, the traffic rules can be more restrictive and secure. To distinguish between these two security needs, admins can define one ASG for when an app stages, and a different one for when it runs.
 
 To provide granular control in securing a deployment, an administrator can assign ASGs to apply across a Cloud Foundry deployment, or to specific spaces or orgs within a deployment. You define ASGs on the cf CLI using `cf create-security-group` and `cf bind-security-group`. <%=vars.manifest_vs_cli_asg%>
 
