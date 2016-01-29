@@ -26,7 +26,7 @@ Some descriptions include links to more detailed documentation.
 The [router](./router.html) routes incoming traffic to the appropriate
 component, either a Cloud Controller component or a hosted application running on a Diego Cell.
 
-The router periodically queries the Diego BBS for which cells and containers each application is currently running on. Then it recomputes new routing tables based on the IP addresses of each cell VM and the host-side port numbers for the cell's containers.
+The router periodically queries the Diego Bulletin Board System (BBS) for which cells and containers each application is currently running on. Then it recomputes new routing tables based on the IP addresses of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
 
 ## <a id='authentication'></a>Authentication
 
@@ -37,13 +37,15 @@ provide identity management.
 
 ## <a id='app-lifecycle'></a>App Lifecycle
 
-### <a id='cc'></a> Cloud Controller
+### <a id='cc'></a> Cloud Controller and Diego Brain
 
 The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of applications.
 When a developer pushes an application to Cloud Foundry, she is targeting the
-Cloud Controller. The Cloud Controller then directs the Diego system through the [CC-Bridge](../diego/diego-components.html#bridge-components) to coordinate individual [Diego cells](#diego-cell) to stage and run applications. In [pre-Diego architecture](../diego/dea-vs-diego.html#design), the Cloud Controller performed these app lifecycle tasks itself.
+Cloud Controller. The Cloud Controller then directs the Diego Brain through the [CC-Bridge](../diego/diego-components.html#bridge-components) to coordinate individual [Diego cells](#diego-cell) to stage and run applications
 
-The Cloud Controller also maintains records of orgs, spaces, services, service instances, user roles, and more.
+In [pre-Diego architecture](../diego/dea-vs-diego.html#design), the Cloud Controller's Droplet Execution Agent (DEA) performed these app lifecycle tasks.
+
+The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), [services](../../services/overview.html), and more.
 
 ### <a id='nsync-converger'></a> nsync, Converger, and Cell Reps
 
@@ -53,15 +55,15 @@ To keep applications available, cloud deployments must constantly monitor their 
 
 These three components work along a spectrum of representations that extends between the user and the application containers. At one end, the user sets how each application should be scaled, either [manually](../../devguide/deploy-apps/cf-scale.html) or with [autoscale](../../customizing/autoscale-configuration.html). At the other end, instances of that application running on widely-distributed VMs may crash or become unavailable.
 
-The nsync, Converger, and Cell Rep components work together along this spectrum to keep apps running as they should. nsync watches for changes in application scaling instructions from the Cloud Controller and writes them into `DesiredLRP` structures in Diego's internal BBS database. Meanwhile, the Cell Rep on each cell watches the state and health of the application instances running in its containers, and updates corresponding `ActualLRP` values in the BBS as they change.
+The nsync, Converger, and Cell Rep components work together along this spectrum to keep apps running as they should. nsync watches for changes in application scaling instructions from the Cloud Controller and writes them into `DesiredLRP` structures in Diego's internal BBS database. Inside each cell, the Cell Rep watches the Garden for the state and health of the application instances running in the cell's containers, and updates corresponding `ActualLRP` values in the shared BBS as they change locally.
 
-At the center of the process, Diego's Converger component monitors the `DesiredLRP` and `ActualLRP` values, and launches or kills application instances as appropriate to reconcile `ActualLRP` counts with `DesiredLRP` values.
+At the center of the process, the Diego Brain's Converger component monitors the `DesiredLRP` and `ActualLRP` values, and launches or kills application instances as appropriate to reconcile `ActualLRP` counts with `DesiredLRP` values.
 
 ## <a id='app-storage-execution'></a>App Storage and Execution
 
 ### <a id='blob'></a> Blob Store
 
-The blob store is a repository for large binary files, which resist easy management under github because github is designed for code, not binaries. Blob store binaries include:
+The blob store is a repository for large binary files, which github cannot easily manage because github is designed for code. Blob store binaries include:
 
 * Application code packages
 * Buildpacks
@@ -69,9 +71,9 @@ The blob store is a repository for large binary files, which resist easy managem
 
 ### <a id='diego-cell'></a> Diego Cell
 
-Each application-hosting VM has a Diego Cell that executes application start and stop actions locally, manages the VM's containers, and reports app status and other data to the BBS and Loggregator.
+Each application VM has a Diego Cell that executes application start and stop actions locally, manages the VM's containers, and reports app status and other data to the BBS and [Loggregator](#metrics-logging).
 
-In pre-Diego CF architecture, the [DEA](./execution-agent.html) performed the task of managing the applications and containers on a VM.
+In pre-Diego CF architecture, the [DEA node](./execution-agent.html) performed the task of managing the applications and containers on a VM.
 
 ## <a id='services'></a>Services
 
@@ -96,9 +98,9 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 
 ## <a id='metrics-logging'></a>Metrics and Logging
 
-### <a id='metrics'></a> Metrics Collector and App Log Aggregator: Logging and Statistics
+### <a id='metrics'></a> Metrics Collector and Loggregator
 
-The metrics collector gather metrics from the components.
-Operators can use this information to monitor an instance of Cloud Foundry.
+The metrics collector gathers metrics and statistics from the components.
+Operators can use this information to monitor a Cloud Foundry deployment.
 
-The application log aggregator streams application logs to developers.
+The [Loggregator](../../loggregator/architecture.html) (log aggregator) system streams application logs to developers.

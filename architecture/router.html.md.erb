@@ -4,7 +4,7 @@ title: (Go)Router
 
 <strong><%= modified_date %></strong>
 
-The router routes traffic coming into Cloud Foundry to the appropriate component: usually, [Cloud Controller](./cloud-controller.html) or a running application on a [DEA](./execution-agent.html) node. The router is implemented in Go.
+The router routes traffic coming into Cloud Foundry to the appropriate component, whether it's an operator addressing the [Cloud Controller](./cloud-controller.html) or an application user accessing an app running on a Diego Cell. The router is implemented in Go.
 Implementing a custom router in Go gives the router full control over every connection, which makes it easier to support WebSockets and other types of traffic (for example, via HTTP CONNECT). A single process contains all routing logic, removing unnecessary latency.
 
 Refer to the following instructions for help getting started with the gorouter
