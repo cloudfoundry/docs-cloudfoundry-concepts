@@ -18,79 +18,89 @@ Some descriptions include links to more detailed documentation.
 
 ![Cloud Foundry Architecture](../images/cf_architecture_block.png)
 
-## <a id='router'></a>Router ##
+
+## <a id='routing'></a>Routing
+
+### <a id='router'></a>Router
 
 The [router](./router.html) routes incoming traffic to the appropriate
-component, usually the Cloud Controller or a running application on a DEA node.
+component, either a Cloud Controller component or a hosted application running on a Diego Cell.
 
-## <a id='uaa'></a> OAuth2 Server (UAA) and Login Server ##
+The router periodically queries the Diego Bulletin Board System (BBS) for which cells and containers each application is currently running on. Then it recomputes new routing tables based on the IP addresses of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
+
+## <a id='authentication'></a>Authentication
+
+### <a id='uaa'></a> OAuth2 Server (UAA) and Login Server
 
 The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to
 provide identity management.
 
-## <a id='cc'></a> Cloud Controller ##
+## <a id='app-lifecycle'></a>App Lifecycle
 
-The [Cloud Controller](./cloud-controller.html) is responsible for managing the
-lifecycle of applications.
+### <a id='cc'></a> Cloud Controller and Diego Brain
+
+The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of applications.
 When a developer pushes an application to Cloud Foundry, she is targeting the
-Cloud Controller.
-The Cloud Controller then stores the raw application bits, creates a record to
-track the application metadata, and directs a DEA node to stage and run the
-application.
-The Cloud Controller also maintains records of orgs, spaces, services,
-service instances, user roles, and more.
+Cloud Controller. The Cloud Controller then directs the Diego Brain through the [CC-Bridge](../diego/diego-components.html#bridge-components) to coordinate individual [Diego cells](#diego-cell) to stage and run applications
 
-## <a id='hm9k'></a> Health Manager (HM9000) ##
+In [pre-Diego architecture](../diego/dea-vs-diego.html#design), the Cloud Controller's Droplet Execution Agent (DEA) performed these app lifecycle tasks.
 
-HM9000 has four core responsibilities:
+The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), [services](../../services/overview.html), and more.
 
-* Monitor applications to determine their state (e.g. running, stopped, crashed, etc.), version, and number of instances.  HM9000 updates the actual state of an application based on heartbeats and `droplet.exited` messages issued by the DEA running the application.
-* Determine applications' expected state, version, and number of instances. HM9000 obtains the desired state of an application from a dump of the Cloud Controller database.
-* Reconcile the actual state of applications with their expected state. For instance, if fewer than expected instances are running, HM9000 will instruct the Cloud Controller to start the appropriate number of instances.
-* Direct Cloud Controller to take action to correct any discrepancies in the state of applications.
+### <a id='nsync-converger'></a> nsync, Converger, and Cell Reps
 
-HM9000 is essential to ensuring that apps running on Cloud Foundry remain
-available.
-HM9000 restarts applications whenever the DEA running an app shuts down for any
-reason, when Warden kills the app because it violated a quota, or when the
-application process exits with a non-zero exit code.
+To keep applications available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required. In pre-Diego architecture, the [Health Manager (HM9000)](../diego/dea-vs-diego.html#hm9k) performed this function. The nsync, Converger, and Cell Reps use a more distributed approach.
 
-Refer to the [HM9000 readme](https://github.com/cloudfoundry/hm9000) for more
-information about the HM9000 architecture.
+![Cloud Foundry Architecture](../images/diego/app-monitor-sync-diego.png)
 
-## <a id='dea'></a> Application Execution (DEA) ##
+These three components work along a spectrum of representations that extends between the user and the application containers. At one end, the user sets how each application should be scaled, either [manually](../../devguide/deploy-apps/cf-scale.html) or with [autoscale](../../customizing/autoscale-configuration.html). At the other end, instances of that application running on widely-distributed VMs may crash or become unavailable.
 
-The [Droplet Execution Agent](./execution-agent.html) manages application
-instances, tracks started instances, and broadcasts state messages.
+The nsync, Converger, and Cell Rep components work together along this spectrum to keep apps running as they should. nsync watches for changes in application scaling instructions from the Cloud Controller and writes them into `DesiredLRP` structures in Diego's internal BBS database. Inside each cell, the Cell Rep watches the Garden for the state and health of the application instances running in the cell's containers, and updates corresponding `ActualLRP` values in the shared BBS as they change locally.
 
-Application instances live inside [Warden](./warden.html) containers.
-Containerization ensures that application instances run in isolation, get their
-fair share of resources, and are protected from noisy neighbors.
+At the center of the process, the Diego Brain's Converger component monitors the `DesiredLRP` and `ActualLRP` values, and launches or kills application instances as appropriate to reconcile `ActualLRP` counts with `DesiredLRP` values.
 
-## <a id='blob'></a> Blob Store ##
+## <a id='app-storage-execution'></a>App Storage and Execution
 
-The blob store holds:
+### <a id='blob'></a> Blob Store
 
-* Application code
+The blob store is a repository for large binary files, which github cannot easily manage because github is designed for code. Blob store binaries include:
+
+* Application code packages
 * Buildpacks
 * Droplets
 
-## <a id='broker'></a> Service Brokers ##
+### <a id='diego-cell'></a> Diego Cell
+
+Each application VM has a Diego Cell that executes application start and stop actions locally, manages the VM's containers, and reports app status and other data to the BBS and [Loggregator](#metrics-logging).
+
+In pre-Diego CF architecture, the [DEA node](./execution-agent.html) performed the task of managing the applications and containers on a VM.
+
+## <a id='services'></a>Services
+
+### <a id='broker'></a> Service Brokers
 
 Applications typically depend on <%= vars.services %> such as databases
 or third-party SaaS providers.
 When a developer provisions and binds a service to an application, the service
 broker for that service is responsible for providing the service instance.
 
-## <a id='nats'></a> Message Bus (NATS) ##
+## <a id='messaging'></a>Messaging
 
-Cloud Foundry uses [NATS](./messaging-nats.html), a lightweight
-publish-subscribe and distributed queueing messaging system, for internal
-communication between components.
+### <a id='bbs-consul'></a> Consul and BBS
 
-## <a id='metrics'></a> Metrics Collector and App Log Aggregator: Logging and Statistics ##
+Cloud Foundry component VMs communicate with each other internally through http and https protocols, sharing temporary messages and data stored in two locations:
 
-The metrics collector gather metrics from the components.
-Operators can use this information to monitor an instance of Cloud Foundry.
+* A [Consul server](../diego/diego-components.html#consul) stores longer-lived control data, such as component IP addresses and distributed locks that prevent components from duplicating actions.
 
-The application log aggregator streams application logs to developers.
+* Diego's [Bulletin Board System](../diego/diego-components.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS is currently implemented in [etcd](https://coreos.com/etcd/).
+
+The route-emitter component uses the NATS protocol to broadcast the latest routing tables to the routers. In pre-Diego CF architecture, the [NATS Message Bus](../diego/dea-vs-diego.html#nats) carried all internal component communications.
+
+## <a id='metrics-logging'></a>Metrics and Logging
+
+### <a id='metrics'></a> Metrics Collector and Loggregator
+
+The metrics collector gathers metrics and statistics from the components.
+Operators can use this information to monitor a Cloud Foundry deployment.
+
+The [Loggregator](../../loggregator/architecture.html) (log aggregator) system streams application logs to developers.
