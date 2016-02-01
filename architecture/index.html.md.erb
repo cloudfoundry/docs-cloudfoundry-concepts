@@ -53,7 +53,7 @@ To keep applications available, cloud deployments must constantly monitor their 
 
 ![Cloud Foundry Architecture](../images/diego/app-monitor-sync-diego.png)
 
-These three components work along a spectrum of representations that extends between the user and the application containers. At one end, the user sets how each application should be scaled, either [manually](../../devguide/deploy-apps/cf-scale.html) or with [autoscale](../../customizing/autoscale-configuration.html). At the other end, instances of that application running on widely-distributed VMs may crash or become unavailable.
+These three components work along a spectrum of representations that extends between the user and the application containers. At one end, the user sets how each application should be scaled. At the other end, instances of that application running on widely-distributed VMs may crash or become unavailable.
 
 The nsync, Converger, and Cell Rep components work together along this spectrum to keep apps running as they should. nsync watches for changes in application scaling instructions from the Cloud Controller and writes them into `DesiredLRP` structures in Diego's internal BBS database. Inside each cell, the Cell Rep watches the Garden for the state and health of the application instances running in the cell's containers, and updates corresponding `ActualLRP` values in the shared BBS as they change locally.
 

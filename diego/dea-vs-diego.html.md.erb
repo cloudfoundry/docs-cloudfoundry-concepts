@@ -29,7 +29,7 @@ fair share of resources, and are protected from "noisy neighbors" - other applic
 
 Warden could only manage containers on VMs running Linux, but the Garden subsystem supports VMs running diverse operating systems. The Garden front end presents the same container management operations that Warden used, with code that is abstracted away from any platform specifics. A platform-specific Garden Backend running on each VM, translates the commands into machine code tailored to the native operating system.
 
-The [Diego-SSH package](../../customizing/diego-ssh/) enables developers to log into containers and access running application instances, a functionality that did not exist pre-Diego.
+The <%= vars.diego_ssh_link %> enables developers to log into containers and access running application instances, a functionality that did not exist pre-Diego.
 
 #### <a id='warden-security'></a> Warden Container-Level Traffic Rules
 
@@ -75,7 +75,7 @@ Diego architecture moves this allocation process out of the Cloud Controller and
 
 ### <a id='nats'></a> Message Bus (NATS)
 
-Pre-Diego Cloud Foundry used [NATS](../messaging-nats.html), a lightweight
+Pre-Diego Cloud Foundry used [NATS](../architecture/messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
 communication between components. Diego retains NATS for some communications, but adds messaging via http and https protocols, through which components share information in the Consul and Diego BBS servers.
 
