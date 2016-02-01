@@ -8,7 +8,7 @@ This topic describes components and functions that changed significantly when Cl
 
 The DEA architecture system is largely written in Ruby and the Diego architecture system is written in Go. When Cloud Foundry contributors decided to migrate the system's core code from Ruby to Go, the rewrite offered the opportunity to make improvements to Cloud Foundry's overall design. 
 
-In a pre-Diego Cloud Foundry deployment, the Cloud Controller's [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](../architecture/index.html#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
+In a pre-Diego Cloud Foundry deployment, the Cloud Controller's [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
 
 DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the [DEA Placement Algorithm](../architecture/cloud-controller.html#dea-placement) with the [Diego Auction](./diego-auction.html).
 
@@ -75,7 +75,7 @@ Diego architecture moves this allocation process out of the Cloud Controller and
 
 ### <a id='nats'></a> Message Bus (NATS)
 
-Pre-Diego Cloud Foundry used [NATS](./messaging-nats.html), a lightweight
+Pre-Diego Cloud Foundry used [NATS](../messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
 communication between components. Diego retains NATS for some communications, but adds messaging via http and https protocols, through which components share information in the Consul and Diego BBS servers.
 
@@ -129,7 +129,7 @@ communication between components. Diego retains NATS for some communications, bu
 <td>BBS stores most runtime data; Consul stores control data.</td></tr>
 <tr>
 <td>Router</td>
-<td><a href="../architecture/gorouter.html">Gorouter</a></td>
+<td><a href="../architecture/router.html">Gorouter</a></td>
 <td>Component that routes external traffic to application instances running in containers</td>
 <td></td></tr></table>
 
