@@ -10,31 +10,33 @@ A stack is a prebuilt root filesystem (rootfs) which works in tandem with a buil
 
 ##<a id='building-stacks'></a>Building Stacks ##
 
-A Droplet Execution Agent (DEA) can support multiple stacks.
+Diego can support multiple stacks.
 The scripts for building the available Cloud Foundry stacks and for building other stacks reside in the GitHub [Stacks](http://github.com/cloudfoundry/stacks) project.
 
 ##<a id='available-stacks'></a>Available Stacks ##
 
 ###<a id='cflinuxfs2'></a>cflinuxfs2 Stack ###
 
-The cflinuxfs2 stack is derived from Ubuntu Trusty 14.04.
+The linux `cflinuxfs2` stack is derived from Ubuntu Trusty 14.04.
+
+For .NET apps, use the windows cell `windows2012R2` stack.
 
 ##<a id='cli-commands'></a>CLI Commands ##
 
-Use the `cf stacks` command to list all the stacks available in a deployment.
+Use the `cf stacks` command to list all the stacks available in a deployment. For example, running this command gives the following output for the `cflinuxfs2` stack.
 
-```
+<pre class='terminal'>
 $ cf stacks
 Getting stacks in org MY-ORG / space development as developer@example.com...
 OK
 
 name         description
 cflinuxfs2   Cloud Foundry Linux-based filesystem
-```
+</pre>
 
-Use the `cf push APPNAME -s STACKNAME` to change your stack and restage your application.
+Use the `cf push APPNAME -s STACKNAME` to change your stack and restage your application. For example, running this command gives the following output for the `cflinuxfs2` stack.
 
-```
+<pre class='terminal'>
 $ cf push testappmx1 -s cflinuxfs2
 Using stack cflinuxfs2...
 OK
@@ -96,6 +98,6 @@ last uploaded: Wed Apr 8 23:40:57 UTC 2015
 
     state    since                    cpu    memory        disk
 #0  running  2015-04-08 04:41:54 PM  0.0%  57.3M of 1G  128.8M of 1G
-```
+</pre>
 
 For API information, review the Stacks section of the [Cloud Foundry API Documentation](http://apidocs.cloudfoundry.org).
