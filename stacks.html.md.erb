@@ -35,7 +35,7 @@ cflinuxfs2      Cloud Foundry Linux-based filesystem
 windows2012R2   Windows Server 2012 R2
 </pre>
 
-Use the `cf push APPNAME -s STACKNAME` to change your stack and restage your application. `-s STACKNAME` specifies a particular stack for your application. For example, specifying `-s windows2012R2` ensures that Windows-based applications are sent to a Windows-based cell. 
+Use the `cf push APPNAME -s STACKNAME` to change your stack and restage your application. `-s STACKNAME` specifies a particular stack for your application. For example, specifying `-s windows2012R2` ensures that Windows-based applications are sent to a Windows-based cell. The default stack is `cflinuxfs2`.
 
 For the linux `cflinuxfs2` stack, running this command restages the app `testappmx1`:
 
