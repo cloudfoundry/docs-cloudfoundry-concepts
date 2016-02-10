@@ -1,6 +1,6 @@
 # Cloud Foundry Concepts Guide
 
-This repository contains the Cloud Foundry concepts guide.
+This repository contains the Cloud Foundry concepts guide, designed to help users and others understand how Cloud Foundry works.
 
 The contents here are structured as a topic repository intended to be
 compiled into a larger document with
