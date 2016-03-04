@@ -1,18 +1,19 @@
 ---
 title: Differences Between DEA and Diego Architectures
+owner: Diego
 ---
 
 This topic describes components and functions that changed significantly when Cloud Foundry&reg; migrated to Diego architecture for version 1.5. This information will inform those who are familiar with Cloud Foundry's DEA-based architecture and want to learn what has changed under Diego and how its new or changed components work.
 
 ##<a id='design'></a>Key Differences
 
-The DEA architecture system is largely written in Ruby and the Diego architecture system is written in Go. When Cloud Foundry contributors decided to migrate the system's core code from Ruby to Go, the rewrite offered the opportunity to make improvements to Cloud Foundry's overall design. 
+The DEA architecture system is largely written in Ruby and the Diego architecture system is written in Go. When Cloud Foundry contributors decided to migrate the system's core code from Ruby to Go, the rewrite offered the opportunity to make improvements to Cloud Foundry's overall design.
 
 In a pre-Diego Cloud Foundry deployment, the Cloud Controller's [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
 
 DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the [DEA Placement Algorithm](../architecture/cloud-controller.html#dea-placement) with the [Diego Auction](./diego-auction.html).
 
-In addition to these broad changes, the Cloud Foundry migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table underneath](#table) provides a summary. 
+In addition to these broad changes, the Cloud Foundry migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table underneath](#table) provides a summary.
 
 ##<a id='component'></a>Changed Components and Functions
 
