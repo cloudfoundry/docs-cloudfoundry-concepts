@@ -26,8 +26,8 @@ Scale your components as described in the [Scaling Platform Availability](#avail
 
 Ensure that you allocate and maintain enough of the following:
 
-* Free space on DEAs so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory in your deployment such that if <%=vars.max_in_flight%> is down, all instances of apps can be placed on the remaining DEAs.
+* Free space on Diego Cells so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if one Diego Cell is down, all instances of apps can be placed on the remaining Diego Cells.
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
 ####Resource pools####
@@ -47,22 +47,13 @@ You can scale platform capacity vertically by adding memory and disk, or horizon
 
 The nature of a particular application should determine whether you scale vertically or horizontally.
 
-**DEAs**:
+**Diego Cells**:
 
-The optimal sizing and CPU/memory balance depends on the performance characteristics of the apps that will run on the DEA.
-
- * The more DEAs are horizontally scaled, the higher the number of NATS messages the DEAs generate. There are no known limits to the number of DEA nodes in a platform.
- * The denser the DEAs (the more vertically scaled they are), the larger the NATS message volume per DEA, as each message includes details of each app instance running on the DEA.
- * Larger DEAs also make for larger points of failure: the system takes longer to rebalance 100 app instances than to rebalance 20 app instances.
+The optimal sizing and CPU/memory balance depends on the performance characteristics of the apps that will run on the Diego Cell. Larger Diego Cells also make for larger points of failure: the system takes longer to rebalance 100 app instances than to rebalance 20 app instances.
 
 **Router**:
 
-Scale the router with the number of incoming requests. In general, this load is much less than the load on DEA nodes.
-
-**Health Manager**:
-
-The Health Manager works as a failover set, meaning that only one Health Manager is active at a time.
-For this reason, you only need to scale the Health Manager to deal with instance failures, not increased deployment size.
+Scale the router with the number of incoming requests. In general, this load is much less than the load on Diego Cells.
 
 **Cloud Controller**:
 
@@ -105,11 +96,6 @@ Scale your VMs to the following instance counts:
 		<td>Diego BBS</td>
 		<td>&ge; 3</td>
 		<td>This must be set to an odd number.</td>
-	</tr>
-	<tr>
-		<td>DEA</td>
-		<td>0</td>
-		<td></td>
 	</tr>
 	<tr>
 		<td>Consul</td>
@@ -160,11 +146,6 @@ Scale your VMs to the following instance counts:
 		<td>etcd</td>
 		<td>&ge; 3</td>
 		<td>This must be set to an odd number.</td>
-	</tr>
-	<tr>
-		<td>Health Manager</td>
-		<td>0</td>
-		<td></td>
 	</tr>
 </table>
 
