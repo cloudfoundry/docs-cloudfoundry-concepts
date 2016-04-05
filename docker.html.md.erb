@@ -63,9 +63,9 @@ Ensure that you are running cf CLI 6.13.0 or a later version. See [Installing th
 
 ###<a id='public'></a>Pushing a Docker image using Docker Hub
 
-Run `cf push lattice-app -o cloudfoundry/MY-DOCKER-IMAGE` to deploy a Docker image. Replace MY-DOCKER-IMAGE with the name of an image from an accessible Docker Registry. 
+Run `cf push lattice-app -o cloudfoundry/MY-DOCKER-IMAGE` to deploy a Docker image. Replace `MY-DOCKER-IMAGE` with the name of an image from an accessible Docker Registry. 
 
-For example, the following command pushes the lattice-app on Docker Hub to Cloud Foundry: 
+For example, the following command pushes the `lattice-app` on Docker Hub to Cloud Foundry: 
 
 <pre class='terminal'>$ cf push lattice-app -o cloudfoundry/lattice-app</pre>
 
@@ -75,7 +75,7 @@ To deploy a Docker image using Docker Trusted Registries, run:
 
  <pre class='terminal'>$ cf push my-app -o MY-PRIVATE-REGISTRY.DOMAIN:5000/image/name:v2</pre> 
 
- Replace `MY-PRIVATE-REGISTRY.DOMAIN` with your domain name, which resolves to the private registry. In this example, 5000 is the port on which it serves traffic. `image/name` is the name of the repository. `v2` is a tag in that repository that refers to a specific image.
+ Replace `MY-PRIVATE-REGISTRY.DOMAIN` with your domain name, which resolves to the private registry. In this example, 5000 is the port on which your private registry serves traffic. `image/name` is the name of the Docker image repository. `v2` is a tag in that repository that refers to a specific image.
 
 ##<a id='caveats'></a>Docker Caveats ##
 
