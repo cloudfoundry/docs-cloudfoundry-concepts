@@ -67,7 +67,7 @@ For this reason, you only need to scale the Health Manager to deal with instance
 
 **Cloud Controller**:
 
-Scale the Cloud Controller with the number of requests to the API and with the number of apps in the system.
+Scale the Cloud Controller horizontally in relation to the number of requests to the API. In general, you will require more Cloud Controllers as you add users and applications to Cloud Foundry. As you add Cloud Controllers, you may need to scale your database (ccdb) vertically to handle the additional API requests.
 
 ## <a id='availability'></a>Scaling Platform Availability ##
 
