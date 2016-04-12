@@ -5,7 +5,7 @@ owner: Diego
 
 <strong><%= modified_date %></strong>
 
-This topic provides an overview of the high-level structure of Diego, the next-generation container management system for Cloud Foundry (CF).
+<%= vars.diego_architecture %>
 
 <ul>
 <%=vars.diego_deploy %>
@@ -16,7 +16,7 @@ This topic provides an overview of the high-level structure of Diego, the next-g
 
 In a Cloud Foundry deployment without Diego, the [Cloud Controller](../architecture/cloud-controller.html) schedules and manages applications on the [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) nodes. Diego replaces the DEAs and the [Health Manager (HM9000)](./dea-vs-diego.html#hm9k), and assumes application scheduling and management responsibility from the Cloud Controller.
 
-Refer to the diagram and descriptions below for information about the way Diego handles application requests.
+Refer to the following diagram and descriptions for information about the way Diego handles application requests.
 
 <%= image_tag("../images/diego/diego-flow.png") %>
 
@@ -32,32 +32,4 @@ Refer to the diagram and descriptions below for information about the way Diego 
 
 1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](./diego-components.html#converger), part of the [Diego Brain](./diego-components.html#brain-components). The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
-1. [Metron Agents](./diego-components.html#metron-agent), part of the Cells, forward application logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
-
-##<a id='monitoring'></a>Monitoring and Testing
-
-The following releases monitor and test runtime deployment:
-
-###Inigo
-
-Inigo is an integration test suite that launches the Diego components through various test cases, including component failures and other exceptional scenarios. Inigo validates a given set of component versions to ensure mutual compatibility, robustness, and graceful performance degradation in failure conditions.
-
-Refer to the [Inigo repo](https://github.com/cloudfoundry-incubator/inigo) on GitHub for more information.
-
-###Auction
-
-The [auction package](https://github.com/cloudfoundry-incubator/auction) encodes behavioral details about Task and LRP allocation to cells during a Diego [Auction](./diego-auction.html). It includes a simulation test suite that validates the optimal performance of the auction algorithm. You can run the simulation for different algorithm variants at various scales, and in the following ways:
-
-- In-process, for short feedback loops
-
-- Across multiple processes, to reveal the impact of communication in the auction
-
-- Across multiple machines in a cloud-like infrastructure, to reveal the impact of latency on the auction
-
-Refer to the [Auction repo](https://github.com/cloudfoundry-incubator/auction) on GitHub for more information.
-
-###Diego Acceptance Tests
-
-Diego Acceptance Tests (DAT) is a suite of acceptance-level tests that run against Cloud Foundry and Diego deployment releases. DAT executes a number of "happy-path" test cases across an entire deployment.
-
-Refer to the [Diego Acceptance Test  repo](https://github.com/cloudfoundry-incubator/diego-acceptance-tests) on GitHub for more information.
+1. The [Metron Agent](./diego-components.html#metron-agent), part of the Cell, forwards application logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
