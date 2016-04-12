@@ -3,7 +3,8 @@ title: Differences Between DEA and Diego Architectures
 owner: Diego
 ---
 
-This topic describes components and functions that changed significantly when Cloud Foundry&reg; migrated to Diego architecture for version 1.5. This information will inform those who are familiar with Cloud Foundry's DEA-based architecture and want to learn what has changed under Diego and how its new or changed components work.
+This topic describes components and functions that changed significantly when Cloud Foundry migrated to <%= vars.dea_diego_version
+ %>. This information will inform those who are familiar with Cloud Foundry's DEA-based architecture and want to learn what has changed under Diego and how its new or changed components work.
 
 ##<a id='design'></a>Key Differences
 
@@ -88,11 +89,7 @@ communication between components. Diego retains NATS for some communications, bu
 <th>Diego architecture</th>
 <th>Function</th>
 <th>&Delta; notes</th></tr>
-<tr>
-<td>1.5 and below</td>
-<td>1.6 and above</td>
-<td>CF version numbers</td>
-<td></td></tr>
+<%= vars.dea_diego_table_row %>
 <tr>
 <td>Ruby</td>
 <td>Go</td>
