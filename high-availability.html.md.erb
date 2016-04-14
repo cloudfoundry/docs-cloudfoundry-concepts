@@ -1,6 +1,6 @@
 ---
 title: Zero Downtime Deployment and Scaling in CF
-owner: Release Integration
+owner: Runtime
 ---
 
 <strong><%= modified_date %></strong>
@@ -35,6 +35,10 @@ Ensure that you allocate and maintain enough of the following:
 
 Configure your <%=vars.pools_link%> according to the requirements of your deployment.
 
+Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS Administrator to ensure additional VMs and related resources, like IPs and storage, will be available when scaling.
+
+<%=vars.pcf_pools%>
+
 <%=vars.om_resurrector_header%>
 <%=vars.om_resurrector_text%>
 
@@ -58,7 +62,7 @@ The optimal sizing and CPU/memory balance depends on the performance characteris
 
 **Router**:
 
-Scale the router relative to the total load for all applications running on Cloud Foundry. In general, the router is CPU-bound and you can scale it vertically by increasing available CPU. After reaching the limit of vertical scaling, you can also scale the router horizontally.
+Scale the router with the number of incoming requests. In general, this load is much less than the load on DEA nodes.
 
 **Health Manager**:
 
@@ -67,7 +71,7 @@ For this reason, you only need to scale the Health Manager to deal with instance
 
 **Cloud Controller**:
 
-Scale the Cloud Controller horizontally in relation to the number of requests to the API. In general, you need more Cloud Controller instances as you add users and applications to Cloud Foundry. As you add Cloud Controller instances, you may need to scale your Cloud Controller database (CCDB) vertically to handle the additional API requests.
+Scale the Cloud Controller with the number of requests to the API and with the number of apps in the system.
 
 ## <a id='availability'></a>Scaling Platform Availability ##
 
@@ -108,22 +112,22 @@ If you are already scaling the number of instances of such components to increas
 		<td></td>
 	</tr>
 	<tr>
-		<td><a href="./architecture/messaging-nats.html">NATS Server</a></td>
+		<td><a href="../concepts/architecture/messaging-nats.html">NATS Server</a></td>
 		<td>&ge; 2</td>
 		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
 	</tr>
 	<tr>
-		<td><a href="./architecture/#hm9k">HM9000</a></td>
+		<td><a href="../concepts/architecture/#hm9k">HM9000</a></td>
 		<td>&ge; 2</td>
 		<td></td>
 	</tr>
 	<tr>
-		<td><a href="./architecture/cloud-controller.html">Cloud Controller</a></td>
+		<td><a href="../concepts/architecture/cloud-controller.html">Cloud Controller</a></td>
 		<td>&ge; 2</td>
 		<td>More Cloud Controllers help with API request volume.</td>
 	</tr>
 	<tr>
-		<td><a href="./architecture/router.html">Gorouter</a></td>
+		<td><a href="../concepts/architecture/router.html">Gorouter</a></td>
 		<td>&ge; 2</td>
 		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
 	</tr>
@@ -133,12 +137,12 @@ If you are already scaling the number of instances of such components to increas
 		<td></td>
 	</tr>
 	<tr>
-		<td><a href="./architecture/uaa.html">UAA</a></td>
+		<td><a href="../concepts/architecture/uaa.html">UAA</a></td>
 		<td>&ge; 2</td>
 		<td></td>
 	</tr>
 	<tr>
-		<td><a href="./architecture/execution-agent.html">DEA</a></td>
+		<td><a href="../concepts/architecture/execution-agent.html">DEA</a></td>
 		<td>&ge; 3</td>
 		<td>More DEAs add application capacity.</td>
 	</tr>
@@ -180,7 +184,7 @@ If you are already scaling the number of instances of such components to increas
 	<tr>
 		<td>Diego Brain</td>
 		<td>&ge; 2</td>
-		<td></td>
+		<td>One per AZ, or two if only one AZ.</td>
 	</tr>
 	<tr>
 		<td>Diego BBS</td>
