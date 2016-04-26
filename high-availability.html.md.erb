@@ -35,6 +35,10 @@ Ensure that you allocate and maintain enough of the following:
 
 Configure your <%=vars.pools_link%> according to the requirements of your deployment.
 
+Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related resources, like IPs and storage, will be available when scaling.
+
+<%=vars.pcf_pools%>
+
 <%=vars.om_resurrector_header%>
 <%=vars.om_resurrector_text%>
 
@@ -180,7 +184,7 @@ If you are already scaling the number of instances of such components to increas
 	<tr>
 		<td>Diego Brain</td>
 		<td>&ge; 2</td>
-		<td></td>
+		<td>One per AZ, or two if only one AZ.</td>
 	</tr>
 	<tr>
 		<td>Diego BBS</td>

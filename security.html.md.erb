@@ -62,7 +62,7 @@ Applications that users deploy to Cloud Foundry exist within a space. Spaces exi
 
 ## <a id='containers'></a>Application Isolation with Containers ##
 
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a [Garden container](./diego/diego-components.html#garden) that isolates processes, memory, and the file system.  Cloud Foundry operators can configure whether contained applications can directly interact with other applications or other Cloud Foundry system components.
+Each application deployed to Cloud Foundry runs within its own self-contained environment, a [Garden container](./diego/diego-architecture.html#garden) that isolates processes, memory, and the file system.  Cloud Foundry operators can configure whether contained applications can directly interact with other applications or other Cloud Foundry system components.
 
 Applications are typically allowed to invoke other applications in Cloud Foundry only by leaving the system and re-entering through the load balancer positioned in front of the Cloud Foundry routers. To isolate applications and control outgoing traffic, each Garden container uses a dedicated virtual network interface (VNI) that consists of a pair of ethernet addresses, one visible to the application instance running in the container, and the other visible to the host VM’s root namespace. The pair is configured to use IPs in a small and static subnet.
 

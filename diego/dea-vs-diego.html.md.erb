@@ -3,7 +3,8 @@ title: Differences Between DEA and Diego Architectures
 owner: Diego
 ---
 
-This topic describes components and functions that changed significantly when Cloud Foundry&reg; migrated to Diego architecture for version 1.5. This information will inform those who are familiar with Cloud Foundry's DEA-based architecture and want to learn what has changed under Diego and how its new or changed components work.
+This topic describes components and functions that changed significantly when Cloud Foundry migrated to <%= vars.dea_diego_version
+ %>. This information will inform those who are familiar with Cloud Foundry's DEA-based architecture and want to learn what has changed under Diego and how its new or changed components work.
 
 ##<a id='design'></a>Key Differences
 
@@ -24,7 +25,7 @@ instances, tracked started instances, and broadcast state messages on each appli
 
 ### <a id='warden'></a> Warden &rarr; Garden
 
-Pre-Diego application instances lived inside [Warden](../architecture/warden.html) containers, which are analogous to [Garden](../diego/diego-components.html#cell-components) containers in Diego architecture.
+Pre-Diego application instances lived inside [Warden](../architecture/warden.html) containers, which are analogous to [Garden](../diego/diego-architecture.html#cell-components) containers in Diego architecture.
 Containerization ensures that application instances run in isolation, get their
 fair share of resources, and are protected from "noisy neighbors" - other applications running on the same machine.
 
@@ -88,11 +89,7 @@ communication between components. Diego retains NATS for some communications, bu
 <th>Diego architecture</th>
 <th>Function</th>
 <th>&Delta; notes</th></tr>
-<tr>
-<td>1.5 and below</td>
-<td>1.6 and above</td>
-<td>CF version numbers</td>
-<td></td></tr>
+<%= vars.dea_diego_table_row %>
 <tr>
 <td>Ruby</td>
 <td>Go</td>
@@ -100,12 +97,12 @@ communication between components. Diego retains NATS for some communications, bu
 <td></td></tr>
 <tr>
 <td><a href="../architecture/execution-agent.html">DEA</a></td>
-<td><a href="./diego-components.html#brain-components">Diego Brain</a></td>
+<td><a href="./diego-architecture.html#brain-components">Diego Brain</a></td>
 <td>High-level coordinator that allocates processes to containers in application VMs and keeps them running</td>
 <td>DEA is part of the Cloud Controller. Diego is outside the Cloud Controller.</td></tr>
 <tr>
 <td>DEA Node</td>
-<td><a href="./diego-components.html#cell-components">Diego Cell</a></td>
+<td><a href="./diego-architecture.html#cell-components">Diego Cell</a></td>
 <td>Mid-level manager on each VM that runs apps as directed and communicates &ldquo;heartbeat&rdquo;, application status and container location, and other messages</td>
 <td>Runs on each VM that hosts apps, as opposed to special-purpose component VMs.</td></tr>
 <tr>

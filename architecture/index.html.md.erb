@@ -41,7 +41,7 @@ provide identity management.
 
 The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of applications.
 When a developer pushes an application to Cloud Foundry, she is targeting the
-Cloud Controller. The Cloud Controller then directs the Diego Brain through the [CC-Bridge](../diego/diego-components.html#bridge-components) to coordinate individual [Diego cells](#diego-cell) to stage and run applications
+Cloud Controller. The Cloud Controller then directs the Diego Brain through the [CC-Bridge](../diego/diego-architecture.html#bridge-components) to coordinate individual [Diego cells](#diego-cell) to stage and run applications
 
 In [pre-Diego architecture](../diego/dea-vs-diego.html#design), the Cloud Controller's Droplet Execution Agent (DEA) performed these app lifecycle tasks.
 
@@ -90,9 +90,9 @@ broker for that service is responsible for providing the service instance.
 
 Cloud Foundry component VMs communicate with each other internally through http and https protocols, sharing temporary messages and data stored in two locations:
 
-* A [Consul server](../diego/diego-components.html#consul) stores longer-lived control data, such as component IP addresses and distributed locks that prevent components from duplicating actions.
+* A [Consul server](../diego/diego-architecture.html#consul) stores longer-lived control data, such as component IP addresses and distributed locks that prevent components from duplicating actions.
 
-* Diego's [Bulletin Board System](../diego/diego-components.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS is currently implemented in [etcd](https://coreos.com/etcd/).
+* Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS is currently implemented in [etcd](https://coreos.com/etcd/).
 
 The route-emitter component uses the NATS protocol to broadcast the latest routing tables to the routers. In pre-Diego CF architecture, the [NATS Message Bus](../diego/dea-vs-diego.html#nats) carried all internal component communications.
 
