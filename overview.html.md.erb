@@ -32,6 +32,6 @@ Cloud Foundry uses the git system on [GitHub](http://github.org) to version-cont
 
 Cloud Foundry components communicate with each other by posting messages internally using http and https protocols, and by sending [NATS](./architecture/messaging-nats.html) messages to each other directly.
 
-As the cloud operates, the Cloud Controller VM, router VM, and all VMs running applications continuously generate logs and metrics. The <%=vars.loggregator_name_or_link%> system aggregates this information in a structured, usable form, the **Firehose**. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals or analyzing user behavior, by applying a **nozzles**.
+As the cloud operates, the Cloud Controller VM, router VM, and all VMs running applications continuously generate logs and metrics. The <%=vars.loggregator_name_or_link%> system aggregates this information in a structured, usable form, the **Firehose**. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals or analyzing user behavior, by applying **nozzles**.
 
 Typical applications depend on free or metered <%=vars.services_link%> such as databases or third-party APIs. To incorporate these into an application, a developer writes a Service Broker, an API that publishes to the Cloud Controller the ability to list service offerings, provision the service, and enable applications to make calls out to it.
