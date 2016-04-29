@@ -1,0 +1,123 @@
+##<a id='available-stacks'></a>Available Stacks ##
+
+Configuration required in Diego and CF manifests to add a new Linux-based ‘pancakes’ stack for use with garden-linux:
+
+Separate BOSH release (pancakes-release)
+
+1. Create a BOSH job template (say, ‘pancakes-rootfs’) that ensures the ‘pancakes’ stack is expanded into a directory on disk (say, ‘/var/vcap/packages/pancakes-rootfs/rootfs’). See the ‘rootfses’ job template in diego-release (https://github.com/cloudfoundry-incubator/diego-release/tree/develop/jobs/rootfses) for one way of doing this.
+
+1. If the ‘pancakes’ stack requires different lifecycle binaries to stage and run apps, create a ‘pancakes-app-lifecycle’ package and job template in your ‘pancakes-release’ to provide a gzipped tar archive of those binaries. See the different app lifecycles included with diego-release (https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/buildpack_app_lifecycle, https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/docker_app_lifecycle, https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/windows_app_lifecycle) for some ways to do this. The ‘pancakes-app-lifecycle’ job template itself can be a no-op, as long as its spec file lists the ‘pancakes-app-lifecycle’ package as a dependency. Let’s assume below that it packages the lifecycle binaries as the file ‘pancakes-app-lifecycle.tgz’.
+
+###<a id='diego-manifest'></a>Update the Diego Manifest ###
+
+1. Diego manifest: On the Linux ‘cell’ jobs, colocate the ‘pancakes-rootfs’ job template from the pancakes release. For example, in the manifests generated with the spiff-based tooling in diego-release, the cell job templates list would change from:
+
+```
+    - name: rep
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: garden
+      release: garden-linux
+    - name: rootfses
+      release: diego
+    - name: metron_agent
+      release: cf
+```
+
+to (additions in bold):
+
+```
+    - name: rep
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: garden
+      release: garden-linux
+    - name: rootfses
+      release: diego
+    - name: pancakes-rootfs
+      release: pancakes
+    - name: metron_agent
+      release: cf
+```
+
+Adding this job template makes sure that the expanded rootfs is available locally on the cell, at ‘/var/vcap/packages/pancakes-rootfs/rootfs’.
+
+1. Tell the rep how to associate the ‘pancakes’ stack with the expanded rootfs directory that the pancakes-rootfs job sets up on the cell: change the ‘diego.rep.preloaded_rootfses’ property from the one-item list:
+
+```
+- cflinuxfs2:/var/vcap/packages/rootfs_cflinuxfs2/rootfs
+```
+
+to the two-item list (additions in bold):
+
+```
+- cflinuxfs2:/var/vcap/packages/rootfs_cflinuxfs2/rootfs
+- pancakes:/var/vcap/packages/pancakes-rootfs/rootfs
+```
+
+1. If you created a ‘pancakes-app-lifecycle’ job template in the ‘pancakes’ release, colocate it with the Diego job that has the file-server. Currently this is the ‘access’ job, so its job template list would change from:
+
+```
+    - name: ssh_proxy
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: metron_agent
+      release: cf
+    - name: file_server
+      release: diego
+```
+
+to:
+
+```
+    - name: ssh_proxy
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: metron_agent
+      release: cf
+    - name: file_server
+      release: diego
+    - name: pancakes-app-lifecycle
+      release: pancakes
+```
+
+1. Configure the stager and nsync components to relate the ‘pancakes’ stack to the ‘pancakes’ lifecycle binary bundle: change the ‘diego.stager.lifecycle_bundles’ and ‘diego.nsync.lifecycle_bundles’ BOSH properties from
+
+```
+      - "buildpack/cflinuxfs2:buildpack_app_lifecycle/buildpack_app_lifecycle.tgz"
+      - "buildpack/windows2012R2:windows_app_lifecycle/windows_app_lifecycle.tgz"
+      - "docker:docker_app_lifecycle/docker_app_lifecycle.tgz"
+```
+
+to (additions in bold):
+
+```
+      - "buildpack/cflinuxfs2:buildpack_app_lifecycle/buildpack_app_lifecycle.tgz"
+      - "buildpack/pancakes:pancakes-app-lifecycle/pancakes-app-lifecycle.tgz"
+      - "buildpack/windows2012R2:windows_app_lifecycle/windows_app_lifecycle.tgz"
+      - "docker:docker_app_lifecycle/docker_app_lifecycle.tgz"
+```
+
+###<a id='cf-manifest'></a>Update the CF Manifest ###
+
+1. Configure CC with the new stack by adding it to the ‘cc.stacks’ property in the CF manifest. For example, this would change the default stack list from
+
+```
+      - name: "cflinuxfs2"
+        description: "Cloud Foundry Linux-based filesystem"
+```
+
+to (additions in bold):
+
+```
+      - name: "cflinuxfs2"
+        description: "Cloud Foundry Linux-based filesystem"
+      - name: "pancakes"
+        description: "Linux-based filesystem, with delicious pancakes"
+```
+
+
