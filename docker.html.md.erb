@@ -54,27 +54,35 @@ $ cf disable-feature-flag diego_docker
 
 <p class='note'><strong>Note</strong>: Disabling the <code>diego-docker</code> feature flag stops all Docker-based apps in your deployment within a few convergence cycles, on the order of a minute.</p>
 
-##<a id='push-docker'></a>Pushing a Docker image with the CF CLI
+##<a id='push-docker'></a>Pushing a Docker Image with the CF CLI
 
 Follow these instructions to deploy updated or new Docker images using Cloud Foundry.
 
 Ensure that you are running cf CLI 6.13.0 or a later version. See [Installing the cf Command Line Interface](../cf-cli/install-go-cli.html) for installation instructions.
 
-Run `cf push lattice-app -o cloudfoundry/MY-DOCKER-IMAGE` to deploy a Docker image. Replace MY-DOCKER-IMAGE with the name of an image from an accessible Docker Registry.
+<p class='note'><strong>Note</strong>: See <a href= 'https://github.com/cloudfoundry-incubator/diego-design-notes/blob/master/docker-support.md'>Docker Support in CF + Diego</a> for information about pushing a docker image with an earlier version of the cf CLI.</p>
 
-For example, the following command pushes the lattice-app on Docker Hub to Cloud Foundry:
+###<a id='public'></a>Pushing a Docker image using Docker Hub
+
+Run `cf push lattice-app -o cloudfoundry/MY-DOCKER-IMAGE` to deploy a Docker image. Replace `MY-DOCKER-IMAGE` with the name of an image from an accessible Docker Registry.
+
+For example, the following command pushes the `lattice-app` on Docker Hub to Cloud Foundry: 
 
 <pre class='terminal'>$ cf push lattice-app -o cloudfoundry/lattice-app</pre>
 
-<p class='note'><strong>Note</strong>: See <a href= 'https://github.com/cloudfoundry-incubator/diego-design-notes/blob/master/docker-support.md'>Docker Support in CF + Diego</a> for information about pushing a docker image with an earlier version of the cf CLI.</p>
+###<a id='private'></a>Pushing a Docker image using Docker Trusted Registries
+
+To deploy a Docker image using Docker Trusted Registries, run:
+
+ <pre class='terminal'>$ cf push my-app -o MY-PRIVATE-REGISTRY.DOMAIN:5000/image/name:v2</pre> 
+
+ Replace `MY-PRIVATE-REGISTRY.DOMAIN` with your domain name, which resolves to the private registry. In this example, 5000 is the port on which your private registry serves traffic. `image/name` is the name of the Docker image repository. `v2` is a tag in that repository that refers to a specific image.
 
 ##<a id='caveats'></a>Docker Caveats ##
 
 This section contains known issues and limitations with running Docker images in Cloud Foundry.
 
-* Diego only supports secure registries bearing certificates signed by a common Certificate Authority (CA). Diego does not currently support self-signed certificates.
-
-* Diego currently only supports v2 Docker registries with Docker 1.6+.
+* Diego supports running Docker images only from Docker registries that present the v2 registry API.
 
 * Diego does not currently support fetching images from private repositories.
 
