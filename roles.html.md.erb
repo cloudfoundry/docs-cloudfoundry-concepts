@@ -9,11 +9,55 @@ This topic describes the types of users in a <%= vars.product_name %>  deploymen
 
 A <%= vars.product_name %> deployment incorporates the following user types:
 
-- [Operator](#operator) ([Ops Manager Administrator](#ops-man-admin) or [Elastic Runtime Administrator](#er-admin))
+Operator - highest level
+	ops man admin
+		sets userstore
+		adds products and services, configuration as tiles
+	ERT op admin
+		true statement about where user account comes from if previously set by ops man admin?
+		perhaps that's what the note says
+Elastic Runtime users - broad term for all the roles under ER users
+
+- [Operator](#operator)
+	- [Ops Manager Administrator](#ops-man-admin)
+	- [Elastic Runtime Administrator](#er-admin))
 - [Elastic Runtime User](#er-user)
+	- Org Manager, Org Auditor, Org Billing Manager
+	- Space Manager, Space Developer, Space Auditor
 - [End User](#end-user)
 
-##<a id="operator"></a>Operator
+## <a id='table'></a>User Types Summary
+
+<table id='users-summary' border='1' class='nice'>
+	<tr>
+		<th>User Type</th>
+		<th>Tools They Use</th>
+		<th>Accounts Stored in</th>
+		<th>Users They Manage</th>
+	</tr><tr>
+		<th>Ops Manager Admin</th>
+		<td>PivNet <br>Ops Manager <br>cf CLI <br> UAA CLI (UAAC) <br>SSO Dashboard<br>IaaS UX</td>
+		<td>Ops Manager store via UAA or external store via SAML or LDAP</td>
+		<td>Elastic Runtime Admins</td>
+	</tr><tr>
+		<th>Elastic Runtime Admin</th>
+		<td>PivNet <br> Ops Manager <br>cf CLI<br>Marketplace</td>
+		<td>Elastic Runtime user store via UAA or external store via SAML or LDAP</td>
+		<td>Elastic Runtime Users</td>
+	</tr><tr>
+		<th>Elastic Runtime User</th>
+		<td>cf CLI <br>CAPI <br>Apps Manager <br>Marketplace</td>
+		<td>Elastic Runtime user store via UAA or external store via SAML or LDAP</td>
+		<td>Elastic Runtime Users within permitted orgs and spaces, End Users</td>
+	</tr><tr>
+		<th>End User</th>
+		<td>Hosted Applications</td>
+		<td>Individual applications or  user store via SSO</td>
+		<td></td>
+	</tr>
+</table>
+
+## <a id="operator"></a>Operator
 
 An operator runs a <%= vars.product_name %> deployment and has the highest-level permissions to configure a deployment, create user accounts, and perform other administrative functions. There are two types of operators:
 
@@ -22,34 +66,38 @@ An operator runs a <%= vars.product_name %> deployment and has the highest-level
 
 The same person can act as both of these administrators.
 
-###<a id="ops-man-admin"></a>Ops Manager Administrator
+### <a id="ops-man-admin"></a>Ops Manager Administrator
 
 An Ops Manager Admin creates a PCF deployment by deploying Ops Manager onto an infrastructure. When Ops Man boots for the first time, the Ops Man Admin specifies that the deployment draws its user account information from one of two places:
 
 1. An internal UAA database that Ops Manager creates new for the deployment.
 1. An external, existing identity provider accessed via SAML or LDAP protocol
 
-The Ops Manager Admin uses the cf CLI to create [additional Ops Manager Admin](../customizing/opsman-users.html) accounts.
+The Ops Manager Admin uses the UAACß to create [additional Ops Manager Admin](../customizing/opsman-users.html) accounts.
 
 Ops Manager Admins create, operate, and add capabilities to deployments through the Ops Manager Installation Dashboard by installing and configuring tiles for Elastic Runtime and other products and services.
 
-###<a id="er-admin"></a>Elastic Runtime Administrator
+### <a id="er-admin"></a>Elastic Runtime Administrator
 
 The Elastic Runtime Admin deploys and configures the Elastic Runtime tile, plus product and service tiles that the PCF deployment uses.
 
-The Elastic Runtime Admin configures the Elastic Runtime tile to specify whether the deployment's user account information comes from an internal UAA or from an external identity provider. They can then add user accounts and define Organizations and Spaces within the deployment. These virtual compartments allow [Elastic Runtime users](#er-user) to self-administer user accounts, roles, and permissions within semi-autonomous subsections of the deployment.
+The Elastic Runtime Admin configures the Elastic Runtime tile to specify whether the deployment's user account information comes from an internal UAA or from an external identity provider.
+
+The Elastic Runtime Admin adds user accounts and define Organizations and Spaces within the deployment. These virtual compartments allow [Elastic Runtime users](#er-user) to self-administer user accounts, roles, and permissions within semi-autonomous subsections of the deployment.
 
 <p class="note"><strong>Note</strong>: The internal UAA for Elastic Runtime is the system-wide UAA for storing user information. It differs from the Ops Manager internal UAA, which only stores Ops Manager Admin accounts.</p>
 
-##<a id="er-user"></a>Elastic Runtime User
+## <a id="er-user"></a>Elastic Runtime User
 
-The Elastic Runtime user 
+Elastic Runtime users include application developers, managers, and auditors who work within Organizations and Spaces. The Elastic Runtime admin manages ER users.
+
+Cloud Foundry uses role-based access control (RBAC), with each role granting permissions in either an org or a space.
+
+ER user records are kept in the Elastic Runtime user store, which can be internal or external. User roles are kept in the Cloud Controller DB, not the ER user store.
 	
-ER Admin defines ER user records in internal ER UAA or external User Store
-	
-you can mainly think of ER Users as developers, but also managers and auditors - see roles below
 
 User roles:
+
 * associate users with, well, roles (or permissions) in orgs and spaces
 
 * defined by ER Admin in CC DB
@@ -64,10 +112,9 @@ User roles:
 			Space Dev
 			Space Auditor
 
-Cloud Foundry uses role-based access control (RBAC), with each role granting
-permissions in either an org or a space.
 
-## <a id='orgs-spaces-roles'></a>Orgs, Spaces, Roles, and Permissions ##
+
+### <a id='orgs-spaces-roles'></a>Orgs, Spaces, Roles, and Permissions ##
 
 For developers and other <%= vars._product_name %> users, a role-based access control system grants permissions in either an org or a space.
 
@@ -100,83 +147,145 @@ A user can have one or more roles.
 The combination of these roles defines the user’s overall permissions in the
 org and within specific spaces in that org.
 
-#### <a id='org-roles'></a>Org Roles and Permissions ###
+* **Org Managers** are managers or other users who need to administer the account and must be assigned from the UAA CLI. See the <a href="../adminguide/uaa-user-management.html">Creating and Managing Users with the UAA CLI (UAAC)</a> topic to learn how to create a user with admin rights.
 
-#####Org Manager ####
+* **Org Auditors** view but cannot edit user information and org quota usage 
+information.
 
-Assign this role to managers or other users who need to administer the account.
+* **Org Billing Managers** create and manage billing account and payment
+information.
 
-An Org Manager can do the following:
+* **Space Managers** are managers or other users who administer a space within an org.
 
-* Add and manage users
-* View users and edit org roles
-* View the org quota
-* Create, view, edit, and delete spaces
-* Invite and manage users in spaces
-* View the status, number of instances, service bindings, and resource use of each application in every space in the org
-* Add domains
-
-<%= vars.link_adminguide_commands %>
-
-#####Org Auditor ####
-
-Assign this role to people who need to view but not edit user information and
-org quota usage information.
-
-An Org Auditor can do the following:
-
-* View users and org roles
-* View the org quota
-
-#####Billing Manager ####
-
-Assign this role to people who need to create and manage billing account and payment information.
-
-A Billing Manager can do the following:
-
-* Set the org spending limit
-* Create and set payment information
-* Read invoices and payment history
-* Create and edit the invoice notification email addresses
-
-<p class="note"><strong>Note</strong>: The Billing Manager role is only relevant for Cloud Foundry environments deployed with a billing engine.</p>
-
-#### <a id='space-roles'></a>Space Roles and Permissions ###
-
-#####Space Manager ####
-
-Assign this role to managers or other users who need to administer a space.
-
-A Space Manager can do the following:
-
-* Add and manage users in the space
-* View the status, number of instances, service bindings, and resource use of each application in the space
-
-#####Space Developer ####
-
-Assign this role to application developers or other users who need to manage
+* **Space Developers** are application developers or other users who manage 
 applications and services in a space.
 
-A Space Developer can do the following:
+* **Space Auditors** view but cannot edit the space.
 
-* Deploy an application
-* Start or stop an application
-* Rename an application
-* Delete an application
-* Create, view, edit, and delete services in a space
-* Bind or unbind a service to an application
-* Rename a space
-* View the status, number of instances, service bindings, and resource use of each application in the space
-* Change the number of instances, memory allocation, and disk limit of each application in the space
-* Associate an internal or external URL with an application
 
-#####Space Auditor ####
-
-Assign this role to people who need to view but not edit the space.
-
-A Space Auditor can do the following:
-
-* View the status, number of instances, service bindings, and resource use of each application in the space
+<table id='roles-permissions' border='1' class='nice'>
+	<tr>
+		<th>User Role</th>
+		<th>Org Manager</th>
+		<th>Org Auditor</th>
+		<th>Org Billing Manager</th>
+		<th>Space Manager</th>
+		<th>Space Developer</th>
+		<th>Space Auditor</th>
+	</tr><tr>
+		<td>Scope of operation</td> 
+		<td>Org</td>
+		<td>Org</td>
+		<td>Org</td>
+		<td>Space</td>
+		<td>Space</td>
+		<td>Space</td>
+	</tr><tr>
+		<td>Add and manage users</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>Edit user roles</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>View users and roles</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>View the org quota</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>Create, view, edit, and delete spaces</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>View the status, number of instances, service bindings, and resource use of applications</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+	</tr><tr>
+		<td>Add domains</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>Deploy, run, and manage applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Instantiate and bind services to applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Associate URLs, instance counts, memory allocation, and disk limit of applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Rename spaces and applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Set payment information and org/space spending limit</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>Read invoices and payment history; set invoice notification email addresses</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
 
 ##<a id="end-user"></a>End User
 
@@ -186,13 +295,10 @@ People with permissions to use specific applications hosted by ER; they don't di
 
 * [PCF,PWS: With SSO - centralized end user management supports SSO for multiple apps (easier!)
 
-####<a id=""></a>Ops Man Admin installs SSO Tile, runs SSO Dashboard, creates service plan that registers various applications, presents dashboard via Okta, etc.
+Ops Man Admin installs SSO Tile, runs SSO Dashboard, creates service plan that registers various applications, presents dashboard via Okta, etc.
 
-####<a id=""></a>Space Manager create instance of service plan and associates End Users via either internal or external store
+Space Manager create instance of service plan and associates End Users via either internal or external store
 
 * External: SAML or LDAP, which can be different from external user store used for ER Users, above
 
 * Internal UAA: Space Manager associates existing users to plans via SSO dashboard or cf CLI, and create new users via cf CLI ]
-
-
-
