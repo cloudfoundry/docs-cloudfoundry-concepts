@@ -14,7 +14,7 @@ In a pre-Diego Cloud Foundry deployment, the Cloud Controller's [Droplet Executi
 
 DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the [DEA Placement Algorithm](../architecture/cloud-controller.html#dea-placement) with the [Diego Auction](./diego-auction.html).
 
-In addition to these broad changes, the Cloud Foundry migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table underneath](#table) provides a summary.
+In addition to these broad changes, the Cloud Foundry migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table](#table) provides a summary.
 
 ##<a id='component'></a>Changed Components and Functions
 
@@ -27,9 +27,9 @@ instances, tracked started instances, and broadcast state messages on each appli
 
 Pre-Diego application instances lived inside [Warden](../architecture/warden.html) containers, which are analogous to [Garden](../diego/diego-architecture.html#cell-components) containers in Diego architecture.
 Containerization ensures that application instances run in isolation, get their
-fair share of resources, and are protected from "noisy neighbors" - other applications running on the same machine.
+fair share of resources, and are protected from "noisy neighbors," or other applications running on the same machine.
 
-Warden could only manage containers on VMs running Linux, but the Garden subsystem supports VMs running diverse operating systems. The Garden front end presents the same container management operations that Warden used, with code that is abstracted away from any platform specifics. A platform-specific Garden Backend running on each VM, translates the commands into machine code tailored to the native operating system.
+Warden could only manage containers on VMs running Linux, but the Garden subsystem supports VMs running diverse operating systems. The Garden front end presents the same container management operations that Warden used, with code that is abstracted away from any platform specifics. A platform-specific Garden Backend running on each VM translates the commands into machine code tailored to the native operating system.
 
 The <%= vars.diego_ssh_link %> enables developers to log into containers and access running application instances, a functionality that did not exist pre-Diego.
 
@@ -79,7 +79,7 @@ Diego architecture moves this allocation process out of the Cloud Controller and
 
 Pre-Diego Cloud Foundry used [NATS](../architecture/messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
-communication between components. Diego retains NATS for some communications, but adds messaging via http and https protocols, through which components share information in the Consul and Diego BBS servers.
+communication between components. Diego retains NATS for some communications, but adds messaging via HTTP and HTTPS protocols, through which components share information in the Consul and Diego BBS servers.
 
 ##<a id='table'></a>DEA / Diego Differences Summary
 
