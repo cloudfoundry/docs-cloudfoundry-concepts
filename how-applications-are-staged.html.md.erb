@@ -7,7 +7,12 @@ owner:
 
 <strong><%= modified_date %></strong>
 
- <%= image_tag("app_push_flow_diagram.png", :height => "100%", :width => "100%") %>
+Cloud Foundry has used two architectures for managing application containers: Diego
+ and Droplet Execution Agents (DEA). This topic describes how the Diego 
+ architecture stages buildpack applications. For information about how DEA applications are
+ staged, see the [Staging Apps with DEAs](./architecture/execution-agent.html#staging) section of the [Droplet Execution Agent](./architecture/execution-agent.html) topic.
+
+ <%= image_tag("app_push_flow_diagram_diego.png") %> 
 
 1. At the command line, the developer enters the directory containing her application and uses the cf command line tool to issue a push command.
 
@@ -21,16 +26,17 @@ owner:
 
 6. The cf command line tool issues an app start command.
 
-7. Because the app has not already been staged, the Cloud Controller chooses a DEA instance from the DEA pool to stage the application.
-The staging DEA uses the instructions in the buildpack to stage the application.
+7. The Cloud Controller issues a staging request to Diego, which then schedules a cell to run the staging Task. The Task uses the instructions in the buildpack to stage the application.
 
-8. The staging DEA streams the output of the staging process so the developer can troubleshoot application staging problems.
+8. The Diego Cell streams the output of the staging process so the developer can troubleshoot application staging problems.
 
-9. The staging DEA packages the resulting staged application into a tarball called a "droplet" and stores it in the blobstore.
+9. The Task packages the resulting staged application into a tarball called a "droplet" and the Diego Cell stores it in the blobstore.
 The results are cached and used next time the application is staged.
 
-10. The staging DEA reports to the Cloud Controller that staging is complete.
+10. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete.
 
-11. The Cloud Controller chooses one or more DEAs from the pool to run the staged application.
+11. Diego schedules the application as a Long Running Process (LRP) on one or more Diego Cells.
 
-12. The running DEAs report the status of the application to the Cloud Controller.
+12. The Diego Cells report the status of the application to the Cloud Controller.
+
+See the [Diego Architecture](./diego/diego-architecture.html) topic for more information. 
