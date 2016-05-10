@@ -8,28 +8,35 @@ owner:
 <strong><%= modified_date %></strong>
 
 Cloud Foundry has used two architectures for managing application containers: Diego
- and Droplet Execution Agents (DEA). This topic describes the flow that the Diego 
- architecture uses to stage applications.
- For information about how DEA applications are
- staged, see the [Staging](./architecture/execution-agent.html#staging) section of the [Droplet Execution Agent](./architecture/execution-agent.html) topic.
+ and Droplet Execution Agents (DEA). This topic describes how the Diego 
+ architecture stages buildpack applications. For information about how DEA applications are
+ staged, see the [Staging Apps with DEAs](./architecture/execution-agent.html#staging) section of the [Droplet Execution Agent](./architecture/execution-agent.html) topic.
 
-1. At the command line, the developer enters the directory containing her application and uses the cf Command Line Interface (CLI) to issue a `cf push` command.
-1. The cf command line tool tells the Cloud Controller to create a record for the application.
-1. The Cloud Controller stores the application metadata (e.g. the app name, number of instances the user specified, and the buildpack).
-1. The cf command line tool uploads the application files.
-1. The Cloud Controller stores the raw application files in the blobstore. (Is this true? Is it Blobstore or Diego File-Server?)
-1. The cf CLI issues an app start command.
-1. The Cloud Controller passes the request to stage the the application to the Cloud Controller Bridge.
-1. The Cloud Controller Bridge translates the staging request into a Task or Long Running Process, then submits it to the Bulletin Board System (BBS) through an API over HTTP.
-1. The BBS submits the Task or LRP to the Auctioneer, part of the Diego Brain.
-1. The Auctioneer distributes the Task or LRP to Diego Cells through an Auction.
+ <%= image_tag("app_push_flow_diagram_diego.png") %> 
 
+1. At the command line, the developer enters the directory containing her application and uses the cf command line tool to issue a push command.
 
+2. The cf command line tool tells the Cloud Controller to create a record for the application.
 
---
+3. The Cloud Controller stores the application metadata (e.g. the app name, number of instances the user specified, and the buildpack).
 
-When staging applications with Diego, is the Blobstore still used to initially store the Application bits and later the resulting droplet?
+4. The cf command line tool uploads the application files.
 
-Or has any of these responsibilities been passed to Diego's File-Server?
+5. The Cloud Controller stores the raw application files in the blobstore.
 
-If ol' Blobstore is still used, is the CC-Uploader (part of CC-Bridge) the one in charge of helping Diego (Rep?) to upload the newly generated droplet into the Blobstore?
+6. The cf command line tool issues an app start command.
+
+7. The Cloud Controller issues a staging request to Diego, which then schedules a cell to run the staging Task. The Task uses the instructions in the buildpack to stage the application.
+
+8. The Diego Cell streams the output of the staging process so the developer can troubleshoot application staging problems.
+
+9. The Task packages the resulting staged application into a tarball called a "droplet" and the Diego Cell stores it in the blobstore.
+The results are cached and used next time the application is staged.
+
+10. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete.
+
+11. Diego schedules the application as a Long Running Process (LRP) on one or more Diego Cells.
+
+12. The Diego Cells report the status of the application to the Cloud Controller.
+
+See the [Diego Architecture](./diego/diego-architecture.html) topic for more information. 
