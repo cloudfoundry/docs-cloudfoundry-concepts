@@ -1,16 +1,23 @@
 ##<a id='available-stacks'></a>Available Stacks ##
 
-Configuration required in Diego and CF manifests to add a new Linux-based ‘pancakes’ stack for use with garden-linux:
+The following configuration change is required in Diego and CF manifests to add a new Linux-based ‘pancakes’ stack for use with garden-linux.   In a real-world example, the 'pancakes' stack could be an older version of either CentOS or Ubuntu.
 
 Separate BOSH release (pancakes-release)
 
-1. Create a BOSH job template (say, ‘pancakes-rootfs’) that ensures the ‘pancakes’ stack is expanded into a directory on disk (say, ‘/var/vcap/packages/pancakes-rootfs/rootfs’). See the ‘rootfses’ job template in diego-release (https://github.com/cloudfoundry-incubator/diego-release/tree/develop/jobs/rootfses) for one way of doing this.
+1. Create a BOSH job template. For example, this procedure uses ‘pancakes-rootfs’ as an example.  This ensures the ‘pancakes’ stack is expanded into a directory on disk. For example, ‘/var/vcap/packages/pancakes-rootfs/rootfs’. 
 
-1. If the ‘pancakes’ stack requires different lifecycle binaries to stage and run apps, create a ‘pancakes-app-lifecycle’ package and job template in your ‘pancakes-release’ to provide a gzipped tar archive of those binaries. See the different app lifecycles included with diego-release (https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/buildpack_app_lifecycle, https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/docker_app_lifecycle, https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/windows_app_lifecycle) for some ways to do this. The ‘pancakes-app-lifecycle’ job template itself can be a no-op, as long as its spec file lists the ‘pancakes-app-lifecycle’ package as a dependency. Let’s assume below that it packages the lifecycle binaries as the file ‘pancakes-app-lifecycle.tgz’.
+See the [‘rootfses’ job template in diego-release](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/jobs/rootfses) for one way of doing this.
+
+1. If the ‘pancakes’ stack requires different lifecycle binaries to stage and run apps, create a ‘pancakes-app-lifecycle’ package and job template in your ‘pancakes-release’ to provide a gzipped tar archive of those binaries. See the following app lifecycles included with diego-release for some ways to do this:
+  *[Buildpack App Lifecycle](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/buildpack_app_lifecycle)
+  *[Docker App Lifecycle](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/docker_app_lifecycle)
+  *[Windows App Lifecycle](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/windows_app_lifecycle)  
+
+The ‘pancakes-app-lifecycle’ job template itself can be a no-op, as long as its spec file lists the ‘pancakes-app-lifecycle’ package as a dependency. The following example assumes that it packages the lifecycle binaries as the file ‘pancakes-app-lifecycle.tgz’.
 
 ###<a id='diego-manifest'></a>Update the Diego Manifest ###
 
-1. Diego manifest: On the Linux ‘cell’ jobs, colocate the ‘pancakes-rootfs’ job template from the pancakes release. For example, in the manifests generated with the spiff-based tooling in diego-release, the cell job templates list would change from:
+1. Configure the Diego manifest by adding the `pancakes-rootfs` job and release name. For example, in the manifests generated with the [spiff-based tooling](https://github.com/cloudfoundry-incubator/spiff) in the `diego-release`, the cell job templates list changes from:
 
 ```
     - name: rep
@@ -25,9 +32,9 @@ Separate BOSH release (pancakes-release)
       release: cf
 ```
 
-to (additions in bold):
+to the following (additions in bold):
 
-```
+<pre>
     - name: rep
       release: diego
     - name: consul_agent
@@ -36,11 +43,11 @@ to (additions in bold):
       release: garden-linux
     - name: rootfses
       release: diego
-    - name: pancakes-rootfs
-      release: pancakes
+    - <b>name: pancakes-rootfs
+      release: pancakes</b>
     - name: metron_agent
       release: cf
-```
+</pre>
 
 Adding this job template makes sure that the expanded rootfs is available locally on the cell, at ‘/var/vcap/packages/pancakes-rootfs/rootfs’.
 
