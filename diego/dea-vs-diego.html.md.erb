@@ -35,7 +35,7 @@ The <%= vars.diego_ssh_link %> enables developers to log into containers and acc
 
 #### <a id='warden-security'></a> Warden Container-Level Traffic Rules
 
-For network security, pre-Diego releases of Cloud Foundry supported `allow` and `deny`rules that governed outbound traffic from all Warden containers running on the same DEA node. Newer releases use container-specific [Application Security Groups] <%= vars.app_sec_groups %> (ASGs) to restrict traffic at a more granular level. Cloud Foundry recommends using ASGs exclusively, but when a pre-Diego deployment defined both Warden rules and ASGs, they were evaluated in a strict priority order.
+For network security, pre-Diego releases of Cloud Foundry supported `allow` and `deny`rules that governed outbound traffic from all Warden containers running on the same DEA node. Newer releases use container-specific <%= vars.app_sec_groups %> (ASGs) to restrict traffic at a more granular level. Cloud Foundry recommends using ASGs exclusively, but when a pre-Diego deployment defined both Warden rules and ASGs, they were evaluated in a strict priority order.
 
 Pre-Diego Cloud Foundry returned an allow, deny, or reject result for the first rule that matched the outbound traffic request parameters, and did not evaluate any lower-priority rules.
 Cloud Foundry evaluated the network traffic rules for an application in the following order:
