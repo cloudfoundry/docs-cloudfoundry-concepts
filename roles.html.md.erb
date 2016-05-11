@@ -71,19 +71,11 @@ applications and services in a space.
 		<td>Space</td>
 		<td>Space</td>
 	</tr><tr>
-		<td>Add and manage users</td>
-		<td>&check;</td>
+		<td>Add and edit users and roles</td>
+		<td>*</td>
 		<td></td>
 		<td></td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-	</tr><tr>
-		<td>Edit user roles</td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>*</td>
 		<td></td>
 		<td></td>
 	</tr><tr>
@@ -103,7 +95,10 @@ applications and services in a space.
 		<td></td>
 		<td></td>
 	</tr><tr>
-		<td>Create, view, edit, and delete spaces</td>
+		<td>Create, view, edit, and delete Orgs</td>
+		<td colspan="6">No by default, but <a href="../customizing/console-env-variables.html#ENABLE_NON_ADMIN_ORG_CREATION">depends on</a> the value of environment variable <code>ENABLE_NON_ADMIN_ORG_CREATION</code></td>
+	</tr><tr>
+		<td>Create, view, edit, and delete Spaces</td>
 		<td>&check;</td>
 		<td></td>
 		<td></td>
@@ -151,7 +146,7 @@ applications and services in a space.
 		<td>&check;</td>
 		<td></td>
 	</tr><tr>
-		<td>Rename spaces and applications</td>
+		<td>Rename applications</td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -177,9 +172,5 @@ applications and services in a space.
 	</tr>
 </table>
 
-[TK - WIP - these two lines re: env vars will be footnotes or included in table]
-
-Depends on the value of the environment variable `ENABLE_NON_ADMIN_ORG_CREATION`.
-
-Depends on the value of the environment variable `ENABLE_NON_ADMIN_ROLE_MANAGEMENT`.
+\* No by default, but <a href="../customizing/console-env-variables.html#ENABLE_NON_ADMIN_ROLE_MANAGEMENT">depends on</a> the value of the environment variable `ENABLE_NON_ADMIN_ROLE_MANAGEMENT`.
 
