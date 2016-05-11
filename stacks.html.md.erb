@@ -26,7 +26,9 @@ The scripts for building the available Cloud Foundry stacks and for building cus
 
 ##<a id='cli-commands'></a>Restaging Applications ##
 
-Stacks are regularly updated to address [CVEs](http://www.ubuntu.com/usn/). Apps will pick up those changes as new releases of <%= vars.product_short %> are deployed. However, if your app is statically linking to something provided in the rootfs, it may require your app to be restaged to pick up the new changes. 
+Stacks are regularly updated to address [CVEs](http://www.ubuntu.com/usn/). Apps will pick up those changes as new releases of <%= vars.product_short %> are deployed. However, if your app statically links to a library provided in the rootfs, you may have to restage it to pick up the new changes.
+
+It can be difficult to know what libraries an app links to, and it depends on the languages you are using. One example is an app that uses a Ruby or Python binary which links out to part of the C standard library. If the C library requires an update, you may need to recompile and restage as follows.
 
 1. Use the `cf stacks` command to list all the stacks available in a deployment. 
 
@@ -49,53 +51,8 @@ Stacks are regularly updated to address [CVEs](http://www.ubuntu.com/usn/). Apps
       Creating app testappmx1 in org MY-ORG / space development as developer@example.com...
       OK
 
-      Creating route testappmx1.cfapps.io...
-      OK
-
-      Binding testappmx1.cfapps.io to testappmx1...
-      OK
-
-      Uploading testappmx1...
-      Uploading app files from: /Users/pivotal/workspace/app_files
-      Uploading 13.4M, 544 files
-      Done uploading
-      OK
-
-      Starting app testappmx1 in org MY-ORG / space development as developer@example.com...
-      -----> Downloaded app package (21M)
-      -------> Buildpack version 1.3.0
-      -----> Compiling Ruby/Rack
-      -----> Using Ruby version: ruby-2.0.0
-      -----> Installing dependencies using 1.7.12
-            Running: bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment
-            Fetching gem metadata from http://rubygems.org/..........
-            Installing rack-rewrite 1.5.0
-            Installing rack 1.5.2
-            Using bundler 1.7.12
-            Installing ref 1.0.5
-            Installing libv8 3.16.14.3
-            Installing therubyracer 0.12.1
-            Your bundle is complete!
-            Gems in the groups development and test were not installed.
-            It was installed into ./vendor/bundle
-            Bundle completed (16.63s)
-            Cleaning up the bundler cache.
-      ###### WARNING:
-            No Procfile detected, using the default web server (webrick)
-
-      -----> Uploading droplet (45M)
-
-      1 of 1 instances running
-
-      App started
-
-      OK
-
-      App testappmx1 was started using this command bundle exec rackup config.ru -p $PORT
-
-      Showing health and status for app testappmx1 in org MY-ORG / space development as developer@example.com...
-      OK
-
+      ...
+      
       requested state: started
       instances: 1/1
       usage: 1G x 1 instances
@@ -107,6 +64,6 @@ Stacks are regularly updated to address [CVEs](http://www.ubuntu.com/usn/). Apps
 
       For API information, review the Stacks section of the [Cloud Foundry API Documentation](http://apidocs.cloudfoundry.org).
 
-      <%= partial '_stacks_cf' %>
+<%= partial '_stacks_cf' %>
 
   

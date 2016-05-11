@@ -1,14 +1,14 @@
-##<a id='available-stacks'></a>Available Stacks ##
+##<a id='add-new-stack'></a>Adding a New Stack ##
 
-The following configuration change is required in Diego and CF manifests to add a new Linux-based ‘pancakes’ stack for use with garden-linux.   In a real-world example, the 'pancakes' stack could be an older version of either CentOS or Ubuntu.
+To add a new stack, you need to create a BOSH Job Template, then change the configurations in the Diego and CF manifests. The following example adds a new Linux-based ‘pancakes’ stack for use with garden-linux. As a real-world example, this 'pancakes' stack could support an older version of either CentOS or Ubuntu.
 
-Separate BOSH release (pancakes-release)
+###<a id='add-new-stack'></a>Create a BOSH Job Template ##
 
-1. Create a BOSH job template. For example, this procedure uses ‘pancakes-rootfs’ as an example.  This ensures the ‘pancakes’ stack is expanded into a directory on disk. For example, ‘/var/vcap/packages/pancakes-rootfs/rootfs’. 
+Create a YAML file as a BOSH Template to deploy your stack. BOSH TemplateThis procedure uses ‘pancakes-rootfs’ as an example. This ensures the ‘pancakes’ stack is expanded into a directory on disk. This bosh release contains the rootfs package as well as a job that extracts the package to ‘/var/vcap/packages/pancakes-rootfs/rootfs’. 
 
-See the [‘rootfses’ job template in diego-release](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/jobs/rootfses) for one way of doing this.
+See the [‘rootfses’ job template in diego-release](https://github.com/cloudfoundry/cflinuxfs2-rootfs-release/tree/master/jobs/cflinuxfs2-rootfs-setup) for one way of doing this.
 
-1. If the ‘pancakes’ stack requires different lifecycle binaries to stage and run apps, create a ‘pancakes-app-lifecycle’ package and job template in your ‘pancakes-release’ to provide a gzipped tar archive of those binaries. See the following app lifecycles included with diego-release for some ways to do this:
+If the ‘pancakes’ stack requires different lifecycle binaries to stage and run apps, create a ‘pancakes-app-lifecycle’ package and job template in your ‘pancakes-release’ to provide a gzipped tar archive of those binaries. See the following app lifecycles included with diego-release for some ways to do this:
   *[Buildpack App Lifecycle](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/buildpack_app_lifecycle)
   *[Docker App Lifecycle](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/docker_app_lifecycle)
   *[Windows App Lifecycle](https://github.com/cloudfoundry-incubator/diego-release/tree/develop/packages/windows_app_lifecycle)  
