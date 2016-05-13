@@ -8,7 +8,7 @@ owner:
 
 <strong><%= modified_date %></strong>
 
-A stack is a prebuilt root filesystem (rootfs) that supports a specific operating system. The stack works in tandem with a buildpack to support compartmentalized applications.
+A stack is a prebuilt root filesystem (rootfs) that supports a specific operating system. The stack works in tandem with a buildpack to support applications running in compartments. Under Diego architecture, each cell can support multiple stacks.
 
 <p class="note"><strong>Note</strong>: You must ensure compatibility for buildpacks on the stacks they are running against.</p>
 
@@ -20,9 +20,7 @@ A stack is a prebuilt root filesystem (rootfs) that supports a specific operatin
 
 * Use the windows cell `windows2012R2` stack for .NET apps.
 
-##<a id='building-stacks'></a>Building Stacks ##
-
-The scripts for building the available Cloud Foundry stacks and for building custom stacks reside in the GitHub [Stacks](http://github.com/cloudfoundry/stacks) project.
+<%= vars.custom_stack %>
 
 ##<a id='cli-commands'></a>Restaging Applications ##
 
@@ -42,7 +40,7 @@ It can be difficult to know what libraries an app statically links to, and it de
       windows2012R2   Windows Server 2012 R2
       </pre>
 
-1. Use the `cf push APPNAME -s STACKNAME` to change your stack and restage your application. `-s STACKNAME` specifies a particular stack for your application. For example, specifying `-s windows2012R2` ensures that Windows-based applications are sent to a Windows-based cell. The default stack is `cflinuxfs2`. Running the following command restages the app `testappmx1` on the default stack-:
+1. Use the `cf push APPNAME -s STACKNAME` to change your stack and restage your application. `-s STACKNAME` specifies a particular stack for your application. For example, specifying `-s windows2012R2` ensures that Windows-based applications are sent to a Windows-based cell. The default stack is `cflinuxfs2`. Running the following command restages the app `testappmx1` on the default stack:
 
       <pre class='terminal'>
       $ cf push testappmx1
@@ -63,7 +61,5 @@ It can be difficult to know what libraries an app statically links to, and it de
       </pre>
 
       For API information, review the Stacks section of the [Cloud Foundry API Documentation](http://apidocs.cloudfoundry.org).
-
-<%= partial '_stacks_cf' %>
 
   
