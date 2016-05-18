@@ -1,0 +1,81 @@
+---
+title: High Availability
+owner:
+---
+
+<strong><%= modified_date %></strong>
+
+A platform as a service (PaaS) is not only about providing middleware that your application can leverage, it is about doing more on behalf of the developer and operator. A modern PaaS must keep apps up and running in the face of failures within the system. From the onset, the Pivotal CF enterprise PaaS has been built to make both the developer and operator’s jobs easier, and in this post I’ll tell you a bit about how it’s done.
+
+## <a id='azs'></a>Availability Zones ##
+
+Idea #1: You can have applications balanced across multiple avail zones.
+
+
+1. Sensibly define Availablility Zones
+2. Configure deployment so that Diego Cells are created across availability zones. 
+3. Deploy multiple instances
+
+First off, there is no voodoo magic here, you are going to have to deploy multiple instances of your application. Then Pivotal CF has the notion of availability zones and these must be sensibly defined, for example, one availability zone (AZ) is defined for one vCenter resource pool, and another AZ defined for a second resource pool. Finally, you configure your Pivotal CF deployment so that the DEAs (the nodes on which your application instances run) are created across the availability zones.  When application instances are then deployed, Pivotal CF will distribute them evenly across the availability zones. You lose one AZ and you still have instances up and serving traffic. That’s one level.
+
+## <a id='health-management-apps'></a>Health Management for App Instances ##
+
+1. The nsync, Converger, and Cell Rep components monitor application instances.
+2. If it these compenents detect a discrepancy, they advise the cloud controller. 
+3. The cloud controller intiates a new deployment of the app. 
+
+Of course, if you lose application instances for any reason, a bug in the app, an AZ goes down, etc. you’ll want the system to compensate, restarting new instances so that we keep the capacity we are aiming for. This is where the elastic runtime health manager comes in. The health manager is constantly keeping tabs on the state of the system, in particular, how many instances of each application are running across all of the DEAs. When it detects a discrepancy between the actual state of the app instances in the cloud and the desired state, as known by the cloud controller, it advises the cloud controller of the difference and the cloud controller will initiate the deployment of new application instances. That’s another level.
+
+## <a id='monitored-processes'></a>Monitored processes ##
+
+1. What happens if the nsync, Converger, and Cell Rep components go down. 
+1. All of the processes running on the component vms are monitored. 
+1. If a process dies, it's automatcally restarted and BOSH agent is informed. 
+1. Bosh Agent informs OM Health Monitor. 
+1. OM Health Monitor passes info to list of responders ie plugins
+1. Monit probably recovered the process, but humans are notified through above mechanism.
+
+There are all of these things that are working in concert to keep your application instances up and running–the DEAs, cloud controller, health manager and so on. You might then ask, “what happens if one of these pieces of software stops working? If the health manager isn’t there, what will compensate for app instance failures?” The answer is that there is another level that is keeping an eye on the health manager (and all of the other components). The processes running on the virtual machines (i.e. the health manager) are monitored, so that if a process dies it will automatically be restarted, whether the restart is successful or not, it will tell the BOSH agent about the failure. Recall that the BOSH agent is there to communicate with Operations Manager and in this case it will relay this failure information to the Operations Manager Health Monitor (not to be confused with the Health Manager of the Elastic Runtime discussed above)–we’ll abbreviate it OMHM. The OMHM will take this alert and pass it through a list of responders that do things things like send emails, page administrators and display alerts in operations dashboards.  There’s a good chance that monit will already have recovered the process, but we also want there to be an opportunity for a human to respond. That’s another level.
+
+## <a id='health-management-vms'></a>Health Management for Virtual Machines ##
+
+(You have to enable the resurrector)
+
+1. Bosh agent on a vm could disappear.
+1. Bosh agent sends out "heartbeat" messages every minute. 
+1. OM Health Monitor listens for these heartbeats. 
+1. If hearbeat is missing, Health Monitor alerts list of responders, including the ressurector
+1. Ressurector asks for the failed vm to be replaced. 
+
+Of course, the BOSH agent on a VM can only communicate back to the Ops Manager if the VM is there, so let’s talk about what happens when a VM disappears. By “disappear” I mean that the BOSH agent is not functional; the VM could be there, but Ops Manager no longer knows what it is up to so for all intents and purposes it’s “gone”.  How does Ops Manager know? One of the things that a BOSH agent is responsible for is sending out heartbeat messages and by default it does so every 60 seconds. The OMHM is constantly listening for those heartbeats and when it finds that one is missing it will itself produce an alert and pass that through the list of responders. Just as described above, this could result in emails, pages and operations dashboard alerts, but in this case there is one more responder that kicks in – the “resurrector”. The resurrector will communicate with the IaaS over which Pivotal CF is running and will ask that the failed VM be replaced. Of course it will be replaced with a VM running the appropriate part of the Elastic Runtime–i.e., a health manager or DEA, etc. That’s right, Ops Manager will restart failed cluster components. That is the fourth level.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
