@@ -9,14 +9,7 @@ A platform as a service (PaaS) is not only about providing middleware that your 
 
 ## <a id='azs'></a>Availability Zones ##
 
-Idea #1: You can have applications balanced across multiple avail zones.
-
-
-1. Sensibly define Availablility Zones
-2. Configure deployment so that Diego Cells are created across availability zones. 
-3. Deploy multiple instances
-
-First off, there is no voodoo magic here, you are going to have to deploy multiple instances of your application. Then Pivotal CF has the notion of availability zones and these must be sensibly defined, for example, one availability zone (AZ) is defined for one vCenter resource pool, and another AZ defined for a second resource pool. Finally, you configure your Pivotal CF deployment so that the DEAs (the nodes on which your application instances run) are created across the availability zones.  When application instances are then deployed, Pivotal CF will distribute them evenly across the availability zones. You lose one AZ and you still have instances up and serving traffic. That’s one level.
+Cloud Foundry supports deploying applications instances across multiple availability zones (AZs). This level of high availability requires that you sensibly define AZs in your IaaS. For example, in vSphere you define one AZ for one vCenter resource pool, and another AZ for a second resource pool. You can configure your deployment so that Diego cells are created across these AZs by [configuring high level instructions here]. With this configuration in place, Cloud Foundry balances the applications you deploy across the AZs you defined. If an AZ goes down, you still have application instances running in another. 
 
 ## <a id='health-management-apps'></a>Health Management for App Instances ##
 
@@ -28,14 +21,7 @@ Of course, if you lose application instances for any reason, a bug in the app, a
 
 ## <a id='monitored-processes'></a>Monitored processes ##
 
-1. What happens if the nsync, Converger, and Cell Rep components go down. 
-1. All of the processes running on the component vms are monitored. 
-1. If a process dies, it's automatcally restarted and BOSH agent is informed. 
-1. Bosh Agent informs OM Health Monitor. 
-1. OM Health Monitor passes info to list of responders ie plugins
-1. Monit probably recovered the process, but humans are notified through above mechanism.
-
-There are all of these things that are working in concert to keep your application instances up and running–the DEAs, cloud controller, health manager and so on. You might then ask, “what happens if one of these pieces of software stops working? If the health manager isn’t there, what will compensate for app instance failures?” The answer is that there is another level that is keeping an eye on the health manager (and all of the other components). The processes running on the virtual machines (i.e. the health manager) are monitored, so that if a process dies it will automatically be restarted, whether the restart is successful or not, it will tell the BOSH agent about the failure. Recall that the BOSH agent is there to communicate with Operations Manager and in this case it will relay this failure information to the Operations Manager Health Monitor (not to be confused with the Health Manager of the Elastic Runtime discussed above)–we’ll abbreviate it OMHM. The OMHM will take this alert and pass it through a list of responders that do things things like send emails, page administrators and display alerts in operations dashboards.  There’s a good chance that monit will already have recovered the process, but we also want there to be an opportunity for a human to respond. That’s another level.
+Cloud Foundry uses a BOSH agent and monit to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, Converger, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent also notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
 
 ## <a id='health-management-vms'></a>Health Management for Virtual Machines ##
 
