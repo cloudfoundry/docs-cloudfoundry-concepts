@@ -53,7 +53,7 @@ outbound traffic from a container if not allowed by a higher-priority rule.
 
 ### <a id='hm9k'></a>Health Manager (HM9000) &rarr; nsync, Converger, and Cell Rep
 
-The function of the Health Monitor (HM9000) component in pre-Diego releases of Cloud Foundry was replaced by the coordinated actions of the [nsync, Converger, and Cell Reps](../architecture/index.html#nsync-converger). In pre-Diego architecture, the Health Monitor (HM9000) had four core responsibilities:
+The function of the Health Manager (HM9000) component in pre-Diego releases of Cloud Foundry was replaced by the coordinated actions of the [nsync, Converger, and Cell Reps](../architecture/index.html#nsync-converger). In pre-Diego architecture, the Health Manager (HM9000) had four core responsibilities:
 
 * Monitor applications to determine their state (e.g. running, stopped, crashed, etc.), version, and number of instances.  HM9000 updates the actual state of an application based on heartbeats and `droplet.exited` messages issued by the DEA node running the application.
 * Determine applications' expected state, version, and number of instances. HM9000 obtains the desired state of an application from a dump of the Cloud Controller database.
