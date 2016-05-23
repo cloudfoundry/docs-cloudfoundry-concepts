@@ -5,7 +5,7 @@ owners: CAPI, Identity
 
 <strong><%= modified_date %></strong>
 
-<%= vars.product_name %> uses role-based access control, with each role granting permissions in either an org or a space.
+<%= vars.product_name %> uses a role-based access control (RBAC) system to grant <%=vars.product_full %> Users permissions appropriate to their role within an org or a space. This topic describes how orgs and spaces work within a <%= vars.product_name %> deployment, and how different <%=vars.product_full %> User roles operate within those contexts.
 
 ## <a id='orgs'></a>Orgs ##
 
@@ -72,10 +72,10 @@ applications and services in a space.
 		<td>Space</td>
 	</tr><tr>
 		<td>Add and edit users and roles</td>
-		<td>*</td>
+		<td><sup>&dagger;</sup></td>
 		<td></td>
 		<td></td>
-		<td>*</td>
+		<td><sup>&dagger;</sup></td>
 		<td></td>
 		<td></td>
 	</tr><tr>
@@ -96,7 +96,12 @@ applications and services in a space.
 		<td></td>
 	</tr><tr>
 		<td>Create, view, edit, and delete Orgs</td>
-		<td colspan="6">No by default, but <a href="../customizing/console-env-variables.html#ENABLE_NON_ADMIN_ORG_CREATION">depends on</a> the value of environment variable <code>ENABLE_NON_ADMIN_ORG_CREATION</code></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
 	</tr><tr>
 		<td>Create, view, edit, and delete Spaces</td>
 		<td>&check;</td>
@@ -172,5 +177,5 @@ applications and services in a space.
 	</tr>
 </table>
 
-\* No by default, but <a href="../customizing/console-env-variables.html#ENABLE_NON_ADMIN_ROLE_MANAGEMENT">depends on</a> the value of the environment variable `ENABLE_NON_ADMIN_ROLE_MANAGEMENT`.
+<sup>&dagger;</sup> No by default, but <a href="../customizing/console-env-variables.html#ENABLE_NON_ADMIN_ROLE_MANAGEMENT">depends on</a> the value of the environment variable `ENABLE_NON_ADMIN_ROLE_MANAGEMENT`.
 
