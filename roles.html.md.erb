@@ -1,12 +1,11 @@
 ---
 title: Orgs, Spaces, Roles, and Permissions
-owner: CAPI
+owners: CAPI, Identity
 ---
 
 <strong><%= modified_date %></strong>
 
-Cloud Foundry uses role-based access control (RBAC), with each role granting
-permissions in either an org or a space.
+<%= vars.product_name %> uses a role-based access control (RBAC) system to grant <%=vars.product_full %> Users permissions appropriate to their role within an org or a space. This topic describes how orgs and spaces work within a <%= vars.product_name %> deployment, and how different <%=vars.product_full %> User roles operate within those contexts.
 
 ## <a id='orgs'></a>Orgs ##
 
@@ -37,80 +36,146 @@ A user can have one or more roles.
 The combination of these roles defines the user’s overall permissions in the
 org and within specific spaces in that org.
 
-### <a id='org-roles'></a>Org Roles and Permissions ###
 
-####Org Manager ####
+* **Org Managers** are managers or other users who need to administer the account and must be assigned from the UAA CLI. See the <a href="../adminguide/uaa-user-management.html">Creating and Managing Users with the UAA CLI (UAAC)</a> topic to learn how to create a user with admin rights.
 
-Assign this role to managers or other users who need to administer the account.
+* **Org Auditors** view but cannot edit user information and org quota usage 
+information.
 
-An Org Manager can do the following:
+* **Org Billing Managers** create and manage billing account and payment
+information.
 
-* Add and manage users
-* View users and edit org roles
-* View the org quota
-* Create, view, edit, and delete spaces
-* Invite and manage users in spaces
-* View the status, number of instances, service bindings, and resource use of each application in every space in the org
-* Add domains
+* **Space Managers** are managers or other users who administer a space within an org.
 
-<%= vars.link_adminguide_commands %>
-
-####Org Auditor ####
-
-Assign this role to people who need to view but not edit user information and
-org quota usage information.
-
-An Org Auditor can do the following:
-
-* View users and org roles
-* View the org quota
-
-####Billing Manager ####
-
-Assign this role to people who need to create and manage billing account and payment information.
-
-A Billing Manager can do the following:
-
-* Set the org spending limit
-* Create and set payment information
-* Read invoices and payment history
-* Create and edit the invoice notification email addresses
-
-<p class="note"><strong>Note</strong>: The Billing Manager role is only relevant for Cloud Foundry environments deployed with a billing engine.</p>
-
-### <a id='space-roles'></a>Space Roles and Permissions ###
-
-####Space Manager ####
-
-Assign this role to managers or other users who need to administer a space.
-
-A Space Manager can do the following:
-
-* Add and manage users in the space
-* View the status, number of instances, service bindings, and resource use of each application in the space
-
-####Space Developer ####
-
-Assign this role to application developers or other users who need to manage
+* **Space Developers** are application developers or other users who manage 
 applications and services in a space.
 
-A Space Developer can do the following:
+* **Space Auditors** view but cannot edit the space.
 
-* Deploy an application
-* Start or stop an application
-* Rename an application
-* Delete an application
-* Create, view, edit, and delete services in a space
-* Bind or unbind a service to an application
-* Rename a space
-* View the status, number of instances, service bindings, and resource use of each application in the space
-* Change the number of instances, memory allocation, and disk limit of each application in the space
-* Associate an internal or external URL with an application
 
-####Space Auditor ####
+<table id='roles-permissions' border='1' class='nice'>
+	<tr>
+		<th>User Role</th>
+		<th>Org Manager</th>
+		<th>Org Auditor</th>
+		<th>Org Billing Manager</th>
+		<th>Space Manager</th>
+		<th>Space Developer</th>
+		<th>Space Auditor</th>
+	</tr><tr>
+		<td>Scope of operation</td> 
+		<td>Org</td>
+		<td>Org</td>
+		<td>Org</td>
+		<td>Space</td>
+		<td>Space</td>
+		<td>Space</td>
+	</tr><tr>
+		<td>Add and edit users and roles</td>
+		<td><sup>&dagger;</sup></td>
+		<td></td>
+		<td></td>
+		<td><sup>&dagger;</sup></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>View users and roles</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>View the org quota</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>Create, view, edit, and delete Orgs</td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+		<td><sup>&dagger;</sup></td>
+	</tr><tr>
+		<td>Create, view, edit, and delete Spaces</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>View the status, number of instances, service bindings, and resource use of applications</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+	</tr><tr>
+		<td>Add domains</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>Deploy, run, and manage applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Instantiate and bind services to applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Associate URLs, instance counts, memory allocation, and disk limit of applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Rename applications</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+	</tr><tr>
+		<td>Set payment information and org/space spending limit</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr><tr>
+		<td>Read invoices and payment history; set invoice notification email addresses</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
 
-Assign this role to people who need to view but not edit the space.
+<sup>&dagger;</sup> No by default, but <a href="../customizing/console-env-variables.html#ENABLE_NON_ADMIN_ROLE_MANAGEMENT">depends on</a> the value of the environment variable `ENABLE_NON_ADMIN_ROLE_MANAGEMENT`.
 
-A Space Auditor can do the following:
-
-* View the status, number of instances, service bindings, and resource use of each application in the space
