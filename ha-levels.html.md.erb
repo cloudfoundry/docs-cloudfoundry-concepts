@@ -5,7 +5,7 @@ owner:
 
 <strong><%= modified_date %></strong>
 
-This topic introduces the concept of High Availability (HA) in a Cloud Foundry deployment. Cloud Foundry includes several layers of HA to keep applications running in the face of system failure. These layers include availability zones, application health management, process monitoring, and vm resurrection. 
+This topic introduces the concept of High Availability (HA) in a Cloud Foundry deployment. Cloud Foundry includes several layers of HA to keep applications running in the face of system failure. These layers include availability zones, application health management, process monitoring, and VM resurrection. 
 
 ## <a id='azs'></a>Availability Zones ##
 
@@ -17,13 +17,13 @@ If you lose application instances for any reason, if there is a bug in the app, 
 
 ## <a id='monitored-processes'></a>Monitored processes ##
 
-Cloud Foundry uses a BOSH agent and monit to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, Converger, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
+Cloud Foundry uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, Converger, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
 
 ## <a id='health-monitoring'></a>Health Monitoring for Virtual Machines ##
 
 The BOSH agent on a VM can only communicate back to the Ops Manager if the VM is there. When a BOSH agent is not functional, its host VM may still exist, but Ops Manager no longer knows the VM status. 
 
-Ops Manager detects if a VM is present by listening for heartbeat messages that are sent from the BOSH agent every 60 seconds. The OMHM constantly listens for those heartbeats, and when it finds that one is missing, it produces an alert and passes that through the list of responders. 
+Ops Manager detects if a VM is present by listening for heartbeat messages that are sent from the BOSH agent every 60 seconds. The Ops Manager Health Monitor (OMHM) constantly listens for those heartbeats, and when it finds that one is missing, it produces an alert and passes that through the list of responders. 
 
 As described previously, emails, pages, and operations dashboard alerts could result from a VM failure. There is also one more responder that kicks in, which is the resurrector. The resurrector communicates with the IaaS over which Pivotal CF is running, and requests that the failed VM be replaced with a VM running the appropriate part of the Elastic Runtime–i.e., a health manager or Diego Cell. Ops Manager restarts failed cluster components.
 
