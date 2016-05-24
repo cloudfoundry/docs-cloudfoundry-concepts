@@ -96,12 +96,12 @@ applications and services in a space.
 		<td></td>
 	</tr><tr>
 		<td>Create, view, edit, and delete Orgs</td>
-		<td><sup>&dagger;</sup></td>
-		<td><sup>&dagger;</sup></td>
-		<td><sup>&dagger;</sup></td>
-		<td><sup>&dagger;</sup></td>
-		<td><sup>&dagger;</sup></td>
-		<td><sup>&dagger;</sup></td>
+		<td><%= vars.manage_roles_pws_yes %></td>
+		<td><%= vars.manage_roles_pws_yes %></td>
+		<td><%= vars.manage_roles_pws_yes %></td>
+		<td><%= vars.manage_roles_pws_yes %></td>
+		<td><%= vars.manage_roles_pws_yes %></td>
+		<td><%= vars.manage_roles_pws_yes %></td>
 	</tr><tr>
 		<td>Create, view, edit, and delete Spaces</td>
 		<td>&check;</td>
@@ -177,5 +177,6 @@ applications and services in a space.
 	</tr>
 </table>
 
-<sup>&dagger;</sup> No by default, but <a href="../customizing/console-env-variables.html#ENABLE_NON_ADMIN_ROLE_MANAGEMENT">depends on</a> the value of the environment variable `ENABLE_NON_ADMIN_ROLE_MANAGEMENT`.
+<%= vars.manage_roles_footnote %>
+
 
