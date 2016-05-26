@@ -26,12 +26,14 @@ Cloud Foundry has used two architectures for managing application containers: Di
 
 6. The cf command line tool issues an app start command.
 
-7. The Cloud Controller issues a staging request to Diego, which then schedules a cell to run the staging [Task](/diego/diego-auction.html#processes). The Task uses the instructions in the buildpack to stage the application. When the developer specifies a particular buildpack with the `-b` flag, the staging Task bypasses the detect scripts and calls the compile script for that particular buildpack in the staging Task container. If the Cloud Controller has a buildpack cache for an app from a previous staging Task, it will construct the Task to download it into the new staging Task container.
+7. The Cloud Controller issues a staging request to Diego, which then schedules a cell to run the staging [Task](/diego/diego-auction.html#processes). The Task uses the instructions in the buildpack to stage the application: 
+	* If the Cloud Controller has a buildpack cache for an app from a previous staging Task, it will instruct the Diego Task to download it into the new staging Task container. The staging Task supplies the location of that cache directory to the buildpack compile script. Once the staging Task completes successfully, the staging Task uploads the contents of that cache directory back to Cloud Controller to be used on the next staging Task for that app. 
+	* If a developer specifies a particular buildpack with the `-b` flag, the staging Task bypasses the detect scripts entirely and calls the compile script for that buildpack in the staging Task container.
 
 8. The Diego Cell streams the output of the staging process so the developer can troubleshoot application staging problems.
 
 9. The Task packages the resulting staged application into a tarball called a "droplet" and the Diego Cell stores it in the blobstore.
-The results are cached and used next time the application is staged. The staging Task supplies the location of that cache directory to the buildpack compile script. Once the staging task finishes successfully, the staging task will then upload the contents of that cache directory back to the Cloud Controller to be used on the next staging task for that app.
+The results are cached and used next time the application is staged. 
 
 10. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. Staging must complete within 15 minutes or the staging is considered failed. Apps are given a minimum of 1GB memory to stage with even if the requested running memory is smaller.
 
