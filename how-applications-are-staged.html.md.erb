@@ -22,18 +22,18 @@ Cloud Foundry has used two architectures for managing application containers: Di
 
 4. The cf command line tool uploads the application files.
 
-5. The Cloud Controller stores the raw application files in the blobstore.
+5. The Cloud Controller stores the raw application files in the blobstore as a package.
 
 6. The cf command line tool issues an app start command.
 
-7. The Cloud Controller issues a staging request to Diego, which then schedules a cell to run the staging Task. The Task uses the instructions in the buildpack to stage the application.
+7. The Cloud Controller issues a staging request to Diego, which then schedules a cell to run the staging [Task](/diego/diego-auction.html#processes). The Task uses the instructions in the buildpack to stage the application. When the developer specifies a particular buildpack with the `-b` flag, the staging Task bypasses the detect scripts and calls the compile script for that particular buildpack in the staging Task container. If the Cloud Controller has a buildpack cache for an app from a previous staging Task, it will construct the Task to download it into the new staging Task container.
 
 8. The Diego Cell streams the output of the staging process so the developer can troubleshoot application staging problems.
 
 9. The Task packages the resulting staged application into a tarball called a "droplet" and the Diego Cell stores it in the blobstore.
-The results are cached and used next time the application is staged.
+The results are cached and used next time the application is staged. The staging Task supplies the location of that cache directory to the buildpack compile script. Once the staging task finishes successfully, the staging task will then upload the contents of that cache directory back to the Cloud Controller to be used on the next staging task for that app.
 
-10. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete.
+10. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. Staging must complete within 15 minutes or the staging is considered failed. Apps are given a minimum of 1GB memory to stage with even if the requested running memory is smaller.
 
 11. Diego schedules the application as a Long Running Process (LRP) on one or more Diego Cells.
 
