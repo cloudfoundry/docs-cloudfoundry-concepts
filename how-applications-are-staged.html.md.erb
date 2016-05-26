@@ -7,7 +7,7 @@ owner:
 
 <strong><%= modified_date %></strong>
 
-Cloud Foundry has used two architectures for managing application containers: Diego
+Cloud Foundry has used two architectures for managing application containers: [Diego](../concepts/diego/diego-architecture.html)
  and Droplet Execution Agents (DEA). This topic describes how the Diego 
  architecture stages buildpack applications. For information about how DEA applications are
  staged, see the [Staging Apps with DEAs](./architecture/execution-agent.html#staging) section of the [Droplet Execution Agent](./architecture/execution-agent.html) topic.
@@ -16,17 +16,17 @@ Cloud Foundry has used two architectures for managing application containers: Di
 
 1. At the command line, the developer enters the directory containing her application and uses the cf command line tool to issue a push command.
 
-2. The cf command line tool tells the Cloud Controller to create a record for the application.
+2. The cf command line tool tells the [Cloud Controller](../concepts/architecture/cloud-controller.html) to create a record for the application.
 
 3. The Cloud Controller stores the application metadata (e.g. the app name, number of instances the user specified, and the buildpack).
 
 4. The cf command line tool uploads the application files.
 
-5. The Cloud Controller stores the raw application files in the blobstore as a package.
+5. The Cloud Controller stores the raw application files in the [blobstore](../concepts/architecture/#blob) as a package.
 
 6. The cf command line tool issues an app start command.
 
-7. The Cloud Controller issues a staging request to Diego, which then schedules a cell to run the staging [Task](/diego/diego-auction.html#processes). The Task uses the instructions in the buildpack to stage the application: 
+7. The Cloud Controller issues a staging request to Diego, which then schedules a [Cell](../concepts/diego/diego-architecture.html#cell-components) to run the staging [Task](/diego/diego-auction.html#processes). The Task uses the instructions in the buildpack to stage the application: 
 	* If the Cloud Controller has a buildpack cache for an app from a previous staging Task, it will instruct the Diego Task to download it into the new staging Task container. The staging Task supplies the location of that cache directory to the buildpack compile script. Once the staging Task completes successfully, the staging Task uploads the contents of that cache directory back to Cloud Controller to be used on the next staging Task for that app. 
 	* If a developer specifies a particular buildpack with the `-b` flag, the staging Task bypasses the detect scripts entirely and calls the compile script for that buildpack in the staging Task container.
 
@@ -35,9 +35,9 @@ Cloud Foundry has used two architectures for managing application containers: Di
 9. The Task packages the resulting staged application into a tarball called a "droplet" and the Diego Cell stores it in the blobstore.
 The results are cached and used next time the application is staged. 
 
-10. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. Staging must complete within 15 minutes or the staging is considered failed. Apps are given a minimum of 1GB memory to stage with even if the requested running memory is smaller.
+10. The [Diego Bulletin Board System](../concepts/diego/diego-architecture.html#database-vms) reports to the Cloud Controller that staging is complete. Staging must complete within 15 minutes or the staging is considered failed. Apps are given a minimum of 1GB memory to stage with even if the requested running memory is smaller.
 
-11. Diego schedules the application as a Long Running Process (LRP) on one or more Diego Cells.
+11. Diego schedules the application as a [Long Running Process](../concepts/diego/diego-auction.html#processes) on one or more Diego Cells.
 
 12. The Diego Cells report the status of the application to the Cloud Controller.
 
