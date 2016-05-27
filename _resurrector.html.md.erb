@@ -1,8 +1,0 @@
-
-Ops Manager detects if a VM is present by listening for heartbeat messages that are sent from the BOSH agent every 60 seconds. The Ops Manager Health Monitor (OMHM) constantly listens for those heartbeats, and when it finds that one is missing, it produces an alert and passes that through the list of responders. 
-
-The BOSH agent on a VM can only communicate back to the Ops Manager if the VM is there. When a BOSH agent is not functional, its host VM may still exist, but Ops Manager no longer knows the VM status. 
-
-There is also one more responder that kicks in, which is the resurrector. When enabled, the resurrector communicates with the IaaS over which <%= vars.product_name %> is running, and requests that the failed VM be replaced with a VM running the appropriate part of the Elastic Runtime i.e., a health manager or Diego Cell. Ops Manager restarts failed cluster components. 
-
-Enable the resurrector by viewing the following pages for your particular IaaS: [AWS](../../customizing/cloudform-om-config.html#director-config), [OpenStack](./../customizing/openstack-om-config.html#director-config), [vSphere](./customizing/resurrector.html).
