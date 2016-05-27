@@ -5,27 +5,33 @@ owner:
 
 <strong><%= modified_date %></strong>
 
-This topic introduces the concept of High Availability (HA) in a Cloud Foundry deployment. Cloud Foundry includes several layers of HA to keep applications running in the face of system failure. These layers include availability zones, application health management, process monitoring, and VM resurrection. 
+This topic introduces the concept of High Availability (HA) in a <%= vars.first_product_name %>  deployment.  <%= vars.product_name %> includes several layers of HA to keep applications running in the face of system failure. These layers include availability zones (AZs), application health management, process monitoring, and VM resurrection. 
 
 ## <a id='azs'></a>Availability Zones ##
 
-Cloud Foundry supports deploying applications instances across multiple availability zones (AZs). This level of high availability requires that you sensibly define AZs in your IaaS. For example, in vSphere you define one AZ for one vCenter resource pool, and another AZ for a second resource pool. You can configure your deployment so that Diego cells are created across these AZs by [configuring high level instructions here]. With this configuration in place, Cloud Foundry balances the applications you deploy across the AZs you defined. If an AZ goes down, you still have application instances running in another. 
+
+<%= vars.product_name %> supports deploying applications instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.product_name %> balances the applications you deploy across the AZs you defined. If an AZ goes down, you still have application instances running in another. 
+
+<%= vars.azs %>
+
 
 ## <a id='health-management-apps'></a>Health Management for App Instances ##
 
-If you lose application instances for any reason, if there is a bug in the app, or if an AZ goes down, Pivotal CF will restart new instances so that capacity is maintained. The nsync, Converger, and Cell Rep components constantly track the state of the system. In particular, the number of instances of each application that are running across all of the Diego Cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state, as known by the cloud controller, they advise the cloud controller of the difference and the cloud controller initiates the deployment of new application instances.
+If you lose application instances for any reason, if there is a bug in the app, or if an AZ goes down, <%= vars.product_name %> will restart new instances so that capacity is maintained. The nsync, Converger, and Cell Rep components constantly track the state of the system, in particular, the number of instances of each application that are running across all of the Diego Cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state, as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
 
 ## <a id='monitored-processes'></a>Monitored processes ##
 
-Cloud Foundry uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, Converger, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
+<%= vars.product_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, Converger, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
 
 ## <a id='health-monitoring'></a>Health Monitoring for Virtual Machines ##
 
-The BOSH agent on a VM can only communicate back to the Ops Manager if the VM is there. When a BOSH agent is not functional, its host VM may still exist, but Ops Manager no longer knows the VM status. 
 
-Ops Manager detects if a VM is present by listening for heartbeat messages that are sent from the BOSH agent every 60 seconds. The Ops Manager Health Monitor (OMHM) constantly listens for those heartbeats, and when it finds that one is missing, it produces an alert and passes that through the list of responders. 
+<%= vars.resurrector %>
 
-As described previously, emails, pages, and operations dashboard alerts could result from a VM failure. There is also one more responder that kicks in, which is the resurrector. The resurrector communicates with the IaaS over which Pivotal CF is running, and requests that the failed VM be replaced with a VM running the appropriate part of the Elastic Runtime–i.e., a health manager or Diego Cell. Ops Manager restarts failed cluster components.
+<%= vars.resurrector1 %>
+
+<%= vars.resurrector2 %>
+
 
 
 
