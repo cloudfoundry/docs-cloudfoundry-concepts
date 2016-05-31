@@ -20,7 +20,7 @@ Cloud Foundry has used two architectures for managing application containers: [D
 
 3. The Cloud Controller stores the application metadata (e.g. the app name, number of instances the user specified, and the buildpack).
 
-4. Before uploading all the application files, the cf CLI issues a resource match request to the Cloud Controller to determine if any of the application files already exist in the resource cache. When the application files are uploaded, the cf CLI omit files that exist in the resource cache by supplying the result of the resource match request. The uploaded application files are combined with the files from the resource cache to create the application package.
+4. Before uploading all the application files, the cf CLI issues a resource match request to the Cloud Controller to determine if any of the application files already exist in the resource cache. When the application files are uploaded, the cf CLI omits files that exist in the resource cache by supplying the result of the resource match request. The uploaded application files are combined with the files from the resource cache to create the application package.
 
 5. The Cloud Controller stores the application package in the [blobstore](../concepts/architecture/#blob).
 
