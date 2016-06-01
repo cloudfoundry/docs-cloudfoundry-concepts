@@ -31,8 +31,7 @@ Cloud Foundry has used two architectures for managing application containers: [D
 
 8. The Diego Cell streams the output of the staging process so the developer can troubleshoot application staging problems.
 
-9. The Task packages the resulting staged application into a tarball called a "droplet" and the Diego Cell stores it in the blobstore.
-The results are cached and used next time the application is staged. 
+9. The Task packages the resulting staged application into a tarball called a “droplet” and the Diego Cell stores it in the blobstore. The Task also uploads the buildpack cache to the blobstore for use the next time the application is staged. 
 
 10. The [Diego Bulletin Board System](../concepts/diego/diego-architecture.html#database-vms) reports to the Cloud Controller that staging is complete. Staging must complete within 15 minutes or the staging is considered failed. Apps are given a minimum of 1GB memory to stage with even if the requested running memory is smaller.
 
