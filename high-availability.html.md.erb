@@ -79,6 +79,8 @@ To scale the Cloud Foundry platform for high availability, the actions you take 
 You can think of components that support multiple instances as scalable processes.
 If you are already scaling the number of instances of such components to increase platform capacity, you need to scale further to achieve the redundancy required for high availability.
 
+<p class="note"><strong>Note</strong>: </p>
+
 Scale your VMs to the following instance counts:
 
 <table border="1" class="nice">
@@ -100,12 +102,12 @@ Scale your VMs to the following instance counts:
 	<tr>
 		<td>Diego BBS</td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
 	</tr>
 	<tr>
 		<td>Consul</td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
 	</tr>
 	<tr>
 		<td>MySQL Server</td>
@@ -150,7 +152,7 @@ Scale your VMs to the following instance counts:
 	<tr>
 		<td>etcd</td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
 	</tr>
 </table>
 
