@@ -13,9 +13,9 @@ The CF router supports session affinity or "sticky sessions" for incoming HTTP r
 
 Sticky sessions means that when multiple instances of an application are running on CF, requests from a particular client always reach the same application instance. This allows applications to store session data specific to a user session.
 
-Sticky sessions require applications to support returning a `JSESSIONID` cookie in responses. 
+To support sticky sessions, applications must return a `JSESSIONID` cookie in responses.
 
-If an application returns a `JSESSIONID` cookie to a client request, the CF routing tier appends a second cookie, called `VCAP_ID`. On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies. The CF routing tier uses the `VCAP_ID` to forward client requests to the same application instance every time. 
+If an application returns a `JSESSIONID` cookie to a client request, the CF routing tier appends a second cookie, called `VCAP_ID` containing a unique identifier for the application instance. On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies. The CF routing tier uses the `VCAP_ID` to forward client requests to the same application instance every time. 
 
 If the application instance identified by the `VCAP_ID` crashes, the router attempts to route the request to a different instance of the application. If the router finds a healthy instance of the application, it initiates a new sticky session. 
 
@@ -29,18 +29,26 @@ HTTP traffic passed from the CF router to an app includes the the following HTTP
 
 * `X-Forwarded-For` gives the IP address of the client originating the request.
 
+If your load balancer terminates TLS upstream from the CF router, it must append these headers to requests forwarded to the CF router. For more details, see the [Securing Traffic into Cloud Foundry](../adminguide/securing-traffic.html) topic.
+
 ## <a id="tls"></a>SSL/TLS Termination ##
 
 Depending on your needs, you can configure your deployment to terminate SSL/TLS at the CF router, the CF router and the load balancer, or the load balancer only. For more information, see the [Securing Traffic into Cloud Foundry](../adminguide/securing-traffic.html) topic.
 
 ## <a id="transparent"></a>Transparent Retries ##
 
-If the backend connection cannot process the HTTP request by returning a success or a failure, the CF router re-attempts requests that are currently at the routing tier to another available backend transparently to the HTTP client. 
+If the CF router cannot establish a TCP connection with a selected application instance, the router considers the instance ineligible for requests for 30 seconds, and the router transparently attempts to connect to another application instance. Once the router has established a TCP connection with an application instance, the router forwards the HTTP request.
+
+See the <a href="#round-robin">Round-Robin Load Balancing</a> section below for more information about how the router forwards requests to application instances.
 
 ## <a id="round-robin"></a>Round-Robin Load Balancing ##
 
-The CF router uses a round-robin algorithm for load balancing incoming requests to apps. As clients make requests, the router rotates through a list of IP addresses for the cells that host the app and the port numbers for the cell's containers.
+The CF router uses the round-robin algorithm for load balancing incoming requests to application instances. The router maintains a dynamically updated list of application instances for each route, and forwards each request for a given route to the next application instance in the list.
 
 ## <a id="sockets"></a>WebSockets ##
 
-TK.
+WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated via HTTP as an upgrade request. The CF Router supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. 
+
+To support WebSockets, operators should configure their load balancer to pass WebSockets requests through as opaque TCP connections. If you are also terminating TLS at your load balancer, you may find that your load balancer does not support operating in TCP mode for some requests, and terminating TLS for others. Operators have the following options:
+* Configure your load balancer to listen on a non-standard port (the built-in CF load balancer listens on 8443 by default for this purpose), and forward requests to this port in TCP mode. Application clients must make WebSockets upgrade requests to this port.
+* Add a second load balancer listening in TCP mode on standard port 80.Configure DNS with a new hostname to be used for WebSockets. This hostname should resolve to the load balancer serving port 80 in TCP mode.
