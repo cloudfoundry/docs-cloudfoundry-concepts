@@ -29,7 +29,7 @@ HTTP traffic passed from the CF router to an app includes the the following HTTP
 
 * `X-Forwarded-For` gives the IP address of the client originating the request.
 
-If your load balancer terminates TLS upstream from the CF router, it must append these headers to requests forwarded to the CF router. For more details, see the [Securing Traffic into Cloud Foundry](../adminguide/securing-traffic.html) topic.
+If your load balancer terminates TLS upstream from the CF router, it must append these headers to requests forwarded to the CF router. <%= vars.http_routing %>
 
 ## <a id="tls"></a>SSL/TLS Termination ##
 
