@@ -5,7 +5,9 @@ owners: CAPI, Identity
 
 <strong><%= modified_date %></strong>
 
-<%= vars.product_name %> uses a role-based access control (RBAC) system to grant <%=vars.product_full %> Users permissions appropriate to their role within an org or a space. This topic describes how orgs and spaces work within a <%= vars.product_name %> deployment, and how different <%=vars.product_full %> User roles operate within those contexts.
+<%= vars.product_name %> uses a role-based access control (RBAC) system to grant <%=vars.product_full %> users permissions appropriate to their role within an org or a space. This topic describes how orgs and spaces work within a <%= vars.product_name %> deployment, and how different <%=vars.product_full %> User roles operate within those contexts.
+
+Admins, <%= vars.product_name %>, Org Managers, and Space Managers can assign user roles using the [cf CLI](../cf-cli/getting-started.html#user-roles)<%= vars.or_apps_man %>.
 
 ## <a id='orgs'></a>Orgs ##
 
@@ -39,13 +41,15 @@ org and within specific spaces in that org.
 
 * **Org Managers** are managers or other users who need to administer the account.
 
-<%= vars.link_adminguide_commands %>
+    <%= vars.link_adminguide_commands %>
 
 * **Org Auditors** view but cannot edit user information and org quota usage 
 information.
 
 * **Org Billing Managers** create and manage billing account and payment
 information.
+
+    <p class="note"><strong>Note</strong>: The Billing Manager role is only relevant for Cloud Foundry environments deployed with a billing engine.</p>
 
 * **Space Managers** are managers or other users who administer a space within an org.
 
