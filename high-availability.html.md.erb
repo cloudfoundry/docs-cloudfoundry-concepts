@@ -100,12 +100,12 @@ Scale your VMs to the following instance counts:
 	<tr>
 		<td>Diego BBS</td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
 	</tr>
 	<tr>
 		<td>Consul</td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
 	</tr>
 	<tr>
 		<td>MySQL Server</td>
@@ -150,7 +150,7 @@ Scale your VMs to the following instance counts:
 	<tr>
 		<td>etcd</td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
 	</tr>
 </table>
 
