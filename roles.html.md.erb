@@ -38,18 +38,15 @@ A user can have one or more roles.
 The combination of these roles defines the user’s overall permissions in the
 org and within specific spaces in that org.
 
-
 * **Org Managers** are managers or other users who need to administer the account.
 
-    <%= vars.link_adminguide_commands %>
+<%= vars.link_adminguide_commands %>
 
 * **Org Auditors** view but cannot edit user information and org quota usage 
 information.
 
-* **Org Billing Managers** create and manage billing account and payment
-information.
-
-    <p class="note"><strong>Note</strong>: The Billing Manager role is only relevant for Cloud Foundry environments deployed with a billing engine.</p>
+<%= vars.billing_manager_role %>
+<%= vars.billing_manager_role_note %>
 
 * **Space Managers** are managers or other users who administer a space within an org.
 
@@ -58,131 +55,4 @@ applications and services in a space.
 
 * **Space Auditors** view but cannot edit the space.
 
-
-<table id='roles-permissions' border='1' class='nice'>
-	<tr>
-		<th>User Role</th>
-		<th>Org Manager</th>
-		<th>Org Auditor</th>
-		<th>Org Billing Manager</th>
-		<th>Space Manager</th>
-		<th>Space Developer</th>
-		<th>Space Auditor</th>
-	</tr><tr>
-		<td>Scope of operation</td> 
-		<td>Org</td>
-		<td>Org</td>
-		<td>Org</td>
-		<td>Space</td>
-		<td>Space</td>
-		<td>Space</td>
-	</tr><tr>
-		<td>Add and edit users and roles</td>
-		<td><sup>&dagger;</sup></td>
-		<td></td>
-		<td></td>
-		<td><sup>&dagger;</sup></td>
-		<td></td>
-		<td></td>
-	</tr><tr>
-		<td>View users and roles</td>
-		<td>&check;</td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr><tr>
-		<td>View the org quota</td>
-		<td>&check;</td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr><tr>
-		<td>Create, view, edit, and delete Orgs</td>
-		<td><%= vars.manage_roles_pws_yes %></td>
-		<td><%= vars.manage_roles_pws_yes %></td>
-		<td><%= vars.manage_roles_pws_yes %></td>
-		<td><%= vars.manage_roles_pws_yes %></td>
-		<td><%= vars.manage_roles_pws_yes %></td>
-		<td><%= vars.manage_roles_pws_yes %></td>
-	</tr><tr>
-		<td>Create, view, edit, rename, and delete Spaces</td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr><tr>
-		<td>View the status, number of instances, service bindings, and resource use of applications</td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td>&check;</td>
-		<td>&check;</td>
-		<td>&check;</td>
-	</tr><tr>
-		<td>Add domains</td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr><tr>
-		<td>Deploy, run, and manage applications</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td>&check;</td>
-		<td></td>
-	</tr><tr>
-		<td>Instantiate and bind services to applications</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td>&check;</td>
-		<td></td>
-	</tr><tr>
-		<td>Associate URLs, instance counts, memory allocation, and disk limit of applications</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td>&check;</td>
-		<td></td>
-	</tr><tr>
-		<td>Rename applications</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td>&check;</td>
-		<td></td>
-	</tr><tr>
-		<td>Set payment information and org/space spending limit</td>
-		<td></td>
-		<td></td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr><tr>
-		<td>Read invoices and payment history; set invoice notification email addresses</td>
-		<td></td>
-		<td></td>
-		<td>&check;</td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
-</table>
-
-<%= vars.manage_roles_footnote %>
-
-
+<%= partial vars.roles_table %>
