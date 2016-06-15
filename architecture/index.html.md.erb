@@ -53,11 +53,13 @@ To keep applications available, cloud deployments must constantly monitor their 
 
 ![Cloud Foundry Architecture](../images/diego/app-monitor-sync-diego.png)
 
-These three components work along a spectrum of representations that extends between the user and the application containers. At one end, the user sets how each application should be scaled. At the other end, instances of that application running on widely-distributed VMs may crash or become unavailable.
+The nsync, Converger, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which may crash or become unavailable.
 
-The nsync, Converger, and Cell Rep components work together along this spectrum to keep apps running as they should. nsync watches for changes in application scaling instructions from the Cloud Controller and writes them into `DesiredLRP` structures in Diego's internal BBS database. Inside each cell, the Cell Rep watches the Garden for the state and health of the application instances running in the cell's containers, and updates corresponding `ActualLRP` values in the shared BBS as they change locally.
+Here is how the components work together:
 
-At the center of the process, the Diego Brain's Converger component monitors the `DesiredLRP` and `ActualLRP` values, and launches or kills application instances as appropriate to reconcile `ActualLRP` counts with `DesiredLRP` values.
+* **nsync** receives a message from the Cloud Controller when the user scales an app. It writes the number of instances into a `DesiredLRP` structure in the Diego BBS database. 
+* **Converger** monitors the `DesiredLRP` and `ActualLRP` values and launches or kills application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
+* **Cell Rep** monitors the containers and provides the `ActualLRP` value.
 
 ## <a id='app-storage-execution'></a>App Storage and Execution
 
