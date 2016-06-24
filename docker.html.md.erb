@@ -7,20 +7,6 @@ owner: Diego
 
 This topic describes Docker image support in Cloud Foundry with Diego and outlines how Cloud Foundry uses Diego to run Docker images. For more information about Diego, see the [Diego Architecture](./diego/diego-architecture.html) topic.
 
-<% mermaid_diagram do%>
-sequenceDiagram
-   participant Developer
-   participant CF Command Line
-   participant Cloud Controller (CCNG)
-   participant CCNG Blobstore
-   participant CCDB
-   participant Diego Cell (Staging)
-   participant Diego Cell (Running)
-   participant Alice
-   Developer->>CF Command Line: CF Push
-   CF Command Line-->>Cloud Controller (CCNG): Create App
-<% end %>
-
 A Docker image consists of a collection of layers. Each layer consists of one or both of the following:
 
 * Raw bits to download and mount. These bits form the file system.
