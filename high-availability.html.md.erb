@@ -1,48 +1,17 @@
 ---
-title: Zero Downtime Deployment and Scaling in CF
+title: Scaling Components in CF
 owner: Release Integration
 ---
 
 <strong><%= modified_date %></strong>
 
-To increase the capacity and availability of the Cloud Foundry platform, and to decrease the chances of downtime, you can scale a deployment up using the strategies described below.
+This topic describes how to scale the component Virtual Machines (VMs) in a deployment to increase application hosting capacity and decrease downtime during ongoing operation, product updates, and platform upgrades.
 
-This topic also describes the requirements for a zero downtime deployment. A zero downtime deployment ensures that if individual components go down, your deployment continues to run.
+Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
-<%= vars.scaling_ert %>
+For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](devguide/deploy-apps/blue-green.html).
 
-## <a id='zero-downtime'></a>Zero Downtime Deployment ##
-
-This section describes the required configurations for achieving a zero downtime deployment.
-
-####Application Instances####
-
-Deploy at least two instances of every application.
-
-####Components####
-
-Scale your components as described in the [Scaling Platform Availability](#availability) section below. Components should be distributed across two or more <%=vars.az%> (AZs).
-
-####Space####
-
-Ensure that you allocate and maintain enough of the following:
-
-* Free space on Diego Cells so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory in your deployment such that if one Diego Cell is down, all instances of apps can be placed on the remaining Diego Cells.
-* Free space to handle one AZ going down if deploying in multiple AZs.
-
-####Resource pools####
-
-Configure your <%=vars.pools_link%> according to the requirements of your deployment.
-
-Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related resources, like IPs and storage, will be available when scaling.
-
-<%=vars.pcf_pools%>
-
-<%=vars.om_resurrector_header%>
-<%=vars.om_resurrector_text%>
-
-## <a id='capacity'></a>Scaling Platform Capacity ##
+## <a id='capacity'></a>Scaling Platform Capacity for Applications ##
 
 You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
 
@@ -64,20 +33,20 @@ Scale the router with the number of incoming requests. In general, this load is 
 
 Scale the Cloud Controller with the number of requests to the API and with the number of apps in the system.
 
-## <a id='availability'></a>Scaling Platform Availability ##
 
-To scale the Cloud Foundry platform for high availability, the actions you take fall into three categories.
+## <a id='zero-downtime'></a>High Availability and Zero Downtime ##
 
- * For components that support multiple instances, increase the number of instances to achieve redundancy.
- * For components that do not support multiple instances, choose a strategy for dealing with events that degrade availability.
- * For database services, plan for and configure backup and restore where possible.
+During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Scaling components to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
+
+Deploying or scaling applications to at least two instances per app also helps maintain high availability. See [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) for information about scaling applications.
+
+### <a id='processes'></a>Scalable Components
+
+You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability.
 
 <p class="note"><strong>Note</strong>: Data services may have single points of failure depending on their configuration.</p>
 
-### <a id='processes'></a>Scalable Processes ###
-
-You can think of components that support multiple instances as scalable processes.
-If you are already scaling the number of instances of such components to increase platform capacity, you need to scale further to achieve the redundancy required for high availability.
+<%= vars.scaling_ert %>
 
 Scale your VMs to the following instance counts:
 
@@ -154,12 +123,11 @@ Scale your VMs to the following instance counts:
 	</tr>
 </table>
 
-### <a id='single-node'></a>Single-node Processes ###
+### <a id='single-node'></a>Unscaleable Components ###
 
-You can think of components that do not support multiple instances as single-node processes.
-Since you cannot increase the number of instances of these components, you should choose a different strategy for dealing with events that degrade availability.
+Some components only run as a single instance, and cannot be scaled. For these singleton processes, you need to choose a different strategy besides scaling to handle events that degrade availability.
 
-First, consider the components whose availability affects the platform as a whole.
+The most important single-node components to address are the HAProxy, NATS, and NFS Server, which affect the platform as a whole. The singleton Collector and Compilation components do not affect platform availability.
 
 **HAProxy**:
 
@@ -181,17 +149,32 @@ Because NATS is deployed by BOSH, the BOSH resurrector will recover the VM if it
 For some deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover the VM where the NFS Server runs.
 In others, it would be preferable to run a scalable and redundant blobstore service. <%= vars.contact_support %>
 
-**Collector**:
 
-This component is not in the critical path for any operation.
+### Supporting Component Scaling
 
-**Compilation**:
+####Space####
 
-This component is active only during platform installation and upgrades.
+Ensure that you allocate and maintain enough of the following:
+
+* Free space on Diego Cells so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if one Diego Cell is down, all instances of apps can be placed on the remaining Diego Cells.
+* Free space to handle one AZ going down if deploying in multiple AZs.
+
+####Resource pools####
+
+Configure your <%=vars.pools_link%> according to the requirements of your deployment.
+
+Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related resources, like IPs and storage, will be available when scaling.
+
+<%=vars.pcf_pools%>
+
+<%=vars.om_resurrector_header%>
+<%=vars.om_resurrector_text%>
+
 
 ### <a id='databases'></a>Databases ###
 
-For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible.
+For scaling internal database components, <%= vars.scaling_ert %>. For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible.
 
 <%= vars.contact_support %>
 
