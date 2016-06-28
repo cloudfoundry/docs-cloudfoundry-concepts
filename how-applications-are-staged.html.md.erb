@@ -9,10 +9,12 @@ owner:
 <strong><%= modified_date %></strong>
 
 Cloud Foundry has used two architectures for managing application containers: 
-[Diego](../concepts/diego/diego-architecture.html) and Droplet Execution Agents 
-(DEAs). 
-This topic describes how the Diego architecture stages buildpack applications. 
+[Diego](../concepts/diego/diego-architecture.html) and Droplet Execution Agents (DEAs). 
 For information about how DEA applications are staged, see the [Staging Apps with DEAs](./architecture/execution-agent.html#staging) section of the [Droplet Execution Agent](./architecture/execution-agent.html) topic.
+
+This topic describes how the Diego architecture stages [buildpack applications](#stage-buildpack) and [Docker images](#stage-docker).
+
+##<a id='stage-buildpack'></a>How Diego Stages Buildpack Applications
 
 <%= image_tag("app_push_flow_diagram_diego.png") %> 
 
@@ -41,3 +43,24 @@ For information about how DEA applications are staged, see the [Staging Apps wit
 12. The Diego Cells report the status of the application to the Cloud Controller.
 
 See the [Diego Architecture](./diego/diego-architecture.html) topic for more information. 
+
+##<a id='stage-docker'></a>How Diego Stages Docker Images
+
+<%= image_tag("docker_push_flow_diagram_diego.png") %> 
+
+1. At the command line, the developer enters the name of a Docker image in an accessible Docker Registry and uses the cf CLI to issue a push command.
+
+2. The cf CLI tells the Cloud Controller to create a record for the Docker image.
+
+2. The Cloud Controller issues a staging request to Diego, which then schedules a Cell to run the staging Task. 
+
+2. The Diego Cell streams the output of the staging process so the developer can troubleshoot staging problems.
+
+3. The Task fetches the metadata associated with the Docker image and returns a portion of it to the Cloud Controller, which stores it in the Cloud Controller database (CCDB).
+
+4. The Cloud Controller uses the Docker image metadata to construct a Long Running Process that runs the start command specified in the Dockerfile. The Cloud Controller also takes into account any user-specified overrides specified in the Dockerfile, such as custom environment variables. 
+
+5. The Cloud Controller submits the Long Running Process to Diego. Diego schedules the Long Running Process on one or more Diego Cells.
+
+6. The Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.
+
