@@ -17,21 +17,11 @@ You can scale platform capacity vertically by adding memory and disk, or horizon
 
 <%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
 
-### <a id='tradeoffs'></a>Trade-offs and Benefits ###
+Scaling up the following components increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine whether you scale vertically or horizontally.
 
-The nature of a particular application should determine whether you scale vertically or horizontally.
-
-**Diego Cells**:
-
-The optimal sizing and CPU/memory balance depends on the performance characteristics of the apps that will run on the Diego Cell. Larger Diego Cells also make for larger points of failure: the system takes longer to rebalance 100 app instances than to rebalance 20 app instances.
-
-**Router**:
-
-Scale the router with the number of incoming requests. In general, this load is much less than the load on Diego Cells.
-
-**Cloud Controller**:
-
-Scale the Cloud Controller with the number of requests to the API and with the number of apps in the system.
+* **Diego cells**: The optimal balance between CPU/memory sizing and instance count depends on the performance characteristics of the apps that run on Diego cells. Scaling vertically with larger Diego cells makes for larger points of failure, and more apps go down when a cell fails. On the other hand, scaling horizontally decreases the speed at which the system rebalances apps. Rebalancing 100 cells takes longer and demands more processing overhead than rebalancing 20 cells.
+* **Router**: Scale the router to accommodate the number of incoming requests. In general, this load is much less than the load on Diego cells.
+* **Cloud Controller**: Scale the Cloud Controller to accommodate the number of requests to the API and the number of apps in the system.
 
 
 ## <a id='zero-downtime'></a>High Availability and Zero Downtime ##
@@ -42,86 +32,9 @@ Deploying or scaling applications to at least two instances per app also helps m
 
 ### <a id='processes'></a>Scalable Components
 
-You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability.
+You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. Ideally, you should also distribute the components across at least three [availability zones](../customizing/understand-az.html) (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
 
-<p class="note"><strong>Note</strong>: Data services may have single points of failure depending on their configuration.</p>
-
-<%= vars.scaling_ert %>
-
-Scale your VMs to the following instance counts:
-
-<table border="1" class="nice">
-	<tr>
-		<th><strong>Job</strong></th>
-		<th><strong>Number</strong></th>
-		<th><strong>Notes</strong></th>
-	</tr>
-	<tr>
-		<td>Diego Cell</td>
-		<td>&ge; 3</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Diego Brain</td>
-		<td>&ge; 2</td>
-		<td>One per AZ, or two if only one AZ.</td>
-	</tr>
-	<tr>
-		<td>Diego BBS</td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
-	</tr>
-	<tr>
-		<td>Consul</td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
-	</tr>
-	<tr>
-		<td>MySQL Server</td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
-	</tr>
-	<tr>
-		<td>MySQL Proxy</td>
-		<td>&ge; 2</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>NATS Server</td>
-		<td>&ge; 2</td>
-		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
-	</tr>
-	<tr>
-		<td>Cloud Controller</td>
-		<td>&ge; 2</td>
-		<td>Cloud Controllers help with API request volume.</td>
-	</tr>
-	<tr>
-		<td>Router</td>
-		<td>&ge; 2</td>
-		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
-	</tr>
-	<tr>
-		<td>UAA</td>
-		<td>&ge; 2</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Doppler Server</td>
-		<td>&ge; 2</td>
-		<td>Deploying additional Doppler servers splits traffic across them. Pivotal recommends to have at least two per Availability Zone.</td>
-	</tr>
-	<tr>
-		<td>Loggregator TC</td>
-		<td>&ge; 2</td>
-		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Pivotal recommends to have at least two per Availability Zone.</td>
-	</tr>
-	<tr>
-		<td>etcd</td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
-	</tr>
-</table>
+<%= partial vars.scale_table %>
 
 ### <a id='single-node'></a>Unscaleable Components ###
 
@@ -152,12 +65,25 @@ In others, it would be preferable to run a scalable and redundant blobstore serv
 
 ### Supporting Component Scaling
 
-####Space####
+<%=vars.om_resurrector_header%>
+<%=vars.om_resurrector_text%>
+
+####Setting `max_in_flight` values ####
+
+For each component, the `max_in_flight` variable limits how many instances of that component are restarted simultaneously during updates or upgrades. This variable can be any integer between 1 and 100. Values for `max_in_flight` are set in the manifest, and you can override them with the TK command.
+
+To ensure zero downtime during updates, set this variable to a number low enough to prevent overburdening the component instances left running. Here are some guidelines:
+
+- For Diego cells, the closer their resource usage is to 100%, the lower you should set `max_in_flight`, to allow non-migrating cells to pick up the work of cells stopping and restarting for migration. If resource usage is already close to 100%, scale your Diego cells up before any upgrades.
+- For quorum-based components (etcd, consul, and Diego BBs), guidelines TK.
+- For other components, guidelines TK.
+
+####Capacity####
 
 Ensure that you allocate and maintain enough of the following:
 
-* Free space on Diego Cells so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory in your deployment such that if one Diego Cell is down, all instances of apps can be placed on the remaining Diego Cells.
+* Free space on Diego cells so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if one Diego cell is down, all instances of apps can be placed on the remaining Diego cells.
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
 ####Resource pools####
@@ -168,13 +94,11 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 <%=vars.pcf_pools%>
 
-<%=vars.om_resurrector_header%>
-<%=vars.om_resurrector_text%>
+#### <a id='databases'></a>Databases ####
 
+For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
-### <a id='databases'></a>Databases ###
-
-For scaling internal database components, <%= vars.scaling_ert %>. For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible.
+<p class="note"><strong>Note</strong>: Data services may have single points of failure depending on their configuration.</p>
 
 <%= vars.contact_support %>
 
