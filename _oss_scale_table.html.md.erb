@@ -1,0 +1,88 @@
+The following table provides recommended instance counts for a high-availability deployment. You can decrease the footprint of your deployment by specifying fewer instances and combining multiple components onto a single VM.
+
+<table border="1" class="nice">
+	<tr>
+		<th><strong>Component</strong></th>
+		<th><strong>Example Job</strong> <code>name = z1</code></th>
+		<th><strong>Number</strong></th>
+		<th><strong>Notes</strong></th>
+	</tr>
+	<tr>
+		<td>Diego Cell</td>
+		<td><code>cell_z1</code></td>
+		<td>&ge; 3</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Diego Brain</td>
+		<td><code>brain_z1</code></td>
+		<td>&ge; 2</td>
+		<td>One per AZ, or two if only one AZ.</td>
+	</tr>
+	<tr>
+		<td>Diego BBS</td>
+		<td><code>??TK</code></td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+	</tr>
+	<tr>
+		<td>Consul</td>
+		<td><code>consul_z1</code></td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+	</tr>
+	<tr>
+		<td>MySQL Server</td>
+		<td><code>mysql_z1</code></td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number.</td>
+	</tr>
+	<tr>
+		<td>MySQL Proxy</td>
+		<td><code>mysql_proxy_z1</code></td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>NATS Server</td>
+		<td><code>nats_z1</code></td>
+		<td>&ge; 2</td>
+		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
+	</tr>
+	<tr>
+		<td>Cloud Controller</td>
+		<td><code>api_z1</code></td>
+		<td>&ge; 2</td>
+		<td>Cloud Controllers help with API request volume.</td>
+	</tr>
+	<tr>
+		<td>Router</td>
+		<td><code>router_z1</code></td>
+		<td>&ge; 2</td>
+		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
+	</tr>
+	<tr>
+		<td>UAA</td>
+		<td><code>uaa_z1</code></td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Doppler Server</td>
+		<td><code>doppler_z1</code></td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Doppler servers splits traffic across them. Pivotal recommends to have at least two per Availability Zone.</td>
+	</tr>
+	<tr>
+		<td>Loggregator TC</td>
+		<td><code>loggregator_z1</code></td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Pivotal recommends to have at least two per Availability Zone.</td>
+	</tr>
+	<tr>
+		<td>etcd</td>
+		<td><code>etcd_z1</code></td>
+		<td>&ge; 3</td>
+		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+	</tr>
+</table>
