@@ -102,7 +102,7 @@ In the steps above, replace the following:
       cid: cf
       user_id: f796d1a2-eca3-4079-a317-f3224f8f7832
       user_name: marissa
-      email: marissa@test.org
+      email: marissa@example.org
       iat: 1413495264
       exp: 1413538464
       iss: http://localhost:8080/uaa/oauth/token
@@ -332,11 +332,11 @@ There is a `login.yml` for the UAA locations, such as for a local `vcap` instanc
 
 ```yaml
 uaa:
-  url: http://uaa.vcap.me
+  url: http://uaa.vcap.example.net
   token:
-    url: http://uaa.vcap.me/oauth/token
+    url: http://uaa.vcap.example.net/oauth/token
   login:
-    url: http://uaa.vcap.me/login.do
+    url: http://uaa.vcap.example.net/login.do
 ```
 
 There is also an environment variable (or Java System property), `LOGIN_SECRET`, for the client secret that the app uses when it authenticates itself with the UAA.
