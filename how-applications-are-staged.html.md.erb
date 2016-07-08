@@ -30,7 +30,7 @@ This topic describes how the Diego architecture stages [buildpack applications](
 
 6. The cf CLI issues an app start command.
 
-7. The Cloud Controller issues a staging request to Diego, which then schedules a [Cell](../concepts/diego/diego-architecture.html#cell-components) to run the staging [Task](../concepts/diego/diego-auction.html#processes). The Task downloads buildpacks and if present, the app’s buildpack cache. It then uses the buildpack that is detected automatically or specified with the `-b` flag to build the droplet. The Task uses the instructions in the buildpack to stage the application.	
+7. The Cloud Controller issues a staging request to Diego, which then schedules a [Cell](../concepts/diego/diego-architecture.html#cell-components) to run the staging [Task](../concepts/diego/diego-auction.html#processes). The Task downloads buildpacks and if present, the app’s buildpack cache. It then uses the buildpack that is detected automatically or specified with the `-b` flag to build the droplet. The Task uses the instructions in the buildpack to stage the application.    
 
 8. The Diego Cell streams the output of the staging process so the developer can troubleshoot application staging problems.
 

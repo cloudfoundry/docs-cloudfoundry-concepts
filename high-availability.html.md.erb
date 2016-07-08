@@ -82,91 +82,91 @@ If you are already scaling the number of instances of such components to increas
 Scale your VMs to the following instance counts:
 
 <table border="1" class="nice">
-	<tr>
-		<th><strong>Job</strong></th>
-		<th><strong>Number</strong></th>
-		<th><strong>Notes</strong></th>
-	</tr>
-	<tr>
-		<td>Diego Cell</td>
-		<td>&ge; 2</td>
-		<td>Following the space requirements for your deployment as mentioned above.</td>
-	</tr>
-	<tr>
-		<td>Diego Brain</td>
-		<td>&ge; 2</td>
-		<td>One per AZ, or two if only one AZ.</td>
-	</tr>
-	<tr>
-		<td>Diego CC Bridge</td>
-		<td>&ge; 2</td>
-		<td>One per AZ, or two if only one AZ.</td>
-	</tr>
-	<tr>
-		<td>Diego Access</td>
-		<td>&ge; 2</td>
-		<td>One per AZ, or two if only one AZ.</td>
-	</tr>
-	<tr>
-		<td>Diego Route Emitter</td>
-		<td>&ge; 2</td>
-		<td>One per AZ, or two if only one AZ.</td>
-	</tr>
-	<tr>
-		<td>Diego Database</td>
-		<td>&ge; 3</td>
-		<td>In order to maintain quorum, there must be an odd number of nodes and only less than half of the cluster may be down at any point in time.</td>
-	</tr>
-	<tr>
-		<td>Consul</td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
-	</tr>
-	<tr>
-		<td>MySQL Server</td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
-	</tr>
-	<tr>
-		<td>MySQL Proxy</td>
-		<td>&ge; 2</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>NATS Server</td>
-		<td>&ge; 2</td>
-		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, use one NATS server.</td>
-	</tr>
-	<tr>
-		<td>Cloud Controller</td>
-		<td>&ge; 2</td>
-		<td>Cloud Controllers help with API request volume.</td>
-	</tr>
-	<tr>
-		<td>Router</td>
-		<td>&ge; 2</td>
-		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
-	</tr>
-	<tr>
-		<td>UAA</td>
-		<td>&ge; 2</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Doppler Server</td>
-		<td>&ge; 2</td>
-		<td>Deploying additional Doppler servers splits traffic across them. Deploy at least two Doppler servers per Availability Zone.</td>
-	</tr>
-	<tr>
-		<td>Loggregator TC</td>
-		<td>&ge; 2</td>
-		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Deploy at least two Loggregator Traffic Controllers per Availability Zone.</td>
-	</tr>
-	<tr>
-		<td>etcd</td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
-	</tr>
+    <tr>
+        <th><strong>Job</strong></th>
+        <th><strong>Number</strong></th>
+        <th><strong>Notes</strong></th>
+    </tr>
+    <tr>
+        <td>Diego Cell</td>
+        <td>&ge; 2</td>
+        <td>Following the space requirements for your deployment as mentioned above.</td>
+    </tr>
+    <tr>
+        <td>Diego Brain</td>
+        <td>&ge; 2</td>
+        <td>One per AZ, or two if only one AZ.</td>
+    </tr>
+    <tr>
+        <td>Diego CC Bridge</td>
+        <td>&ge; 2</td>
+        <td>One per AZ, or two if only one AZ.</td>
+    </tr>
+    <tr>
+        <td>Diego Access</td>
+        <td>&ge; 2</td>
+        <td>One per AZ, or two if only one AZ.</td>
+    </tr>
+    <tr>
+        <td>Diego Route Emitter</td>
+        <td>&ge; 2</td>
+        <td>One per AZ, or two if only one AZ.</td>
+    </tr>
+    <tr>
+        <td>Diego Database</td>
+        <td>&ge; 3</td>
+        <td>In order to maintain quorum, there must be an odd number of nodes and only less than half of the cluster may be down at any point in time.</td>
+    </tr>
+    <tr>
+        <td>Consul</td>
+        <td>&ge; 3</td>
+        <td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+    </tr>
+    <tr>
+        <td>MySQL Server</td>
+        <td>&ge; 3</td>
+        <td>This must be set to an odd number.</td>
+    </tr>
+    <tr>
+        <td>MySQL Proxy</td>
+        <td>&ge; 2</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NATS Server</td>
+        <td>&ge; 2</td>
+        <td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, use one NATS server.</td>
+    </tr>
+    <tr>
+        <td>Cloud Controller</td>
+        <td>&ge; 2</td>
+        <td>Cloud Controllers help with API request volume.</td>
+    </tr>
+    <tr>
+        <td>Router</td>
+        <td>&ge; 2</td>
+        <td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
+    </tr>
+    <tr>
+        <td>UAA</td>
+        <td>&ge; 2</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Doppler Server</td>
+        <td>&ge; 2</td>
+        <td>Deploying additional Doppler servers splits traffic across them. Deploy at least two Doppler servers per Availability Zone.</td>
+    </tr>
+    <tr>
+        <td>Loggregator TC</td>
+        <td>&ge; 2</td>
+        <td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Deploy at least two Loggregator Traffic Controllers per Availability Zone.</td>
+    </tr>
+    <tr>
+        <td>etcd</td>
+        <td>&ge; 3</td>
+        <td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+    </tr>
 </table>
 
 ### <a id='single-node'></a>Single-node Processes ###
