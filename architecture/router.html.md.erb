@@ -55,11 +55,11 @@ Such a message can be sent to both the `router.register` subject to register URI
 <pre class="terminal">
 $ nohup ruby -rsinatra -e 'get("/") { "Hello!" }' &
 $ nats-pub 'router.register' '{"host":"127.0.0.1","port":4567,
-	"uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
-	"tags":{"another_key":"another_value","some_key":"some_value"}}'
+    "uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
+    "tags":{"another_key":"another_value","some_key":"some_value"}}'
 Published [router.register] : '{"host":"127.0.0.1","port":4567,
-	"uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
-	"tags":{"another_key":"another_value","some_key":"some_value"}}'
+    "uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
+    "tags":{"another_key":"another_value","some_key":"some_value"}}'
 $ curl my_first_url.vcap.me:8080
 Hello!
 </pre>

@@ -109,7 +109,7 @@ This container filesystem is created by stacking a read-only base filesystem and
 Resource control is managed using Linux control groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt)) or Windows [job objects](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684161(v=vs.85).aspx). Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers. 
 
 <p class="note">
-	<strong>Note</strong>: BOSH does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
+    <strong>Note</strong>: BOSH does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
 </p>
 
 ## <a id='service-broker'></a>Security for Service Broker Integration ##
