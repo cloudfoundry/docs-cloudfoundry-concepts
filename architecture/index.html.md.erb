@@ -47,18 +47,18 @@ In [pre-Diego architecture](../diego/dea-vs-diego.html#design), the Cloud Contro
 
 The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), <%= vars.services_link %>, and more.
 
-### <a id='nsync-converger'></a> nsync, Converger, and Cell Reps
+### <a id='nsync-bbs'></a> nsync, BBS, and Cell Reps
 
-To keep applications available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required. In pre-Diego architecture, the [Health Manager (HM9000)](../diego/dea-vs-diego.html#hm9k) performed this function. The nsync, Converger, and Cell Reps use a more distributed approach.
+To keep applications available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required. In pre-Diego architecture, the [Health Manager (HM9000)](../diego/dea-vs-diego.html#hm9k) performed this function. The nsync, BBS, and Cell Reps use a more distributed approach.
 
 ![Cloud Foundry Architecture](../images/diego/app-monitor-sync-diego.png)
 
-The nsync, Converger, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which may crash or become unavailable.
+The nsync, BBS, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which may crash or become unavailable.
 
 Here is how the components work together:
 
 * **nsync** receives a message from the Cloud Controller when the user scales an app. It writes the number of instances into a `DesiredLRP` structure in the Diego BBS database. 
-* **Converger** monitors the `DesiredLRP` and `ActualLRP` values and launches or kills application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
+* **BBS** via its convergence process, monitors the `DesiredLRP` and `ActualLRP` values and launches or kills application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
 * **Cell Rep** monitors the containers and provides the `ActualLRP` value.
 
 ## <a id='app-storage-execution'></a>App Storage and Execution
