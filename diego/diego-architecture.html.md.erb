@@ -29,7 +29,7 @@ View a larger version of this image at the [Diego Design Notes repo](http://html
 
 1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](#executor) creates a [Garden](#garden) container in the Cell. The Task or LRP runs in the container.
 
-1. The [BBS](#bbs) tracks desired LRPs, running LRP instances, and in-flight Tasks for . Also periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
+1. The [BBS](#bbs) tracks desired LRPs, running LRP instances, and in-flight Tasks. It also periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
 1. The [Metron Agent](#metron-agent), part of the Cell, forwards application logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
 

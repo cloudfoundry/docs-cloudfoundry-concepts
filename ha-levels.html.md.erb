@@ -17,7 +17,7 @@ This topic introduces the concept of High Availability (HA) in a <%= vars.first_
 
 ## <a id='health-management-apps'></a>Health Management for App Instances ##
 
-If you lose application instances for any reason, if there is a bug in the app, or if an AZ goes down, <%= vars.product_name %> will restart new instances so that capacity is maintained. The nsync, BBS, and Cell Rep components constantly track the state of the system, in particular, the number of instances of each application that are running across all of the Diego Cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state, as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
+If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. The nsync, BBS, and Cell Rep components constantly track the state of the system. In particular, they track the number of instances of each application that are running across all of the Diego Cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
 
 ## <a id='monitored-processes'></a>Monitored processes ##
 
