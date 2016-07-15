@@ -51,9 +51,9 @@ deployment manifest.
 1. **Hard-coded reject rule**: Cloud Foundry returns a reject result for all
 outbound traffic from a container if not allowed by a higher-priority rule.
 
-### <a id='hm9k'></a>Health Manager (HM9000) &rarr; nsync, Converger, and Cell Rep
+### <a id='hm9k'></a>Health Manager (HM9000) &rarr; nsync, BBS, and Cell Rep
 
-The function of the Health Manager (HM9000) component in pre-Diego releases of Cloud Foundry was replaced by the coordinated actions of the [nsync, Converger, and Cell Reps](../architecture/index.html#nsync-converger). In pre-Diego architecture, the Health Manager (HM9000) had four core responsibilities:
+The function of the Health Manager (HM9000) component in pre-Diego releases of Cloud Foundry was replaced by the coordinated actions of the [nsync, BBS, and Cell Reps](../architecture/index.html#nsync-bbs). In pre-Diego architecture, the Health Manager (HM9000) had four core responsibilities:
 
 * Monitor applications to determine their state (e.g. running, stopped, crashed, etc.), version, and number of instances.  HM9000 updates the actual state of an application based on heartbeats and `droplet.exited` messages issued by the DEA node running the application.
 * Determine applications' expected state, version, and number of instances. HM9000 obtains the desired state of an application from a dump of the Cloud Controller database.
@@ -117,9 +117,9 @@ communication between components. Diego retains NATS for some communications, bu
 <td>Diego Auction distinguishes between Task and Long-Running Process (LRP) job types</td></tr>
 <tr>
 <td>Health Manager (HM9000)</td>
-<td><a href="../architecture/index.html#nsync-converger">nSync, Converger, and Cell Reps</a></td>
+<td><a href="../architecture/index.html#nsync-bbs">nSync, BBS, and Cell Reps</a></td>
 <td>System that monitors application instances and keeps instance counts in sync with the number that should be running</td>
-<td>nSync syncs between Cloud Controller and Diego, Converger syncs within Diego, and Cell Reps sync between cells and the Diego BBS.</td></tr>
+<td>nSync syncs between Cloud Controller and Diego, BBS syncs within Diego, and Cell Reps sync between cells and the Diego BBS.</td></tr>
 <tr>
 <td>NATS Message Bus</td>
 <td><a href="../architecture/index.html#bbs-consul">Bulletin Board System (BBS) and Consul</a> via http/s, and NATS</td>
