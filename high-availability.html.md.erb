@@ -1,11 +1,11 @@
 ---
-title: Scaling Components in CF
+title: High Availability Configurations
 owner: Release Integration
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to scale the component Virtual Machines (VMs) in a deployment to increase application hosting capacity and decrease downtime during ongoing operation, product updates, and platform upgrades.
+This topic describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
 Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
@@ -26,13 +26,18 @@ Scaling up the following components increases your capacity to host applications
 
 ## <a id='zero-downtime'></a>High Availability and Zero Downtime ##
 
-During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Scaling components to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
+During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
 
 Deploying or scaling applications to at least two instances per app also helps maintain high availability. See [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) for information about scaling applications.
 
+### <a id='azs'></a>Availability Zones
+
+Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
+
+
 ### <a id='processes'></a>Scalable Components
 
-You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. Ideally, you should also distribute the components across at least three [availability zones](../customizing/understand-az.html) (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
+You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. You should also distribute the instances of multiply-scaled components across different [availability zones](../customizing/understand-az.html) (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
 
 <%= partial vars.scale_table %>
 
@@ -40,43 +45,20 @@ You can scale most Cloud Foundry components to multiple instances to achieve the
 
 Some components only run as a single instance, and cannot be scaled. For these singleton processes, you need to choose a different strategy besides scaling to handle events that degrade availability.
 
-The most important single-node components to address are the HAProxy, NATS, and NFS Server, which affect the platform as a whole. The singleton Collector and Compilation components do not affect platform availability.
+The most high-availability solution for blob storage is to use an external, third-party provider such as AWS S3, Openstack SWIFT, Google Cloud Storage, or Azure Blob Storage. But if you configure internal WebDAV or NFS to serve as your blob store, the component runs as a single node.
 
-**HAProxy**:
+For these deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover your WebDAV or NFS Server VM if it fails. <%= vars.contact_support %>
 
-Cloud Foundry deploys with a single instance of HAProxy for use in lab and test environments. Production environments should use your own highly-available load balancing solution.
-
-**NATS**:
-
-You might run NATS as a single-node process if you lack the resources to deploy two stable NATS servers.
-
-Cloud Foundry continues to run any apps that are already running even when NATS is unavailable for short periods of time.
-The components publishing messages to and consuming messages from NATS are resilient
-to NATS failures. As soon as NATS recovers, operations such as health management and
-router updates resume and the whole Cloud Foundry system recovers.
-
-Because NATS is deployed by BOSH, the BOSH resurrector will recover the VM if it becomes non-responsive.
-
-**NFS Server**:
-
-For some deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover the VM where the NFS Server runs.
-In others, it would be preferable to run a scalable and redundant blobstore service. <%= vars.contact_support %>
-
+The singleton Collector and Compilation components do not affect platform availability.
 
 ### Supporting Component Scaling
 
-<%=vars.om_resurrector_header%>
-<%=vars.om_resurrector_text%>
-
-####Setting `max_in_flight` values ####
-
-For each component, the `max_in_flight` variable limits how many instances of that component are restarted simultaneously during updates or upgrades. This variable can be any integer between 1 and 100. Values for `max_in_flight` are set in the manifest, and you can override them with the TK command.
-
-To ensure zero downtime during updates, set this variable to a number low enough to prevent overburdening the component instances left running. Here are some guidelines:
-
-- For Diego cells, the closer their resource usage is to 100%, the lower you should set `max_in_flight`, to allow non-migrating cells to pick up the work of cells stopping and restarting for migration. If resource usage is already close to 100%, scale your Diego cells up before any upgrades.
-- For quorum-based components (etcd, consul, and Diego BBs), guidelines TK.
-- For other components, guidelines TK.
+<% if vars.product_name == 'CF' %>
+<%= vars.max_in_flight_header %>
+<%= partial 'max_in_flight_text' %>
+<% end %>
+<%= vars.om_resurrector_header%>
+<%= vars.om_resurrector_text%>
 
 ####Capacity####
 

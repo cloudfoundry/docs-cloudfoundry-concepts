@@ -21,21 +21,21 @@ The following table provides recommended instance counts for a high-availability
 	</tr>
 	<tr>
 		<td>Diego BBS</td>
-		<td><code>??TK</code></td>
+		<td><code>diego_database_z1</code></td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+		<td>Set this to to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
 	</tr>
 	<tr>
 		<td>Consul</td>
 		<td><code>consul_z1</code></td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+		<td>Set this to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
 	</tr>
 	<tr>
 		<td>MySQL Server</td>
 		<td><code>mysql_z1</code></td>
-		<td>&ge; 3</td>
-		<td>This must be set to an odd number.</td>
+		<td>3</td>
+		<td></td>
 	</tr>
 	<tr>
 		<td>MySQL Proxy</td>
@@ -47,7 +47,7 @@ The following table provides recommended instance counts for a high-availability
 		<td>NATS Server</td>
 		<td><code>nats_z1</code></td>
 		<td>&ge; 2</td>
-		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
+		<td>You might run a single NATS instance if you lack the resources to deploy two stable NATS servers. Components using NATS are resilient to message failures and the BOSH resurrector recovers the NATS VM quickly if it becomes non-responsive.</td>
 	</tr>
 	<tr>
 		<td>Cloud Controller</td>
@@ -60,6 +60,12 @@ The following table provides recommended instance counts for a high-availability
 		<td><code>router_z1</code></td>
 		<td>&ge; 2</td>
 		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
+	</tr>
+	<tr>
+		<td>HAProxy</td>
+		<td><code>haproxy_z1</code></td>
+		<td>1</td>
+		<td>You can scale HAProxy to multiple instances, but round-robin DNS resolution to multiple HAProxy instances has not been tested for high availability. If you want to use a single IP address for domains hosted by Cloud Foundry, use a highly available load balancer in front of HAProxy.</td>
 	</tr>
 	<tr>
 		<td>UAA</td>
@@ -83,6 +89,6 @@ The following table provides recommended instance counts for a high-availability
 		<td>etcd</td>
 		<td><code>etcd_z1</code></td>
 		<td>&ge; 3</td>
-		<td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
+		<td>Set this to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
 	</tr>
 </table>
