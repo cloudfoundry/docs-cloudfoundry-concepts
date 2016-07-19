@@ -64,8 +64,8 @@ The following table provides recommended instance counts for a high-availability
 	<tr>
 		<td>HAProxy</td>
 		<td><code>haproxy_z1</code></td>
-		<td>1</td>
-		<td>You can scale HAProxy to multiple instances, but round-robin DNS resolution to multiple HAProxy instances has not been tested for high availability. If you want to use a single IP address for domains hosted by Cloud Foundry, use a highly available load balancer in front of HAProxy.</td>
+		<td>0 or 1</td>
+		<td>For production environments, the best approach is to scale HAProxy to <code>0</code> and configure a high-availability load balancer (LB) to point directly to each gorouter instance. You can also configure the LB to point to HAProxy scaled at <code>1</code>. Either way, an LB is the best way to host Cloud Foundry domains at a single IP address. Round-robin DNS resolution to multiple HAProxy instances has not been tested for high availability.</td>
 	</tr>
 	<tr>
 		<td>UAA</td>
