@@ -9,7 +9,7 @@ This topic describes how to configure system components to ensure high availabil
 
 Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
-For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](devguide/deploy-apps/blue-green.html).
+For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
 
 ## <a id='capacity'></a>Scaling Platform Capacity for Applications ##
 
@@ -28,13 +28,7 @@ Scaling up the following components increases your capacity to host applications
 
 During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
 
-<<<<<<< HEAD
-* Disk space and memory on Diego Cells so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory on Diego Cells such that if one Diego Cell is down, all instances of apps can be placed on the remaining Diego Cells.
-* Disk space and memory on Diego Cells to handle one AZ going down if deploying in multiple AZs.
-=======
 Deploying or scaling applications to at least two instances per app also helps maintain high availability. See [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) for information about scaling applications.
->>>>>>> rework-scaling-topic-#120406275
 
 ### <a id='azs'></a>Availability Zones
 
@@ -43,7 +37,7 @@ Deploying Cloud Foundry across three or more AZs and assigning multiple componen
 
 ### <a id='processes'></a>Scalable Components
 
-You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. You should also distribute the instances of multiply-scaled components across different [availability zones](../customizing/understand-az.html) (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
+You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. You should also distribute the instances of multiply-scaled components across different availability zones (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
 
 <%= partial vars.scale_table %>
 
