@@ -1,0 +1,138 @@
+---
+title: Container Security
+owner: Security
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes how Cloud Foundry (CF) secures the containers that host application instances. 
+
+CF isolates all instances of Linux containers from each other using operating system features and the characteristics of the virtual and physical infrastructure where PCF is deployed. 
+
+## <a id="types"></a> Cloud Foundry Container Types
+
+CF uses [Garden](./diego/diego-architecture.html#garden) to manage the containers that host instances of the applications running on a deployment. Garden has two container types: unprivileged and privileged. CF determines which container type to use depending on the workload or application type.
+
+### <a id="unprivileged"></a> Unprivileged Containers
+
+Docker images come with their own root filesystem and user. CF cannot trust the root filesystem and cannot assume that the container user process will never be root. For that reason, CF runs applications based on Docker images in unprivileged containers.
+
+See [Using Docker in Cloud Foundry](docker.html) for more information.
+
+### <a id="privileged"></a> Privileged Containers
+
+CF runs buildpack applications, as well as [staging tasks](how-applications-) for both buildpack and Docker image applications, in containers that use the cflinuxfs2 root filesystem. Because all processes invoked in these containers are run as the unprivileged user `vcap`, CF runs the containers as privileged.
+
+## <a id="hardening"></a> Container Hardening
+
+Cloud Foundry does the following to mitigate container breakout and denial of service attacks:
+
+### <a id="namespaces"></a> Namespaces
+
+A namespace wraps a global system resource in an abstraction that makes it appear to the processes within the namespace that they have their own isolated instance of the global resource. Changes to the global resource are visible to other processes that are members of the namespace, but are invisible to other processes. One use of namespaces is to implement containers.
+
+Linux provides the following namespaces:
+
+<table id='namespaces' border='1' class='nice'>
+	<tr>
+		<th>Namespace</th>
+		<th>Isolates</th>
+	</tr><tr>
+		<td>IPC</td>
+		<td>System V IPC, POSIX message queues</td>	
+	</tr><tr>	
+		<td>Network</td>
+		<td>Network devices, stacks, ports, etc.</td>
+	</tr><tr>
+		<td>Mount</td>
+		<td>Mount points</td>
+	</tr><tr>
+		<td>PID</td>
+		<td>Process IDs</td>
+	</tr><tr>
+		<td>User</td>
+		<td>User and group IDs</td>
+	</tr><tr>
+		<td>UTS</td>
+		<td>Hostname and NIS domain name</td>
+	</tr>
+</table>
+
+CF uses the full set of linux namespaces (PID, Mount, Network, IPC, UTS, User) to provide isolation between containers running on the same host.
+	<p class="note"><strong>Note</strong>: The User namespace is not used for privileged containers.</p>
+
+In unprivileged containers, CF maps the root UID/GID (0) inside the container user namespace to another UID/GID on the host to prevent an application from inheriting the root UID/GID on the host if it breaks out of the container.
+
+* This is the same UID/GID for all containers.
+* All UIDs apart from UID 0 are mapped to themselves. UID 0 inside the container namespace is mapped to MAX_UID-1 outside of the container namespace.
+* Container Root does not grant Host Root permissions
+
+### <a id="capabilities"></a> Capabilities
+
+For permission checks, traditional UNIX implementations distinguish two categories of processes: 
+
+* **privileged processes** 
+	* Effective UID is 0, referred to as superuser or root 
+	* bypasses all kernel permission checks
+* **unprivileged processes**
+	* Effective UID is nonzero
+	* subject to full permission checking based on the process credentials, such as effective UID, effective GID, and supplementary group list
+
+Linux divides superuser privileges into distinct units, known as capabilities, which you can enable and disable independently. Capabilities are a per-thread attribute.
+
+CF limits root user privileges in unprivileged containers by dropping the following capabilities from all container processes:
+
+* CAP\_DAC\_READ\_SEARCH
+* CAP\_LINUX\_IMMUTABLE
+* CAP\_NET\_BROADCAST
+* CAP\_NET\_ADMIN
+* CAP\_IPC\_LOCK
+* CAP\_IPC\_OWNER
+* CAP\_SYS\_MODULE
+* CAP\_SYS\_RAWIO
+* CAP\_SYS\_PTRACE
+* CAP\_SYS\_PACCT
+* CAP\_SYS\_BOOT
+* CAP\_SYS\_NICE
+* CAP\_SYS\_RESOURCE
+* CAP\_SYS\_TIME
+* CAP\_SYS\_TTY\_CONFIG
+* CAP\_LEASE
+* CAP\_AUDIT\_CONTROL
+* CAP\_MAC\_OVERRIDE
+* CAP\_MAC\_ADMIN
+* CAP\_SYSLOG
+* CAP\_WAKE\_ALARM
+* CAP\_BLOCK\_SUSPEND
+
+Additionally, we also drop CAP\_SYS\_ADMIN for unprivileged containers.
+
+CF mounts /proc and /sys read-only inside the container
+Limit access to devices using cgroups, explicitly whitelist safe device nodes.
+	* /dev/full
+	* /dev/fuse
+	* /dev/null
+	* /dev/ptmx
+	* /dev/pts/*
+	* /dev/random
+	* /dev/tty
+	* /dev/tty0
+	* /dev/tty1
+	* /dev/urandom
+	* /dev/zero
+	* /dev/tap
+	* /dev/tun
+* Disallow dmesg access for unprivileged users and all users in unprivileged containers.
+* Use a chroot when importing docker images from docker registries.
+* Establish a container-specific overlay filesystem mount and pivot_root into that overlay to isolate the container from the host system’s filesystem.
+* Eliminate any dependencies on scripts and binaries inside the rootfs, by not calling any binary or script inside the container filesystem.
+* Avoid side-loading binaries in the container (via bind mounts or other methods), and simply “re-exec” the same binary (read from /proc/self/exe) any time we need to run something in a container.
+* Establish a virtual ethernet pair for each container for its network traffic.
+	* One interface in the pair is inside the container’s network namespace, and is the only non-loopback interface accessible inside the container.
+	* The other interface remains in the host network namespace and is bridged to the container-side interface.
+	* Egress whitelist rules are applied to these interfaces according to Administrator configured policy.
+	* First-packet logging rules may also be enabled on TCP whitelist rules.
+	* DNAT rules are established on the host to enable traffic ingress from the host interface to whitelisted ports on the container-side interface.
+* Apply disk quotas by confining container-specific filesystem layers to loop devices with the specified disk-quota capacity.
+* Apply a total memory usage quota via the memory cgroup and destroy the container if the memory usage exceeds the quota.
+* Apply a fair-use limit to CPU usage for processes inside the container via the cpu.shares group.
