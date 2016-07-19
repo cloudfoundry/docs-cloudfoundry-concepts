@@ -41,17 +41,15 @@ You can scale most Cloud Foundry components to multiple instances to achieve the
 
 <%= partial vars.scale_table %>
 
-### <a id='single-node'></a>Unscaleable Components ###
+### <a id='blobstore'></a>Blob Storage ###
 
-Some components only run as a single instance, and cannot be scaled. For these singleton processes, you need to choose a different strategy besides scaling to handle events that degrade availability.
+For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
 
-The most high-availability solution for blob storage is to use an external, third-party provider such as AWS S3, Openstack SWIFT, Google Cloud Storage, or Azure Blob Storage. But if you configure internal WebDAV or NFS to serve as your blob store, the component runs as a single node.
-
-For these deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover your WebDAV or NFS Server VM if it fails. <%= vars.contact_support %>
+If you store blobs internally using either NFS or WebDAV, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS Server VM if it fails. <%= vars.contact_support %>
 
 The singleton Collector and Compilation components do not affect platform availability.
 
-### Supporting Component Scaling
+### <a id='supporting-scaling'></a> Supporting Component Scaling
 
 <% if vars.product_name == 'CF' %>
 <%= vars.max_in_flight_header %>
