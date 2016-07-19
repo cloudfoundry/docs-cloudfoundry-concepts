@@ -1,35 +1,76 @@
 ---
-title: Zero Downtime Deployment and Scaling in CF
+title: High Availability Configurations
 owner: Release Integration
 ---
 
 <strong><%= modified_date %></strong>
 
-To increase the capacity and availability of the Cloud Foundry platform, and to decrease the chances of downtime, you can scale a deployment up using the strategies described below.
+This topic describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
-This topic also describes the requirements for a zero downtime deployment. A zero downtime deployment ensures that if individual components go down, your deployment continues to run.
+Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
-<%= vars.scaling_ert %>
+For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](devguide/deploy-apps/blue-green.html).
 
-## <a id='zero-downtime'></a>Zero Downtime Deployment ##
+## <a id='capacity'></a>Scaling Platform Capacity for Applications ##
 
-This section describes the required configurations for achieving a zero downtime deployment.
+You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
 
-####Application Instances####
+<%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
 
-Deploy at least two instances of every application.
+Scaling up the following components increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine whether you scale vertically or horizontally.
 
-####Components####
+* **Diego cells**: The optimal balance between CPU/memory sizing and instance count depends on the performance characteristics of the apps that run on Diego cells. Scaling vertically with larger Diego cells makes for larger points of failure, and more apps go down when a cell fails. On the other hand, scaling horizontally decreases the speed at which the system rebalances apps. Rebalancing 100 cells takes longer and demands more processing overhead than rebalancing 20 cells.
+* **Router**: Scale the router to accommodate the number of incoming requests. In general, this load is much less than the load on Diego cells.
+* **Cloud Controller**: Scale the Cloud Controller to accommodate the number of requests to the API and the number of apps in the system.
 
-Scale your components as described in the [Scaling Platform Availability](#availability) section below. Components should be distributed across two or more <%=vars.az%> (AZs).
 
-####Space####
+## <a id='zero-downtime'></a>High Availability and Zero Downtime ##
 
-Ensure that you allocate and maintain enough of the following:
+During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
 
+<<<<<<< HEAD
 * Disk space and memory on Diego Cells so that apps expected to deploy can successfully be staged and run.
 * Disk space and memory on Diego Cells such that if one Diego Cell is down, all instances of apps can be placed on the remaining Diego Cells.
 * Disk space and memory on Diego Cells to handle one AZ going down if deploying in multiple AZs.
+=======
+Deploying or scaling applications to at least two instances per app also helps maintain high availability. See [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) for information about scaling applications.
+>>>>>>> rework-scaling-topic-#120406275
+
+### <a id='azs'></a>Availability Zones
+
+Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
+
+
+### <a id='processes'></a>Scalable Components
+
+You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. You should also distribute the instances of multiply-scaled components across different [availability zones](../customizing/understand-az.html) (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
+
+<%= partial vars.scale_table %>
+
+### <a id='blobstore'></a>Blob Storage ###
+
+For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
+
+If you store blobs internally using either NFS or WebDAV, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS Server VM if it fails. <%= vars.contact_support %>
+
+The singleton Collector and Compilation components do not affect platform availability.
+
+### <a id='supporting-scaling'></a> Supporting Component Scaling
+
+<% if vars.product_name == 'CF' %>
+<%= vars.max_in_flight_header %>
+<%= partial 'max_in_flight_text' %>
+<% end %>
+<%= vars.om_resurrector_header%>
+<%= vars.om_resurrector_text%>
+
+####Capacity####
+
+Ensure that you allocate and maintain enough of the following:
+
+* Free space on Diego cells so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if one Diego cell is down, all instances of apps can be placed on the remaining Diego cells.
+* Free space to handle one AZ going down if deploying in multiple AZs.
 
 ####Resource pools####
 
@@ -39,174 +80,11 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 <%=vars.pcf_pools%>
 
-<%=vars.om_resurrector_header%>
-<%=vars.om_resurrector_text%>
+#### <a id='databases'></a>Databases ####
 
-## <a id='capacity'></a>Scaling Platform Capacity ##
-
-You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
-
-<%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
-
-### <a id='tradeoffs'></a>Trade-offs and Benefits ###
-
-The nature of a particular application should determine whether you scale vertically or horizontally.
-
-**Diego Cells**:
-
-The optimal sizing and CPU/memory balance depends on the performance characteristics of the apps that will run on the Diego Cell. Larger Diego Cells also make for larger points of failure: the system takes longer to rebalance 100 app instances than to rebalance 20 app instances.
-
-**Router**:
-
-Scale the router with the number of incoming requests. In general, this load is much less than the load on Diego Cells.
-
-**Cloud Controller**:
-
-Scale the Cloud Controller with the number of requests to the API and with the number of apps in the system.
-
-## <a id='availability'></a>Scaling Platform Availability ##
-
-To scale the Cloud Foundry platform for high availability, the actions you take fall into three categories.
-
- * For components that support multiple instances, increase the number of instances to achieve redundancy.
- * For components that do not support multiple instances, choose a strategy for dealing with events that degrade availability.
- * For database services, plan for and configure backup and restore where possible.
+For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
 <p class="note"><strong>Note</strong>: Data services may have single points of failure depending on their configuration.</p>
-
-### <a id='processes'></a>Scalable Processes ###
-
-You can think of components that support multiple instances as scalable processes.
-If you are already scaling the number of instances of such components to increase platform capacity, you need to scale further to achieve the redundancy required for high availability.
-
-Scale your VMs to the following instance counts:
-
-<table border="1" class="nice">
-    <tr>
-        <th><strong>Job</strong></th>
-        <th><strong>Number</strong></th>
-        <th><strong>Notes</strong></th>
-    </tr>
-    <tr>
-        <td>Diego Cell</td>
-        <td>&ge; 2</td>
-        <td>Following the space requirements for your deployment as mentioned above.</td>
-    </tr>
-    <tr>
-        <td>Diego Brain</td>
-        <td>&ge; 2</td>
-        <td>One per AZ, or two if only one AZ.</td>
-    </tr>
-    <tr>
-        <td>Diego CC Bridge</td>
-        <td>&ge; 2</td>
-        <td>One per AZ, or two if only one AZ.</td>
-    </tr>
-    <tr>
-        <td>Diego Access</td>
-        <td>&ge; 2</td>
-        <td>One per AZ, or two if only one AZ.</td>
-    </tr>
-    <tr>
-        <td>Diego Route Emitter</td>
-        <td>&ge; 2</td>
-        <td>One per AZ, or two if only one AZ.</td>
-    </tr>
-    <tr>
-        <td>Diego Database</td>
-        <td>&ge; 3</td>
-        <td>In order to maintain quorum, there must be an odd number of nodes and only less than half of the cluster may be down at any point in time.</td>
-    </tr>
-    <tr>
-        <td>Consul</td>
-        <td>&ge; 3</td>
-        <td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
-    </tr>
-    <tr>
-        <td>MySQL Server</td>
-        <td>&ge; 3</td>
-        <td>This must be set to an odd number.</td>
-    </tr>
-    <tr>
-        <td>MySQL Proxy</td>
-        <td>&ge; 2</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>NATS Server</td>
-        <td>&ge; 2</td>
-        <td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, use one NATS server.</td>
-    </tr>
-    <tr>
-        <td>Cloud Controller</td>
-        <td>&ge; 2</td>
-        <td>Cloud Controllers help with API request volume.</td>
-    </tr>
-    <tr>
-        <td>Router</td>
-        <td>&ge; 2</td>
-        <td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
-    </tr>
-    <tr>
-        <td>UAA</td>
-        <td>&ge; 2</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Doppler Server</td>
-        <td>&ge; 2</td>
-        <td>Deploying additional Doppler servers splits traffic across them. Deploy at least two Doppler servers per Availability Zone.</td>
-    </tr>
-    <tr>
-        <td>Loggregator TC</td>
-        <td>&ge; 2</td>
-        <td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Deploy at least two Loggregator Traffic Controllers per Availability Zone.</td>
-    </tr>
-    <tr>
-        <td>etcd</td>
-        <td>&ge; 3</td>
-        <td>This must be set to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum.</td>
-    </tr>
-</table>
-
-### <a id='single-node'></a>Single-node Processes ###
-
-You can think of components that do not support multiple instances as single-node processes.
-Since you cannot increase the number of instances of these components, you should choose a different strategy for dealing with events that degrade availability.
-
-First, consider the components whose availability affects the platform as a whole.
-
-**HAProxy**:
-
-Cloud Foundry deploys with a single instance of HAProxy for use in lab and test environments. Production environments should use your own highly-available load balancing solution.
-
-**NATS**:
-
-You might run NATS as a single-node process if you lack the resources to deploy two stable NATS servers.
-
-Cloud Foundry continues to run any apps that are already running even when NATS is unavailable for short periods of time.
-The components publishing messages to and consuming messages from NATS are resilient
-to NATS failures. As soon as NATS recovers, operations such as health management and
-router updates resume and the whole Cloud Foundry system recovers.
-
-Because NATS is deployed by BOSH, the BOSH resurrector will recover the VM if it becomes non-responsive.
-
-**NFS Server**:
-
-For some deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover the VM where the NFS Server runs.
-In others, it would be preferable to run a scalable and redundant blobstore service. <%= vars.contact_support %>
-
-**Collector**:
-
-This component is not in the critical path for any operation.
-
-**Compilation**:
-
-This component is active only during platform installation and upgrades.
-
-### <a id='databases'></a>Databases ###
-
-For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible.
 
 <%= vars.contact_support %>
 
