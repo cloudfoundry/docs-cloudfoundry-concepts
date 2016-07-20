@@ -60,58 +60,6 @@ Applications that users deploy to Cloud Foundry exist within a space. Spaces exi
 
 <%=vars.console_links%>
 
-## <a id='containers'></a>Application Isolation with Containers ##
-
-Each application deployed to Cloud Foundry runs within its own self-contained environment, a [Garden container](./diego/diego-architecture.html#garden) that isolates processes, memory, and the file system.  Cloud Foundry operators can configure whether contained applications can directly interact with other applications or other Cloud Foundry system components.
-
-Applications are typically allowed to invoke other applications in Cloud Foundry only by leaving the system and re-entering through the load balancer positioned in front of the Cloud Foundry routers. To isolate applications and control outgoing traffic, each Garden container uses a dedicated virtual network interface (VNI) that consists of a pair of ethernet addresses, one visible to the application instance running in the container, and the other visible to the host VM’s root namespace. The pair is configured to use IPs in a small and static subnet.
-
-This restrictive operating environment is designed for security and stability. If a spoofing attack bypasses the physical firewall for your deployment, Cloud Foundry <%=vars.net_traffic_rules%> help prevent the attack from accessing application containers.
-
-### <a id='application-traffic'></a>Application Traffic ###
-
-When an app instance starts, the cell (or DEA) on the host VM allocates an IP address and also assigns an arbitrary port to the application container. The application uses the `PORT` environment variable provided in the container environment to determine which port to listen on. Because the host assigns a random value to the `PORT` environment variable, the value is generally unique for each application instance.
-
-A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as recommended, then all traffic goes through the following levels of network address translation, as shown in the diagram below:
-
-* <strong>Inbound</strong> requests flow from the load balancer through the router to the host cell (or DEA), then into the app container. The router determines which application instance receives each request.
-
-* <strong>Outbound</strong> traffic flows from the app container to the cell (or DEA), then to the gateway on the cell's virtual network interface. This gateway might be a NAT to external networks depending on your IaaS.
-
-  <%= image_tag("images/security/sysbound2.png") %>
-
-
-### <a id='network-traffic'></a>Network Traffic Rules ###
-
-Administrators can configure rules to prevent system access from external networks and between internal components, and to restrict applications from establishing connections over the virtual network interface.
-Admins can configure these rules at two levels. Application Security Groups apply <%=vars.net_traffic_rules%> at the container level, and Network Properties of cells (or DEAs) apply them at the host VM level.
-
-#### <a id='container-rules'></a>Application Security Groups ####
-
-To target applications with specific network traffic rules, <%=vars.app_sec_groups%> (ASGs) define traffic rules for individual containers. The rules specify the protocols, addresses, and ports that are allowed for outgoing traffic. Because they are “allow” rules, their order of evaluation is unimportant when multiple application security groups apply to the same space, org, or deployment. The cell uses these rules to filter and log outbound network traffic.
-
-When applications are first staging, they need traffic rules loose enough to let them pull resources in from across the network. Once they are running, the traffic rules can be more restrictive and secure. To distinguish between these two security needs, admins can define one ASG for when an app stages, and a different one for when it runs.
-
-To provide granular control in securing a deployment, an administrator can assign ASGs to apply across a Cloud Foundry deployment, or to specific spaces or orgs within a deployment. You define ASGs on the cf CLI using `cf create-security-group` and `cf bind-security-group`. <%=vars.manifest_vs_cli_asg%>
-
-#### <a id='container-rules'></a>Host-level Network Properties ####
-
-Operators can configure the `allow_networks` and `deny_networks` parameters for DEAs to restrict communication between system components and applications. Any Cloud Foundry ASG configurations will overwrite these configurations. For more information, see <%=vars.dea_properties%>.
-
-<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you use Cloud Foundry ASGs to specify egress access rules for your applications. This functionality enables you to more securely restrict application outbound traffic to predefined routes.</p>
-
-### <a id='filesystem'></a>Container Mechanics###
-
-Container isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host cannot detect each other. Every container includes a private root filesystem – each container has its own Process ID (PID), namespace, network namespace, and mount namespace.
-
-This container filesystem is created by stacking a read-only base filesystem and a container-specific read-write filesystem, commonly known as an overlay filesystem. The read-only filesystem contains the minimal set of operating system packages and Garden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write filesystem. The read-write filesystem is unique to each container and is created by formatting a large sparse file of a fixed size. This fixed size prevents the read-write filesystem from overflowing into unallocated space.
-
-Resource control is managed using Linux control groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt)) or Windows [job objects](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684161(v=vs.85).aspx). Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers. 
-
-<p class="note">
-    <strong>Note</strong>: BOSH does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
-</p>
-
 ## <a id='service-broker'></a>Security for Service Broker Integration ##
 
 The Cloud Controller authenticates every request with the Service Broker API using HTTP or HTTPS, depending on which protocol that you specify during broker registration. The Cloud Controller rejects any broker registration that does not contain a username and password.
