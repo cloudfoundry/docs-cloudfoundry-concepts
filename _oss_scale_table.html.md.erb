@@ -4,14 +4,14 @@ The following table provides recommended instance counts for a high-availability
 	<tr>
 		<th><strong>Component</strong></th>
 		<th><strong>Example Job</strong> <code>name = z1</code></th>
-		<th><strong>Number</strong></th>
+		<th><strong>Instances</strong></th>
 		<th><strong>Notes</strong></th>
 	</tr>
 	<tr>
 		<td>Diego Cell</td>
 		<td><code>cell_z1</code></td>
 		<td>&ge; 3</td>
-		<td></td>
+		<td>The optimal balance between CPU/memory sizing and instance count depends on the performance characteristics of the apps that run on Diego cells. Scaling vertically with larger Diego cells makes for larger points of failure, and more apps go down when a cell fails. On the other hand, scaling horizontally decreases the speed at which the system rebalances apps. Rebalancing 100 cells takes longer and demands more processing overhead than rebalancing 20 cells.</td>
 	</tr>
 	<tr>
 		<td>Diego Brain</td>
@@ -53,13 +53,13 @@ The following table provides recommended instance counts for a high-availability
 		<td>Cloud Controller</td>
 		<td><code>api_z1</code></td>
 		<td>&ge; 2</td>
-		<td>Cloud Controllers help with API request volume.</td>
+		<td>Scale the Cloud Controller to accommodate the number of requests to the API and the number of apps in the system.</td>
 	</tr>
 	<tr>
 		<td>Router</td>
 		<td><code>router_z1</code></td>
 		<td>&ge; 2</td>
-		<td>Additional Gorouters help bring more available bandwidth to ingress and egress.</td>
+		<td>Scale the router to accommodate the number of incoming requests. Additional instances increase available bandwidth. In general, this load is much less than the load on Diego cells.</td>
 	</tr>
 	<tr>
 		<td>HAProxy</td>

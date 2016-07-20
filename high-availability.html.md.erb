@@ -1,43 +1,44 @@
 ---
-title: High Availability Configurations
+title: High Availability in Cloud Foundry
 owner: Release Integration
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
+This topic explains how to configure Cloud Foundry for high availability (HA) and how Cloud Foundry is designed to ensure HA at multiple layers.
+
+
+## <a id='capacity'></a>Configuring High Availability ##
+
+This section describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
 Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
-For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
+Deploying or scaling applications to at least two instances per app also helps maintain high availability. For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
 
-## <a id='capacity'></a>Scaling Platform Capacity for Applications ##
+### <a id='azs'></a>Availability Zones
+
+During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
+
+Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
+
+### <a id='vert-and-horiz'></a>Vertical and Horizontal Scaling ##
 
 You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
 
 <%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
 
-Scaling up the following components increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine whether you scale vertically or horizontally.
+To scale vertically, ensure that you allocate and maintain enough of the following:
 
-* **Diego cells**: The optimal balance between CPU/memory sizing and instance count depends on the performance characteristics of the apps that run on Diego cells. Scaling vertically with larger Diego cells makes for larger points of failure, and more apps go down when a cell fails. On the other hand, scaling horizontally decreases the speed at which the system rebalances apps. Rebalancing 100 cells takes longer and demands more processing overhead than rebalancing 20 cells.
-* **Router**: Scale the router to accommodate the number of incoming requests. In general, this load is much less than the load on Diego cells.
-* **Cloud Controller**: Scale the Cloud Controller to accommodate the number of requests to the API and the number of apps in the system.
+* Free space on Diego cells so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if one Diego cell is down, all instances of apps can be placed on the remaining Diego cells.
+* Free space to handle one AZ going down if deploying in multiple AZs.
 
-
-## <a id='zero-downtime'></a>High Availability and Zero Downtime ##
-
-During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
-
-Deploying or scaling applications to at least two instances per app also helps maintain high availability. See [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) for information about scaling applications.
-
-### <a id='azs'></a>Availability Zones
-
-Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
-
+Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine how you should scale vertically vs. horizontally.
 
 ### <a id='processes'></a>Scalable Components
 
-You can scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. You should also distribute the instances of multiply-scaled components across different availability zones (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
+You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. You should also distribute the instances of multiply-scaled components across different availability zones (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
 
 <%= partial vars.scale_table %>
 
@@ -58,15 +59,7 @@ The singleton Collector and Compilation components do not affect platform availa
 <%= vars.om_resurrector_header%>
 <%= vars.om_resurrector_text%>
 
-####Capacity####
-
-Ensure that you allocate and maintain enough of the following:
-
-* Free space on Diego cells so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory in your deployment such that if one Diego cell is down, all instances of apps can be placed on the remaining Diego cells.
-* Free space to handle one AZ going down if deploying in multiple AZs.
-
-####Resource pools####
+####Resource Pools####
 
 Configure your <%=vars.pools_link%> according to the requirements of your deployment.
 
@@ -82,4 +75,28 @@ For database services deployed outside Cloud Foundry, plan to leverage your infr
 
 <%= vars.contact_support %>
 
+## <a id='cf-ha'></a>How CF Maintains High Availability ##
 
+This section explains how <%= vars.first_product_name %> deployments include several layers of HA to keep applications running in the face of system failure. These layers include availability zones (AZs), application health management, process monitoring, and VM resurrection.
+
+### <a id='azs'></a>Availability Zones ###
+
+<%= vars.product_name %> supports deploying applications instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.product_name %> balances the applications you deploy across the AZs you defined. If an AZ goes down, you still have application instances running in another. 
+
+<%= vars.azs %>
+
+
+### <a id='health-management-apps'></a>Health Management for App Instances ###
+
+If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. The [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) components  track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
+
+### <a id='monitored-processes'></a>Process Monitoring ###
+
+<%= vars.product_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, BBS, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
+
+### <a id='health-monitoring'></a>Resurrection for VMs ###
+
+BOSH detects if a VM is present by listening for heartbeat messages that are sent from the BOSH agent every 60 seconds. The BOSH Health Monitor listens for those heartbeats. When the Health Monitor finds that a VM is not responding, it passes an alert to the Resurrector component. If the Resurrector is enabled, it sends the IaaS a request to create a new VM instance to replace the one that failed.
+
+
+<%= vars.resurrector %>
