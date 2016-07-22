@@ -5,18 +5,16 @@ owner: Security
 
 <strong><%= modified_date %></strong>
 
-<%=vars.pcf_rec%> protects customers from security threats by minimizing network surface area, applying security controls, isolating customer applications and data in containers, and encrypting connections.
+This topic provides an overview of Cloud Foundry security. For an overview of container security, see the [Understanding Container Security](container-security.html) topic.
 
+Cloud Foundry implements the following measures to mitigate against security threats:
 
-Cloud Foundry:
-
-* Implements role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access.
-
-* Ensures security of application bits in a multi-tenant environment.
-
-* Prevents possible denial of service attacks through resource starvation.
-
-Before you read this document, you might want to review the [general system architecture](./architecture/index.html).
+* Minimizes network surface area
+* Isolates customer applications and data in containers
+* Encrypts connections
+* Uses  role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access
+* Ensures security of application bits in a multi-tenant environment
+* Prevents possible denial of service attacks through resource starvation
 
 ## <a id='system-boundaries'></a>System Boundaries and Access ##
 
