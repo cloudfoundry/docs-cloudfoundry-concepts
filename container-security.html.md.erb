@@ -9,7 +9,7 @@ This topic describes how Cloud Foundry (CF) secures the containers that host app
 
 * [Container Mechanics](#mechanics) provides an overview of container isolation. 
 * [Container Networking](#networking) describes container networking and how CF administrators [customize](#config-traffic) container network traffic rules for their deployment. 
-* [Container Security](#security) describes how CF secures containers by assigning application instances to [unprivileged or privileged](#types) containers and by [hardening](#hardening) them.
+* [Container Security](#security) describes how CF secures containers by running application instances in [unprivileged](#types) containers and by [hardening](#hardening) them.
 
 ## <a id='mechanics'></a>Container Mechanics###
 
@@ -84,21 +84,18 @@ To configure host-level network properties for DEAs, see <%=vars.dea_properties%
 
 CF secures containers through the following measures:
 
-* Assigning application instances to [unprivileged](#unprivileged) or [privileged](#privileged) containers depending on the workload or application type.
+* Running application instances in [unprivileged](#types) containers by default.
 * [Hardening](#hardening) containers by limiting functionality and access rights.
 * Blocking all outbound network connections from application containers by default. Administrators can override this behavior by [configuring Application Security Groups](#asg) (ASGs).
 
 ### <a id="types"></a> Container Types
 
-Garden has two container types: unprivileged and privileged. CF determines which container type to use depending on the workload or application type.
+Garden has two container types: unprivileged and privileged. CF runs all application instances and staging tasks in unprivileged containers by default.
 
-#### <a id="unprivileged"></a> Unprivileged Containers
+However, operators can use privileged containers for different workloads by editing the Diego manifest and redeploying:
 
-Applications based on Docker images run in unprivileged containers. Because Docker images come with their own root filesystem and user, CF cannot trust the root filesystem and cannot assume that the container user process will never be root. For that reason, CF runs applications based on Docker images in unprivileged containers. See [Using Docker in Cloud Foundry](docker.html) for more information about using Docker.
-
-#### <a id="privileged"></a> Privileged Containers
-
-Buildpack-based applications, as well as [staging tasks](how-applications-) for both buildpack and Docker image applications, run in privileged containers that use the cflinuxfs2 root filesystem. Because all processes invoked in these containers are run as the unprivileged user `vcap`, CF runs the containers as privileged.
+* To enable privileged containers for buildpack-based applications, set the `capi.nsync.diego_privileged_containers` property to `true` in the Diego manifest.
+* To enable privileged containers for staging tasks, set the `capi.stager.diego_privileged_containers` property to `true` in the Diego manifest.
 
 ### <a id='hardening'></a> Container Hardening
 
