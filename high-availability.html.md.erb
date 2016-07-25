@@ -30,8 +30,8 @@ You can scale platform capacity vertically by adding memory and disk, or horizon
 
 To scale vertically, ensure that you allocate and maintain enough of the following:
 
-* Free space on Diego cells so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory in your deployment such that if one Diego cell is down, all instances of apps can be placed on the remaining Diego cells.
+* Free space on host VMs, whether they are Diego cells or DEAs, so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if one host VM is down, all instances of apps can be placed on the remaining Host VMs.
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
 Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine how you should scale vertically vs. horizontally.
@@ -88,7 +88,7 @@ This section explains how <%= vars.first_product_name %> deployments include sev
 
 ### <a id='health-management-apps'></a>Health Management for App Instances ###
 
-If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. The [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) components  track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
+If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. Under Diego architecture, the [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) components  track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
 
 ### <a id='monitored-processes'></a>Process Monitoring ###
 
