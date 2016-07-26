@@ -90,9 +90,11 @@ CF secures containers through the following measures:
 
 ### <a id="types"></a> Container Types
 
-Garden has two container types: unprivileged and privileged. CF runs all application instances and staging tasks in unprivileged containers by default.
+Garden has two container types: unprivileged and privileged. Currently, CF runs all application instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
 
-However, operators can use privileged containers for different workloads by editing the Diego manifest and redeploying:
+Formerly, CF ran applications based on Docker images in unprivileged containers, and buildpack-based applications and staging tasks in privileged containers. CF ran applications based on Docker images in unprivileged containers because Docker images come with their own root filesystem and user, so CF could not trust the root filesystem and could not assume that the container user process would never be root. CF ran build-pack based applications and staging tasks in privileged containers because they use the cflinuxfs2 root filesystem and all processes are run as the unprivileged user `vcap`.
+
+Although all application instances and staging tasks now run by default in unprivileged containers, operators can override these defaults by customizing their Diego deployment manifest and redeploying:
 
 * To enable privileged containers for buildpack-based applications, set the `capi.nsync.diego_privileged_containers` property to `true` in the Diego manifest.
 * To enable privileged containers for staging tasks, set the `capi.stager.diego_privileged_containers` property to `true` in the Diego manifest.
