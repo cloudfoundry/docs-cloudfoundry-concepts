@@ -62,13 +62,15 @@ Here is how the components work together:
 
 ## <a id='app-storage-execution'></a>App Storage and Execution
 
-### <a id='blob'></a> Blob Store
+### <a id='blob'></a> Blobstore
 
-The blob store is a repository for large binary files, which Github cannot easily manage because Github is designed for code. Blob store binaries include:
+The blobstore is a repository for large binary files, which Github cannot easily manage because Github is designed for code. Blobstore binaries include:
 
 * Application code packages
 * Buildpacks
 * Droplets
+
+You can configure the blobstore as either an internal server or an external S3 or S3-compatible endpoint, as described in this [Knowledge Base article](https://discuss.zendesk.com/hc/en-us/articles/217982188-How-to-use-Elastic-Runtime-blob-storage-data-).
 
 ### <a id='diego-cell'></a> Diego Cell
 
