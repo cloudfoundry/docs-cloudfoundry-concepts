@@ -65,7 +65,7 @@ The Cloud Controller manages a blobstore for the following:
 * **Droplets**: Result of taking an app package, staging it by processing a
     buildpack, and preparing it to run
 
-You can configure the blobstore as either an internal server or an external S3 or S3-compatible endpoint. See this [Knowledge Base article](https://discuss.zendesk.com/hc/en-us/articles/217982188-How-to-use-Elastic-Runtime-blob-storage-data-) for more information about the blobstore.
+You can configure the blobstore as either an internal server or an external S3 or S3-compatible endpoint.  <%= vars.blobstore_kb %>
 
 The blobstore uses the [Fog](http://fog.io/) Ruby gem such that it can use
 abstractions like Amazon S3 or an NFS-mounted file system for storage.
