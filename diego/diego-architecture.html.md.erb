@@ -29,7 +29,7 @@ View a larger version of this image at the [Diego Design Notes repo](http://html
 
 1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](#executor) creates a [Garden](#garden) container in the Cell. The Task or LRP runs in the container.
 
-1. The BBS tracks desired LRPs, running LRP instances, and in-flight Tasks for the [Converger](#converger), part of the Diego Brain. The Converger periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
+1. The [BBS](#bbs) tracks desired LRPs, running LRP instances, and in-flight Tasks. It also periodically analyzes this information and corrects discrepancies to ensure consistency between `ActualLRP` and `DesiredLRP` counts.
 
 1. The [Metron Agent](#metron-agent), part of the Cell, forwards application logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
 
@@ -45,7 +45,7 @@ Components in the Diego core run and monitor Tasks and LRPs. The core consists o
 
 ###<a id='brain-components'></a>Diego Brain ###
 
-Diego Brain components distribute Tasks and LRPs to Diego Cells, and correct discrepancies between `ActualLRP` and `DesiredLRP` counts to ensure fault-tolerance and long-term consistency. The Diego Brain consists of the Auctioneer and the Converger.
+Diego Brain components distribute Tasks and LRPs to Diego Cells, and correct discrepancies between `ActualLRP` and `DesiredLRP` counts to ensure fault-tolerance and long-term consistency. The Diego Brain consists of the Auctioneer.
 
 <a id='auctioneer'></a>
 
@@ -58,20 +58,6 @@ Diego Brain components distribute Tasks and LRPs to Diego Cells, and correct dis
 - Maintains a lock in the BBS that restricts auctions to one Auctioneer at a time
 
 Refer to the [Auctioneer repo](https://github.com/cloudfoundry-incubator/auctioneer) on GitHub for more information.
-
-####<a id='converger'></a>Converger ####
-
-- Uses converge methods from the [Runtime Schema](https://github.com/cloudfoundry-incubator/runtime-schema) to analyze snapshots from the BBS to ensure consistency and fault tolerance for Tasks and LRPs
-
-- Acts to keep `DesiredLRP` count and `ActualLRP` count synchronized in the following ways:
-    - If the `DesiredLRP` count exceeds the `ActualLRP` count, the Converger requests a start auction from the Auctioneer
-    - If the `ActualLRP` count exceeds the `DesiredLRP` count, the Converger sends a stop message to the Rep on the Cell hosting an instance
-
-- Monitors for potentially missed messages, resending them if necessary
-
-- Maintains a lock in the BBS that limits converge methods to one Converger at a time
-
-Refer to the [Converger repo](https://github.com/cloudfoundry-incubator/converger) on GitHub for more information.
 
 ###<a id='cell-components'></a>Diego Cell Components ###
 
@@ -123,8 +109,15 @@ Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/deve
 
 - Provides an RPC-style API over HTTP to [Diego Core](#core) components and external clients, including the [SSH Proxy](#ssh-proxy), [CC-Bridge](#bridge-components), and [Route Emitter](#route-emitter).
 
-Refer to the [Bulletin Board System repo](https://github.com/cloudfoundry-incubator/bbs) on GitHub for more information.
+- Ensure consistency and fault tolerance for Tasks and LRPs by comparing desired state (stored in the database) with actual state (from running instances)
 
+- Acts to keep `DesiredLRP` count and `ActualLRP` count synchronized in the following ways:
+    - If the `DesiredLRP` count exceeds the `ActualLRP` count, requests a start auction from the Auctioneer
+    - If the `ActualLRP` count exceeds the `DesiredLRP` count, sends a stop message to the Rep on the Cell hosting an instance
+
+- Monitors for potentially missed messages, resending them if necessary
+
+Refer to the [Bulletin Board System repo](https://github.com/cloudfoundry-incubator/bbs) on GitHub for more information.
 
 ####<a id='etcd'></a>etcd ####
 
