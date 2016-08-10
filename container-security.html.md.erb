@@ -8,61 +8,62 @@ owner: Security
 This topic describes how Cloud Foundry (CF) secures the containers that host application instances on Linux. For an overview of other CF security features, see the [Understanding Cloud Foundry Security](security.html) topic.
 
 * [Container Mechanics](#mechanics) provides an overview of container isolation. 
-* [Container Networking](#networking) describes container networking and how CF administrators [customize](#config-traffic) container network traffic rules for their deployment. 
+* [Container Networking](#networking) provides an [overview](#net-overview) of container networking and describes how CF administrators [customize](#config-traffic) container network traffic rules for their deployment. 
 * [Container Security](#security) describes how CF secures containers by running application instances in [unprivileged](#types) containers and by [hardening](#hardening) them.
 
 ## <a id='mechanics'></a>Container Mechanics###
 
-Each instance of an application deployed to CF runs within its own self-contained environment, a [Garden container](./diego/diego-architecture.html#garden) that isolates processes, memory, and the filesystem. CF isolates all containers from each other using operating system features and the characteristics of the virtual and physical infrastructure where CF is deployed. 
+Each instance of an application deployed to CF runs within its own self-contained environment, a [Garden container](./diego/diego-architecture.html#garden). This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where CF is deployed. 
 
-### <a id='isolation'></a>Container Isolation
+CF achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
 
-Container isolation is achieved by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set such that multiple containers present on the same host cannot detect each other. Every container includes a private root filesystem – each container has its own Process ID (PID), namespace, network namespace, and mount namespace.
-
-This container filesystem is created by stacking a read-only base filesystem and a container-specific read-write filesystem, commonly known as an overlay filesystem. The read-only filesystem contains the minimal set of operating system packages and Garden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write filesystem. The read-write filesystem is unique to each container and is created by formatting a large sparse file of a fixed size. This fixed size prevents the read-write filesystem from overflowing into unallocated space.
+CF creates the container filesystem by stacking a read-only base filesystem and a container-specific read-write filesystem, commonly known as an overlay filesystem. The read-only filesystem contains the minimal set of operating system packages and Garden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write filesystem. The read-write filesystem is unique to each container and is created by formatting a large sparse file of a fixed size. This fixed size prevents the read-write filesystem from overflowing into unallocated space.
 
 Resource control is managed using Linux control groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt)). Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers. 
 
 <p class="note">
-    <strong>Note</strong>: BOSH does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
+    <strong>Note</strong>: CF does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
 </p>
 
 ## <a id='networking'></a>Container Networking ##
 
-To isolate applications and control outgoing traffic, each Garden container uses a dedicated virtual network interface (VNI) that consists of a pair of Ethernet addresses: one visible to the application instance running in the container, and the other visible to the host VM’s root namespace. The pair is configured to use IPs in a small and static subnet. Applications are typically allowed to invoke other applications in CF only by leaving the system and re-entering through the load balancer positioned in front of the CF routers. 
+### <a id='net-overview'></a>Networking Overview ###
 
-When an application instance starts, the [Diego cell](./diego/diego-architecture.html#cell-components) (or [DEA](./architecture/execution-agent.html)) on the host VM allocates an IP address and assigns an arbitrary port to the application container. The application uses the `PORT` environment variable provided in the container environment to determine which port to listen on. Because the host assigns a random value to the `PORT` environment variable, the value is generally unique for each application instance.
+To isolate applications and control outgoing traffic, each Garden container uses a dedicated virtual network interface that consists of a pair of Ethernet addresses: one visible to the application instance running in the container, and the other visible to the host VM’s root namespace. The pair is configured to use IP addresses in a small and static subnet. Applications are typically allowed to invoke other applications in CF only by leaving the system and re-entering through the load balancer positioned in front of the CF routers. 
+<p class="note"><strong>Note</strong>: This topic assumes that your CF deployment uses the newer Diego architecture, instead of the older DEA architecture. For more information, see the <a href="./diego/dea-vs-diego.html">Differences Between DEA and Diego Architectures</a> topic.</p>
+
+When an application instance starts, the [Diego cell](./diego/diego-architecture.html#cell-components) on the host VM allocates an IP address and assigns an arbitrary port to the application container. The application uses the `PORT` environment variable provided in the container environment to determine which port to listen on. Because the host assigns a random value to the `PORT` environment variable, the value is generally unique for each application instance.
 
 A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as recommended, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
 
-* <strong>Inbound</strong> requests flow from the load balancer through the router to the host cell (or DEA), then into the application container. The router determines which application instance receives each request.
+* <strong>Inbound</strong> requests flow from the load balancer through the router to the host cell, then into the application container. The router determines which application instance receives each request.
 
-* <strong>Outbound</strong> traffic flows from the application container to the cell (or DEA), then to the gateway on the cell's virtual network interface. This gateway might be a NAT to external networks depending on your IaaS.
+* <strong>Outbound</strong> traffic flows from the application container to the cell, then to the gateway on the cell's virtual network interface. Depending on your IaaS, this gateway may be a NAT to external networks.
 
   <%= image_tag("images/security/sysbound2.png") %>
 
-### <a id='config-traffic'></a>Container Network Traffic Rules ###
+### <a id='config-traffic'></a>Network Traffic Rules ###
 
 Administrators can configure rules to govern container network traffic. These rules can prevent system access from external networks and between internal components, and restrict applications from establishing connections over the virtual network interface.
 
 Administrators configure these rules at two levels: 
 
 * [Application Security Groups](#asg) apply network traffic rules at the container level.
-* [Network Properties](#network-properties) of cells (or DEAs) apply network traffic rules at the host VM level.
+* [Network Properties](#network-properties) of cells apply network traffic rules at the host VM level.
 
 #### <a id='asg'></a>Application Security Groups ####
 
-CF blocks all outbound network connections from application containers by default. Administrators can override this behavior by configuring ASGs to specify egress access rules for applications.
+CF blocks all outbound network connections from application containers by default. Administrators can override this behavior by configuring Application Security Groups (ASGs) to specify egress access rules for applications.
 
 To target applications with specific network traffic rules, ASGs define traffic rules for individual containers. The rules specify the protocols, addresses, and ports that are allowed for outgoing traffic. Because they are “allow” rules, their order of evaluation is unimportant when multiple application security groups apply to the same space, org, or deployment. The cell uses these rules to filter and log outbound network traffic.
 
-When applications are first staging, they need traffic rules loose enough to let them pull resources in from across the network. Once they are running, the traffic rules can be more restrictive and secure. To distinguish between these two security needs, administrators can define one ASG for when an application stages, and a different one for when it runs. To provide granular control in securing a deployment, an administrator can also assign ASGs to apply across a CF deployment, or to specific spaces or orgs within a deployment. 
+When applications are first staging, they need traffic rules loose enough to let them pull resources from across the network. Once they are running, the traffic rules can be more restrictive and secure. To distinguish between these two security needs, administrators can define one ASG for when an application stages, and a different one for when it runs. To provide granular control in securing a deployment, an administrator can also assign ASGs to apply across a CF deployment, or to specific spaces or orgs within a deployment. 
 
 <%=vars.app_sec_groups_link%>
 
 #### <a id='network-properties'></a>Host-level Network Properties ####
 
-Operators can configure the `allow_networks` and `deny_networks` parameters for cells (or DEAs) to restrict communication between system components and applications. 
+Operators can configure the `allow_networks` and `deny_networks` parameters for cells to restrict communication between system components and applications. 
 
 To configure host-level network properties, edit the following properties in your Diego manifest and redeploy:
 
@@ -84,24 +85,24 @@ To configure host-level network properties for DEAs, see <%=vars.dea_properties%
 
 CF secures containers through the following measures:
 
-* Running application instances in [unprivileged](#types) containers by default.
-* [Hardening](#hardening) containers by limiting functionality and access rights.
-* Blocking all outbound network connections from application containers by default. Administrators can override this behavior by [configuring Application Security Groups](#asg) (ASGs).
+* Running application instances in [unprivileged](#types) containers by default
+* [Hardening](#hardening) containers by limiting functionality and access rights
+* Blocking all outbound network connections from application containers by default (administrators can override this behavior by [configuring Application Security Groups](#asg))
 
-### <a id="types"></a> Container Types
+### <a id="types"></a> Types
 
 Garden has two container types: unprivileged and privileged. Currently, CF runs all application instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
 
-Formerly, CF ran applications based on Docker images in unprivileged containers, and buildpack-based applications and staging tasks in privileged containers. CF ran applications based on Docker images in unprivileged containers because Docker images come with their own root filesystem and user, so CF could not trust the root filesystem and could not assume that the container user process would never be root. CF ran build-pack based applications and staging tasks in privileged containers because they use the cflinuxfs2 root filesystem and all processes are run as the unprivileged user `vcap`.
+Formerly, CF ran applications based on Docker images in unprivileged containers, and buildpack-based applications and staging tasks in privileged containers. CF ran applications based on Docker images in unprivileged containers because Docker images come with their own root filesystem and user, so CF could not trust the root filesystem and could not assume that the container user process would never be root. CF ran build-pack based applications and staging tasks in privileged containers because they used the cflinuxfs2 root filesystem and all processes were run as the unprivileged user `vcap`.
 
-Although all application instances and staging tasks now run by default in unprivileged containers, operators can override these defaults by customizing their Diego deployment manifest and redeploying:
+Although all application instances and staging tasks now run by default in unprivileged containers, operators can override these defaults by customizing their Diego deployment manifest and redeploying.
 
 * To enable privileged containers for buildpack-based applications, set the `capi.nsync.diego_privileged_containers` property to `true` in the Diego manifest.
 * To enable privileged containers for staging tasks, set the `capi.stager.diego_privileged_containers` property to `true` in the Diego manifest.
 
-### <a id='hardening'></a> Container Hardening
+### <a id='hardening'></a> Hardening
 
-CF does the following to mitigate against container breakout and denial of service attacks:
+CF mitigates against container breakout and denial of service attacks in the following ways:
 
 * CF uses the full set of [Linux namespaces](http://manpages.ubuntu.com/manpages/wily/man7/namespaces.7.html) (IPC, Network, Mount, PID, User, UTS) to provide isolation between containers running on the same host. The User namespace is not used for privileged containers.
 * In unprivileged containers, CF maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an application from inheriting UID/GID 0 on the host if it breaks out of the container. 
@@ -111,10 +112,10 @@ CF does the following to mitigate against container breakout and denial of servi
 * CF mounts `/proc` and `/sys` as read-only inside containers.
 * CF disallows `dmesg` access for unprivileged users and all users in unprivileged containers.
 * CF uses `chroot` when importing docker images from docker registries.
-* CF establishes a container-specific overlay filesystem mount and uses [`pivot_root`](http://manpages.ubuntu.com/manpages/trusty/man2/pivot_root.2.html) to move the root filesystem into that overlay to isolate the container from the host system’s filesystem.
-* CF eliminates any dependencies on scripts and binaries inside the root filesystem, by not calling any binary or script inside the container filesystem.
-* CF avoids side-loading binaries in the container, through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
-* CF establishes a a virtual ethernet pair for each container for its network traffic. See the [Container Network Traffic](#traffic) section above for more information.
+* CF establishes a container-specific overlay filesystem mount. CF uses [`pivot_root`](http://manpages.ubuntu.com/manpages/trusty/man2/pivot_root.2.html) to move the root filesystem into this overlay, in order to isolate the container from the host system’s filesystem.
+* CF does not call any binary or script inside the container filesystem, in order to eliminate any dependencies on scripts and binaries inside the root filesystem.
+* CF avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
+* CF establishes a virtual Ethernet pair for each container for network traffic. See the [Container Network Traffic](#traffic) section above for more information. The virtual Ethernet pair has the following features:
     * One interface in the pair is inside the container’s network namespace, and is the only non-loopback interface accessible inside the container.
     * The other interface remains in the host network namespace and is bridged to the container-side interface.
     * Egress whitelist rules are applied to these interfaces according to [ASGs](#asg) configured by the administrator.
@@ -138,27 +139,27 @@ CF does the following to mitigate against container breakout and denial of servi
 	* `/dev/tap`
 	* `/dev/tun`
 * CF drops the following [Linux capabilities](http://manpages.ubuntu.com/manpages/wily/man7/capabilities.7.html) for all container processes. Every dropped capability limits what actions the root user can perform.
-	* `CAP\_DAC\_READ\_SEARCH`
-	* `CAP\_LINUX\_IMMUTABLE`
-	* `CAP\_NET\_BROADCAST`
-	* `CAP\_NET\_ADMIN`
-	* `CAP\_IPC\_LOCK`
-	* `CAP\_IPC\_OWNER`
-	* `CAP\_SYS\_MODULE`
-	* `CAP\_SYS\_RAWIO`
-	* `CAP\_SYS\_PTRACE`
-	* `CAP\_SYS\_PACCT`
-	* `CAP\_SYS\_BOOT`
-	* `CAP\_SYS\_NICE`
-	* `CAP\_SYS\_RESOURCE`
-	* `CAP\_SYS\_TIME`
-	* `CAP\_SYS\_TTY\_CONFIG`
-	* `CAP\_LEASE`
-	* `CAP\_AUDIT\_CONTROL`
-	* `CAP\_MAC\_OVERRIDE`
-	* `CAP\_MAC\_ADMIN`
-	* `CAP\_SYSLOG`
-	* `CAP\_WAKE\_ALARM`
-	* `CAP\_BLOCK\_SUSPEND`
-	* `CAP\_SYS\_ADMIN` (for unprivileged containers)
+	* `CAP_DAC_READ_SEARCH`
+	* `CAP_LINUX_IMMUTABLE`
+	* `CAP_NET_BROADCAST`
+	* `CAP_NET_ADMIN`
+	* `CAP_IPC_LOCK`
+	* `CAP_IPC_OWNER`
+	* `CAP_SYS_MODULE`
+	* `CAP_SYS_RAWIO`
+	* `CAP_SYS_PTRACE`
+	* `CAP_SYS_PACCT`
+	* `CAP_SYS_BOOT`
+	* `CAP_SYS_NICE`
+	* `CAP_SYS_RESOURCE`
+	* `CAP_SYS_TIME`
+	* `CAP_SYS_TTY_CONFIG`
+	* `CAP_LEASE`
+	* `CAP_AUDIT_CONTROL`
+	* `CAP_MAC_OVERRIDE`
+	* `CAP_MAC_ADMIN`
+	* `CAP_SYSLOG`
+	* `CAP_WAKE_ALARM`
+	* `CAP_BLOCK_SUSPEND`
+	* `CAP_SYS_ADMIN` (for unprivileged containers)
 
