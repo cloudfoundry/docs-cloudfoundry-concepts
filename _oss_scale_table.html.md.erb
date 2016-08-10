@@ -1,0 +1,106 @@
+The following table provides recommended instance counts for a high-availability deployment. You can decrease the footprint of your deployment by specifying fewer instances and combining multiple components onto a single VM.
+
+<table border="1" class="nice">
+	<tr>
+		<th><strong>Component</strong></th>
+		<th><strong>Job Name Prefix</th>
+		<th><strong>Total Instances</strong></th>
+		<th><strong>Notes</strong></th>
+	</tr>
+	<tr>
+		<td>Diego Cell</td>
+		<td><code>cell_z</code></td>
+		<td>&ge; 3</td>
+		<td><strong><a href="./diego/dea-vs-diego.html">Specific to Diego architecture</a></strong>. The optimal balance between CPU/memory sizing and instance count depends on the performance characteristics of the apps that run on Diego cells. Scaling vertically with larger Diego cells makes for larger points of failure, and more apps go down when a cell fails. On the other hand, scaling horizontally decreases the speed at which the system rebalances apps. Rebalancing 100 cells takes longer and demands more processing overhead than rebalancing 20 cells.</td>
+	</tr>
+	<tr>
+		<td>Diego Brain</td>
+		<td><code>brain_z</code></td>
+		<td>&ge; 2</td>
+		<td><strong><a href="./diego/dea-vs-diego.html">Specific to Diego architecture</a></strong>. One per AZ, or two if only one AZ.</td>
+	</tr>
+	<tr>
+		<td>Diego BBS</td>
+		<td><code>diego_database_z</code></td>
+		<td>&ge; 3</td>
+		<td><strong><a href="./diego/dea-vs-diego.html">Specific to Diego architecture</a></strong>. Set this to to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
+	</tr>
+	<tr>
+		<td>DEA</td>
+		<td><code>runner_z</code></td>
+		<td>&ge; 3</td>
+		<td><strong><a href="./diego/dea-vs-diego.html">Specific to DEA architecture</a></strong>.</td>
+	</tr>
+	<tr>
+		<td>Health Manager (HM9000)</td>
+		<td><code>hm9000_z</code></td>
+		<td>&ge; 2</td>
+		<td><strong><a href="./diego/dea-vs-diego.html">Specific to DEA architecture</a></strong>.</td>
+	</tr>
+	<tr>
+		<td>Consul</td>
+		<td><code>consul_z</code></td>
+		<td>&ge; 3</td>
+		<td>Set this to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
+	</tr>
+	<tr>
+		<td>PostgreSQL Server</td>
+		<td><code>postgres_z</code></td>
+		<td>0 or 1</td>
+		<td>`0` if Postgres database is external.</td>
+	</tr>
+	<tr>
+		<td>MySQL Proxy</td>
+		<td><code>mysql_proxy_z</code></td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>NATS Server</td>
+		<td><code>nats_z</code></td>
+		<td>&ge; 2</td>
+		<td>You might run a single NATS instance if you lack the resources to deploy two stable NATS servers. Components using NATS are resilient to message failures and the BOSH resurrector recovers the NATS VM quickly if it becomes non-responsive.</td>
+	</tr>
+	<tr>
+		<td>Cloud Controller</td>
+		<td><code>api_z</code></td>
+		<td>&ge; 2</td>
+		<td>Scale the Cloud Controller to accommodate the number of requests to the API and the number of apps in the system.</td>
+	</tr>
+	<tr>
+		<td>Router</td>
+		<td><code>router_z</code></td>
+		<td>&ge; 2</td>
+		<td>Scale the router to accommodate the number of incoming requests. Additional instances increase available bandwidth. In general, this load is much less than the load on host VMs, whether Diego cells or DEAs.</td>
+	</tr>
+	<tr>
+		<td>HAProxy</td>
+		<td><code>haproxy_z</code></td>
+		<td>0 or 1</td>
+		<td>For production environments, the best approach is to scale HAProxy to <code>0</code> and configure a high-availability load balancer (LB) to point directly to each gorouter instance. You can also configure the LB to point to HAProxy scaled at <code>1</code>. Either way, an LB is the best way to host Cloud Foundry domains at a single IP address. Round-robin DNS resolution to multiple HAProxy instances has not been tested for high availability.</td>
+	</tr>
+	<tr>
+		<td>UAA</td>
+		<td><code>uaa_z</code></td>
+		<td>&ge; 2</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Doppler Server</td>
+		<td><code>doppler_z</code></td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Doppler servers splits traffic across them. Pivotal recommends to have at least two per Availability Zone.</td>
+	</tr>
+	<tr>
+		<td>Loggregator TC</td>
+		<td><code>loggregator_z</code></td>
+		<td>&ge; 2</td>
+		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Pivotal recommends to have at least two per Availability Zone.</td>
+	</tr>
+	<tr>
+		<td>etcd</td>
+		<td><code>etcd_z</code></td>
+		<td>&ge; 3</td>
+		<td>Set this to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
+	</tr>
+</table>

@@ -1,0 +1,9 @@
+For each component, the variable `max_in_flight` limits how many instances of that component are restarted simultaneously during updates or upgrades. You set `max_in_flight` in the manifest as a system-wide value, plus any component-specific overrides. Values for `max_in_flight` can be any integer between 1 and 100.
+
+To ensure zero downtime during updates, set `max_in_flight` for each component to a number low enough to prevent overburdening the component instances left running. Here are some guidelines:
+
+- For host VMs, the closer their resource usage is to 100%, the lower you should set `max_in_flight`, to allow non-migrating cells to pick up the work of cells stopping and restarting for migration. If resource usage is already close to 100%, scale up your host VMs before any updates.
+- For quorum-based components (etcd, consul, and Diego BBS), set `max_in_flight` to `1`.
+- For other components, set `max_in_flight` to the number of instances that you can afford to have down at any one time. This depends on your capacity planning. With higher redundancy, you can make the number high so that updates run faster. But if your components are at high utilization, you should keep the number low.
+
+Never set `max_in_flight` to a value greater than or equal to the number of instances you have running for a component.

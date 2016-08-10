@@ -46,7 +46,7 @@ You can horizontally scale most Cloud Foundry components to multiple instances t
 
 For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
 
-If you store blobs internally using either NFS or WebDAV, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS Server VM if it fails. <%= vars.contact_support %>
+If you store blobs internally using WebDAV, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV server VM if it fails. <%= vars.contact_support %>
 
 The singleton Collector and Compilation components do not affect platform availability.
 
