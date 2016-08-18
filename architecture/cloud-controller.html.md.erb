@@ -24,7 +24,7 @@ The Cloud Controller collects these advertisements in a construct called a pool.
 1. It filters the remaining advertisements to include only those:
     * With adequate disk
     * With adequate memory
-    * Running the required stack (linux or windows)
+    * Running the required stack (Linux or Windows)
 
     <%= image_tag '../images/dea_placement_algorithm/dea_criteria_filter.png' %>
 1. It then narrows its search to DEAs running in the availability zone with the fewest running instances (according to the information provided by the advertisements in the pool).
