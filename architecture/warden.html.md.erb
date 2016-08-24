@@ -25,7 +25,7 @@ The [Warden](https://github.com/cloudfoundry/warden) repository in GitHub contai
 ## <a id='intro'></a>Getting Started ##
 
 This guide assumes Ruby 1.9 and Bundler are already available.
-Ensure that Ruby 1.9 has GNU readline library support through the 'libreadline-dev' package and zlib support through the 'zlib1g-dev' package.
+Ensure that Ruby 1.9 has GNU readline library support through the `libreadline-dev` package and `zlib` support through the `zlib1g-dev` package.
 
 ### <a id='kernel'></a>Install Kernel ###
 
@@ -336,9 +336,9 @@ This kernel is available as `linux-image-server-lts-backport-natty` (substitute 
 
 Other dependencies are:
 
-* build-essential (for compiling the Warden C bits)
-* debootstrap (for bootstrapping the base filesystem of the container)
-* quota (for managing file system quotas)
+* `build-essential` (for compiling the Warden C bits)
+* `debootstrap` (for bootstrapping the base filesystem of the container)
+* `quota` (for managing file system quotas)
 
 Run `rake setup` for further Warden bootstrapping.
 
