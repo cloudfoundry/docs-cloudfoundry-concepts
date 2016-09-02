@@ -114,7 +114,7 @@ If you are already scaling the number of instances of such components to increas
 	<tr>
 		<td><a href="./architecture/messaging-nats.html">NATS Server</a></td>
 		<td>&ge; 2</td>
-		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
+		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, we recommend that you use one NATS server.</td>
 	</tr>
 	<tr>
 		<td><a href="./architecture/#hm9k">HM9000</a></td>
@@ -154,12 +154,12 @@ If you are already scaling the number of instances of such components to increas
 	<tr>
 		<td><a href="../devguide/deploy-apps/streaming-logs.html">Doppler Server (formerly Loggregator Server)</a></td>
 		<td>&ge; 2</td>
-		<td>Deploying additional Doppler servers splits traffic across them. Pivotal recommends you have at least two per Availability Zone.</td>
+		<td>Deploying additional Doppler servers splits traffic across them. We recommend you have at least two per Availability Zone.</td>
 	</tr>
 	<tr>
 		<td>Loggregator Traffic Controller</td>
 		<td>&ge; 2</td>
-		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Pivotal recommends you have at least two per Availability Zone.</td>
+		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. We recommend you have at least two per Availability Zone.</td>
 	</tr>
 	<tr>
 		<td>etcd</td>
@@ -214,7 +214,7 @@ If you are already scaling the number of instances of such components to increas
 	<tr>
 		<td>NATS Server</td>
 		<td>&ge; 2</td>
-		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, Pivotal recommends that you use one NATS server.</td>
+		<td>If you lack the network bandwidth, CPU utilization, or other resources to deploy two stable NATS servers, we recommend that you use one NATS server.</td>
 	</tr>
 	<tr>
 		<td>Cloud Controller</td>
@@ -234,12 +234,12 @@ If you are already scaling the number of instances of such components to increas
 	<tr>
 		<td>Doppler Server</td>
 		<td>&ge; 2</td>
-		<td>Deploying additional Doppler servers splits traffic across them. Pivotal recommends to have at least two per Availability Zone.</td>
+		<td>Deploying additional Doppler servers splits traffic across them. We recommends to have at least two per Availability Zone.</td>
 	</tr>
 	<tr>
 		<td>Loggregator TC</td>
 		<td>&ge; 2</td>
-		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. Pivotal recommends to have at least two per Availability Zone.</td>
+		<td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. We recommend you have at least two per Availability Zone.</td>
 	</tr>
 	<tr>
 		<td>etcd</td>
@@ -278,7 +278,7 @@ Because NATS is deployed by BOSH, the BOSH resurrector will recover the VM if it
 **NFS Server**:
 
 For some deployments, an appropriate strategy would be to use your infrastructure's high availability features to immediately recover the VM where the NFS Server runs.
-In others, it would be preferable to run a scalable and redundant blobstore service. Contact Pivotal PSO if you need help.
+In others, it would be preferable to run a scalable and redundant blobstore service. Contact our support if you need help.
 
 **Collector**:
 
@@ -292,6 +292,6 @@ This component is active only during platform installation and upgrades.
 
 For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible.
 
-Contact Pivotal PSO if you require replicated databases or any assistance.
+Contact our support if you require replicated databases or any assistance.
 
 
