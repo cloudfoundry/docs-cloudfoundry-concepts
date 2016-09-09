@@ -174,18 +174,18 @@ $ bundle exec rspec
 This section describes how the DEA architecture stages applications.
 
  <%= image_tag("app_push_flow_diagram.png", :height => "100%", :width => "100%") %>
+ 
+1. At the command line, the developer enters the directory containing her application and uses the Cloud Foundry Command Line Interface (cf CLI) tool to issue a push command.
 
-1. At the command line, the developer enters the directory containing her application and uses the cf command line tool to issue a push command.
-
-2. The cf command line tool tells the Cloud Controller to create a record for the application.
+2. The cf CLI tool tells the Cloud Controller to create a record for the application.
 
 3. The Cloud Controller stores the application metadata (e.g. the app name, number of instances the user specified, and the buildpack).
 
-4. The cf command line tool uploads the application files.
+4. The cf CLI tool uploads the application files.
 
 5. The Cloud Controller stores the raw application files in the blobstore.
 
-6. The cf command line tool issues an app start command.
+6. The cf CLI tool issues an app start command.
 
 7. Because the app has not already been staged, the Cloud Controller chooses a DEA instance from the DEA pool to stage the application.
 The staging DEA uses the instructions in the buildpack to stage the application.
