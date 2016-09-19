@@ -42,7 +42,7 @@ The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of a
 When a developer pushes an application to Cloud Foundry, she is targeting the
 Cloud Controller. The Cloud Controller then directs the Diego Brain through the [CC-Bridge](../diego/diego-architecture.html#bridge-components) to coordinate individual [Diego cells](#diego-cell) to stage and run applications.
 
-In [pre-Diego architecture](../diego/dea-vs-diego.html#design), the Cloud Controller's Droplet Execution Agent (DEA) performed these app lifecycle tasks.
+<%=vars.pre_diego_cc%>
 
 The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), <%= vars.services_link %>, and more.
 
@@ -76,7 +76,7 @@ You can configure the blobstore as either an internal server or an external S3 o
 
 Each application VM has a Diego Cell that executes application start and stop actions locally, manages the VM's containers, and reports app status and other data to the BBS and [Loggregator](#metrics-logging).
 
-In pre-Diego CF architecture, the [DEA node](./execution-agent.html) performed the task of managing the applications and containers on a VM.
+<%=vars.pre_diego_node%>
 
 ## <a id='services'></a>Services
 
