@@ -1,3 +1,5 @@
+The following table describes roles and permissions that are applied after an operator sets the status of an org to _suspended_.
+
 <table id='oss-roles-permissions' border='1' class='nice'>
     <tr>
         <th>User Role</th>
@@ -9,8 +11,8 @@
         <th>Space Developer</th>
         <th>Space Auditor</th>
     </tr><tr>
-        <td>Scope of operation</td>
-        <td>Org</td> 
+        <td>Scope of operation</td> 
+        <td>Org</td>
         <td>Org</td>
         <td>Org</td>
         <td>Org</td>
@@ -20,10 +22,10 @@
     </tr><tr>
         <td>Assign user roles</td>
         <td>&check;</td>
-        <td>&check;</td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
     </tr><tr>
@@ -38,7 +40,7 @@
     </tr><tr>
         <td>Create and assign Org and Space quota plans</td>
         <td>&check;</td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -55,15 +57,6 @@
         <td>&check;</td>
     </tr><tr>
         <td>Create Orgs</td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-    </tr><tr>
-        <td>Suspend or Reactivate an Org</td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -83,7 +76,16 @@
     </tr><tr>
         <td>Edit, rename, and delete Orgs</td>
         <td>&check;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Suspend or Reactivate an Org</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -92,7 +94,7 @@
     </tr><tr>
         <td>Create Spaces</td>
         <td>&check;</td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -102,7 +104,7 @@
         <td>View Spaces</td>
         <td>&check;</td>
         <td>&check;</td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td>&check;</td>
         <td></td>
@@ -110,16 +112,16 @@
     </tr><tr>
         <td>Edit Spaces</td>
         <td>&check;</td>
-        <td>&check;</td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
+        <td></td>
         <td></td>
 	<td></td>
     </tr><tr>
         <td>Delete Spaces</td>
         <td>&check;</td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -128,10 +130,10 @@
     </tr><tr>
         <td>Rename Spaces</td>
         <td>&check;</td>
-        <td>&check;</td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
     </tr><tr>
@@ -146,7 +148,7 @@
     </tr><tr>
         <td>Add private domains<sup>&dagger;</sup></td>
         <td>&check;</td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -190,7 +192,4 @@
         <td></td>
     </tr>
 </table>
-
-<sup>&#42;</sup>Not by default, unless [feature flag](../adminguide/listing-feature-flags.html) `user_org_creation` is set to `true`.
-
 <sup>&dagger;</sup>Unless disabled by [feature flags](../adminguide/listing-feature-flags.html).

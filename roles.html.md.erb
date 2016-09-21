@@ -17,10 +17,11 @@ All collaborators access an org with user accounts.
 Collaborators in an org share a resource quota plan, applications, services
 availability, and custom domains.
 
+By default, an org has the status of _active_. An operator can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services. For details on what activities are allowed for suspended orgs, see [Roles and Permissions for Suspended Orgs](#suspendedroles). 
+
 ## <a id='users'></a>User Accounts ##
 
-A user account represents an individual person within the context of a Cloud
-Foundry installation.
+A user account represents an individual person within the context of a <%= vars.product_name %> installation.
 A user can have different roles in different spaces within an org, governing
 what level and type of access they have within that space.
 
@@ -37,6 +38,8 @@ Each space role applies only to a particular space.
 A user can have one or more roles.
 The combination of these roles defines the user’s overall permissions in the
 org and within specific spaces in that org.
+
+* **Admin** is a user role that has been assigned the `cloud_controller.admin` scope in UAA. An admin user has permissions on all orgs and spaces and can perform operational actions using the [Cloud Controller API](http://apidocs.cloudfoundry.org/). To create an account with `cloud_controller.admin` scope for your <%= vars.product_name %> installation, see [Create an Admin User](../adminguide/uaa-user-management.html#creating-admin-users). 
 
 * **Org Managers** are managers or other users who need to administer the account.
 
@@ -56,3 +59,7 @@ applications and services in a space.
 * **Space Auditors** view but cannot edit the space.
 
 <%= partial vars.roles_table %>
+
+### <a id='suspendedroles'></a>Roles and Permissions for Suspended Orgs ###
+
+<%= partial vars.suspended_roles_table %>
