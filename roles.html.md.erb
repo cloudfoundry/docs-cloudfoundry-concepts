@@ -41,6 +41,8 @@ org and within specific spaces in that org.
 
 * **Admin** is a user role that has been assigned the `cloud_controller.admin` scope in UAA. An admin user has permissions on all orgs and spaces and can perform operational actions using the [Cloud Controller API](http://apidocs.cloudfoundry.org/). To create an account with `cloud_controller.admin` scope for your <%= vars.product_name %> installation, see [Create an Admin User](../adminguide/uaa-user-management.html#creating-admin-users). 
 
+* **Admin Read-Only** is a user role that has been assigned the `cloud_controller.admin_read_only` scope in UAA. This role has read-only access to all Cloud Controller API resources.
+
 * **Org Managers** are managers or other users who need to administer the account.
 
 <%= vars.link_adminguide_commands %>

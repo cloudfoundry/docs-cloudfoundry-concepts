@@ -4,6 +4,7 @@ The following table describes roles and permissions that are applied after an op
     <tr>
         <th>User Role</th>
         <th>Admin</th>
+        <th>Admin Read-Only</th>
         <th>Org Manager</th>
         <th>Org Auditor</th>
         <th>Org Billing Manager</th>
@@ -12,6 +13,7 @@ The following table describes roles and permissions that are applied after an op
         <th>Space Auditor</th>
     </tr><tr>
         <td>Scope of operation</td> 
+        <td>Org</td>
         <td>Org</td>
         <td>Org</td>
         <td>Org</td>
@@ -28,8 +30,10 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr><tr>
         <td>View users and roles</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -46,26 +50,10 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
         <td></td>
-    </tr><tr>
-        <td>View Org quota plans</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-    </tr><tr>
-        <td>Create Orgs</td>
-        <td>&check;</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td></td>
     </tr><tr>
-        <td>View Orgs</td>
+        <td>View org quota plans</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -74,8 +62,9 @@ The following table describes roles and permissions that are applied after an op
         <td>&check;</td>
         <td>&check;</td>
     </tr><tr>
-        <td>Edit, rename, and delete Orgs</td>
+        <td>Create orgs</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -83,8 +72,30 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
     </tr><tr>
-        <td>Suspend or Reactivate an Org</td>
+        <td>View all orgs</td>
         <td>&check;</td>
+        <td>&check;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>View orgs where user is member</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+    </tr><tr>
+        <td>Edit, rename, and delete orgs</td>
+        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -92,8 +103,9 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
     </tr><tr>
-        <td>Create Spaces</td>
+        <td>Suspend or activate an org</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -101,17 +113,29 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
     </tr><tr>
-        <td>View Spaces</td>
-        <td>&check;</td>
+        <td>Create spaces</td>
         <td>&check;</td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
     </tr><tr>
-        <td>Edit Spaces</td>
+        <td>View spaces</td>
         <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td></td>
+        <td></td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td></td>
+    </tr><tr>
+        <td>Edit spaces</td>
+        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -119,8 +143,9 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
 	<td></td>
     </tr><tr>
-        <td>Delete Spaces</td>
+        <td>Delete spaces</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -128,8 +153,9 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
 	<td></td>
     </tr><tr>
-        <td>Rename Spaces</td>
+        <td>Rename spaces</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -138,6 +164,7 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
     </tr><tr>
         <td>View the status, number of instances, service bindings, and resource use of applications</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td></td>
@@ -154,9 +181,11 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr><tr>
         <td>Deploy, run, and manage applications</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -172,9 +201,11 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr><tr>
         <td>Associate routes<sup>&dagger;</sup>, instance counts, memory allocation, and disk limit of applications</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -190,6 +221,8 @@ The following table describes roles and permissions that are applied after an op
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr>
 </table>
+
 <sup>&dagger;</sup>Unless disabled by [feature flags](../adminguide/listing-feature-flags.html).

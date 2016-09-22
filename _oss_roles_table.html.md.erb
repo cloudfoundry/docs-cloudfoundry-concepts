@@ -1,7 +1,8 @@
 <table id='oss-roles-permissions' border='1' class='nice'>
     <tr>
-        <th>User Role</th>
+        <th>Activity</th>
         <th>Admin</th>
+        <th>Admin Read-Only</th>
         <th>Org Manager</th>
         <th>Org Auditor</th>
         <th>Org Billing Manager</th>
@@ -14,12 +15,14 @@
         <td>Org</td>
         <td>Org</td>
         <td>Org</td>
+        <td>Org</td>
         <td>Space</td>
         <td>Space</td>
         <td>Space</td>
     </tr><tr>
         <td>Assign user roles</td>
         <td>&check;</td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -35,26 +38,30 @@
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
-    </tr><tr>
-        <td>Create and assign Org and Space quota plans</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr><tr>
-        <td>View Org quota plans</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
-        <td>&check;</td>
         <td>&check;</td>
     </tr><tr>
-        <td>Create Orgs</td>
+        <td>Create and assign org and space quota plans</td>
+        <td>&check;</td>
+        <td></td>
+        <td>&check;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>View org quota plans</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;</td>
+    </tr><tr>
+        <td>Create orgs</td>
+        <td>&check;</td>
         <td><sup>&#42;</sup></td>
         <td><sup>&#42;</sup></td>
         <td><sup>&#42;</sup></td>
@@ -63,7 +70,19 @@
         <td><sup>&#42;</sup></td>
         <td><sup>&#42;</sup></td>
     </tr><tr>
-        <td>Suspend or Reactivate an Org</td>
+        <td>Suspend or activate an org</td>
+        <td>&check;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>View all orgs</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -72,7 +91,8 @@
         <td></td>
         <td></td>
     </tr><tr>
-        <td>View Orgs</td>
+        <td>View orgs where user is member</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -81,8 +101,9 @@
         <td>&check;</td>
         <td>&check;</td>
     </tr><tr>
-        <td>Edit, rename, and delete Orgs</td>
+        <td>Edit, rename, and delete orgs</td>
         <td>&check;</td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -90,8 +111,9 @@
         <td></td>
         <td></td>
     </tr><tr>
-        <td>Create Spaces</td>
+        <td>Create spaces</td>
         <td>&check;</td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -99,17 +121,19 @@
         <td></td>
         <td></td>
     </tr><tr>
-        <td>View Spaces</td>
-        <td>&check;</td>
+        <td>View spaces</td>
         <td>&check;</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
         <td></td>
+        <td></td>
+        <td>&check;</td>
+        <td>&check;</td>
         <td></td>
     </tr><tr>
-        <td>Edit Spaces</td>
+        <td>Edit spaces</td>
         <td>&check;</td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -117,8 +141,9 @@
         <td></td>
 	<td></td>
     </tr><tr>
-        <td>Delete Spaces</td>
+        <td>Delete spaces</td>
         <td>&check;</td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -126,8 +151,9 @@
         <td></td>
 	<td></td>
     </tr><tr>
-        <td>Rename Spaces</td>
+        <td>Rename spaces</td>
         <td>&check;</td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -138,6 +164,7 @@
         <td>View the status, number of instances, service bindings, and resource use of applications</td>
         <td>&check;</td>
         <td>&check;</td>
+        <td>&check;</td>
         <td></td>
         <td></td>
         <td>&check;</td>
@@ -146,6 +173,7 @@
     </tr><tr>
         <td>Add private domains<sup>&dagger;</sup></td>
         <td>&check;</td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -160,6 +188,7 @@
         <td></td>
         <td></td>
         <td></td>
+        <td>&check;</td>
         <td></td>
     </tr><tr>
         <td>Instantiate and bind services to applications</td>
@@ -169,6 +198,7 @@
         <td></td>
         <td></td>
         <td></td>
+        <td>&check;</td>
         <td></td>
     </tr><tr>
         <td>Associate routes<sup>&dagger;</sup>, instance counts, memory allocation, and disk limit of applications</td>
@@ -178,6 +208,7 @@
         <td></td>
         <td></td>
         <td></td>
+        <td>&check;</td>
         <td></td>
     </tr><tr>
         <td>Rename applications</td>
@@ -187,6 +218,7 @@
         <td></td>
         <td></td>
         <td></td>
+        <td>&check;</td>
         <td></td>
     </tr>
 </table>
