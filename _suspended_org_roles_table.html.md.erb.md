@@ -1,5 +1,3 @@
-The following table describes roles and permissions that are applied after an operator sets the status of an org to _suspended_.
-
 <table id='oss-roles-permissions' border='1' class='nice'>
     <tr>
         <th>User Role</th>
