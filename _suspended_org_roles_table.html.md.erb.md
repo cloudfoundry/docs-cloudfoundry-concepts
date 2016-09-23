@@ -40,7 +40,7 @@
         <td>&check;</td>
         <td>&check;</td>
     </tr><tr>
-        <td>Create and assign Org and Space quota plans</td>
+        <td>Create and assign org and space quota plans</td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -81,7 +81,7 @@
         <td></td>
     </tr>
     <tr>
-        <td>View orgs where user is member</td>
+        <td>View orgs where user is a member</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>

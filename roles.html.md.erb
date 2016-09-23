@@ -17,7 +17,7 @@ All collaborators access an org with user accounts.
 Collaborators in an org share a resource quota plan, applications, services
 availability, and custom domains.
 
-By default, an org has the status of _active_. An operator can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services. For details on what activities are allowed for suspended orgs, see [Roles and Permissions for Suspended Orgs](#suspendedroles). 
+By default, an org has the status of _active_. An admin can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services. For details on what activities are allowed for suspended orgs, see [Roles and Permissions for Suspended Orgs](#suspendedroles). 
 
 ## <a id='users'></a>User Accounts ##
 
@@ -39,13 +39,10 @@ A user can have one or more roles.
 The combination of these roles defines the user’s overall permissions in the
 org and within specific spaces in that org.
 
-* **Admin** is a user role that has been assigned the `cloud_controller.admin` scope in UAA. An admin user has permissions on all orgs and spaces and can perform operational actions using the [Cloud Controller API](http://apidocs.cloudfoundry.org/). To create an account with `cloud_controller.admin` scope for your <%= vars.product_name %> installation, see [Create an Admin User](../adminguide/uaa-user-management.html#creating-admin-users). 
+<%= vars.admin_role %>
+<%= vars.admin_read_only_role %>
 
-* **Admin Read-Only** is a user role that has been assigned the `cloud_controller.admin_read_only` scope in UAA. This role has read-only access to all Cloud Controller API resources.
-
-* **Org Managers** are managers or other users who need to administer the account.
-
-<%= vars.link_adminguide_commands %>
+* **Org Managers** are managers or other users who need to administer the org.
 
 * **Org Auditors** view but cannot edit user information and org quota usage 
 information.
@@ -60,9 +57,9 @@ applications and services in a space.
 
 * **Space Auditors** view but cannot edit the space.
 
-### <a id='roles></a>Roles and Permissions for Active Orgs
+### <a id='roles'></a>Roles and Permissions for Active Orgs ###
 
-The following table describes the default permissions for various <%= vars.product_name %>  roles.
+The following table describes the permissions for various <%= vars.product_name %> roles.
 
 <%= partial vars.roles_table %>
 
