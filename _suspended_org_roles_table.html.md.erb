@@ -1,6 +1,6 @@
 <table id='oss-roles-permissions' border='1' class='nice'>
     <tr>
-        <th>Activity</th>
+        <th>User Role</th>
         <th>Admin</th>
         <th>Admin Read-Only</th>
         <th>Org Manager</th>
@@ -10,8 +10,8 @@
         <th>Space Developer</th>
         <th>Space Auditor</th>
     </tr><tr>
-        <td>Scope of operation</td>
-        <td>Org</td> 
+        <td>Scope of operation</td> 
+        <td>Org</td>
         <td>Org</td>
         <td>Org</td>
         <td>Org</td>
@@ -23,10 +23,10 @@
         <td>Assign user roles</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
     </tr><tr>
@@ -43,7 +43,7 @@
         <td>Create and assign org and space quota plans</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -62,15 +62,14 @@
     </tr><tr>
         <td>Create orgs</td>
         <td>&check;</td>
-        <td><sup></sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
-    </tr>
-    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
         <td>View all orgs</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -80,8 +79,9 @@
         <td></td>
         <td></td>
         <td></td>
-    </tr><tr>
-        <td>View orgs where user is member</td>
+    </tr>
+    <tr>
+        <td>View orgs where user is a member</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -94,7 +94,7 @@
         <td>Edit, rename, and delete orgs</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -114,7 +114,7 @@
         <td>Create spaces</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -134,17 +134,17 @@
         <td>Edit spaces</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
+        <td></td>
         <td></td>
 	<td></td>
     </tr><tr>
         <td>Delete spaces</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -154,10 +154,10 @@
         <td>Rename spaces</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
     </tr><tr>
@@ -174,7 +174,7 @@
         <td>Add private domains<sup>&dagger;</sup></td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -188,7 +188,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
     </tr><tr>
         <td>Instantiate and bind services to applications</td>
@@ -198,7 +198,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
     </tr><tr>
         <td>Associate routes<sup>&dagger;</sup>, instance counts, memory allocation, and disk limit of applications</td>
@@ -208,7 +208,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
     </tr><tr>
         <td>Rename applications</td>
@@ -218,11 +218,9 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>&check;</td>
+        <td></td>
         <td></td>
     </tr>
 </table>
-
-<sup>&#42;</sup>Not by default, unless [feature flag](../adminguide/listing-feature-flags.html) `user_org_creation` is set to `true`.
 
 <sup>&dagger;</sup>Unless disabled by [feature flags](../adminguide/listing-feature-flags.html).
