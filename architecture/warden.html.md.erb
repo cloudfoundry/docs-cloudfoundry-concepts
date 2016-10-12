@@ -108,29 +108,19 @@ folder.
 The cgroups offers two possibilities for limiting the CPU usage:
 
 * CPU affinity: Binds a group to certain CPU cores which limits the actual usage.
-* CPU bandwidth: Sets the weight of a group with the process scheduler. This is the method
-used by Cloud Foundry. This is giving the process all free CPU, but will give other
-processes a higher priority considering the CPU allowance. Setting this is
-done via the cpu.shares option, which is in range from 2 to 1024, with 1024
-the default. CPU bandwidth is a realtime CPU quota that a process gets and it
-is dynamically calculated based on the CPU activity of all the processes.
+* CPU bandwidth: Sets the weight of a group with the process scheduler. Cloud Foundry uses this method. The process scheduler gives a process all free CPU, but give other processes a higher priority considering the CPU allowance. Set this through the `cpu.shares` option, which ranges from `2` to `1024`, with a default of `1024`. CPU bandwidth is a realtime CPU quota that a process receives and is dynamically calculated based on the CPU activity of all the processes.
 
-The CPU share in percent can be calculated when you divide the cpu.shares
-for a process on the sum of all cpu.shares of all processes that are doing
-some CPU activity:
+Divide the `cpu.shares` of a process by the sum of all `cpu.shares` with CPU activity to calculate the CPU share percentage for the process:
 
-<code>process_cpu_share_percent = cpu.shares / sum_cpu_shares * 100</code>
+<code>process\_cpu\_share\_percentage = (cpu.shares / sum\_cpu\_shares) * 100</code>
 
 Both Diego apps and DEA apps scale the number of allocated shares linearly with
 the amount of memory, with an app instance requesting 8G of memory getting the
 upper limit of 1024 shares. 
 
-<code>process_cpu.shares = application_memory / 8</code>
+<code>process\_cpu.shares = application\_memory / 8</code>
 
-Diego also guarantees a minimum of 10 shares per app instance.
-
-This prevents oversubscription by a single application and the starving of CPU
-to other containers.
+Diego guarantees a minimum of 10 shares per app instance to prevents oversubscription by a single application and the starving of CPU resources to other containers.
 
 The next example below helps to illustrate this better. We are having for our
 example three processes - P1, P2 and P3 and they are assigned respectively with
@@ -139,24 +129,23 @@ as there is nothing else that demands CPU power. Then P2 joins in and is doing
 some actual work (e.g. a request comes in). The CPU share between P1 and P2 will
 be calculated as follows:
 
-<code>P1 -> 5/(5+20)=0.2 =20%
-P2 -> 20/(5+20)=0.8 =80%
-P3 (idle)</code>
+* P1 -> 5 / (5+20) = 0.2 = 20%
+* P2 -> 20 / (5+20) = 0.8 = 80%
+* P3 (idle)
 
 However at some point process P3 joins in as well. Then the distribution will
 be recalculated again:
 
-<code>P1 -> 5/(5+20+30)=0.0909 ~9%
-P2 -> 20/(5+20+30)=0.363 ~36%
-P3 -> 30/(5+20+30)=0.545 ~55%</code>
+* P1 -> 5 / (5+20+30) = 0.0909 = ~9%
+* P2 -> 20 / (5+20+30) = 0.363 = ~36%
+* P3 -> 30 / (5+20+30) = 0.545 = ~55%
 
 Assuming that P1 becomes idle for some amount of time, then a recalculation
 between P2 and P3 takes place once more:
 
-<code>
-P1 (idle)
-P2 -> 20/(20+30)=0.4 =40%
-P3 -> 30/(20+30)=0.6 =60%
+* P1 (idle)
+* P2 -> 20 / (20+30) = 0.4 = 40%
+P3 -> 30 / (20+30) = 0.6 = 60%
 </code>
 
 If P3 finishes or becomes idle then P2 can consume all the CPU as another
