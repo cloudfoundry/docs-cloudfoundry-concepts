@@ -100,23 +100,73 @@ share, and the maximum amount of memory it may use.
 
 Each container is placed in its own cgroup, which requires the container to use
 a fair share of CPU compared to the relative CPU share of other containers.
+CPU shares do not work as direct percentages of total CPU usage. Instead, they
+provide a relative share of CPU usage in a given time window. The cgroups
+pseudo-file-system in CF is located on the runner in the <code>/tmp/warden/cgroups</code>
+folder.
 
-CPU shares do not work as direct percentages of total CPU usage.
-Instead, they provide a relative share of CPU usage in a given time window.
+The cgroups offers two possibilities for limiting the CPU usage: The first is
+binding a group to certain CPU cores and thus limiting the actual usage, which
+is called <em>CPU affinity</em> and additionally the so called <em>CPU bandwidth</em> (the one
+used by Cloud Foundry), which sets the weight of a group with the process
+scheduler. This is giving the process all free CPU, but will give other
+processes a higher priority considering the CPU allowance. Setting this is
+done via the cpu.shares option, which is in range from 2 to 1024, with 1024
+the default. CPU bandwidth is a realtime CPU quota that a process gets and it
+is dynamically calculated based on the CPU activity of all the processes.
 
-For example, if cgroup A has 10 shares and cgroup B has 30, and if their
-processes are both requesting lots of CPU usage, the kernel will grant 10/40 =
-25% time to A and 30/40 = 75% time to B.
+The CPU share in percent can be calculated when you divide the cpu.shares
+for a process on the sum of all cpu.shares of all processes that are doing
+some CPU activity:
 
-If B is idle, A may receive up to all the CPU.
-Shares per cgroup range from 2 to 1024, with 1024 the default.
+<code>process_cpu_share_percent = cpu.shares / sum_cpu_shares * 100</code>
+
 Both Diego apps and DEA apps scale the number of allocated shares linearly with
 the amount of memory, with an app instance requesting 8G of memory getting the
-upper limit of 1024 shares.
+upper limit of 1024 shares. 
+
+<code>process_cpu.shares = application_memory / 8</code>
+
 Diego also guarantees a minimum of 10 shares per app instance.
 
 This prevents oversubscription by a single application and the starving of CPU
 to other containers.
+
+The next example below helps to illustrate this better. We are having for our
+example three processes - P1, P2 and P3 and they are assigned respectively with
+cpu.shares of 5, 20 & 30. Our P1 starts some activity and may use the whole CPU
+as there is nothing else that demands CPU power. Then P2 joins in and is doing
+some actual work (e.g. a request comes in). The CPU share between P1 and P2 will
+be calculated as follows:
+
+<code>P1 -> 5/(5+20)=0.2 =20%
+P2 -> 20/(5+20)=0.8 =80%
+P3 (idle)</code>
+
+However at some point process P3 joins in as well. Then the distribution will
+be recalculated again:
+
+<code>P1 -> 5/(5+20+30)=0.0909 ~9%
+P2 -> 20/(5+20+30)=0.363 ~36%
+P3 -> 30/(5+20+30)=0.545 ~55%</code>
+
+Let's assume that P1 becomes idle for some amount of time - then a recalculation
+between P2 and P3 takes place once more:
+
+<code>P1 (idle)
+P2 -> 20/(20+30)=0.4 =40%
+P3 -> 30/(20+30)=0.6 =60%<code>
+
+If P3 finishes or becomes idle then P2 can consume all the CPU as another
+recalculation will be performed again.
+
+The calculation of the CPU usage based on the percentage of the total CPU power
+available is quite sophisticated as we need for such calculation at a time all
+the CPU activity of all the process including their cpu.shares. And obviously this
+can be completely different a moment later as idle processes may become active
+and vice versa.
+
+<p class="note"><strong>Summary:</strong> In a nutshell the cpu.shares are the minimum guaranteed CPU share that the process can get.</p>
 
 ### <a id='linux'></a>Networking ###
 
