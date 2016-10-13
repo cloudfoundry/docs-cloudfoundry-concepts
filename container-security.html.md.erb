@@ -30,7 +30,8 @@ Resource control is managed using Linux control groups ([cgroups](https://www.ke
 ### <a id='net-overview'></a>Networking Overview ###
 
 To isolate applications and control outgoing traffic, each Garden container uses a dedicated virtual network interface that consists of a pair of Ethernet addresses: one visible to the application instance running in the container, and the other visible to the host VM’s root namespace. The pair is configured to use IP addresses in a small and static subnet. Applications are typically allowed to invoke other applications in CF only by leaving the system and re-entering through the load balancer positioned in front of the CF routers. 
-<p class="note"><strong>Note</strong>: This topic assumes that your CF deployment uses the newer Diego architecture, instead of the older DEA architecture. For more information, see the <a href="./diego/dea-vs-diego.html">Differences Between DEA and Diego Architectures</a> topic.</p>
+
+<%= vars.container_security1 %>
 
 When an application instance starts, the [Diego cell](./diego/diego-architecture.html#cell-components) on the host VM allocates an IP address and assigns an arbitrary port to the application container. The application uses the `PORT` environment variable provided in the container environment to determine which port to listen on. Because the host assigns a random value to the `PORT` environment variable, the value is generally unique for each application instance.
 
@@ -79,7 +80,7 @@ To configure host-level network properties, edit the following properties in you
 
 <p class="note"><strong>Note</strong>: ASGs provide a greater degree of security than host-level network properties. ASGs enable you to more securely restrict application outbound traffic to predefined routes. ASGs also overwrite any host-level configurations.</p> 
 
-To configure host-level network properties for DEAs, see <%=vars.dea_properties%>.
+<%= vars.container_security2 %>
 
 ## <a id='security'></a>Container Security###
 

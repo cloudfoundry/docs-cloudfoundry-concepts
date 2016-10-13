@@ -10,44 +10,11 @@ system.
 The Cloud Controller maintains a database with tables for orgs, spaces,
 services, user roles, and more.
 
-##<a id='dea-placement'></a>Droplet Execution Agent (DEA) Placement Algorithm ##
+##<a id='auction'></a>Diego Auction ##
 
-<%= vars.cloud_controller_dea_algorithm %>
+The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to balance application processes over the [cells](index.html#diego-cell) in a Cloud Foundry installation.
 
-Whenever Cloud Foundry needs to spin up a new instance of an app, the Cloud Controller is responsible for [selecting a droplet execution agent (DEA) to run it](https://github.com/cloudfoundry/cloud_controller_ng/blob/2b1d38cba944086fa545d621a37ce4089b8e239e/lib/cloud_controller/dea/pool.rb#L44-L50).
-
-DEAs broadcast their availability to the Cloud Controller through a NATS message called an `advertisement`, which contains a `stats` hash with information about their available memory, available disk, the stack which the DEA runs, and an expiration time.
-
-The Cloud Controller collects these advertisements in a construct called a pool. When the Cloud Controller needs to find a DEA to run an app, it runs through the following steps, using criteria (minimum thresholds for disk, memory, etc.) specific to the app that the chosen DEA will run:
-
-1. It removes the expired DEA advertisements from the pool.
-1. It filters the remaining advertisements to include only those:
-    * With adequate disk
-    * With adequate memory
-    * Running the required stack (Linux or Windows)
-
-    <%= image_tag '../images/dea_placement_algorithm/dea_criteria_filter.png' %>
-1. It then narrows its search to DEAs running in the availability zone with the fewest running instances (according to the information provided by the advertisements in the pool).
-    <%= image_tag '../images/dea_placement_algorithm/dea_az_select.png' %>
-1. It then narrows its search to the DEAs with the fewest running instances.
-    <%= image_tag '../images/dea_placement_algorithm/dea_select_instance_count.png' %>
-1. It then narrows its search to the top half of the DEAs, sorted by memory.
-    <%= image_tag '../images/dea_placement_algorithm/dea_top_half_memory.png' %>
-1. It then randomly selects one of the remaining DEAs.
-
-### Considerations
-
-It is important to note that the Cloud Controller uses this algorithm to balance new app instances between DEAs when the new app instances are created, but do not balance already-running apps.
-
-For example, suppose a set of apps are running on DEAs in two AZs, and one AZ temporarily goes down. While the second AZ is down, all instances will be placed on the remaining AZ. After the second AZ comes back online, new instances will be allocated to DEAs there, since the algorithm favors DEAs in the zone with the fewest running instances. However, instances running on the first AZ will not be moved to the other AZ, so the imbalance will persist.
-
-An imbalance may also result from a deploy where DEAs have had a change to their source code or stemcell.
-
-It is possible to rebalance the DEAs between AZs in two ways:
-<ul>
-  <li>Restarting the app, which may result in a brief down-time.</li>
-  <li>Terminating and restarting half of the instances one by one.</li>
-</ul>
+<%= vars.dea_algorithm_link %>
 
 ##<a id='database'></a>Database (CC_DB) ##
 
@@ -77,9 +44,9 @@ platform using the NATS message bus.
 For example, the Cloud Controller uses NATS when performing the following
 interactions:
 
-* Instructing a DEA to stage an application by processes a buildpack for the app
+* Instructing a cell to stage an application by processes a buildpack for the app
     and to prepare it to run
-* Instructing a DEA to start or stop an application
+* Instructing a cell to start or stop an application
 * Receiving information from the Health Manager about applications
 * Subscribing to Service Gateways that advertise available services
 * Instructing Service Gateways to handle provisioning, unprovisioning, binding,
@@ -100,24 +67,4 @@ Travis currently runs three build jobs against SQLite, Postgres, and MySQL.
 
 ## <a id='logs'></a>Logs ##
 
-Cloud Controller manages its logs using
-[Steno](http://github.com/cloudfoundry/steno).
-Each log entry includes a **source** field to designate from which code module
-the entry originates.
-Some of the possible sources are `cc.app`, `cc.app_stager`, `cc.dea.client` and
-`cc.healthmanager.client`.
-
-## <a id='configuration'></a>Configuration ##
-
-The Cloud Controller uses a YAML configuration file.
-For an example, see `config/cloud_controller.yml`.
-Some of the keys the Cloud Controller reads from this configuration file
-include:
-
-* `logging`: A [Steno configuration
-    hash](http://github.com/cloudfoundry/steno#from-yaml-file)
-* `bulk_api`: - Basic auth credentials for the application state bulk API.
-    In Cloud Foundry, the health manager uses this endpoint to retrieve the
-    expected state of every user application.
-* `uaa`: URL and credentials for connecting to the [UAA](./uaa.html), the Cloud
-    Foundry OAuth 2.0 server.
+For more information about how Cloud Foundry aggregates and streams logs and metrics, see the [Overview of the Loggregator System](../../loggregator/index.html) topic.

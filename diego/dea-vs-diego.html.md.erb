@@ -12,7 +12,7 @@ The DEA architecture system is largely written in Ruby and the Diego architectur
 
 In a pre-Diego Cloud Foundry deployment, the Cloud Controller's [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
 
-DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the [DEA Placement Algorithm](../architecture/cloud-controller.html#dea-placement) with the [Diego Auction](./diego-auction.html).
+DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the [DEA Placement Algorithm](../architecture/dea-algorithm.html) with the [Diego Auction](./diego-auction.html).
 
 In addition to these broad changes, the Cloud Foundry migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table](#table) provides a summary.
 
@@ -71,7 +71,7 @@ information about the HM9000 architecture.
 
 ### <a id='dea-placement'></a>DEA Placement Algorithm &rarr; Diego Auction
 
-In pre-Diego architecture, the Cloud Controller used the [DEA Placement Algorithm](../architecture/cloud-controller.html#dea-placement) to select the host DEA nodes for application instances that needed hosting.
+In pre-Diego architecture, the Cloud Controller used the [DEA Placement Algorithm](../architecture/dea-algorithm.html) to select the host DEA nodes for application instances that needed hosting.
 
 Diego architecture moves this allocation process out of the Cloud Controller and into the Diego Brain, which uses the [Diego Auction](../diego/diego-auction.html) algorithm. The Diego Auction prioritizes one-time tasks like staging apps without affecting the uptime of ongoing, running applications like web servers.
 
