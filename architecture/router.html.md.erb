@@ -1,14 +1,14 @@
 ---
-title: (Go)Router
+title: Gorouter
 owner: Routing
 ---
 
 <strong><%= modified_date %></strong>
 
-The router routes traffic coming into Cloud Foundry to the appropriate component, whether it's an operator addressing the [Cloud Controller](./cloud-controller.html) or an application user accessing an app running on a Diego Cell. The router is implemented in Go.
-Implementing a custom router in Go gives the router full control over every connection, which makes it easier to support WebSockets and other types of traffic (for example, via HTTP CONNECT). A single process contains all routing logic, removing unnecessary latency.
+The Gorouter routes traffic coming into Cloud Foundry to the appropriate component, whether it is an operator addressing the [Cloud Controller](./cloud-controller.html) or an application user accessing an app running on a Diego Cell. The router is implemented in Go.
+Implementing a custom router in Go gives the router full control over every connection, which simplifies support for WebSockets and other types of traffic (for example, through HTTP CONNECT). A single process contains all routing logic, removing unnecessary latency.
 
-Refer to the following instructions for help getting started with the gorouter
+Refer to the following instructions for help getting started with the Gorouter
 in a standalone environment.
 
 ## <a id='setup'></a>Setup ##
@@ -33,7 +33,9 @@ $ ./bin/router
 
 ## <a id='use'></a>Usage ##
 
-Gorouter receives route updates via [NATS](./messaging-nats.html). By default, routes that have not been updated in two minutes are pruned. Therefore, to maintain an active route, ensure that the route is updated at least every two minutes. The format of these route updates is as follows:
+The Gorouter receives route updates though [NATS](./messaging-nats.html). 
+By default, routes that have not been updated in two minutes are pruned. Therefore, to maintain an active route, you must ensure that the route is updated at least every two minutes. 
+The format of these route updates is as follows:
 
 ~~~json
 {
