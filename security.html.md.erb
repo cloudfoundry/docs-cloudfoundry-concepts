@@ -20,7 +20,7 @@ Cloud Foundry implements the following measures to mitigate against security thr
 
 As the image below shows, in a typical deployment of Cloud Foundry, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more Cloud Foundry routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
 
-<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
+<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you also install a NAT VM for outbound requests and a Jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
   <%= image_tag("images/security/sysbound1.png") %>
 
@@ -32,7 +32,7 @@ All traffic from the public internet to the Cloud Controller and UAA happens ove
 
 Operators deploy Cloud Foundry with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
 
-<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
+<p class="note"><strong>Note</strong>: <%=vars.pcf_rec%> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a Jumpbox on the subnet or through VPN.</p>
 
 BOSH includes the following functionality for security:
 
@@ -101,7 +101,7 @@ To help run a secure deployment, <%=vars.pcf_rec%> recommends the following:
 <li>Configure UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.</li>
 <li>Deploy within a VLAN that limits network traffic to individual VMs. This reduce the possibility of unauthorized access to the VMs within your BOSH-managed cloud.</li>
 <li>Enable HTTPS for applications and SSL database connections to protect sensitive data transmitted to and from applications.</li>
-<li>Ensure that the jumpbox is secure, along with the load balancer and NAT VM.</li>
+<li>Ensure that the Jumpbox is secure, along with the load balancer and NAT VM.</li>
 <li>Encrypt stored files and data within databases to meet your data security requirements. Deploy using industry standard encryption and the best practices for your language or framework.</li>
 <li>Prohibit promiscuous network interfaces on the trusted network.</li>
 <li>Review and monitor data sharing and security practices with third-party services that you use to provide additional functionality to your application.</li>

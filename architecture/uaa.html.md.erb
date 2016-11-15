@@ -16,7 +16,7 @@ It has endpoints for managing user accounts and for registering OAuth2 clients, 
 
 To start, fetch the UAA from Git, then build and run all of the components that
 comprise the UAA and the example programs (uaa, samples/api, and samples/app)
-with a single invocation of gradle:
+with a single invocation of Gradle:
 
 <pre class="terminal">
 $ git clone git://github.com/cloudfoundry/uaa.git
@@ -113,7 +113,7 @@ In the steps above, replace the following:
 
 The command line example in the previous section should work against the UAA, although token encoding is unnecessary as you will not have the client secret.
 
-In this case, there is no need to run a local uaa server.
+In this case, there is no need to run a local UAA server.
 Query the external login endpoint about the system:
 
 <pre class="terminal">
@@ -148,9 +148,9 @@ Run the integration tests with the following command:
 $ ./gradlew integrationTest
 </pre>
 
-This starts a uaa server running in a local Apache Tomcat instance. By default, the service URL is set to `http://localhost:8080/uaa`.
+This starts a UAA server running in a local Apache Tomcat instance. By default, the service URL is set to `http://localhost:8080/uaa`.
 
-You can set the environment variable `CLOUD_FOUNDRY_CONFIG_PATH` to a directory containing a `uaa.yml` file in which the various URLs used in the tests are changed, and the uaa server context root may be set.
+You can set the environment variable `CLOUD_FOUNDRY_CONFIG_PATH` to a directory containing a `uaa.yml` file in which the various URLs used in the tests are changed, and the UAA server context root may be set.
 
 ### <a id='custom-configuration'></a>Custom YAML Configuration ###
 
