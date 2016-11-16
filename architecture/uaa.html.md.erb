@@ -457,5 +457,79 @@ See the tables below for a description of the scopes covered by UAA:
   </tr>
 </table>
 
+### <a id="cc-scopes"></a>Cloud Controller Scopes
+
+<table>
+  <tr>
+    <th>Scope</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>cloud_controller.read</code></td>
+    <td>This scope gives the ability to read from any Cloud Controller route the token has access to.</td>
+  </tr>
+  <tr>
+    <td><code>cloud_controller.write</code></td>
+    <td>This scope gives the ability to post to Cloud Controller routes the token has access to.</td>
+  </tr>
+  <tr>
+    <td><code>cloud_controller.admin</code></td>
+    <td>This admin scope gives full permissions to Cloud Controller.</td>
+  </tr>
+  <tr>
+    <td><code>cloud_controller.admin_read_only</code></td>
+    <td>This admin scope gives read permissions to Cloud Controller.</td>
+  </tr>
+  <tr>
+    <td><code>cloud_controller.permissions</code></td>
+    <td></td>
+  </tr>
+</table>
+
+### <a id="routing-scopes"></a>Routing Scopes
+
+<table>
+  <tr>
+    <th>Scope</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>routing.routes.read</code></td>
+    <td>This scope gives the ability to read the full routing table from the router.</td>
+  </tr>
+  <tr>
+    <td><code>routing.routes.write</code></td>
+    <td>This scope gives the ability to write the full routing table from the router.</td>
+  </tr>
+  <tr>
+    <td><code>routing.router_groups.read</code></td>
+    <td>This scope gives the ability to read the full list of routing groups.</td>
+  </tr>
+  <tr>
+    <td><code>routing.router_groups.write</code></td>
+    <td>This scopes gives the ability to write the full list of routing groups.</td>
+  </tr>
+</table>
+
+### <a id="other-scopes"></a>Other Scopes
+
+<table>
+  <tr>
+    <th>Scope</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>doppler.firehose</code></td>
+    <td>This scope gives the ability to read logs from the <a href="../../loggregator/architecture.html#firehose">Firehose</a> endpoint.</td>
+  </tr>
+  <tr>
+    <td><code>notifications.write</code></td>
+    <td>This scope gives the ability to send notifications through the <a href="../../adminguide/notifications.html">Notification Service</a>.</td>
+  </tr>
+</table>
+
+
+
+
 
 
