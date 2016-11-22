@@ -13,7 +13,7 @@ This topic describes how Cloud Foundry (CF) secures the containers that host app
 
 ## <a id='mechanics'></a>Container Mechanics###
 
-Each instance of an application deployed to CF runs within its own self-contained environment, a [Garden container](./diego/diego-architecture.html#garden). This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where CF is deployed. 
+Each instance of an application deployed to CF runs within its own self-contained environment, a [Garden container](./architecture/garden.html). This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where CF is deployed. 
 
 CF achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
 
