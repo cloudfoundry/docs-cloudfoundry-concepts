@@ -1,0 +1,39 @@
+---
+title: Garden
+owner: Diego
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes Garden, the component that Cloud Foundry uses to create and manage isolated environments called containers. Each instance of an application deployed to Cloud Foundry runs within a container. For more information about how containers work, see the [Container Mechanics](../container-security.html#mechanics) section of the <em>Understanding Container Security</em> topic.
+
+##<a id='backends'></a>Backends
+
+Garden has pluggable backends for different platforms and runtimes, and specifies a set of interfaces that each platform-specific backend must implement. These interfaces contain methods to perform the following actions:
+
+- Create and delete containers
+- Apply resource limits to containers
+- Open and attach network ports to containers
+- Copy files into and out of containers
+- Run processes within containers
+- Stream `STDOUT` and `STDERR` data out of containers
+- Annotate containers with arbitrary metadata
+- Snapshot containers for redeploys without downtime
+
+For more information, see the [Garden repo](https://github.com/cloudfoundry/garden) on GitHub.
+
+##<a id='garden-runc'></a>Garden-runC
+
+Cloud Foundry currently uses the [garden-runC](https://github.com/cloudfoundry-incubator/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of Cloud Foundry used the [garden-linux](https://github.com/cloudfoundry-attic/garden-linux) backend. 
+
+<%= vars.garden_runc %>
+
+Garden-runC has the following features:
+
+* Uses the same OCI low-level container execution code as Docker and Kubernetes, so container images run identically across all three platforms 
+* [AppArmor](https://wiki.ubuntu.com/AppArmor) is configured and enforced
+by default for all unprivileged containers
+* Seccomp whitelisting restricts the set of system calls a container can access, reducing the risk of container breakout
+* Allows pluggable networking and rootfs management
+
+For more information, see the [garden-runC repo](https://github.com/cloudfoundry-incubator/garden-runc-release) on GitHub.

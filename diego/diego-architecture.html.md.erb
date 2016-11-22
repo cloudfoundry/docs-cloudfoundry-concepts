@@ -91,9 +91,9 @@ Refer to the [Executor repo](https://github.com/cloudfoundry-incubator/executor)
 
 - Provides a platform-independent server and clients to manage Garden containers
 
-- Defines the [garden-linux](https://github.com/cloudfoundry-incubator/garden-linux) interface for container implementation
+- Defines the [garden-runc](https://github.com/cloudfoundry/garden-runc-release) interface for container implementation
 
-Refer to the [Garden repo](https://github.com/cloudfoundry-incubator/garden) on GitHub for more information.
+See the [Garden](../architecture/garden.html) topic or the [Garden repo](https://github.com/cloudfoundry-incubator/garden) on GitHub for more information.
 
 ####<a id='metron-agent'></a>Metron Agent ####
 
@@ -191,22 +191,7 @@ Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub
 
 ###<a id='backends'></a>Garden Backends ###
 
-Garden contains a set of interfaces that each platform-specific backend must implement. These interfaces contain methods to perform the following actions:
-
-- Create and delete containers
-- Apply resource limits to containers
-- Open and attach network ports to containers
-- Copy files into and out of containers
-- Run processes within containers
-- Stream `STDOUT` and `STDERR` data out of containers
-- Annotate containers with arbitrary metadata
-- Snapshot containers for redeploys without downtime
-
-Refer to the [Garden repo](https://github.com/cloudfoundry-incubator/garden) on GitHub for more information.
-
-####<a id='backend-implementations'></a>Current Implementations ####
-
-- [Garden-RunC](https://github.com/cloudfoundry-incubator/garden-runc-release) provides a Linux-specific implementation of the Garden interface using the Open Container Interface (OCI) standard.
+Garden contains a set of interfaces that each platform-specific backend must implement. See the [Garden](../architecture/garden.html) topic or the [Garden repo](https://github.com/cloudfoundry-incubator/garden) on GitHub for more information.
 
 ###<a id='app-lifecycles'></a>App Lifecycle Binaries ###
 
