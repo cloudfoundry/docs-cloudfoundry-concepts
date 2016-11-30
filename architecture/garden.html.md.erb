@@ -20,11 +20,11 @@ Garden has pluggable backends for different platforms and runtimes, and specifie
 - Annotate containers with arbitrary metadata
 - Snapshot containers for redeploys without downtime
 
-For more information, see the [Garden repo](https://github.com/cloudfoundry/garden) on GitHub.
+For more information, see the [Garden repository](https://github.com/cloudfoundry/garden) on GitHub.
 
 ##<a id='garden-runc'></a>Garden-runC
 
-Cloud Foundry currently uses the [garden-runC](https://github.com/cloudfoundry-incubator/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of Cloud Foundry used the [garden-linux](https://github.com/cloudfoundry-attic/garden-linux) backend. 
+Cloud Foundry currently uses the [Garden-runC](https://github.com/cloudfoundry-incubator/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of Cloud Foundry used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend. 
 
 <%= vars.garden_runc %>
 
@@ -36,4 +36,4 @@ by default for all unprivileged containers
 * Seccomp whitelisting restricts the set of system calls a container can access, reducing the risk of container breakout
 * Allows pluggable networking and rootfs management
 
-For more information, see the [garden-runC repo](https://github.com/cloudfoundry-incubator/garden-runc-release) on GitHub.
+For more information, see the [Garden-runC repository](https://github.com/cloudfoundry-incubator/garden-runc-release) on GitHub.
