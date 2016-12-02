@@ -23,7 +23,7 @@ If the application instance identified by the `VCAP_ID` crashes, the router atte
 
 ## <a id="http-headers"></a>HTTP Headers ##
 
-HTTP traffic passed from the CF router to an app includes the the following HTTP headers:
+HTTP traffic passed from the CF router to an app includes the following HTTP headers:
 
 * `X-Forwarded-Proto` gives the scheme of the HTTP request from the client. The scheme is HTTP if the client made an insecure request or HTTPS if the client made a secure request. Developers can configure their apps to reject insecure requests by inspecting the HTTP headers of incoming traffic and rejecting traffic that includes `X-Forwarded-Proto` with the scheme of HTTP.
 
