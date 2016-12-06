@@ -95,7 +95,7 @@ Cloud Foundry component VMs communicate with each other internally through HTTP 
 
 * A [Consul server](../diego/diego-architecture.html#consul) stores longer-lived control data, such as component IP addresses and distributed locks that prevent components from duplicating actions.
 
-* Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS is currently implemented in [etcd](https://coreos.com/etcd/).
+* Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS stores data in MySQL, via the [Go MySQL Driver](https://github.com/go-sql-driver/mysql).
 
 The route-emitter component uses the NATS protocol to broadcast the latest routing tables to the routers. In pre-Diego CF architecture, the [NATS Message Bus](../diego/dea-vs-diego.html#nats) carried all internal component communications.
 
