@@ -49,7 +49,7 @@ Administrators can configure rules to govern container network traffic. These ru
 
 Administrators configure these rules at two levels: 
 
-* Application Security Groups apply network traffic rules at the container level. <%=vars.app_sec_groups_link%>
+* Application Security Groups (ASGs) apply network traffic rules at the container level. <%=vars.app_sec_groups_link%>
 * [Network Properties](#network-properties) of cells apply network traffic rules at the host VM level.
 
 #### <a id='network-properties'></a>Host-level Network Properties ####
@@ -78,7 +78,7 @@ CF secures containers through the following measures:
 
 * Running application instances in [unprivileged](#types) containers by default
 * [Hardening](#hardening) containers by limiting functionality and access rights
-* Blocking all outbound network connections from application containers by default. Administrators can override this behavior by [configuring Application Security Groups](#asg).
+* Blocking all outbound network connections from application containers by default. Administrators can override this behavior by configuring ASGs. <%=vars.app_sec_groups_link%>
 
 ### <a id="types"></a> Types
 
