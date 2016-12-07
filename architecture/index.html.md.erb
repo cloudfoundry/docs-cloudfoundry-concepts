@@ -101,9 +101,12 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 
 ## <a id='metrics-logging'></a>Metrics and Logging
 
-### <a id='metrics'></a> Metrics Collector and Loggregator
-
-The metrics collector gathers metrics and statistics from the components.
-Operators can use this information to monitor a Cloud Foundry deployment.
+### <a id='metrics'></a> Loggregator
 
 The <%= vars.loggregator_name_or_link %> (log aggregator) system streams application logs to developers.
+
+<% if vars.product_name == 'CF' %>
+<%= partial 'old_collector' %>
+<% end %>
+
+
