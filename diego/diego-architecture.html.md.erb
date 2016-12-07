@@ -25,7 +25,7 @@ View a larger version of this image at the [Diego Design Notes repo](http://html
 
 1. The BBS submits the Tasks and LRPs to the [Auctioneer](#auctioneer), part of the [Diego Brain](#brain-components).
 
-1. The Auctioneer distributes these Tasks and LRPs to [Cells](#cell-components) through an [Auction](./diego-auction.html).
+1. The Auctioneer distributes these Tasks and LRPs to [Cells](#cell-components) through an [Auction](./diego-auction.html). The Diego Brain communicates with Diego Cells using SSL/TLS protocol.
 
 1. Once the Auctioneer assigns a Task or LRP to a Cell, an in-process [Executor](#executor) creates a [Garden](#garden) container in the Cell. The Task or LRP runs in the container.
 
@@ -53,7 +53,7 @@ Diego Brain components distribute Tasks and LRPs to Diego Cells, and correct dis
 
 - Uses the [auction package](https://github.com/cloudfoundry-incubator/auction) to run Diego Auctions for Tasks and LRPs
 
-- Communicates with Cell [Reps](#rep) over HTTP
+- Communicates with Cell [Reps](#rep) over SSL/TLS
 
 - Maintains a lock in the BBS that restricts auctions to one Auctioneer at a time
 
