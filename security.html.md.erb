@@ -5,7 +5,7 @@ owner: Security
 
 <strong><%= modified_date %></strong>
 
-This topic provides an overview of Cloud Foundry security. For an overview of container security, see the [Understanding Container Security](container-security.html) topic.
+This topic provides an overview of Cloud Foundry (CF) security. For an overview of container security, see the [Understanding Container Security](container-security.html) topic.
 
 Cloud Foundry implements the following measures to mitigate against security threats:
 
@@ -91,7 +91,7 @@ Cloud Foundry secures both the code and the configuration of an application usin
 For operators, Cloud Foundry provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform.
 Additionally, operators can redirect Cloud Foundry component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
 
-For users, Cloud Foundry records an audit trail of all relevant API invocations of an app. The CLI command `cf events` returns this information.
+For users, Cloud Foundry records an audit trail of all relevant API invocations of an app. The Cloud Foundry Command Line Interface (cf CLI) command `cf events` returns this information.
 
 ## <a id='recommendations'></a>Recommendations for Running a Secure Deployment ##
 
