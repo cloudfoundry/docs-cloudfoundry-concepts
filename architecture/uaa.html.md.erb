@@ -455,6 +455,70 @@ See the tables below for a description of the scopes covered by UAA:
     <td><code>clients.secret</code></td>
     <td>This admin scope is required to change the password of a client.</td>
   </tr>
+  <tr>
+    <td><code>zones.read</code></td>
+    <td>Scope required to invoke the /identity-zones endpoint to read identity zones</td>
+  </tr>
+  <tr>
+    <td><code>zones.write</code></td>
+    <td>Scope required to invoke the /identity-zones endpoint to create and update identity zones</td>
+  </tr>
+  <tr>
+    <td><code>scim.zones</code></td>
+    <td>Limited scope that only allows adding/removing a user to/from zone management groups under the path /Groups/zones</td>
+    <tr>
+      <td><code>oauth.approval</code></td> 
+      <td>/approvals endpoint. Scope required to be able to approve/disapprove clients to act on a user's behalf. This is a default scope defined in uaa.yml.</td>
+    </tr>
+    <tr>
+      <td><code>oauth.login</code></td>
+      <td>Scope used to indicate a login application, such as external login servers, to perform trusted operations, such as create users not authenticated in the UAA.</td>
+    </tr>
+    <tr>
+      <td><code>approvals.me</code></td>
+      <td>Not currently used</td>
+    </tr>
+    <tr>
+      <td><code>uaa.resource</code></td>
+      <td>Scope to indicate this is a resource server, used for the /check_token endpoint</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.admin</code></td>
+      <td>Scope that permits operations in a designated zone by authenticating against the default zone, such as create identity providers or clients in another zone (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.read</code></td>
+      <td>Scope that permits reading the given identity zone (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.clients.admin</code></td>
+      <td>Translates into clients.admin after zone switch is complete (used together with the X-Identity-Zone-Id header)</td>  
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.clients.read</code></td>
+      <td>Translates into clients.read after zone switch is complete (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.clients.write</code></td>
+      <td>translates into clients.write after zone switch is complete (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.clients.scim.read</code></td>
+      <td>Translates into scim.read after zone switch is complete (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.clients.scim.create</code></td>
+      <td>Translates into scim.create after zone switch is complete (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.clients.scim.write</code></td>
+      <td>Translates into scim.write after zone switch is complete (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+    <tr>
+      <td nowrap><code>zones.&lt;zone id&gt;.idps.read</code></td>
+      <td>Translates into idps.read after zone switch is complete (used together with the X-Identity-Zone-Id header)</td>
+    </tr>
+  </tr> 
 </table>
 
 ### <a id="cc-scopes"></a>Cloud Controller Scopes
