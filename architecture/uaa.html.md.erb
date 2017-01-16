@@ -355,19 +355,19 @@ resource-ids: oauth
 
 #### Use Cases ####
 
-1. Authenticate
+1. Authenticate:
 
         GET /login
 
-    The sample app presents a form login interface for the backend UAA, and also an OpenID widget so the user can authenticate using Google credentials or others.
+    The sample app presents a form login interface for the backend UAA, and an OpenID widget where a user can authenticate using Google credentials or others.
 
-2. Approve OAuth2 token grant
+2. Approve OAuth2 token grant:
 
         GET /oauth/authorize?client_id=app&response_type=code...
 
-    Standard OAuth2 Authorization Endpoint. The UAA handles client credentials and all other features in the back end, and the login application is used to render the UI (see `access_confirmation.jsp`).
+    Standard OAuth2 Authorization Endpoint. The UAA handles client credentials and all other features in the back end, and the login application is used to render the UI.
 
-3. Obtain access token
+3. Obtain access token:
 
         POST /oauth/token
     Standard OAuth2 Authorization Endpoint passed through to the UAA.
@@ -467,14 +467,14 @@ See the tables below for a description of the scopes covered by UAA:
   </tr>
   <tr>
     <td><code>scim.zones</code></td>
-    <td>This is a limited scope only allows adding a user to or removing a user from zone management groups under the path <code>/Groups/zones</code>.</td>
+    <td>This is a limited scope that only allows adding a user to, or removing a user from, zone management groups under the path <code>/Groups/zones</code>.</td>
     <tr>
       <td><code>oauth.approval</code></td> 
-      <td><code>/approvals endpoint</code>. This scope is required to be able to approve or reject clients in order to act on a user's behalf. This is a default scope defined in uaa.yml.</td>
+      <td><code>/approvals endpoint</code>. This scope is required to approve or reject clients to act on a user's behalf. This is a default scope defined in the <code>uaa.yml</code> file.</td>
     </tr>
     <tr>
       <td><code>oauth.login</code></td>
-      <td>This scope is used to indicate a login application, such as external login servers, to perform trusted operations, such as create users not authenticated in the UAA.</td>
+      <td>This scope is used to indicate a login application, such as external login servers, can perform trusted operations, such as creating users not authenticated in the UAA.</td>
     </tr>
     <tr>
       <td><code>approvals.me</code></td>
@@ -486,7 +486,7 @@ See the tables below for a description of the scopes covered by UAA:
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.admin</code></td>
-      <td>This scope permits operations in a designated zone by authenticating against the default zone, such as create identity providers or clients in another zone. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope permits operations in a designated zone, such as creating identity providers or clients in another zone, by authenticating against the default zone. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.read</code></td>
@@ -494,31 +494,31 @@ See the tables below for a description of the scopes covered by UAA:
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.admin</code></td>
-      <td>This scope translates into clients.admin after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>  
+      <td>This scope translates into <code>clients.admin</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>  
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.read</code></td>
-      <td>This scope translates into clients.read after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>clients.read</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.write</code></td>
-      <td>This scope translates into clients.write after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>clients.write</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.scim.read</code></td>
-      <td>This scope translates into scim.read after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>scim.read</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.scim.create</code></td>
-      <td>This scope translates into scim.create after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>scim.create</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.scim.write</code></td>
-      <td>This scope translates into scim.write after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>scim.write</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.idps.read</code></td>
-      <td>This scope translates into idps.read after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>idps.read</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
   </tr> 
 </table>
