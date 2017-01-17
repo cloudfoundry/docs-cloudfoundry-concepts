@@ -115,9 +115,12 @@ Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/deve
     - If the `DesiredLRP` count exceeds the `ActualLRP` count, requests a start auction from the Auctioneer
     - If the `ActualLRP` count exceeds the `DesiredLRP` count, sends a stop message to the Rep on the Cell hosting an instance
 
+- Limits the number of containers that can be started concurrently to 200. 
+  If your deployment requires more than 200 containers, they start up in batches of 200.  
+
 - Monitors for potentially missed messages, resending them if necessary
 
-Refer to the [Bulletin Board System repo](https://github.com/cloudfoundry-incubator/bbs) on GitHub for more information.
+For more information, see the [Bulletin Board System repo](https://github.com/cloudfoundry-incubator/bbs) on GitHub.
 
 ####<a id='etcd'></a>etcd ####
 
