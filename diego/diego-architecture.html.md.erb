@@ -109,14 +109,14 @@ Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/deve
 
 - Provides an RPC-style API over HTTP to [Diego Core](#core) components and external clients, including the [SSH Proxy](#ssh-proxy), [CC-Bridge](#bridge-components), and [Route Emitter](#route-emitter).
 
-- Ensure consistency and fault tolerance for Tasks and LRPs by comparing desired state (stored in the database) with actual state (from running instances)
+- Ensure consistency and fault tolerance for Tasks and LRPs by comparing desired state, stored in the database, with actual state, from running instances
 
 - Acts to keep `DesiredLRP` count and `ActualLRP` count synchronized in the following ways:
     - If the `DesiredLRP` count exceeds the `ActualLRP` count, requests a start auction from the Auctioneer
     - If the `ActualLRP` count exceeds the `DesiredLRP` count, sends a stop message to the Rep on the Cell hosting an instance
 
-- Limits the number of containers that can be started concurrently to 200. 
-  If your deployment requires more than 200 containers, they start up in batches of 200.  
+- Limits the number of containers that can be concurrently in the starting state to 200. If your deployment requires more than 200 containers, containers 
+after the first 200 will not be started until some in the first 200 leave the starting state. 
 
 - Monitors for potentially missed messages, resending them if necessary
 
