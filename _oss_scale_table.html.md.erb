@@ -62,10 +62,22 @@ The following table provides recommended instance counts for a high-availability
                 <td>You might run a single NATS instance if you lack the resources to deploy two stable NATS servers. Components using NATS are resilient to message failures and the BOSH resurrector recovers the NATS VM quickly if it becomes non-responsive.</td>
         </tr>
         <tr>
-                <td>Cloud Controller</td>
+                <td>Cloud Controller API</td>
                 <td><code>api_z</code></td>
                 <td>&ge; 2</td>
                 <td>Scale the Cloud Controller to accommodate the number of requests to the API and the number of apps in the system.</td>
+        </tr>
+        <tr>
+                <td>Cloud Controller Clock</td>
+                <td><code>clock_z</code></td>
+                <td>&ge; 2</td>
+                <td>Scale the Cloud Controller Clock to ensure queueing cyclical background jobs, such as cleaning up stale data.</td>
+        </tr>
+        <tr>
+                <td>Cloud Controller Worker</td>
+                <td><code>api_worker_z</code></td>
+                <td>&ge; 2</td>
+                <td>Scale the Cloud Controller to accommodate the number of asynchronous requests to the API and background jobs.</td>
         </tr>
         <tr>
                 <td>Router</td>
