@@ -44,26 +44,21 @@ BOSH includes the following functionality for security:
 
 <p class="note"><strong>Note</strong>: BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
 
-
 ## <a id='isolation-segments'></a>Isolation Segments
 
-Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads.
+Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. They keep app resources as separate and compartmented as if they were in different CF deployments, but share the management components of a single deployment to reduce latency and avoid redundancy.
 				
-Isolation segments define a group of Cloud Foundry assigned resources (compute, network, logging) to which applications can be directed for deployment. An Isolation Segment may optionally be dedicated to the sole use of a particular organization or even to that of specific users within the organization.
+You can designate isolation segments for exclusive use by [orgs and spaces](./roles.html) within CF. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces.
 
-Customers use isolation segments for different reasons, including:
+Customers can use isolation segments for different reasons, including to:
 
-* Regulatory restrictions on where they can run their compute instances. For example, a health care company cannot manage instances that have medical records on the same system as the billing system.
-* Performance
-* TK more examples?
+* Follow regulatory restrictions to separate where they run compute instances. For example, a health care company may not be able to host medical records and billing systems on the same machines.
+* Dedicate specific hardware to different isolation segments, for example to guarantee that high-priority apps run on a cluster of high-performance hosts.
+* Separate data on multiple clients, to strengthen a security story or offer different hosting tiers.
 						
-Isolation segments in CF are identified by name and guid (e.g. `30dd879c-ee2f-11db-8314-0800200c9a66`]. The IS as an entity has no internal structure beyond these two properties. An IS “contains” resources by virtue of being applied as a label to 1 ..n resources at the time of CF deployment.
-						
-Isolation segments take three closely connected forms: 
+In CF, the Cloud Controller Database (CCDB) identifies isolation segments by name and GUID (e.g. `30dd879c-ee2f-11db-8314-0800200c9a66`). The isolation segment object has no internal structure beyond these two properties at the Cloud Foundry level, but BOSH associates the name of the isolation segment with Diego cells, through their `placement_tag` property.
 
-* An entity, serving as a unique identifier, and created in the CCDB, which may be associated with 0..n resources. 
-* As a unique BOSH property that is applied to a number of job(s), identifying the isolation segment to which they belong. 
-* An IS also refers to a new optional property used when creating/updating a space, which is attached to any application pushed to that space.
+This diagram shows how isolation segments keep apps running on different pools of cells, and how the cells communicate with each other and with the management components:
 
   <%= image_tag("images/security/isolation-segments.png") %>
 
