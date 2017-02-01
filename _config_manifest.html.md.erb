@@ -1,0 +1,7 @@
+Although all application instances and staging tasks now run by default in unprivileged containers, 
+operators can override these defaults by customizing their Diego deployment manifest and redeploying.
+
+* To enable privileged containers for buildpack-based apps, set the `capi.nsync.diego_privileged_containers` property 
+to `true` in the Diego manifest.
+* To enable privileged containers for staging tasks, set the `capi.stager.diego_privileged_containers` property 
+to `true` in the Diego manifest.
