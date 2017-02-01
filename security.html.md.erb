@@ -44,6 +44,29 @@ BOSH includes the following functionality for security:
 
 <p class="note"><strong>Note</strong>: BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
 
+## <a id='isolation-segments'></a>Isolation Segments
+
+Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. They keep app resources as separate and compartmented as if they were in different CF deployments, but share the management components of a single deployment to reduce latency and avoid redundancy.
+				
+You can designate isolation segments for exclusive use by [orgs and spaces](./roles.html) within CF. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces.
+
+Customers can use isolation segments for different reasons, including to:
+
+* Follow regulatory restrictions to separate where they run compute instances. For example, a health care company may not be able to host medical records and billing systems on the same machines.
+* Dedicate specific hardware to different isolation segments, for example to guarantee that high-priority apps run on a cluster of high-performance hosts.
+* Separate data on multiple clients, to strengthen a security story or offer different hosting tiers.
+						
+In CF, the Cloud Controller Database (CCDB) identifies isolation segments by name and GUID (e.g. `30dd879c-ee2f-11db-8314-0800200c9a66`). The isolation segment object has no internal structure beyond these two properties at the Cloud Foundry level, but BOSH associates the name of the isolation segment with Diego cells, through their `placement_tag` property.
+
+This diagram shows how isolation segments keep apps running on different pools of cells, and how the cells communicate with each other and with the management components:
+
+  <%= image_tag("images/security/isolation-segments.png") %>
+
+<%= vars.manage_iso_seg_link %>
+
+See the [Isolation Segments](http://v3-apidocs.cloudfoundry.org/version/3.0.0/index.html#isolation-segments) section of the Cloud Controller API (CAPI) Reference for API commands related to isolation segments.
+
+
 ## <a id='auth'></a>Authentication and Authorization ##
 
 [User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for Cloud Foundry and its various components.
