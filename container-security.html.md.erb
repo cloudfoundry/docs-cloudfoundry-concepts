@@ -47,30 +47,7 @@ A host VM has a single IP address. If you configure the deployment with the clus
 
 Administrators can configure rules to govern container network traffic. These rules can prevent system access from external networks and between internal components, and restrict applications from establishing connections over the virtual network interface.
 
-Administrators configure these rules at two levels: 
-
-* Application Security Groups (ASGs) apply network traffic rules at the container level. <%=vars.app_sec_groups_link%>
-* [Network Properties](#network-properties) of cells apply network traffic rules at the host VM level.
-
-#### <a id='network-properties'></a>Host-level Network Properties ####
-
-Operators can configure the `allow_networks` and `deny_networks` parameters for cells to restrict communication between system components and applications. 
-
-To configure host-level network properties, edit the following properties in your Diego manifest and redeploy:
-
-```
-  garden.deny_networks:
-    description: "List of CIDR blocks to which containers will be denied access."
-    default: []
-
-  garden.allow_networks:
-    description: "List of CIDR blocks to which containers will be allowed access (applied after deny)."
-    default: []
-```
-
-<p class="note"><strong>Note</strong>: ASGs provide a greater degree of security than host-level network properties. ASGs enable you to more securely restrict application outbound traffic to predefined routes. ASGs also overwrite any host-level configurations.</p> 
-
-<%= vars.container_security2 %>
+Application Security Groups (ASGs) apply network traffic rules at the container level. <%=vars.app_sec_groups_link%>
 
 ## <a id='security'></a>Container Security###
 
