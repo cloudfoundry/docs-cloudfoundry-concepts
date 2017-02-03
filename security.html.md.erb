@@ -50,11 +50,11 @@ Isolation segments provide dedicated pools of resources to which apps can be dep
 				
 You can designate isolation segments for exclusive use by [orgs and spaces](./roles.html) within CF. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces.
 
-Customers can use isolation segments for different reasons, including to
+Customers can use isolation segments for different reasons, including the following:
 
-* Follow regulatory restrictions that require separation between different types of applications. For example, a health care company may not be able to host medical records and billing systems on the same machines.
-* Dedicate specific hardware to different isolation segments, for example to guarantee that high-priority apps run on a cluster of high-performance hosts.
-* Separate data on multiple clients, to strengthen a security story, or offer different hosting tiers.
+* To follow regulatory restrictions that require separation between different types of applications. For example, a health care company may not be able to host medical records and billing systems on the same machines.
+* To dedicate specific hardware to different isolation segments. For example, to guarantee that high-priority apps run on a cluster of high-performance hosts.
+* To separate data on multiple clients, to strengthen a security story, or offer different hosting tiers.
 						
 In CF, the Cloud Controller Database (CCDB) identifies isolation segments by name and GUID, for example `30dd879c-ee2f-11db-8314-0800200c9a66`. The isolation segment object has no internal structure beyond these two properties at the Cloud Foundry level, but BOSH associates the name of the isolation segment with Diego cells, through their `placement_tag` property.
 
