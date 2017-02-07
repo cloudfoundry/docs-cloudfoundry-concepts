@@ -68,12 +68,6 @@ The following table provides recommended instance counts for a high-availability
                 <td>Scale the Cloud Controller to accommodate the number of requests to the API and the number of apps in the system.</td>
         </tr>
         <tr>
-                <td>Cloud Controller Clock</td>
-                <td><code>clock_z</code></td>
-                <td>&ge; 2</td>
-                <td>Scale the Cloud Controller Clock to ensure queueing cyclical background jobs, such as cleaning up stale data.</td>
-        </tr>
-        <tr>
                 <td>Cloud Controller Worker</td>
                 <td><code>api_worker_z</code></td>
                 <td>&ge; 2</td>
