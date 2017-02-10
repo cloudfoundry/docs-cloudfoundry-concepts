@@ -44,6 +44,20 @@ Developers can then add Zipkin trace IDs to their application logging in order t
 
 After adding Zipkin HTTP headers to app logs, developers can use `cf logs myapp` to correlate the trace and span ids logged by the Gorouter with the trace ids logged by their app. To correlate trace ids for a request through multiple apps, each app must forward appropriate values for the headers with requests to other applications.
 
+### <a id="app-instance-routing"></a> App Instance Routing in HTTP Headers
+
+Developers who want to obtain debug data for a specific instance of an app can use the HTTP header `X-CF-APP-INSTANCE` to make a request to an app instance.
+
+Perform the following steps to make an HTTP request to a specific app instance:
+
+1. Obtain the GUID of your app:
+	<pre class="terminal">$ cf app YOUR-APP --guid</pre>
+1. List your app instances and retrieve the index number of the instance you want to debug:
+	<pre class="terminal">$ cf app YOUR-APP</pre>
+1. Make a request to the app route using the HTTP header `X-CF-APP-INSTANCE` set to the concatenated values of the app GUID and the instance index:
+	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre> 
+
+
 ## <a id="tls"></a>SSL/TLS Termination ##
 
 Depending on your needs, you can configure your deployment to terminate SSL/TLS at the CF router, the CF router and the load balancer, or the load balancer only. <%= vars.http_routing %>
