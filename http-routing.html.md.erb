@@ -15,7 +15,7 @@ Sticky sessions means that when multiple instances of an application are running
 
 To support sticky sessions, applications must return a `JSESSIONID` cookie in responses.
 
-If an application returns a `JSESSIONID` cookie to a client request, the CF routing tier appends a second cookie, called `VCAP_ID`, containing a unique identifier for the application instance. On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies. The CF routing tier uses the `VCAP_ID` to forward client requests to the same application instance every time.
+If an application returns a `JSESSIONID` cookie to a client request, the CF routing tier appends a second cookie, called `VCAP_ID`, containing a unique identifier for the application instance. On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies. The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same application instance every time. The `JSESSIONID` cookie is forwarded to the application instance to enable session continuity.
 
 If the application instance identified by the `VCAP_ID` crashes, the router attempts to route the request to a different instance of the application. If the router finds a healthy instance of the application, it initiates a new sticky session.
 
