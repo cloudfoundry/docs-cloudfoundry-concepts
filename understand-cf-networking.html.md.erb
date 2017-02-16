@@ -1,0 +1,164 @@
+---
+title: Understanding CF Networking
+owner: CF Networking
+---
+
+This topic provides an overview of how CF Networking works. <%= vars.cf_networking %>
+
+The CF Networking feature enables app instances to communicate with each other directly. When the CF Networking feature is disabled, all app-to-app traffic must go through the [Gorouter](./architecture/router.html).
+
+##<a id="architecture"></a> Architecture
+
+### <a id='overview'></a>Overview
+
+CF Networking integrates with [Garden-runC](./architecture/garden.html#garden-runc) in a [Diego](./diego/diego-architecture.html) deployment. 
+The [CF Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release) includes several core components, as well as swappable components. 
+
+To understand the components and how they work, see the diagram and tables below. 
+The diagram displays the CF Networking components in blue and other CF components in gray. 
+The diagram also highlights swappable components in yellow. 
+
+![c2c architecture diagram](./images/c2c-arch.png)
+
+### <a id='core'></a> Core Components
+
+The CF Networking BOSH release includes the following core components:
+
+<table>
+  <tr>
+    <th>Part</th>
+    <th>Function</th>
+  </tr>
+  <tr>
+    <td>Cloud Foundry Command Line Interface (CF CLI) plugin</td>
+    <td>A plugin that you download to control network access policies between apps. 
+  </tr>
+  <tr>
+    <td>Policy Server</td>
+    <td>A central management node that does the following:
+      <ul>
+        <li>Maintains a database of policies for traffic between apps. 
+            The CF CLI plugin calls an API to create or update a record 
+            in the policy database whenever you create or remove a policy.</li>
+        <li>Exposes a JSON REST API used by the CF CLI plugin</li>
+      </ul></td>
+  </tr>
+  <tr>
+    <td>Garden External Networker</td>
+    <td> 
+      A Garden-runC add-on deployed to every Diego cell that does the following:
+      <ul>
+        <li>Invokes the CNI plugin component to set up the network for each app</li>
+        <li>Forwards ports to support incoming connections from the Gorouter, TCP Router, and Diego SSH Proxy. 
+            This keeps apps externally reachable.</li>
+        <li>Installs outbound whitelist rules to support Application Security Groups (ASGs). </li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+###<a id='swap'></a> Swappable Components
+
+The CF Networking BOSH release includes the following swappable components:
+
+<table>
+  <tr>
+    <th>Part</th>
+    <th>Function</th>
+  </tr>
+  <tr>
+  <td>Flannel CNI plugin<br></td>
+  <td>A plugin that provides IP address management and network connectivity to apps.
+  <ul>
+  <li>Acquires IP address of container and relays to Garden</li>
+  <li>Installs network interface in container using the the flannel VXLAN backend. This is a shared, flat L3 network.</li>
+  </td>
+  </ul>
+  </tr>
+  <tr>
+  <td>VXLAN Policy Agent<br></td>
+  <td>Enforces network policy for traffic between apps as follows:
+  <ul>
+  <li>Discovers desired network policies from the Policy Server Internal API</li>
+  <li>Updates iptables rules on Diego cell to allow whitelisted inbound traffic </li>
+  <li>Tags outbound traffic with the unique identifier of the source app using the VXLAN Group-Based Policy (GBP) header</li>
+  </ul>
+  </td>
+  </tr>
+</table> 
+
+##<a id='app-comm'></a> App Instance Communication
+
+### <a id='without-cf'></a>Without CF Networking
+
+The diagram below illustrates how two app instances communicate in a deployment without CF Networking enabled. 
+Traffic from **App A** must route out and back in through the Gorouter, 
+which restricts performance and the protocol used to send the traffic. 
+In this scenario, **App B** does not know the real source of the traffic it receives and must trust all inbound traffic. 
+
+![Pre CF Networking](./images/pre-c2c.png)
+
+### <a id='with-cf'></a>With CF Networking
+
+The diagram below illustrates how app instances communicate in a deployment with CF Networking enabled. 
+In this example, the operator creates two policies to regulate the flow of traffic between **App A**, **App B**, and **App C**. 
+
+* Allow traffic from **App A** to **App B**
+* Allow traffic from **App A** to **App C**
+
+If traffic and its direction is not explicitly allowed, it is denied. For example, **App B** cannot send traffic to **App C**.
+
+![Post CF Networking](./images/post-c2c.png)
+
+##<a id="c2cvsasg"></a> CF Networking versus ASGs
+
+Both application security groups (ASGs) and CF Networking policies affect traffic from app instances.
+The following table highlights differences between ASGs and CF Networking policies.
+
+<table>
+  <tr>
+   <th></th>
+   <th>ASGs</th>
+   <th>CF Networking Policies</th>
+  <tr>
+  <tr>
+   <th>Policy granularity</th>
+   <td>From a space to an IP address range</td>
+   <td>From a source app to a destination app</td>
+  </tr>
+  <tr>
+   <th>Scope</th>
+   <td>For a space, org, or deployment</td>
+   <td>For app to app only</td>
+  </tr>
+  <tr>
+   <th>Traffic direction</th>
+   <td>Outbound control</td>
+   <td>Policies apply for incoming packets from other app instances</td>
+  </tr>
+  <tr>
+   <th>Source app</th>
+   <td>Is not known</td>
+   <td>Is identified because of direct addressability</td>
+  </tr>
+  <tr>
+   <th>Policies take affect</th>
+   <td>After app restart</td>
+   <td>Immediately</td>
+  </tr>
+</table>
+
+##<a id="policies"></a> Policies
+
+Enabling CF Networking for your deployment allows you to create policies for communication between app instances.
+The CF Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
+
+The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly 
+without going through the Gorouter, a load balancer, or a firewall. 
+CF Networking supports UDP and TCP, and you can configure policies for multiple ports. 
+These policies apply immediately without having to restart the app. 
+
+##<a id="alt-stack"></a> Alternative Network Stacks
+
+The BOSH release that contains the CF Networking feature is composed of a 
+pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [CF Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
