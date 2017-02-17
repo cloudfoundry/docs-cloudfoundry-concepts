@@ -5,13 +5,13 @@ owner: Routing
 
 <strong><%= modified_date %></strong>
 
-This topic describes features of HTTP routing handled by the Cloud Foundry (CF) [router](http://docs.cloudfoundry.org/concepts/architecture/#routing).
+This topic describes features of HTTP routing handled by the Cloud Foundry (CF) [router](./architecture/#routing).
 
-## <a id="sessions"></a>Sticky Sessions ##
+## <a id="sessions"></a>Session Affinity ##
 
-The CF router supports session affinity or "sticky sessions" for incoming HTTP requests to compatible apps.
+The CF router supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
 
-Sticky sessions means that when multiple instances of an app are running on CF, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
+With sticky sessions, when multiple instances of an app are running on CF, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
 
 * To support sticky sessions, configure your app to return a `JSESSIONID` cookie in responses. The app generates a `JSESSIONID` as a long hash in the following format:
 <pre class="terminal">
