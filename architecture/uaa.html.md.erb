@@ -1,58 +1,52 @@
 ---
-title: User Account and Authentication (UAA) Server
+title: Component&#58 User Account and Authentication (UAA) Server
 owner: Identity
 ---
 
 <strong><%= modified_date %></strong>
 
-The UAA is the identity management service for Cloud Foundry.
-Its primary role is as an OAuth2 provider, issuing tokens for client applications to use when they act on behalf of Cloud Foundry users.
-In collaboration with the login server, it can authenticate users with their Cloud Foundry credentials, and can act as an SSO service using those credentials (or others).
-It has endpoints for managing user accounts and for registering OAuth2 clients, as well as various other management functions.
+This topic provides an overview of the User Account and Authentication (UAA) Server, the identity management service for Cloud Foundry
+
+The primary role of the UAA is as an OAuth2 provider, issuing tokens for client apps to use when they act on behalf of Cloud Foundry users.
+In collaboration with the login server, the UAA can authenticate users with their Cloud Foundry credentials, and can act as an SSO service using those, or other, credentials.
+
+The UAA has endpoints for managing user accounts and for registering OAuth2 clients, as well as various other management functions.
 
 ## <a id='quickstart'></a>Quick Start ##
 
-### <a id='local'></a>Deploy Locally ###
+You can deploy the UAA locally or to Cloud Foundry.
 
-To start, fetch the UAA from Git, then build and run all of the components that
-comprise the UAA and the example programs (uaa, samples/api, and samples/app)
-with a single invocation of Gradle:
+* [Deploy UAA Locally](#local)
+* [Deploy UAA to Cloud Foundry](#cf)
 
-<pre class="terminal">
-$ git clone git://github.com/cloudfoundry/uaa.git
-$ cd uaa
-$ ./gradlew run
-</pre>
+### <a id='local'></a>Deploy UAA Locally ###
 
-If successful, the three apps will run together on a single instance of Tomcat
-listening on port 8080, with endpoints `/uaa`, `/app`, and `/api`.
+Follow the instructions below to deploy and run the UAA locally.
 
-### <a id='cf'></a>Deploy to Cloud Foundry ###
+1. In a terminal window, clone the UAA GitHub repository. 
 
-You can also build the app and push it to Cloud Foundry:
+    <pre class="terminal">
+    $ git clone git://github.com/cloudfoundry/uaa.git
+    </pre>
 
-<pre class="terminal">
-$ ./gradlew :cloudfoundry-identity-uaa:war
-$ cf push MYUAA -m 512M -p uaa/build/libs/cloudfoundry-identity-uaa-1.8.0.war --no-start
-$ cf set-env MYUAA SPRING_PROFILES_ACTIVE default
-$ cf start MYUAA
-</pre>
-
-In the steps above, replace the following:
-
-* `MYUAA` with a unique application name
-* `1.8.0` with the appropriate version label from your build
-
-### <a id='demo-local'></a>Local Command Line Usage ###
-
-1. Run the UAA server as described above:
+2. Navigate to the directory where you cloned the UAA GitHub repository, then run the `./gradlew run` command to build and run all the components that
+comprise the UAA and the example programs, `uaa`, `samples/api`, and `samples/app`.
 
     <pre class="terminal">
     $ cd uaa
     $ ./gradlew run
     </pre>
 
-2. Start another terminal. From the project base directory, query the login endpoint about the system:
+3. If successful, the three apps run together on a single instance of Tomcat
+listening on port 8080, with endpoints `/uaa`, `/app`, and `/api`.
+
+### <a id='demo-local'></a>Use Local UAA ###
+
+Follow the steps below to access and use a locally-deployed UAA server.
+
+1. Run the UAA server as described in the [Deploy Locally](#local) section, above. 
+
+2. Open another terminal window. From the project base directory, run `curl -H "Accept: application/json" localhost:8080/uaa/login` to query the login endpoint about the system. For example:
 
     <pre class="terminal">
     $ curl -H "Accept: application/json" localhost:8080/uaa/login
@@ -66,79 +60,136 @@ In the steps above, replace the following:
     }
     </pre>
 
-3. Log in with the UAA Ruby gem:
+3. Run `gem install cf-uaac` to install the Cloud Foundry UAA Command Line Client (UAAC) Ruby gem.
 
     <pre class="terminal">
     $ gem install cf-uaac
-    $ uaac target http://localhost:8080/uaa
-    $ uaac token get marissa koala
     </pre>
 
-    If you do not specify username and password, you will be prompted to supply
-    them.
-
-    This authenticates and obtains an access token from the server using the
-    OAuth2 implicit grant, similar to the approach intended for a standalone
-    client like the `cf` CLI.
-    The token is stored in `~/.uaac.yml`.
-    Open `~/.uaac.yml` to obtain the access token for your `cf` target, or use
-    `--verbose` on the login command line above to see it in the command shell.
-
-4. Log in as a resource server and retrieve the token details:
+3. Run `uaac target http://localhost:8080/uaa` to target the local UAA Server endpoint.
 
     <pre class="terminal">
     $ uaac target http://localhost:8080/uaa
-    $ uaac token decode [token-value-from-above]
+ </pre>
+
+3. Run `uaac token get USERNAME PASSWORD` to log in. Replace `USERNAME` with your user name, and `PASSWORD` with your password. For example:
+
+    <pre class="terminal">
+    $ uaac token get marissa koala
     </pre>
 
-    You should see your username and the client id of the original token grant
-    on STDOUT:
+    If you do not specify a username and password, the UAAC prompts you to 
+    supply them.
+    <br><br>
+    The `uaac token client get` command authenticates and obtains an access 
+    token from the server using the OAuth2 implicit grant, similar to the 
+    approach intended for a standalone client like the Cloud Foundry Command 
+    Line Interface (cf CLI). 
+    <br><br>
+    UAAC stores the access token in the `~/.uaac.yml` file. Open the 
+    `~/.uaac.yml` in a text editor and copy this access token to use in the 
+    next step.
 
-    ~~~
-      jti: e3a7d065-8514-43c2-b1f8-f8ab761791e2
-      sub: f796d1a2-eca3-4079-a317-f3224f8f7832
-      scope: scim.userids password.write openid cloud_controller.write cloud_controller.read
-      client_id: cf
-      cid: cf
-      user_id: f796d1a2-eca3-4079-a317-f3224f8f7832
-      user_name: marissa
-      email: marissa@example.org
-      iat: 1413495264
-      exp: 1413538464
-      iss: http://localhost:8080/uaa/oauth/token
-      aud: scim openid cloud_controller password
-    ~~~
+4. Run `uaac token decode ACCESS-TOKEN-VALUE` to retrieve the token details. Replace `ACCESS-TOKEN-VALUE` with your access token, copied from your `~/.uaac.yml` file. The UAAC should display your username and the client id of the original token grant. For example:
 
-### <a id='demo-hosted'></a>Remote Command Line Usage ###
+    <pre class="terminal">
+    $ uaac token decode abcdef0123456789ABCDEF0123456789ghijklmnopqr01234567890
+    jti: e3a7d065-8514-43c2-b1f8-f8ab761791e2
+    sub: f796d1a2-eca3-4079-a317-f3224f8f7832
+    scope: scim.userids password.write openid cloud_controller.write cloud_controller.read
+    client_id: cf
+    cid: cf
+    user_id: f796d1a2-eca3-4079-a317-f3224f8f7832
+    user_name: marissa
+    email: marissa@example.org
+    iat: 1413495264
+    exp: 1413538464
+    iss: http://localhost:8080/uaa/oauth/token
+    aud: scim openid cloud_controller password
+    </pre>
 
-The command line example in the previous section should work against the UAA, although token encoding is unnecessary as you will not have the client secret.
+### <a id='cf'></a>Deploy UAA to Cloud Foundry ###
 
-In this case, there is no need to run a local UAA server.
-Query the external login endpoint about the system:
+Follow the instructions below to build the UAA as an app and push it to Cloud Foundry using the Cloud Foundry Command Line Interface (cf CLI). 
 
-<pre class="terminal">
-$ curl -H "Accept: application/json" uaa.run.pivotal.io/login
-{
-  "timestamp":"2014-09-15T18:25:04+0000",
-  "app":{"version":"1.8.3"},
-  "commit_id":"git-metadata-not-found",
-  "prompts":{"username":["text","Email"],
-             "password":["password","Password"]
-  }
-}
-</pre>
+1. In a terminal window, clone the UAA GitHub repository. 
 
-You can then try logging in with the UAA Ruby gem. Make sure you have Ruby 1.9, then:
+    <pre class="terminal">
+    $ git clone git://github.com/cloudfoundry/uaa.git
+    </pre>
 
-<pre class="terminal">
-$ gem install cf-uaac   # If you have not already installed cf-uaac
-$ uaac target uaa.run.pivotal.io
-$ uaac token get [yourusername] [yourpassword]
-</pre>
+2. Navigate to the directory where you cloned the UAA GitHub repository, then run the `./gradlew :cloudfoundry-identity-uaa:war` command build the UAA as a WAR file. 
 
-If you do not specify a username and password, you will be prompted to supply them.
+    <pre class="terminal">
+    $ cd uaa
+    $ ./gradlew :cloudfoundry-identity-uaa:war
+    </pre>
 
-This authenticates and obtains an access token from the server using the OAuth2 implicit grant, which is the same grant that a client like the `cf` CLI uses.
+3. Run the cf CLI `cf push APP-NAME -m 512M -p PATH-TO-WAR-FILE --no-start` command to push the app to Cloud Foundry. Replace `APP-NAME` with a name for your UAA app, and `PATH-TO-WAR-FILE` with the path to the WAR file you created in the previous step. For example:
+
+    <pre class="terminal">
+    $ cf push MYUAA -m 512M -p uaa/build/libs/cloudfoundry-identity-uaa-1.8.0.war --no-start
+    </pre>
+
+4. Run `cf set-env APP-NAME SPRING_PROFILES_ACTIVE default` to set the `SPRING_PROFILES_ACTIVE` environment variable with the value `default`. Replace `APP-NAME` with the name of your app that you used in the previous step. For example:
+
+    <pre class="terminal">
+    $ cf set-env MYUAA SPRING_PROFILES_ACTIVE default
+    </pre>
+
+5. Run `cf start APP-NAME` to start your app. Replace `APP-NAME` with the name of your app. For example:
+
+    <pre class="terminal">
+    $ cf start MYUAA
+    </pre>
+
+### <a id='demo-hosted'></a>Use Remote UAA ###
+
+You use a UAA server that you pushed as an app to Cloud Foundry in a similar way to one you [run locally](#demo-local). You do not need app token encoding because you do not have the client secret.
+
+Follow the steps below to access and use a UAA server that you pushed as an app to Cloud Foundry.
+
+
+1. [Deploy UAA to Cloud Foundry](#) as described above. 
+
+1. From the project base directory, run `curl -H "Accept: application/json" APP-FQDN/login` to query the external login endpoint about the system. Replace `APP-FQDN` with the FQDN of your app. For example:
+
+    <pre class="terminal">
+    $ curl -H "Accept: application/json" uaa.example.org/login
+    {
+      "timestamp":"2014-09-15T18:25:04+0000",
+      "app":{"version":"1.8.3"},
+      "commit_id":"git-metadata-not-found",
+      "prompts":{"username":["text","Email"],
+          "password":["password","Password"]
+      }
+    }
+    </pre>
+
+1. Run `gem install cf-uaac` to install the Cloud Foundry UAA Command Line Client (UAAC) Ruby gem.
+
+    <pre class="terminal">
+    $ gem install cf-uaac
+    </pre>
+
+3. Run `uaac target APP-FQDN` to target the remote UAA Server endpoint. Replace `APP-FQDN` with the FQDN of your app.
+    <pre class="terminal">
+    $ uaac target uaa.example.org
+    </pre>
+
+3. Run `uaac token get USERNAME PASSWORD` to log in. Replace `USERNAME` with your user name, and `PASSWORD` with your password. For example:
+
+    <pre class="terminal">
+    $ uaac token get marissa koala
+    </pre>
+
+    If you do not specify a username and password, the UAAC prompts you to 
+    supply them.
+    <br><br>
+    The `uaac token client get` command authenticates and obtains an access 
+    token from the server using the OAuth2 implicit grant, similar to the 
+    approach intended for a standalone client like the Cloud Foundry Command 
+    Line Interface (cf CLI). 
 
 ## <a id='integration'></a>Integration Tests ##
 
@@ -148,125 +199,129 @@ Run the integration tests with the following command:
 $ ./gradlew integrationTest
 </pre>
 
-This starts a UAA server running in a local Apache Tomcat instance. By default, the service URL is set to `http://localhost:8080/uaa`.
+This command starts a UAA server running in a local Apache Tomcat instance. By default, the service URL is set to `http://localhost:8080/uaa`.
 
-You can set the environment variable `CLOUD_FOUNDRY_CONFIG_PATH` to a directory containing a `uaa.yml` file in which the various URLs used in the tests are changed, and the UAA server context root may be set.
+You can set the environment variable `CLOUD_FOUNDRY_CONFIG_PATH` to a directory containing a `uaa.yml` file where you change the URLs used in the tests, and where you can set the UAA server context root.
 
 ### <a id='custom-configuration'></a>Custom YAML Configuration ###
 
-To modify the runtime parameters you can provide a `uaa.yml`, as shown in the following example:
+Follow the steps below to modify the runtime parameters.
 
-<pre class="terminal">
-$ cat > /tmp/uaa.yml
-uaa:
-  host: uaa.appcloud21.dev.mozycloud
-  test:
-    username: dev@cloudfoundry.org # defaults to vcap_tester@vmware.com
-    password: changeme
-    email: dev@cloudfoundry.org
-</pre>
+1. Create a `uaa.yml` file in the following format:
 
-Then from `uaa/uaa`:
+    ```
+    uaa:
+      host: UAA-HOSTNAME
+      test:
+        username: USERNAME
+        password: PASSWORD
+        email: EMAIL-ADDRESS
+    ```
 
-<pre class="terminal">
-    $ CLOUD_FOUNDRY_CONFIG_PATH=/tmp ./gradlew test
-</pre>
+    Replace the values in the above format as follows:
+    * **UAA-HOSTNAME**: The FQDN of UAA app. Example: `uaa.example.org`
+    * **USERNAME**: A valid username. Example: `dev@example.org`
+    * **PASSWORD**: Password for the above username.
+    * **EMAIL-ADDRESS**: Email address for the above user. Example: `dev@example.org`
 
-The webapp looks for a YAML file in the following locations
-(later entries override earlier ones) when it starts up.
+1. From the `uaa/uaa` directory, run `CLOUD_FOUNDRY_CONFIG_PATH=/tmp ./gradlew test`.
 
-```yaml
+1. The web app looks for a YAML file in the following locations when it starts, with later entries overriding earlier ones:
+
+    ```yaml
     classpath:uaa.yml
     file:${CLOUD_FOUNDRY_CONFIG_PATH}/uaa.yml
     file:${UAA_CONFIG_FILE}
     ${UAA_CONFIG_URL}
-```
+    ```
 
 ###<a id='gradle-test'></a>Test with PostgreSQL or MySQL ###
 
-The default UAA unit tests (`./gradlew test`) use hsqldb.
+The default UAA unit tests, `./gradlew test`, use HyperSQL (hsqldb). 
 
-To run the unit tests using PostgreSQL:
+To use a different database management system, create a `uaa.yml` file containing `spring_profiles: default,OTHER-DBMS` in the `src/main/resources/` directory. Replace `OTHER-DBMS` with the name of the other database management system to use.
+
+For example, run the following command to run the unit tests using PostgreSQL instead of hsqldb:
 
 <pre class="terminal">
 $ echo "spring_profiles: default,postgresql" > src/main/resources/uaa.yml
 $ ./gradlew test integrationTest
 </pre>
 
-To run the unit tests using MySQL:
+Run the following command to run the unit tests using MySQL instead of hsqldb:
 
 <pre class="terminal">
 $ echo "spring_profiles: default,mysql" > src/main/resources/uaa.yml
 $ ./gradlew test integrationTest
 </pre>
 
-The database configuration for the common and scim modules is located at `common/src/test/resources/(mysql|postgresql).properties` and `scim/src/test/resources/(mysql|postgresql).properties`.
+You can find the database configuration for the common and scim modules at `common/src/test/resources/(mysql|postgresql).properties` and `scim/src/test/resources/(mysql|postgresql).properties`.
 
 ## <a id='projects'></a>UAA Projects ##
 
-There are several projects: the main `uaa` server application, and some samples:
+The following UAA projects exist:
 
-* `common` is a module containing a JAR with all the business logic. It is used in the webapps below.
+* `common`: A module containing a JAR with all the business logic. `common` is used in the web apps listed below.
 
-* `uaa` is the UAA server. `uaa` provides an authentication service plus authorized delegation for back-end services and apps by issuing OAuth2 access tokens.
+* `uaa`: The UAA server. `uaa` provides an authentication service and authorized delegation for back-end services and apps by issuing OAuth2 access tokens.
 
-* `api` (sample) is an OAuth2 resource service which returns a mock list of deployed apps. `api` is a service that provides resources that other applications might want to access on behalf of the resource owner.
+* `api`: A sample OAuth2 resource service that returns a mock list of deployed apps. `api` provides resources that other apps might want to access on behalf of the resource owner.
 
-* `app` (sample) is a user application that uses both of the above. `app` is a webapp that needs single sign-on and access to the `api` service on behalf of users.
+* `app`: A sample user app that uses both `api` and `uaa`. `app` is a web app that requires single sign-on and access to the `api` service on behalf of users.
 
-* `scim` is the <a href="http://www.simplecloud.info/">SCIM</a> user management module used by UAA.
+* `scim`: The <a href="http://www.simplecloud.info/">SCIM</a> user management module used by UAA.
 
 ### <a id='uaa-server'></a>UAA Server ###
 
-The authentication service is `uaa`. It is a plain Spring MVC webapp.
-Deploy as normal in Tomcat or your container of choice, or execute `./gradlew run` to run it directly from the `uaa` directory in the source tree. When running with Gradle, it listens on port 8080 and the URL is `http://localhost:8080/uaa`.
+The authentication service, `uaa`, is a Spring MVC web app. You can deploy it in Tomcat or your container of choice, or execute `./gradlew run` to run it directly from the `uaa` directory in the source tree. When run with Gradle, `uaa` listens on port `8080` and has URL `http://localhost:8080/uaa`.
 
-The UAA Server supports the APIs defined in the UAA-APIs document. To summarize:
+The UAA Server supports the APIs defined in the UAA-APIs document which include the following:
 
-1. The OAuth2 `/authorize` and `/token` endpoints
+* The OAuth2 `/authorize` and `/token` endpoints
 
-2. A `/login_info` endpoint to allow querying for required login prompts
+* A `/login_info` endpoint to allow querying for required login prompts
 
-3. A `/check_token` endpoint, to allow resource servers to obtain information about an access token submitted by an OAuth2 client.
+* A `/check_token` endpoint to allow resource servers to obtain information about an access token submitted by an OAuth2 client
 
-4. SCIM user provisioning endpoint
+* SCIM user provisioning endpoint
 
-5. OpenID connect endpoints to support authentication `/userinfo` and `/check_id` (todo). Implemented roughly enough to get it working (so `/app` authenticates here), but not to meet the spec.
+* OpenID connect endpoints to support authentication `/userinfo` and `/check_id`
 
 Command line clients can perform authentication by submitting credentials directly to the `/authorize` endpoint.
-There is an `ImplicitAccessTokenProvider` in Spring Security OAuth that can do the heavy lifting if your client is Java.
+
+An `ImplicitAccessTokenProvider` exists in Spring Security OAuth to use if your client is Java.
 
 By default, `uaa` will launch with a context root `/uaa`.
 
 #### <a id='configuration'></a>Configuration ####
 
-There is a `uaa.yml` file in the application which provides defaults to the placeholders in the Spring XML.
-Wherever you see `${placeholder.name}` in the XML, there is an opportunity to override it either by providing a System property (`-D` to JVM) with the same name, or a custom `uaa.yml` (as described above).
+A `uaa.yml` file exists in the app. This file provides defaults to the placeholders in the Spring XML.
 
-All passwords and client secrets in the config files are plain text, but they will be inserted into the UAA database encrypted with BCrypt.
+You can override any occurrences of `${placeholder.name}` in the XML by adding it to the `uaa.yml` file, or by providing a System property, `-D` to JVM, with the same name. 
+
+All passwords and client secrets in the config files are in plain text, but are inserted into the UAA database encrypted with BCrypt.
 
 #### <a id='user-account-data'></a>User Account Data ####
 
-The default is to use an in-memory RDBMS user store that is pre-populated with a single test user: `marissa` with password `koala`.
+The default uses an in-memory RDBMS user store, pre-populated with a single test user `marissa` with password `koala`.
 
-To use Postgresql for user data, activate the Spring profile `postgresql`.
+To use PostgreSQL for user data, activate the Spring profile `postgresql`.
 
-You can configure the active profiles in `uaa.yml` using:
+You can configure the active profiles in `uaa.yml` using the following:
 
 ```yaml
 spring_profiles: postgresql,default
 ```
 
-To use PostgreSQL instead of HSQL:
+To use PostgreSQL instead of HyperSQL (hsqldb):
 
 <pre class="terminal">
 $ echo "spring_profiles: postgresql,default" > src/main/resources/uaa.yml
 $ ./gradlew run
 </pre>
 
-To bootstrap a microcloud-type environment, you need an admin client; there is a database initializer component that inserts one.
-If the default profile is active (i.e. not `postgresql`), there is also a `cf` CLI client so that the gem login works out of the box.
-You can override the default settings and add additional clients in `uaa.yml`:
+To bootstrap a microcloud-type environment, you need an admin client. A database initializer component that inserts an admin client exists.
+If the default profile is active, for example not `postgresql`, a cf CLI client exists so that the Gem login works with no additional configuration required. You can override the default settings and add additional clients in the `uaa.yml` file:
 
 ```yaml
 oauth:
@@ -280,55 +335,61 @@ oauth:
       resource-ids: clients
 ```
 You can use the admin client to create additional clients.
-You will need a client with read/write access to the `scim` resource to create user accounts.
-The integration tests take care of this automatically by inserting client and user accounts as necessary to make the tests work.
+You must have a client with read/write access to the `scim` resource to create user accounts.
+The integration tests handle this automatically by inserting client and user accounts as necessary for the tests.
 
-### <a id='samples'></a>Sample Applications ###
+### <a id='samples'></a>Sample Apps ###
 
-Two sample applications are included with the UAA: `/api` and `/app`.
+Two sample apps are included with the UAA: `/api` and `/app`.
 
-Run them with `./gradlew run` from the `uaa` root directory. All three apps, `/uaa`, `/api`, and `/app` get deployed simultaneously.
+Run them with `./gradlew run` from the `uaa` root directory. All three apps, `/uaa`, `/api`, and `/app`, are simultaneously deployed.
 
-#### <a id='api-application'></a>The API Sample Application ####
+#### <a id='api-application'></a> API Sample App ####
 
-An example resource server.
-It hosts a service that returns a list of mock applications under `/apps`.
+The `api` sample app is an example resource server. It hosts a service that returns a list of mock apps under `/apps`.
 
-#### <a id='app-application'></a>The App Sample Application ####
+#### <a id='app-application'></a> APP Sample App ####
 
-This is a user interface app (primarily aimed at browsers) that uses OpenId Connect for authentication (i.e. SSO) and OAuth2 for access grants.
-It authenticates with the Auth service, then accesses resources in the API service.
+The `app` sample app is a user interface app, primarily aimed at browsers, that uses OpenID Connect for authentication and OAuth2 for access grants. `app` authenticates with the Auth service, then accesses resources in the API service.
 Run it with `./gradlew run` from the `uaa` root directory.
 
-The application can operate in multiple different profiles according to the location (and presence) of the UAA server and the Login application.
-By default, the application looks for a UAA on `localhost:8080/uaa`, but you can change this by setting an environment variable (or System property) called `UAA_PROFILE`.
-In the application source code (`samples/app/src/main/resources`), you will find multiple properties files pre-configured with different likely locations for those servers.
-They are all in the form `application-UAA_PROFILE.properties`.
-The naming convention adopted is that the `UAA_PROFILE` is `local` for the localhost deployment, `vcap` for a `vcap.me` deployment, and `staging` for a staging deployment.
-The profile names are double-barreled (e.g. `local-vcap` when the login server is in a different location than the UAA server).
+The app can operate in multiple different profiles according to the location and presence of the UAA server and the login app.
+By default, the app looks for a UAA on `localhost:8080/uaa`, but you can change this by setting the `UAA_PROFILE` environment variable or System Property.
+
+The app source code, `samples/app/src/main/resources`, contains multiple properties files pre-configured with different likely locations for those servers. The names of these properties files follow the form `app-UAA_PROFILE.properties`.
+
+The naming convention for the `UAA_PROFILE` is as follows: 
+
+* `local`: a localhost deployment
+
+* `vcap`: a `vcap.me` deployment
+
+* `staging`: a staging deployment
+
+Profile names can be hyphenated to indicate multiple contexts. For example, `local-vcap` can be used when the login server is in a different location than the UAA server.
 
 ##### Use Cases #####
 
-1. See all apps
+1. See all apps:
 
         GET /app/apps
 
-    Browser is redirected through a series of authentication and access grant steps (which could be slimmed down to implicit steps not requiring user at some point), and then the photos are shown.
+    Browser is redirected through a series of authentication and access grant steps, and then the photos are shown.
 
-2. See the currently logged in user details, a bag of attributes grabbed from the open id provider
+2. See the currently logged in user details, a selection of attributes from the OpenID provider:
 
         GET /app
 
-#### <a id='login-application'></a>Login Application ####
+#### <a id='login-application'></a>LOGIN App ####
 
-A user interface for authentication.
+The `login` app is a user interface for authentication. 
 The UAA can also authenticate user accounts, but only if it manages them itself,
 and it only provides a basic UI.
 You can brand and customize the login app for non-native authentication and for more complicated UI flows, like user registration and password reset.
 
-The login application is itself an OAuth2 endpoint provider, but delegates those features to the UAA server.
-Therefore, configuration for the login application consists of locating the UAA through its OAuth2 endpoint URLs and registering the login application itself as a client of the UAA.
-There is a `login.yml` for the UAA locations, such as for a local `vcap` instance:
+The login app is itself an OAuth2 endpoint provider, but delegates those features to the UAA server.
+Therefore, configuration for the login app consists of locating the UAA through its OAuth2 endpoint URLs and registering the login app itself as a client of the UAA.
+A `login.yml` for the UAA locations exists, such as for a local `vcap` instance:
 
 ```yaml
 uaa:
@@ -339,7 +400,7 @@ uaa:
     url: http://uaa.vcap.example.net/login.do
 ```
 
-There is also an environment variable (or Java System property), `LOGIN_SECRET`, for the client secret that the app uses when it authenticates itself with the UAA.
+An environment variable or Java System property also exists, `LOGIN_SECRET`, for the client secret that the app uses when it authenticates itself with the UAA.
 The login app is registered by default in the UAA only if there are no active Spring profiles.
 In the UAA, the registration is located in the `oauth-clients.xml` config file:
 
@@ -353,19 +414,19 @@ resource-ids: oauth
 
 #### Use Cases ####
 
-1. Authenticate
+1. Authenticate:
 
         GET /login
 
-    The sample app presents a form login interface for the backend UAA, and also an OpenID widget so the user can authenticate using Google credentials or others.
+    The sample app presents a form login interface for the backend UAA, and an OpenID widget where a user can authenticate using Google or other credentials.
 
-2. Approve OAuth2 token grant
+2. Approve OAuth2 token grant:
 
         GET /oauth/authorize?client_id=app&response_type=code...
 
-    Standard OAuth2 Authorization Endpoint. The UAA handles client credentials and all other features in the back end, and the login application is used to render the UI (see `access_confirmation.jsp`).
+    Standard OAuth2 Authorization Endpoint. The UAA handles client credentials and all other features in the back end, and the login app is used to render the UI.
 
-3. Obtain access token
+3. Obtain access token:
 
         POST /oauth/token
     Standard OAuth2 Authorization Endpoint passed through to the UAA.
@@ -465,14 +526,14 @@ See the tables below for a description of the scopes covered by UAA:
   </tr>
   <tr>
     <td><code>scim.zones</code></td>
-    <td>This is a limited scope only allows adding a user to or removing a user from zone management groups under the path <code>/Groups/zones</code>.</td>
+    <td>This is a limited scope that only allows adding a user to, or removing a user from, zone management groups under the path <code>/Groups/zones</code>.</td>
     <tr>
       <td><code>oauth.approval</code></td> 
-      <td><code>/approvals endpoint</code>. This scope is required to be able to approve or reject clients in order to act on a user's behalf. This is a default scope defined in uaa.yml.</td>
+      <td><code>/approvals endpoint</code>. This scope is required to approve or reject clients to act on a user's behalf. This is a default scope defined in the <code>uaa.yml</code> file.</td>
     </tr>
     <tr>
       <td><code>oauth.login</code></td>
-      <td>This scope is used to indicate a login application, such as external login servers, to perform trusted operations, such as create users not authenticated in the UAA.</td>
+      <td>This scope is used to indicate a login app, such as external login servers, can perform trusted operations, such as creating users not authenticated in the UAA.</td>
     </tr>
     <tr>
       <td><code>approvals.me</code></td>
@@ -484,7 +545,7 @@ See the tables below for a description of the scopes covered by UAA:
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.admin</code></td>
-      <td>This scope permits operations in a designated zone by authenticating against the default zone, such as create identity providers or clients in another zone. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope permits operations in a designated zone, such as creating identity providers or clients in another zone, by authenticating against the default zone. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.read</code></td>
@@ -492,31 +553,31 @@ See the tables below for a description of the scopes covered by UAA:
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.admin</code></td>
-      <td>This scope translates into clients.admin after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>  
+      <td>This scope translates into <code>clients.admin</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>  
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.read</code></td>
-      <td>This scope translates into clients.read after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>clients.read</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.write</code></td>
-      <td>This scope translates into clients.write after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>clients.write</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.scim.read</code></td>
-      <td>This scope translates into scim.read after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>scim.read</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.scim.create</code></td>
-      <td>This scope translates into scim.create after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>scim.create</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.clients.scim.write</code></td>
-      <td>This scope translates into scim.write after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>scim.write</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
     <tr>
       <td nowrap><code>zones.ZONE-ID.idps.read</code></td>
-      <td>This scope translates into idps.read after zone switch is complete. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
+      <td>This scope translates into <code>idps.read</code> after zone switch completes. This scope is used with the <code>X-Identity-Zone-Id header</code>.</td>
     </tr>
   </tr> 
 </table>
@@ -591,9 +652,3 @@ See the tables below for a description of the scopes covered by UAA:
     <td>This scope gives the ability to send notifications through the <%= vars.notifications_link %>.</td>
   </tr>
 </table>
-
-
-
-
-
-
