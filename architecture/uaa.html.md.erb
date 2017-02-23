@@ -128,11 +128,11 @@ $ curl -H "Accept: application/json" uaa.run.pivotal.io/login
 }
 </pre>
 
-You can then try logging in with the UAA Ruby gem. Make sure you have Ruby 1.9, then:
+You can then try logging in with the UAA Ruby gem.
 
 <pre class="terminal">
 $ gem install cf-uaac   # If you have not already installed cf-uaac
-$ uaac target uaa.run.pivotal.io
+$ uaac target https://uaa.run.pivotal.io
 $ uaac token get [yourusername] [yourpassword]
 </pre>
 
