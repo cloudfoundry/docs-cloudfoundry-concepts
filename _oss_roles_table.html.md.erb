@@ -3,15 +3,18 @@
         <th>Activity</th>
         <th>Admin</th>
         <th>Admin Read-Only</th>
+        <th>Global Auditor</th>
         <th>Org Manager</th>
         <th>Org Auditor</th>
         <th>Org Billing Manager</th>
         <th>Space Manager</th>
         <th>Space Developer</th>
         <th>Space Auditor</th>
+ 
     </tr><tr>
         <td>Scope of operation</td>
         <td>Org</td> 
+        <td>Org</td>
         <td>Org</td>
         <td>Org</td>
         <td>Org</td>
@@ -23,14 +26,16 @@
         <td>Assign user roles</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
-        <td></td>
         <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
+        <td>&check;</td>
+        <td></td>
+        <td></td> 
     </tr><tr>
         <td>View users and roles</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -49,8 +54,10 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr><tr>
         <td>View org quota plans</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -63,15 +70,17 @@
         <td>Create orgs</td>
         <td>&check;</td>
         <td><sup></sup></td>
+        <td><sup></sup></td>
         <td><sup>&#42;</sup></td>
         <td><sup>&#42;</sup></td>
         <td><sup>&#42;</sup></td>
         <td><sup>&#42;</sup></td>
         <td><sup>&#42;</sup></td>
-        <td><sup>&#42;</sup></td>
+        <td><sup>&#42;</sup></td>      
     </tr>
     <tr>
         <td>View all orgs</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td></td>
@@ -82,8 +91,9 @@
         <td></td>
     </tr><tr>
         <td>View orgs where user is member</td>
-        <td>&check;</td>
-        <td>&check;</td>
+        <td>&check;<sup>&#42;</sup><sup>&#42;</sup></td>
+        <td>&check;<sup>&#42;</sup><sup>&#42;</sup></td>
+        <td>&check;<sup>&#42;</sup><sup>&#42;</sup></td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -93,6 +103,7 @@
     </tr><tr>
         <td>Edit, rename, and delete orgs</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td>&check;</td>
         <td></td>
@@ -110,10 +121,12 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>Create and assign space quota plans</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td>&check;</td>
         <td></td>
@@ -126,6 +139,7 @@
         <td>Create spaces</td>
         <td>&check;</td>
         <td></td>
+        <td></td>
         <td>&check;</td>
         <td></td>
         <td></td>
@@ -134,6 +148,7 @@
         <td></td>
     </tr><tr>
         <td>View spaces</td>
+        <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
@@ -146,17 +161,19 @@
         <td>Edit spaces</td>
         <td>&check;</td>
         <td></td>
-        <td>&check;</td>
-        <td></td>
         <td></td>
         <td>&check;</td>
         <td></td>
+        <td></td>
+        <td>&check;</td>
+        <td></td>     
 	<td></td>
     </tr><tr>
         <td>Delete spaces</td>
         <td>&check;</td>
         <td></td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -172,6 +189,7 @@
         <td>&check;</td>
         <td></td>
         <td></td>
+        <td></td>
     </tr><tr>
         <td>View the status, number of instances, service bindings, and resource use of applications</td>
         <td>&check;</td>
@@ -182,9 +200,11 @@
         <td>&check;</td>
         <td>&check;</td>
         <td>&check;</td>
+        <td>&check;</td>
     </tr><tr>
         <td>Add private domains<sup>&dagger;</sup></td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td>&check;</td>
         <td></td>
@@ -200,8 +220,9 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>&check;</td>
         <td></td>
+        <td>&check;</td>
+        <td></td>     
     </tr><tr>
         <td>Instantiate and bind services to applications</td>
         <td>&check;</td>
@@ -210,8 +231,9 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>&check;</td>
         <td></td>
+        <td>&check;</td>
+        <td></td>        
     </tr><tr>
         <td>Associate routes<sup>&dagger;</sup>, instance counts, memory allocation, and disk limit of applications</td>
         <td>&check;</td>
@@ -220,11 +242,13 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>&check;</td>
         <td></td>
+        <td>&check;</td>
+        <td></td>        
     </tr><tr>
         <td>Rename applications</td>
         <td>&check;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -242,9 +266,12 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr>
 </table>
 
 <sup>&#42;</sup>Not by default, unless [feature flag](../adminguide/listing-feature-flags.html) `user_org_creation` is set to `true`.
+
+<sup>&#42;</sup><sup>&#42;</sup>Admin, admin read-only and global auditor roles do not need to be added as members of orgs or spaces to view resources.
 
 <sup>&dagger;</sup>Unless disabled by [feature flags](../adminguide/listing-feature-flags.html).
