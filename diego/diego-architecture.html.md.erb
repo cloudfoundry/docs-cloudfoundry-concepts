@@ -213,6 +213,8 @@ The following three platform-specific binaries deploy applications and govern th
 
 ###<a id='route-emitter'></a>Route-Emitter ###
 
+- Acts as either one global route-emitter or local route-emitters on each Diego cell
+
 - Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to the Cloud Foundry  [router](https://github.com/cloudfoundry/gorouter) when it detects changes
 
 - Periodically emits the entire routing table to the Cloud Foundry router
