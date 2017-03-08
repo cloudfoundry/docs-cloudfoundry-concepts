@@ -63,7 +63,7 @@ Perform the following steps to make an HTTP request to a specific app instance:
 1. List your app instances and retrieve the index number of the instance you want to debug:
 	<pre class="terminal">$ cf app YOUR-APP</pre>
 1. Make a request to the app route using the HTTP header `X-CF-APP-INSTANCE` set to the concatenated values of the app GUID and the instance index:
-	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre> 
+	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
 
 
 ## <a id="tls"></a>SSL/TLS Termination ##
@@ -83,3 +83,7 @@ The CF router uses the round-robin algorithm for load balancing incoming request
 ## <a id="sockets"></a>sockets ##
 
 WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The CF Router supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
+
+## <a id="keepalive"></a>Idle Keepalive Connections ##
+
+When an operator has chosen to disable support for Keepalive Connections, the CF Router will close the TCP connection to an app instance or system component after sending a single HTTP request. When Keepalive Connections is enabled the router will maintain established connections, with a configurable maximum that limits the number of total idle connections from each router. The router will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the router limit has not been reached that connection will be maintained. The number of idle connections from each router to an individual backend is limited to 100. Operators should see [Router Idle Keepalive Connections](../adminguide/routing-keepalive.html) for details. 
