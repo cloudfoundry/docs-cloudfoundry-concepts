@@ -1,28 +1,28 @@
 ---
-title: Understanding CF Networking
-owner: CF Networking
+title: Understanding Container-to-Container Networking
+owner: Container-to-Container Networking
 ---
 
-This topic provides an overview of how CF Networking works. <%= vars.cf_networking %>
+This topic provides an overview of how Container-to-Container Networking works. <%= vars.cf_networking %>
 
-The CF Networking feature enables app instances to communicate with each other directly. When the CF Networking feature is disabled, all app-to-app traffic must go through the [Gorouter](./architecture/router.html).
+The Container-to-Container Networking feature enables app instances to communicate with each other directly. When the Container-to-Container Networking feature is disabled, all app-to-app traffic must go through the [Gorouter](./architecture/router.html).
 
 ##<a id="architecture"></a> Architecture
 
 ### <a id='overview'></a>Overview
 
-CF Networking integrates with [Garden-runC](./architecture/garden.html#garden-runc) in a [Diego](./diego/diego-architecture.html) deployment. 
-The [CF Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release) includes several core components, as well as swappable components. 
+Container-to-Container Networking integrates with [Garden-runC](./architecture/garden.html#garden-runc) in a [Diego](./diego/diego-architecture.html) deployment. 
+The [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release) includes several core components, as well as swappable components. 
 
 To understand the components and how they work, see the diagram and tables below. 
-The diagram displays the CF Networking components in blue and other CF components in gray. 
+The diagram displays the Container-to-Container Networking components in blue and other CF components in gray. 
 The diagram also highlights swappable components in yellow. 
 
 ![c2c architecture diagram](./images/c2c-arch.png)
 
 ### <a id='core'></a> Core Components
 
-The CF Networking BOSH release includes the following core components:
+The Container-to-Container Networking BOSH release includes the following core components:
 
 <table>
   <tr>
@@ -59,7 +59,7 @@ The CF Networking BOSH release includes the following core components:
 
 ###<a id='swap'></a> Swappable Components
 
-The CF Networking BOSH release includes the following swappable components:
+The Container-to-Container Networking BOSH release includes the following swappable components:
 
 <table>
   <tr>
@@ -89,18 +89,18 @@ The CF Networking BOSH release includes the following swappable components:
 
 ##<a id='app-comm'></a> App Instance Communication
 
-### <a id='without-cf'></a>Without CF Networking
+### <a id='without-cf'></a>Without Container-to-Container Networking
 
-The diagram below illustrates how two app instances communicate in a deployment without CF Networking enabled. 
+The diagram below illustrates how two app instances communicate in a deployment without Container-to-Container Networking enabled. 
 Traffic from **App A** must route out and back in through the Gorouter, 
 which restricts performance and the protocol used to send the traffic. 
 In this scenario, **App B** does not know the real source of the traffic it receives and must trust all inbound traffic. 
 
-![Pre CF Networking](./images/pre-c2c.png)
+![Pre Container-to-Container Networking](./images/pre-c2c.png)
 
-### <a id='with-cf'></a>With CF Networking
+### <a id='with-cf'></a>With Container-to-Container Networking
 
-The diagram below illustrates how app instances communicate in a deployment with CF Networking enabled. 
+The diagram below illustrates how app instances communicate in a deployment with Container-to-Container Networking enabled. 
 In this example, the operator creates two policies to regulate the flow of traffic between **App A**, **App B**, and **App C**. 
 
 * Allow traffic from **App A** to **App B**
@@ -108,18 +108,18 @@ In this example, the operator creates two policies to regulate the flow of traff
 
 If traffic and its direction is not explicitly allowed, it is denied. For example, **App B** cannot send traffic to **App C**.
 
-![Post CF Networking](./images/post-c2c.png)
+![Post Container-to-Container Networking](./images/post-c2c.png)
 
-##<a id="c2cvsasg"></a> CF Networking versus ASGs
+##<a id="c2cvsasg"></a> Container-to-Container Networking versus ASGs
 
-Both application security groups (ASGs) and CF Networking policies affect traffic from app instances.
-The following table highlights differences between ASGs and CF Networking policies.
+Both application security groups (ASGs) and Container-to-Container Networking policies affect traffic from app instances.
+The following table highlights differences between ASGs and Container-to-Container Networking policies.
 
 <table>
   <tr>
    <th></th>
    <th>ASGs</th>
-   <th>CF Networking Policies</th>
+   <th>Container-to-Container Networking Policies</th>
   <tr>
   <tr>
    <th>Policy granularity</th>
@@ -150,15 +150,15 @@ The following table highlights differences between ASGs and CF Networking polici
 
 ##<a id="policies"></a> Policies
 
-Enabling CF Networking for your deployment allows you to create policies for communication between app instances.
-The CF Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
+Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances.
+The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
 
 The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly 
 without going through the Gorouter, a load balancer, or a firewall. 
-CF Networking supports UDP and TCP, and you can configure policies for multiple ports. 
+Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. 
 These policies apply immediately without having to restart the app. 
 
 ##<a id="alt-stack"></a> Alternative Network Stacks
 
-The BOSH release that contains the CF Networking feature is composed of a 
-pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [CF Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
+The BOSH release that contains the Container-to-Container Networking feature is composed of a 
+pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
