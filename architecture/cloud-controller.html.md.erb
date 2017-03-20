@@ -22,7 +22,7 @@ The Cloud Controller database has been tested with Postgres.
 
 ##<a id='blob-store'></a>Blobstore ##
 
-The Cloud Controller manages a blobstore for the following:
+The Cloud Controller manages blobstores for the following:
 
 * **Resources**: Files that are uploaded to the Cloud Controller with a unique
     SHA such that they can be reused without re-uploading the file
@@ -32,10 +32,15 @@ The Cloud Controller manages a blobstore for the following:
 * **Droplets**: Result of taking an app package, staging it by processing a
     buildpack, and preparing it to run
 
-You can configure the blobstore as either an internal server or an external S3 or S3-compatible endpoint.  <%= vars.blobstore_kb %>
+* **Buildpacks**: The buildpacks available to stage apps with.
+
+* **Buildpack Cache**: Cached artifacts resulting from the staging process.
 
 The blob store uses the [Fog](http://fog.io/) Ruby gem such that it can use
-abstractions like Amazon S3, WebDAV, or NFS file system for storage.
+services like Amazon S3, WebDAV, or NFS file system for storage. 
+
+Typically, the same blobstore is used to store all five types of blobs, but
+the cloud controller may be configured to use a separate blobstore for each type.
 
 ##<a id='nats'></a>NATS Messaging ##
 
