@@ -32,15 +32,15 @@ The Cloud Controller manages blobstores for the following:
 * **Droplets**: Result of taking an app package, staging it by processing a
     buildpack, and preparing it to run
 
-* **Buildpacks**: The buildpacks available to stage apps with.
+* **Buildpacks**: The buildpacks available to stage apps with
 
-* **Buildpack Cache**: Cached artifacts resulting from the staging process.
+* **Buildpack Cache**: Cached artifacts resulting from the staging process
 
-The blob store uses the [Fog](http://fog.io/) Ruby gem such that it can use
-services like Amazon S3, WebDAV, or NFS file system for storage. 
+The blobstore uses the [Fog](http://fog.io/) Ruby gem in order to use
+services like Amazon S3, WebDAV, or the NFS filesystem for storage. 
 
 Typically, the same blobstore is used to store all five types of blobs, but
-the cloud controller may be configured to use a separate blobstore for each type.
+the Cloud Controller may be configured to use a separate blobstore for each type.
 
 ##<a id='nats'></a>NATS Messaging ##
 
