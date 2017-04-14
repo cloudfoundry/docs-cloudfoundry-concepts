@@ -1,5 +1,5 @@
 ---
-title: Application Security Groups
+title: Understanding Application Security Groups
 owner: Security
 ---
 
@@ -21,6 +21,8 @@ _This page assumes you are using cf CLI v6.4 or later._
 ## <a id='introduction'></a>Introduction ##
 
 This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the Cloud Foundry Command Line Interface (cf CLI) tool. 
+
+<%= vars.asg_first_time %>
 
 ###<a id="defn"></a>Application Security Groups
 
@@ -125,6 +127,9 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs.
 Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](#procedures) below.
+
+<%= vars.asg_first_time %>
+
 <table>
   <tr>
     <th></th>
