@@ -22,6 +22,13 @@ This guide presents an overview of how Cloud Foundry works and a discussion of k
 
 * <a href="./understand-cf-networking.html" class="subnav">Understanding Container-to-Container Networking</a>
 
+<% if vars.product_name == 'PWS' %>
+<% else %>
+<ul>
+<li><a href="./asg.html" class="subnav">Understanding Application Security Groups</a></li>
+</ul>
+<% end %>
+
 ## Architecture 
 
 * <a href="./architecture/index.html" class="subnav">Cloud Foundry Components</a>
@@ -50,9 +57,5 @@ This guide presents an overview of how Cloud Foundry works and a discussion of k
 <li><a href="./diego/diego-architecture.html" class="subnav">Diego Architecture</a></li>
 <%=vars.dea_diego_diff_link%>
 <li><a href="./diego/ssh-conceptual.html" class="subnav">Understanding Application SSH</a></li>
-<% if vars.product_name == 'PWS' %>
-<% else %>
-<li><a href="./asg.html" class="subnav">Understanding Application Security Groups</a></li>
-<% end %>
 <li><a href="./diego/diego-auction.html" class="subnav">How the Diego Auction Allocates Jobs</a></li>
 </ul>
