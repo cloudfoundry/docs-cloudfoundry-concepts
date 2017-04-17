@@ -24,6 +24,13 @@ This guide presents an overview of how Cloud Foundry works, a discussion of key 
 
 * <a href="./glossary.html" class="subnav">Glossary</a>
 
+<ul>
+<% if vars.product_name == 'PWS' %>
+<% else %>
+<li><a href="./asg.html" class="subnav">Understanding Application Security Groups</a></li>
+<% end %>
+</ul>
+
 ## Architecture 
 
 * <a href="./architecture/index.html" class="subnav">Cloud Foundry Components</a>
@@ -49,11 +56,4 @@ This guide presents an overview of how Cloud Foundry works, a discussion of key 
 * <a href="./diego/ssh-conceptual.html" class="subnav">Understanding Application SSH</a>
 
 * <a href="./diego/diego-auction.html" class="subnav">How the Diego Auction Allocates Jobs</a>
-
-<ul>
-<% if vars.product_name == 'PWS' %>
-<% else %>
-<li><a href="./asg.html" class="subnav">Understanding Application Security Groups</a></li>
-<% end %>
-</ul>
 
