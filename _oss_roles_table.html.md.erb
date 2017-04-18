@@ -256,7 +256,7 @@
         <td></td>
         <td>&check;</td>
         <td></td>
-    </tr><tr>
+     </tr><tr>
         <td>Create and manage <a href="../concepts/asg.html">Application Security Groups</a></td>
         <td>&check;</td>
         <td></td>
@@ -267,7 +267,95 @@
         <td></td>
         <td></td>
         <td></td>
-    </tr>
+    </tr><tr>
+	    <td>Create, update, and delete an <a href="../adminguide/isolation-segments.html">Isolation Segment</a></td>
+	    <td>&check;</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+    </tr><tr>
+        <td>List all <a href="../adminguide/isolation-segments.html">Isolation Segments</a> for an Org</td>
+        <td>&check;</td>
+        <td>&check;</td>
+        <td>&check;&#135;</td>
+        <td>&check;&#135;</td>
+        <td>&check;&#135;</td>
+        <td>&check;&#135;</td>
+        <td>&check;&#135;</td>
+        <td>&check;&#135;</td>
+        <td>&check;&#135;</td>
+    </tr><tr>
+        <td>Entitle or revoke an <a href="../adminguide/isolation-segments.html">Isolation Segment</a></td>
+        <td>&check;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+		<td>List all Orgs entitled to an <a href="../adminguide/isolation-segments.html">Isolation Segment</a></td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;&#135;</td>
+		<td>&check;&#135;</td>
+		<td>&check;&#135;</td>
+		<td>&check;&#135;</td>
+		<td>&check;&#135;</td>
+		<td>&check;&#135;</td>
+		<td>&check;&#135;</td>
+    </tr><tr>
+		<td>Assign a default <a href="../adminguide/isolation-segments.html">Isolation Segment</a> to an Org</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+    </tr><tr>
+		<td>List and manage <a href="../adminguide/isolation-segments.html">Isolation Segments</a> for spaces</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+    </tr><tr>
+		<td>List entitled <a href="../adminguide/isolation-segments.html">Isolation Segment</a> for a space</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+    </tr><tr>
+		<td>List which <a href="../adminguide/isolation-segments.html">Isolation Segment</a> an app runs on</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td></td>
+		<td></td>
+		<td>&check;</td>
+		<td>&check;</td>
+		<td>&check;</td>
+    </tr><tr>
 </table>
 
 <sup>&#42;</sup>Not by default, unless [feature flag](../adminguide/listing-feature-flags.html) `user_org_creation` is set to `true`.
@@ -275,3 +363,5 @@
 <sup>&#42;</sup><sup>&#42;</sup>Admin, admin read-only, and global auditor roles do not need to be added as members of orgs or spaces to view resources.
 
 <sup>&dagger;</sup>Unless disabled by [feature flags](../adminguide/listing-feature-flags.html).
+
+<sup>&#135;</sup>Applies only to orgs they belong to.
