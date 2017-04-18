@@ -168,6 +168,8 @@ Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](
   </tr>
 </table>
 
+<p class='warning'><strong>Warning</strong>: Cloud Foundry does not support ASGs for UDP or ICMP traffic that have logging configured. Apps with this ASG configuration will crash when they are pushed or restaged.</p>
+
 ## <a id='procedures'></a> Managing ASGs with the cf CLI
 
 This section provides the commands you need to create and manage ASGs.
