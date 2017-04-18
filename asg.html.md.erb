@@ -127,6 +127,8 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 |`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see the <a href="../devguide/services/log-management.html">Using Log Management Services</a> topic.
 | `description`   |An optional text field for operators managing security group rules
 
+<p class='note warning'><strong>Warning</strong>: Cloud Foundry does not support ASGs for UDP or ICMP traffic that have logging configured. Apps with this ASG configuration will crash when they are pushed or restaged.</p>
+
 ##<a id="process"></a> Process for Administering ASGs
 
 The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs.
@@ -167,8 +169,6 @@ Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](
 <a href="#deleting-groups">Delete ASGs</a></td>
   </tr>
 </table>
-
-<p class='warning'><strong>Warning</strong>: Cloud Foundry does not support ASGs for UDP or ICMP traffic that have logging configured. Apps with this ASG configuration will crash when they are pushed or restaged.</p>
 
 ## <a id='procedures'></a> Managing ASGs with the cf CLI
 
