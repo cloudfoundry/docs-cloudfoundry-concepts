@@ -85,10 +85,10 @@ CF mitigates against container breakout and denial of service attacks in the fol
 * CF establishes a container-specific overlay filesystem mount. CF uses [`pivot_root`](http://manpages.ubuntu.com/manpages/trusty/man2/pivot_root.2.html) to move the root filesystem into this overlay, in order to isolate the container from the host system’s filesystem.
 * CF does not call any binary or script inside the container filesystem, in order to eliminate any dependencies on scripts and binaries inside the root filesystem.
 * CF avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
-* CF establishes a virtual Ethernet pair for each container for network traffic. See the [Container Network Traffic](#traffic) section above for more information. The virtual Ethernet pair has the following features:
+* CF establishes a virtual Ethernet pair for each container for network traffic. See the [Container Network Traffic](#config-traffic) section above for more information. The virtual Ethernet pair has the following features:
     * One interface in the pair is inside the container’s network namespace, and is the only non-loopback interface accessible inside the container.
     * The other interface remains in the host network namespace and is bridged to the container-side interface.
-    * Egress whitelist rules are applied to these interfaces according to [ASGs](#asg) configured by the administrator.
+    * Egress whitelist rules are applied to these interfaces according to Application Security Groups (ASGs) configured by the administrator.
     * First-packet logging rules may also be enabled on TCP whitelist rules.
     * DNAT rules are established on the host to enable traffic ingress from the host interface to whitelisted ports on the container-side interface.
 * CF applies disk quotas by confining container-specific filesystem layers to loop devices with the specified disk-quota capacity.
