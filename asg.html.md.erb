@@ -119,13 +119,15 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 |Attribute        |Description                                                                                                                                                                                                  |Notes
 |---              |---                                                                                                                                                                                                          |---
-|`protocol`       |`tcp`, `udp`, `icmp`, or `all`                                                                                                                                                                               |Required. Logging is only supported when the protocol type is `tcp`.
+|`protocol`       |`tcp`, `udp`, `icmp`, or `all`                                                                                                                                                                               |Required 
 |`destination`    |A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block to allow network access to
 |`ports`          |A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081`                                                            |Required when `protocol` is `tcp` or `udp`
 |`code`           |ICMP code                                                                                                                                                                                                    |Required when `protocol` is `icmp`
 |`type`           |ICMP type                                                                                                                                                                                                    |Required when `protocol` is `icmp`
-|`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see the <a href="../devguide/services/log-management.html">Using Log Management Services</a> topic.
+|`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see the <a href="../devguide/services/log-management.html">Using Log Management Services</a> topic.                                                                                                                                                                                                    |Logging is only supported when the protocol type is `tcp`.
 | `description`   |An optional text field for operators managing security group rules
+
+
 
 ##<a id="process"></a> Process for Administering ASGs
 
