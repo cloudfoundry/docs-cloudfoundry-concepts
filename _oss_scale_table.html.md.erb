@@ -11,33 +11,21 @@ The following table provides recommended instance counts for a high-availability
                 <td>Diego Cell</td>
                 <td><code>cell_z</code></td>
                 <td>&ge; 3</td>
-                <td><strong><a href="./diego/dea-vs-diego.html">Specific to Diego architecture</a></strong>. The optimal balance between CPU/memory sizing and instance count depends on the performance characteristics of the apps that run on Diego cells. Scaling vertically with larger Diego cells makes for larger points of failure, and more apps go down when a cell fails. On the other hand, scaling horizontally decreases the speed at which the system rebalances apps. Rebalancing 100 cells takes longer and demands more processing overhead than rebalancing 20 cells.</td>
+                <td>The optimal balance between CPU/memory sizing and instance count depends on the performance characteristics of the apps that run on Diego cells. Scaling vertically with larger Diego cells makes for larger points of failure, and more apps go down when a cell fails. On the other hand, scaling horizontally decreases the speed at which the system rebalances apps. Rebalancing 100 cells takes longer and demands more processing overhead than rebalancing 20 cells.</td>
         </tr>
         <tr>
                 <td>Diego Brain</td>
                 <td><code>brain_z</code></td>
                 <td>&ge; 2</td>
-                <td><strong><a href="./diego/dea-vs-diego.html">Specific to Diego architecture</a></strong>. One per AZ, or two if only one AZ.</td>
+                <td>One per AZ, or two if only one AZ.</td>
         </tr>
         <tr>
                 <td>Diego BBS</td>
                 <td><code>diego_database_z</code></td>
                 <td>&ge; 3</td>
-                <td><strong><a href="./diego/dea-vs-diego.html">Specific to Diego architecture</a></strong>. Set this to to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
+                <td>Set this to to an odd number equal to or one greater than the number of AZs you have, in order to maintain quorum. Distribute the instances evenly across the AZs, at least one instance per AZ.</td>
         </tr>
-        <tr>
-                <td>DEA</td>
-                <td><code>runner_z</code></td>
-                <td>&ge; 3</td>
-                <td><strong><a href="./diego/dea-vs-diego.html">Specific to DEA architecture</a></strong>.</td>
-        </tr>
-        <tr>
-                <td>Health Manager (HM9000)</td>
-                <td><code>hm9000_z</code></td>
-                <td>&ge; 2</td>
-                <td><strong><a href="./diego/dea-vs-diego.html">Specific to DEA architecture</a></strong>.</td>
-        </tr>
-        <tr>
+       <tr>
                 <td>Consul</td>
                 <td><code>consul_z</code></td>
                 <td>&ge; 3</td>
@@ -77,7 +65,7 @@ The following table provides recommended instance counts for a high-availability
                 <td>Router</td>
                 <td><code>router_z</code></td>
                 <td>&ge; 2</td>
-                <td>Scale the router to accommodate the number of incoming requests. Additional instances increase available bandwidth. In general, this load is much less than the load on host VMs, whether Diego cells or DEAs.</td>
+                <td>Scale the router to accommodate the number of incoming requests. Additional instances increase available bandwidth. In general, this load is much less than the load on host VMs.</td>
         </tr>
         <tr>
                 <td>HAProxy</td>

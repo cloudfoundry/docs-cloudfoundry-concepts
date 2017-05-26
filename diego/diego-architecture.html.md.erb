@@ -11,7 +11,8 @@ owner: Diego
 
 ##<a id='architecture'></a>Diego Architecture
 
-Cloud Foundry has used two architectures for managing application containers: [Droplet Execution Agents](../architecture/execution-agent.html) (DEA) and Diego. With the DEA architecture, the [Cloud Controller](../architecture/cloud-controller.html) schedules and manages applications on the DEA nodes. In the newer Diego architecture, Diego components replace the DEAs and the [Health Manager (HM9000)](./dea-vs-diego.html#hm9k), and assume application scheduling and management responsibility from the Cloud Controller.
+Cloud Foundry uses the Diego architecture to manage application containers. Diego components assume application scheduling and
+management responsibility from the Cloud Controller.
 
 Refer to the following diagram and descriptions for information about the way Diego handles application requests.
 
