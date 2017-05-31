@@ -44,7 +44,7 @@ The Cloud Controller also maintain records of [orgs, spaces, user roles](../role
 
 ### <a id='nsync-bbs'></a> nsync, BBS, and Cell Reps
 
-To keep applications available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required. In pre-Diego architecture, the [Health Manager (HM9000)](../diego/dea-vs-diego.html#hm9k) performed this function. The nsync, BBS, and Cell Reps use a more distributed approach.
+To keep applications available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required.
 
 ![Cloud Foundry Architecture](../images/diego/app-monitor-sync-diego.png)
 
@@ -72,8 +72,6 @@ You can configure the blobstore as either an internal server or an external S3 o
 
 Each application VM has a Diego Cell that executes application start and stop actions locally, manages the VM's containers, and reports app status and other data to the BBS and [Loggregator](#metrics-logging).
 
-<%=vars.pre_diego_node%>
-
 ## <a id='services'></a>Services
 
 ### <a id='broker'></a> Service Brokers
@@ -93,7 +91,7 @@ Cloud Foundry component VMs communicate with each other internally through HTTP 
 
 * Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS stores data in MySQL, using the [Go MySQL Driver](https://github.com/go-sql-driver/mysql).
 
-The route-emitter component uses the NATS protocol to broadcast the latest routing tables to the routers. In pre-Diego CF architecture, the [NATS Message Bus](../diego/dea-vs-diego.html#nats) carried all internal component communications.
+The route-emitter component uses the NATS protocol to broadcast the latest routing tables to the routers.
 
 ## <a id='metrics-logging'></a>Metrics and Logging
 
