@@ -89,6 +89,18 @@ The Container-to-Container Networking BOSH release includes the following swappa
 
 ##<a id='app-comm'></a> App Instance Communication
 
+Container-to-Container Networking uses an overlay network to manage communication
+between app instances.
+
+Each Diego cell assigns IP addresses to its containers using a /24 subnet range,
+which supports up to 250 containers per cell. The subnet range you choose for
+your overlay network determines how many Diego cells your network supports.
+
+Using the /16 subnet range, <%= vars.product_full %> supports up to 250 Diego cells.
+To support a higher or lower number of Diego cells, choose a different subnet range.
+For example, use /12 to support more Diego cells or /24 to support fewer Diego cells.
+<p class="note"><strong>NOTE</strong>: The overlay network IP range must not conflict with any other IP addresses in the network. If there is a conflict, the Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
+
 ### <a id='without-cf'></a>Without Container-to-Container Networking
 
 The diagram below illustrates how two app instances communicate in a deployment without Container-to-Container Networking enabled. 
