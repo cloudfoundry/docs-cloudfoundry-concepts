@@ -24,8 +24,7 @@ _This page assumes you are using cf CLI v6.4 or later._
 
 ## <a id='introduction'></a>Introduction ##
 
-This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the Cloud Foundry Command Line Interface (cf CLI) tool. 
-
+This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool. 
 <%= vars.asg_first_time %>
 
 ###<a id="defn"></a>Application Security Groups
@@ -103,14 +102,14 @@ The following table indicates the differences between the four sets.
   </tr>
 </table>
 
-Typically, ASGs applied during the staging lifecycle are more permissive than the ASGs
-applied during the running lifecycle.
+Typically, ASGs applied during the staging lifecycle are more permissive than 
+the ASGs applied during the running lifecycle.
 This is because staging often requires access to different resources, such as
 dependencies.
 
 You use different commands to apply an ASG to each of the four sets. For more information, see the [Procedures](#procedures) section of this topic.
 
-<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use the CC API. The cf CLI <code>cf bind-security-group</code> command supports space-scoped running ASGs, but not space-scoped staging ASGs.</p>
+<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use the Cloud Controller (CC) API. The cf CLI <code>cf bind-security-group</code> command supports space-scoped running ASGs, but not space-scoped staging ASGs.</p>
 
 ### <a id='creating-groups'></a>The Structure and Attributes of ASGs ##
 
@@ -120,11 +119,11 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 |Attribute        |Description                                                                                                                                                                                                  |Notes
 |---              |---                                                                                                                                                                                                          |---
 |`protocol`       |`tcp`, `udp`, `icmp`, or `all`                                                                                                                                                                               |Required 
-|`destination`    |A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block to allow network access to
+|`destination`    |A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block that can receive traffic.
 |`ports`          |A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081`                                                            |Required when `protocol` is `tcp` or `udp`
 |`code`           |ICMP code                                                                                                                                                                                                    |Required when `protocol` is `icmp`. A value of `-1` allows all codes.
 |`type`           |ICMP type                                                                                                                                                                                                    |Required when `protocol` is `icmp`. A value of `-1` allows all types.
-|`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see the <a href="../devguide/services/log-management.html">Using Log Management Services</a> topic.                                                                                                                                                                                                    |Logging is only supported when the protocol type is `tcp`.
+|`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see the <a href="../devguide/services/log-management.html">Using Log Management Services</a> topic.                                                                                                                                                                                                    |Logging is only supported with protocol type `tcp`
 | `description`   |An optional text field for operators managing security group rules
 
 
@@ -144,7 +143,7 @@ Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](
   </tr>
   <tr>
     <td>1.</td>
-    <td>Review the existing ASGs. If this is a new deployment, probably these are the <a href="#default">Default ASGs</a> alone.</td>
+    <td>Review the existing ASGs. If this is a new deployment, these like consist of only the <a href="#default">Default ASGs</a>.</td>
     <td><a href="#viewing">View ASGs</a></td>
   </tr>
   <tr>
@@ -164,7 +163,7 @@ Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](
   </tr>
   <tr>
     <td>5.</td>
-    <td>If you need to delete ASGs, unbind and delete them.</td>
+    <td>If you need to delete an ASG, first unbind it, then delete it.</td>
     <td><a href="#unbinding-asgs">Unbind ASGs</a><br>
 <a href="#deleting-groups">Delete ASGs</a></td>
   </tr>
