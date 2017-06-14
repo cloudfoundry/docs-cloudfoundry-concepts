@@ -5,8 +5,8 @@ This topic includes the following sections:
 	* [Diego Brain](#brain-components)
 	* [Diego Cell](#cell-components)
 	* [Database VMs](#database-vms)
-* [Platform-specific Components](#core)
 	* [Consul](#consul)
+* [Platform-specific Components](#core)
 	* [Garden Backends](#backends)
 	* [App Lifecycle Binaries](#lifecycles)
 
@@ -25,7 +25,7 @@ View a larger version of this image at the [Diego Design Notes repo](http://html
 <% end %>
 
 
-1. The Cloud Controller passes requests to stage and run applications to the Diego [Bulletin Board System](#bbs) (BBS).
+1. The Cloud Controller passes requests to stage and run applications to several components on the [Diego Brain](#brain).
 
 1. The BBS submits the Tasks and LRPs to the [Auctioneer](#auctioneer), part of the [Diego Brain](#brain-components).
 
@@ -53,6 +53,8 @@ The Diego Brain consists of the following:
 * [SSH Proxy](#ssh-proxy)
 * [TPS Watcher](#tps)
 * [TCP Route-emitter](#tcp)
+* [Nsync](#nsync)
+* [Stager](#stager)
 
 <a id='auctioneer'></a>
 
@@ -99,6 +101,22 @@ Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub
 - Monitors `DesiredLRP` and `ActualLRP` states, emitting TCP route registration and unregistration messages to the Cloud Foundry [routing API](https://github.com/cloudfoundry-incubator/routing-api) when it detects changes
 
 - Periodically emits TCP routes to the Cloud Foundry routing API
+
+#### <a id='nsync'></a>Nsync ####
+
+- Listens for app requests to update the `DesiredLRPs` count and updates `DesiredLRPs` through the BBS
+
+- Periodically polls the Cloud Controller for each app to ensure that Diego maintains accurate `DesiredLRPs` counts
+
+Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on GitHub for more information.
+
+#### <a id='stager'></a>Stager ####
+
+- Translates staging requests from the Cloud Controller into generic Tasks and LRPs
+
+- Sends a response to the Cloud Controller when a Task completes
+
+Refer to the [Stager repo](https://github.com/cloudfoundry-incubator/stager) on GitHub for more information.
 
 ###<a id='cell-components'></a>Diego Cell ###
 
@@ -195,13 +213,13 @@ The Diego BBS stores data in MySQL. Diego uses the Go MySQL Driver to communicat
 
 Refer to the [Go MySQL Driver repo](https://github.com/go-sql-driver/mysql) on GitHub for more information.
 
-##<a id='platform-specific'></a>Platform-specific Components ##
-
 ###<a id='consul'></a>Consul ###
 
 - Provides dynamic service registration and load balancing through DNS resolution
 
 Refer to the [Consul repo](https://github.com/hashicorp/consul) on GitHub for more information.
+
+##<a id='platform-specific'></a>Platform-specific Components ##
 
 ###<a id='backends'></a>Garden Backends ###
 
