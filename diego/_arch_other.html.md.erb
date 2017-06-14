@@ -27,6 +27,8 @@ View a larger version of this image at the [Diego Design Notes repo](http://html
 
 1. The Cloud Controller passes requests to stage and run applications to several components on the [Diego Brain](#brain).
 
+1. The Diego Brain components translate staging and running requests into [Tasks and Long Running Processes](./diego-auction.html#processes) (LRPs), then submit these to the [Bulletin Board System](#bbs) (BBS) through an API over HTTP.
+
 1. The BBS submits the Tasks and LRPs to the [Auctioneer](#auctioneer), part of the [Diego Brain](#brain-components).
 
 1. The Auctioneer distributes these Tasks and LRPs to [Cells](#cell-components) through an [Auction](./diego-auction.html). The Diego Brain communicates with Diego Cells using SSL/TLS protocol.
@@ -170,11 +172,9 @@ Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/deve
 
 ####<a id='route-emitter'></a>Route-emitter ###
 
-- Acts as either one global route-emitter or local route-emitters on each Diego cell
+- Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to the Cloud Foundry [HTTP router](https://github.com/cloudfoundry/gorouter) when it detects changes
 
-- Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to the Cloud Foundry  [router](https://github.com/cloudfoundry/gorouter) when it detects changes
-
-- Periodically emits the entire routing table to the Cloud Foundry router
+- Periodically emits the entire routing table to the Cloud Foundry HTTP router
 
 Refer to the [Route-Emitter repo](https://github.com/cloudfoundry-incubator/route-emitter) on GitHub for more information.
 
