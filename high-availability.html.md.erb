@@ -37,7 +37,13 @@ Scaling up the following components horizontally also increases your capacity to
 
 ### <a id='processes'></a>Scalable Components
 
-You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. You should also distribute the instances of multiply-scaled components across different availability zones (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. <%= vars.scaling_ert %>
+You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. 
+
+You should also distribute the instances of multiply-scaled components across different availability zones (AZs). If you use more than three AZs, ensure that you use an odd number of AZs. 
+
+If you do not require a high-availability deployment (for example, you are deploying a proof-of-concept or sandbox), Pivotal recommends that you scale down job instances to the minimum required for a functional deployment.
+
+<%= vars.scaling_ert %>
 
 <%= partial vars.scale_table %>
 
