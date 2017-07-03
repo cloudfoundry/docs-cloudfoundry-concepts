@@ -16,7 +16,7 @@ The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to ba
 
 ##<a id='database'></a>Database (CC_DB) ##
 
-The Cloud Controller database has been tested with Postgres.
+The Cloud Controller database has been tested with Postgres and MySQL.
 
 ##<a id='blob-store'></a>Blobstore ##
 
@@ -66,6 +66,6 @@ test against Postgres and MySQL. For example:
     DB_CONNECTION="mysql2://root:password@localhost:3306/ccng" rspec
 ~~~
 
-Travis currently runs three build jobs against SQLite, Postgres, and MySQL.
+Travis currently runs two build jobs against Postgres and MySQL.
 
 <%= vars.cloud_controller_logging %>
