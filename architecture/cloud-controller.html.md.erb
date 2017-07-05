@@ -10,6 +10,11 @@ system.
 The Cloud Controller maintains a database with tables for orgs, spaces,
 services, user roles, and more.
 
+<% if vars.product_name == 'CF' %>
+<%= partial 'cc_communications' %>
+<% else %>
+<% end %>
+
 ##<a id='auction'></a>Diego Auction ##
 
 The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to balance application processes over the [cells](index.html#diego-cell) in a Cloud Foundry installation.
