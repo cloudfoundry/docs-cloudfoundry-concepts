@@ -107,7 +107,7 @@ dependencies.
 
 You use different commands to apply an ASG to each of the four sets. For more information, see the [Procedures](#procedures) section of this topic.
 
-<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use the Cloud Controller (CC) API. The cf CLI <code>cf bind-security-group</code> command supports space-scoped running ASGs, but not space-scoped staging ASGs.</p>
+<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use cf CLI 6.28.0 or later.</p>
 
 ### <a id='creating-groups'></a>The Structure and Attributes of ASGs ##
 
@@ -248,19 +248,7 @@ Example:
 $ cf bind-security-group my-asg my-org my-space
 </pre>
 
-To bind an ASG to a space-scoped staging ASG set, run the following Cloud Controller (CC) API commands:
-<pre>
-GET /v2/security\_groups/:guid/staging\_spaces
-PUT /v2/spaces/:guid/staging\_security\_groups/:security\_group\_guid data
-PUT /v2/security\_groups/:guid/staging\_spaces/:space\_guid
-DELETE /v2/spaces/:guid/staging\_security\_groups/:security\_group\_guid  data
-DELETE /v2/security\_groups/:guid/staging\_spaces/:space\_guid
-</pre>
-These API calls require administrator access.
-Additionally, the payload returned from API `GET` calls to
-`/v2/spaces/` and `/v2/spaces/:guid` includes a link to the `staging_security_groups_url`.
-
-For more information about using these CC API commands, see the [Cloud Foundry API](https://apidocs.cloudfoundry.org/) documentation.
+To bind an ASG to a space-scoped staging ASG set, run `cf bind-security-group SECURITY-GROUP ORG SPACE --lifecycle staging`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to bind the ASG set.
 
 ### <a id='updating-groups'></a>Update ASGs
 
@@ -298,11 +286,11 @@ Example:
 $ cf unbind-running-security-group my-asg
 </pre>
 
-To unbind an ASG from a specific space, run `cf unbind-security-group SECURITY-GROUP ORG SPACE`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to unbind the ASG set.
+To unbind an ASG from a specific space, run `cf unbind-security-group SECURITY-GROUP ORG SPACE --lifecycle running`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to unbind the ASG set, and replace `running` with `staging` if you want to unbind from the staging ASG set.
 
 Example:
 <pre class="terminal">
-$ cf unbind-security-group my-asg my-org my-space
+$ cf unbind-security-group my-asg my-org my-space --lifecycle staging
 </pre>
 
 ### <a id='deleting-groups'></a>Delete ASGs ##
@@ -437,7 +425,7 @@ that you want to disallow traffic to, as well as the addresses that you want to 
 Based on these disallow/allow (exclude/include) lists that you provide as
 input, the ASG Creator formulates a JSON file of allow rules.
 
-In turn, the JSON file is the input for the `cf create-security-group ` command
+In turn, the JSON file is the input for the `cf create-security-group` command
 that creates an ASG.
 
 You can download the latest release of the ASG Creator from the Cloud Foundry incubator repository on Github:  [https://github.com/cloudfoundry-incubator/asg-creator/releases/latest](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest)
