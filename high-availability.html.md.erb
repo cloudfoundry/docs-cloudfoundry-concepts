@@ -29,7 +29,7 @@ You can scale platform capacity vertically by adding memory and disk, or horizon
 
 To scale vertically, ensure that you allocate and maintain enough of the following:
 
-* Free space on host VMs, whether they are Diego cells <%=vars.buildpacks_index_dea%>, so that apps expected to deploy can successfully be staged and run.
+* Free space on host VMs so that apps expected to deploy can successfully be staged and run.
 * Disk space and memory in your deployment such that if one host VM is down, all instances of apps can be placed on the remaining Host VMs.
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
