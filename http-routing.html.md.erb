@@ -5,7 +5,7 @@ owner: Routing
 
 <strong><%= modified_date %></strong>
 
-This topic describes features of HTTP routing handled by the Cloud Foundry (CF) [router](./architecture/#routing), also called the _Gorouter_.
+This topic describes features of HTTP routing handled by the Gorouter, which is part of the Cloud Foundry (CF) [routing](./architecture/#routing) tier.
 
 ## <a id="sessions"></a>Session Affinity ##
 
@@ -25,7 +25,7 @@ With sticky sessions, when multiple instances of an app are running on CF, reque
 
 * On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies.
 
-The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The `JSESSIONID` cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the router attempts to route the request to a different instance of the app. If the router finds a healthy instance of the app, it initiates a new sticky session.
+The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The `JSESSIONID` cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
 
 <p class="note"><strong>Note</strong>: CF does not persist or replicate HTTP session data across app instances. If an app instance crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared by all instances of an app, store session data in a CF marketplace service that offers data persistence.</p>
 
