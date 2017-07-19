@@ -80,7 +80,7 @@ See the <a href="#round-robin">Round-Robin Load Balancing</a> section below for 
 
 The Gorouter uses the round-robin algorithm for load balancing incoming requests to application instances. The router maintains a dynamically updated list of application instances for each route, and forwards each request for a given route to the next application instance in the list.
 
-## <a id="sockets"></a>sockets ##
+## <a id="sockets"></a>WebSockets ##
 
 WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
 
