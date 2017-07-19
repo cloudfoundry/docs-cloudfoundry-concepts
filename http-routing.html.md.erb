@@ -45,8 +45,8 @@ Zipkin is a tracing system that enables app developers to troubleshoot failures 
 
 <%= vars.zipkin_enable_link %>
 
-* If the `X-B3-TraceId` and `X-B3-SpanId` HTTP headers are not present in the request, the Gorouter generates values for these and inserts the headers into the request forwarded to an application. These values are also found in the router access log message for the request: `x_b3_traceid` and `x_b3_spanid`.
-* If both `X-B3-TraceId` and `X-B3-SpanId` HTTP headers are present in the request, the Gorouter forwards the same value for `X-B3-TraceId`, generates a new value for `X-B3-SpanId`, and adds the `X-B3-ParentSpan` header, and sets to the value of the span id in the request. In addition to these trace and span ids, the router access log message for the request includes `x_b3_parentspanid`.
+* If the `X-B3-TraceId` and `X-B3-SpanId` HTTP headers are not present in the request, the Gorouter generates values for these and inserts the headers into the request forwarded to an application. These values are also found in the Gorouter access log message for the request: `x_b3_traceid` and `x_b3_spanid`.
+* If both `X-B3-TraceId` and `X-B3-SpanId` HTTP headers are present in the request, the Gorouter forwards the same value for `X-B3-TraceId`, generates a new value for `X-B3-SpanId`, and adds the `X-B3-ParentSpan` header, and sets to the value of the span id in the request. In addition to these trace and span ids, the Gorouter access log message for the request includes `x_b3_parentspanid`.
 
 Developers can then add Zipkin trace IDs to their application logging in order to trace app requests and responses in Cloud Foundry.
 
@@ -72,7 +72,7 @@ Depending on your needs, you can configure your deployment to terminate SSL/TLS 
 
 ## <a id="transparent"></a>Transparent Retries ##
 
-If the Gorouter cannot establish a TCP connection with a selected application instance, the router considers the instance ineligible for requests for 30 seconds, and the router transparently attempts to connect to another application instance. Once the router has established a TCP connection with an application instance, the router forwards the HTTP request.
+If the Gorouter cannot establish a TCP connection with a selected application instance, the Gorouter considers the instance ineligible for requests for 30 seconds, and the Gorouter transparently attempts to connect to another application instance. Once the Gorouter has established a TCP connection with an application instance, the Gorouter forwards the HTTP request.
 
 See the <a href="#round-robin">Round-Robin Load Balancing</a> section below for more information about how the router forwards requests to application instances.
 
