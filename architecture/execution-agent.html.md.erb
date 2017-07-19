@@ -41,9 +41,9 @@ It is a replacement for the older directory server that was embedded in the DEA 
 A DEA periodically checks the health of the applications running in it.
 
 If a URL is mapped to an application, the DEA attempts to connect to the port assigned to the application.
-If the application port is accepting connections, the DEA considers that application state to be "Running."
+If the application port is accepting connections, the DEA considers that application state to be `Running`.
 If there is no URL mapped to the application, the DEA checks the system process table for the application process PID.
-If the PID exists, the DEA considers that application state to be "Running."
+If the PID exists, the DEA considers that application state to be `Running`.
 
 The DEA also checks for a `AppState` object for the application.
 

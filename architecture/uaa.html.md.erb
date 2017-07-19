@@ -79,7 +79,7 @@ In the steps above, replace the following:
 
     This authenticates and obtains an access token from the server using the
     OAuth2 implicit grant, similar to the approach intended for a standalone
-    client like the `cf` CLI.
+    client like the Cloud Foundry Command Line Interface (cf CLI).
     The token is stored in `~/.uaac.yml`.
     Open `~/.uaac.yml` to obtain the access token for your `cf` target, or use
     `--verbose` on the login command line above to see it in the command shell.
@@ -138,7 +138,7 @@ $ uaac token get [yourusername] [yourpassword]
 
 If you do not specify a username and password, you will be prompted to supply them.
 
-This authenticates and obtains an access token from the server using the OAuth2 implicit grant, which is the same grant that a client like the `cf` CLI uses.
+This authenticates and obtains an access token from the server using the OAuth2 implicit grant, which is the same grant that a client like the cf CLI uses.
 
 ## <a id='integration'></a>Integration Tests ##
 
@@ -265,7 +265,7 @@ $ ./gradlew run
 </pre>
 
 To bootstrap a microcloud-type environment, you need an admin client; there is a database initializer component that inserts one.
-If the default profile is active (i.e. not `postgresql`), there is also a `cf` CLI client so that the gem login works out of the box.
+If the default profile is active (i.e. not `postgresql`), there is also a cf CLI client so that the gem login works out of the box.
 You can override the default settings and add additional clients in `uaa.yml`:
 
 ```yaml

@@ -71,7 +71,7 @@ Adding one-time Task-C (load = 4) and Task-D (load = 3) to the above example, th
 
 With all jobs sorted in priority order, the Auctioneer allocates each in turn to one of the VMs. The process resembles an auction, where VMs "bid" with their suitability to run each job. Facilitating this process, each app VM has a resident [Cell](./diego-architecture.html#cell-components) that monitors and allocates the machine’s operation. The Cell participates in the auction on behalf of the virtual machine that it runs on.
 
-Starting with the highest-priority job in the ordered sequence, the Auctioneer polls all the Cells on their fitness to run the currently-auctioned job. Cells “bid” to host each job according to the following priorities, in decreasing order:
+Starting with the highest-priority job in the ordered sequence, the Auctioneer polls all the Cells on their fitness to run the currently-auctioned job. Cells "bid" to host each job according to the following priorities, in decreasing order:
 
 1. Allocate all jobs only to Cells that have the correct software stack to host them, and sufficient resources given their allocation so far during this auction.
 
