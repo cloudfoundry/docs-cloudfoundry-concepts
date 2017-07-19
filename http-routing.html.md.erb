@@ -5,13 +5,13 @@ owner: Routing
 
 <strong><%= modified_date %></strong>
 
-This topic describes features of HTTP routing handled by the Cloud Foundry (CF) [router](http://docs.cloudfoundry.org/concepts/architecture/#routing).
+This topic describes features of HTTP routing handled by the Gorouter, which is part of the Cloud Foundry (CF) [routing](./architecture/#routing) tier.
 
-## <a id="sessions"></a>Sticky Sessions ##
+## <a id="sessions"></a>Session Affinity ##
 
-The CF router supports session affinity or "sticky sessions" for incoming HTTP requests to compatible apps.
+The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
 
-Sticky sessions means that when multiple instances of an app are running on CF, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
+With sticky sessions, when multiple instances of an app are running on CF, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
 
 * To support sticky sessions, configure your app to return a `JSESSIONID` cookie in responses. The app generates a `JSESSIONID` as a long hash in the following format:
 <pre class="terminal">
@@ -25,13 +25,13 @@ Sticky sessions means that when multiple instances of an app are running on CF, 
 
 * On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies.
 
-The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The `JSESSIONID` cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the router attempts to route the request to a different instance of the app. If the router finds a healthy instance of the app, it initiates a new sticky session.
+The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The `JSESSIONID` cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
 
 <p class="note"><strong>Note</strong>: CF does not persist or replicate HTTP session data across app instances. If an app instance crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared by all instances of an app, store session data in a CF marketplace service that offers data persistence.</p>
 
 ## <a id="http-headers"></a>HTTP Headers ##
 
-HTTP traffic passed from the CF router to an app includes the the following HTTP headers:
+HTTP traffic passed from the Gorouter to an app includes the the following HTTP headers:
 
 * `X-Forwarded-Proto` gives the scheme of the HTTP request from the client. The scheme is HTTP if the client made an insecure request or HTTPS if the client made a secure request. Developers can configure their apps to reject insecure requests by inspecting the HTTP headers of incoming traffic and rejecting traffic that includes `X-Forwarded-Proto` with the scheme of HTTP.
 
@@ -45,13 +45,13 @@ Depending on your needs, you can configure your deployment to terminate SSL/TLS 
 
 ## <a id="transparent"></a>Transparent Retries ##
 
-If the CF router cannot establish a TCP connection with a selected application instance, the router considers the instance ineligible for requests for 30 seconds, and the router transparently attempts to connect to another application instance. Once the router has established a TCP connection with an application instance, the router forwards the HTTP request.
+If the Gorouter cannot establish a TCP connection with a selected application instance, the router considers the instance ineligible for requests for 30 seconds, and the router transparently attempts to connect to another application instance. Once the router has established a TCP connection with an application instance, the router forwards the HTTP request.
 
 See the <a href="#round-robin">Round-Robin Load Balancing</a> section below for more information about how the router forwards requests to application instances.
 
 ## <a id="round-robin"></a>Round-Robin Load Balancing ##
 
-The CF router uses the round-robin algorithm for load balancing incoming requests to application instances. The router maintains a dynamically updated list of application instances for each route, and forwards each request for a given route to the next application instance in the list.
+The Gorouter uses the round-robin algorithm for load balancing incoming requests to application instances. The router maintains a dynamically updated list of application instances for each route, and forwards each request for a given route to the next application instance in the list.
 
 ## <a id="sockets"></a>WebSockets ##
 
