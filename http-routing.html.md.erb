@@ -37,11 +37,11 @@ HTTP traffic passed from the Gorouter to an app includes the the following HTTP 
 
 * `X-Forwarded-For` gives the IP address of the client originating the request.
 
-If your load balancer terminates TLS upstream from the CF router, it must append these headers to requests forwarded to the CF router. <%= vars.http_routing %>
+If your load balancer terminates TLS upstream from the Gorouter, it must append these headers to requests forwarded to the Gorouter. <%= vars.http_routing %>
 
 ## <a id="tls"></a>SSL/TLS Termination ##
 
-Depending on your needs, you can configure your deployment to terminate SSL/TLS at the CF router, the CF router and the load balancer, or the load balancer only. <%= vars.http_routing %>
+Depending on your needs, you can configure your deployment to terminate SSL/TLS at the Gorouter, the Gorouter and the load balancer, or the load balancer only. <%= vars.http_routing %>
 
 ## <a id="transparent"></a>Transparent Retries ##
 
@@ -55,7 +55,7 @@ The Gorouter uses the round-robin algorithm for load balancing incoming requests
 
 ## <a id="sockets"></a>WebSockets ##
 
-WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated via HTTP as an upgrade request. The CF Router supports this upgrade handshake, and will hold the TCP connection open with the selected application instance.
+WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated via HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and will hold the TCP connection open with the selected application instance.
 
 To support WebSockets, operators should configure their load balancer to pass WebSockets requests through as opaque TCP connections. If you are also terminating TLS at your load balancer, you may find that your load balancer does not support operating in TCP mode for some requests, and terminating TLS for others. Operators have the following options:
 
