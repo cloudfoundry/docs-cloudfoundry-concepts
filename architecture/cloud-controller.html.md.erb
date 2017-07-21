@@ -21,7 +21,11 @@ The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to ba
 
 ##<a id='database'></a>Database (CC_DB) ##
 
+<% if vars.product_name == 'OSS' %>
 The Cloud Controller database has been tested with Postgres and MySQL.
+<% else %>
+The Cloud Controller database has been tested with MySQL.
+<% end %>
 
 ##<a id='blob-store'></a>Blobstore ##
 
@@ -62,6 +66,8 @@ interactions:
 
 ##<a id='testing'></a>Testing ##
 
+<% if vars.product_name == 'OSS' %>
+
 By default `rspec` runs a test suite with the SQLite in-memory database.
 Specify a connection string using the `DB_CONNECTION` environment variable to
 test against Postgres and MySQL. For example:
@@ -72,5 +78,17 @@ test against Postgres and MySQL. For example:
 ~~~
 
 Travis currently runs two build jobs against Postgres and MySQL.
+
+<% else %>
+
+By default `rspec` runs a test suite with the SQLite in-memory database.
+Specify a connection string using the `DB_CONNECTION` environment variable to
+test against MySQL. For example:
+
+~~~
+    DB_CONNECTION="mysql2://root:password@localhost:3306/ccng" rspec
+~~~
+
+<% end %>
 
 <%= vars.cloud_controller_logging %>
