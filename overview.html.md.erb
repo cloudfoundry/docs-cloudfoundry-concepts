@@ -40,7 +40,7 @@ To organize user access to the cloud and to control resource use, a cloud operat
 
 ###<a id='resources'></a> Where CF Stores Resources
 
-Cloud Foundry uses the git system on [GitHub](http://github.org) to version-control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, CF maintains an internal or external blobstore. To store and share temporary information, such as internal component states, CF uses MySQL, [Consul](https://github.com/hashicorp/consul)<% if vars.product_name == 'CF' %>, and [etcd](https://github.com/coreos/etcd).<%else%>.<%end%>
+Cloud Foundry uses the git system on [GitHub](http://github.org) to version-control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, CF maintains an internal or external blobstore. To store and share temporary information, such as internal component states, CF uses <% if vars.product_name == 'CF' %>MySQL, [Consul](https://github.com/hashicorp/consul), and [etcd](https://github.com/coreos/etcd).<%else%>MySQL and [Consul](https://github.com/hashicorp/consul).<%end%>
 
 ###<a id='communicate'></a> How CF Components Communicate
 
