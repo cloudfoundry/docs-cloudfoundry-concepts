@@ -49,6 +49,48 @@ services like Amazon S3, WebDAV, or the NFS filesystem for storage.
 Typically, the same blobstore is used to store all five types of blobs, but
 the Cloud Controller may be configured to use a separate blobstore for each type.
 
+1. Define blob, orphaned blob
+1. Explain the problem: how blobs get orphaned and why this is bad
+1. Explain how CF automatically cleans up orphaned blobs
+1. Say that one could do it themselves all at once
+
+Cloud Foundry has to manage large files, such as the bits of an app. The platform is constantly receiving, storing, bundling, and transporting these files, which are called blobs, or binary large objects. Cloud Foundry stores these blobs in a special database for large objects called a blobstore. You tell Cloud Foundry where to set up its blobstore when you configure Elastic Runtime in the File Storage pane. To learn about the types of blobs in Cloud Foundry, see the table below.
+
+<table>
+<tr>
+<th>Blob Type</th>
+<th>Description</th>
+<th>Location in Blobstore</th>
+</tr>
+<tr>
+<td>App Package</td>
+<td>This is the full set of data for an application when it is pushed to the platform. This is the complete set of application files that is injected into the container when an application is staged.</td>
+<td>`/cc-packages`</td>
+</tr>
+<tr>
+<td>Droplet</td>
+<td>This is the full output of the staging process. It includes the application bits plus any additional software that is necessary to run your application.</td>
+<td>`/cc-droplets`</td>
+</tr>
+<tr>
+<td>Buildpack</td>
+<td>These are the files for all of the build packs that are installed on the platform. These are downloaded to the DEA/Diego Cell and used to stage an application.</td>
+<td>`/cc-buildpacks`</td>
+</tr>
+<tr>
+<td>Buildpack cache</td>
+<td>Build packs have the ability to cache data between staging runs.  This allows them to save large downloads and other files from run-to-run, typically so that the build pack runs more quickly. Once staging is complete, the build pack's cache is persisted to the blob store.</td>
+<td>`cc-droplets/buildpack_cache`</td>
+</tr>
+<tr>
+<td>Resource Cache</td>
+<td>Before the cf CLI uploads large files to the platform, it will first check with the cloud controller to see if there are cached copies of the file on the platform. It does this to save bandwidth and makes uploads take less time. The cached data is stored in the blob store.</td>
+<td>`/cc-resources`</td>
+</tr>
+</table>
+
+Note that when using the internal storage, these directories will be located at `/var/vcap/store/shared.`
+
 ##<a id='nats'></a>NATS Messaging ##
 
 The Cloud Controller interacts with other core components of the Cloud Foundry
