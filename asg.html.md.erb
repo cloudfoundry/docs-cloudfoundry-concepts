@@ -107,7 +107,8 @@ dependencies.
 
 You use different commands to apply an ASG to each of the four sets. For more information, see the [Procedures](#procedures) section of this topic.
 
-<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use cf CLI 6.28.0 or later.</p>
+<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use cf CLI 6.28.0 or later.
+</p>
 
 ### <a id='creating-groups'></a>The Structure and Attributes of ASGs ##
 
@@ -223,7 +224,8 @@ See <a href="#binding-groups">Bind ASGs</a> below.
 
 ### <a id='binding-groups'></a>Bind ASGs ##
 
-<p class='note'><strong>Note</strong>: Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+<p class='note'><strong>Note</strong>: Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
+</p>
 
 To apply an ASG, you must first bind it to an ASG set.
 
@@ -265,12 +267,14 @@ $ cf update-security-group my-asg ~/workspace/my-asg-v2.json
 </pre>
 
 <p class='note'><strong>Note</strong>: Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space,
-use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
+</p>
 
 ### <a id='unbinding-groups'></a>Unbind ASGs
 
 <p class='note'><strong>Note</strong>: Unbinding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space,
-use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
+</p>
 
 To unbind an ASG from the platform-wide staging ASG set, run `cf unbind-staging-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
@@ -295,7 +299,8 @@ $ cf unbind-security-group my-asg my-org my-space --lifecycle staging
 
 ### <a id='deleting-groups'></a>Delete ASGs ##
 
-<p class='note'><strong>Note</strong>: You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.</p>
+<p class='note'><strong>Note</strong>: You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.
+</p>
 
 To delete an ASG, run `cf delete-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
@@ -348,7 +353,8 @@ to integrate with services available on public networks.
 Example app dependencies include public Maven repositories, NPM, RubyGems, and 
 Docker registries.
 
-<p class='note'><strong>Note</strong>: You should exclude IaaS metadata endpoints, such as <code>169.254.169.254</code>, because the metadata endpoint can expose sensitive environment information to untrusted apps. The <code>public_networks</code> example below accounts for this recommendation.</p>
+<p class='note'><strong>Note</strong>: You should exclude IaaS metadata endpoints, such as <code>169.254.169.254</code>, because the metadata endpoint can expose sensitive environment information to untrusted apps. The <code>public_networks</code> example below accounts for this recommendation.
+</p>
 
 Example `public_networks` ASG:
 
@@ -385,7 +391,8 @@ messaging servers, directory servers, and file servers. Configure appropriate
 private network ASGs as appropriate. You may find it helpful to use a naming
 convention with `private_networks` as part of the ASG name, such as `private_networks_databases`.
 
-<p class='note'><strong>Note</strong>: You should exclude any private networks and IP addresses that app and task instances should not have access to. </p>
+<p class='note'><strong>Note</strong>: You should exclude any private networks and IP addresses that app and task instances should not have access to.
+</p>
 
 Example `private_networks` ASG:
 
