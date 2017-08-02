@@ -448,6 +448,282 @@ You can download the latest release of the ASG Creator from the Cloud Foundry in
 
 ## <a id='logging'></a> ASG Logging
 
-The KB article [How to use Application Security Group (ASG) logging](https://discuss.pivotal.io/hc/en-us/articles/115005916027) describes how you can use ASGs to correlate emitted logs back to an app.
+Tracing application logs can aid in troubleshooting and debugging. These logs provide granular information, including the application's:
+
++ <b>name</b>
++ <b>space\_url</b>
++ space <b>name</b> 
++ <b>organization\_url</b>
++ organization <b>name</b>
++ <b>container\_id</b> 
++ <b>process\_guid</b>
+
+### <a id="asg-logging-prereq"></a> Configure the Rules File
+
+To trace application logs, set the `log` attribute to `true` in the rules file. In the context of ASG Logging, a rules file is a JSON file that describes the rules for your Application Security Groups.
+
+For more information about configuring the rules file and creating Application Security Groups, see the "Create ASGs" section of the <%= vars.understanding_asg_individual_link %> topic. 
+
+Below is a code sample from an example rules file. In this example, the rules file is configured to forward requests to 10.87.35.105 through the syslog server. 
+
+
+<pre class="terminal">
+  [ 
+    { 
+      "protocol": "tcp", 
+      "destination": "10.87.35.105", 
+      "ports":"80",   
+      "log": true, 
+      "description": "Allow apps to reach gorouter" 
+    } 
+  ]
+</pre>
+
+###<a id="single-ip"></a> Trace the Traffic Logs of a Single IP
+
+Obtaining the app <b>name</b>, <b>space\_url</b>, space <b>name</b>, <b>organization\_url</b>, and organization <b>name</b> is a sequential and interdependent process. 
+
+First, the operator must obtain the <b>container\_id</b>. The operator can then use the <b>container\_id</b> to obtain the <b>process\_guid</b>. The <b>process\_guid</b> is then queried to obtain the <b>space\_url</b>. The <b>space\_url</b> is then queried to obtain the space <b>name</b> and <b>organization\_url</b>. Finally, the <b>organization\_url</b> is queried to obtain the organization <b>name</b>.
+
+Step 1. Obtain the <b>container_id</b>
+
+Run the `grep` command and specify the IP address that you want to audit to generate the desired log entry and related <b>container_id</b>:
+
+`$ grep “DST= IP_ADDRESS”`
+
+Example below: 
+
+<pre class="terminal">
+$ grep “DST= 10.193.79.30”
+
+10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] <b>d08bb414-cdba-4381-412a-e9ecc</b>IN=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
+</pre>
+
+In the above terminal output, the <b>container\_id</b> is bolded. The <b>container\_id</b> is a 31 character unique ID that allows operators to trace back to the application. The <b>containder\_id</b>, as shown above, precedes “IN” in log entries. Operators must query the <b>container\_id</b> to obtain the <b>process\_guid</b>. 
+
+Step 2: Obtain the <b>process\_guid</b>
+
+Run the `grep` command in conjunction with the <b>container\_id</b> in the following way to obtain the <b>process\_guid</b>:
+
+`$ grep CONTAINER_ID | grep “vcap.rep” | grep process_guid`
+
+Example below: 
+
+<pre class="terminal">
+  $ grep d08bb414-cdba-4381-412a-e9ecc 10.193.79.42.log| grep "vcap.rep" | grep process_guid
+
+  Jun 22 13:07:52 10.193.79.42 user vcap.rep [job=diego_cell index=2]  {"timestamp":"1498136872.889604807",
+  "source":"rep","message":"rep.executing-container-operation.ordinary-lrp-processor.process-reserved-
+  container.run-container.containerstore-run.node-run.action.run-step.process-exit","log_level":1,
+  "data":{"cancelled":true,"container-guid":"d08bb414-cdba-4381-412a-e9eccdcedb40","container-state":
+  "reserved","exitStatus":143,"guid":"d08bb414-cdba-4381-412a-e9eccdcedb40","lrp-instance-key"
+  :{"instance_guid":"d08bb414-cdba-4381-412a-e9eccdcedb40","cell_id":"diego_cell-2"},"lrp-key"
+  :{<b>"process_guid":"4ccbb24c-268e-421a-9d1b-3678b6eb40d0</b>-4a2fe5af-5d55-4c0e-b720-5e2a8ee686a3","
+  index":0,"domain":"cf-apps"},"process":"56c9d
+</pre>
+
+The <b>process\_guid</b> string in the resulting output is comprised of 73 characters, inclusive of dashes. 
+
+Step 3. Obtain the app <b>name</b> and <b>space\_url</b>.
+
+Run the `cf curl` command in conjunction with the <b>process\_guid</b> to obtain the app <b>name</b> and <b>space\_url</b>. You only need the first 36 characters of the <b>process\_guid</b> to complete this step. 
+
+`$ cf curl /v2/apps/PROCESS_GUID`
+
+Example below: 
+
+<pre class= "terminal">
+  $ cf curl /v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0
+
+  {
+  "metadata": 
+  "guid": "4ccbb24c-268e-421a-9d1b-3678b6eb40d0",      
+  "url": "/v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0",
+  "created_at": "2017-06-16T23:13:55Z",
+  "updated_at": "2017-06-20T22:56:40Z"
+  },
+  "entity": {
+  "<b>name": "proxy"</b>,
+  "production": false,
+  "space_guid": "c65add41-d85b-4823-9e2a-545a5e0e5812",
+  "stack_guid": "9dad41b8-3043-48da-acf4-e1d4a700ea88",
+  "
+  "ports": [
+     8080
+  --- snip ---
+
+  ],
+  "<b>space_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812</b>",
+  "stack_url": "/v2/stacks/9dad41b8-3043-48da-acf4-e1d4a700ea88",
+  "routes_url": "/v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0/routes",
+  "events_url": "/v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0/events",
+  "service_bindings_url": "/v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0/service_bindings",
+  "route_mappings_url": "/v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0/route_mappings"
+  } 
+
+</pre>
+
+Step 4. Obtain the space <b>name</b> and <b>organization\_url</b> 
+
+Run the `cf curl` command in conjunction with the <b>space\_url</b> in the following way to obtain the space <b>name</b> and <b>organization\_url</b>:
+
+`$ cf curl /v2/spaces/SPACE_URL`
+
+Example below: 
+
+<pre class= "terminal">
+  $ cf curl /v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812
+
+  {
+  "metadata": {
+  "guid": "c65add41-d85b-4823-9e2a-545a5e0e5812",
+  "url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812",
+  "created_at": "2017-06-16T18:14:40Z",
+  "updated_at": null
+  },
+  "entity": {
+  "<b>name": "s"</b>,
+  "organization_guid": "2c279d6c-6f15-4cc0-99ed-72ef76ec50eb",
+  "space_quota_definition_guid": null,
+  "allow_ssh": true,
+  "<b>organization_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb"</b>,
+  "developers_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/developers",
+  "managers_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/managers",
+  "auditors_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/auditors",
+  "apps_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/apps",
+  "routes_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/routes",
+  "domains_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/domains",
+  "service_instances_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/service_instances",
+  "app_events_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/app_events",
+  "events_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/events",
+  "security_groups_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/security_groups" 
+</pre>
+
+Step 5: Obtain the organization <b>name</b>
+
+Run the `cf curl` command in conjunction with the <b>organization\_url</b> in the following way to obtain the organization <b>name</b>:
+
+`$ cf curl /v2/organizations/ORGANIZATION_URL`
+
+Example below: 
+
+<pre class= "terminal">
+  $ cf curl /v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb 
+
+  {
+  "metadata": {
+  "guid": "2c279d6c-6f15-4cc0-99ed-72ef76ec50eb",
+  "url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb",
+  "created_at": "2017-06-16T18:14:19Z",
+  "updated_at": null
+  },
+  "entity": {
+  "<b>name": "o"</b>,
+  "billing_enabled": false,
+  "quota_definition_guid": "6002a805-f285-4e7b-8ff6-cd4ac607d26e",
+  "status": "active",
+  "quota_definition_url": "/v2/quota_definitions/6002a805-f285-4e7b-8ff6-cd4ac607d26e",
+  "spaces_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/spaces",
+  "domains_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/domains",
+  "private_domains_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/private_domains",
+  "users_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/users",
+  "managers_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/managers",
+  "billing_managers_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/billing_managers",
+  "auditors_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/auditors",
+  "app_events_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/app_events",
+  "space_quota_definitions_url": "/v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb/space_quota_definitions"
+  }
+  }
+</pre>
+
+###<a id="auditing-deleted-apps"></a> Auditing Deleted Apps
+
+If an app has been deleted, `cf curl /v2/apps/PROCESS_GUID` yields an output similar to the following:
+
+<pre class="terminal">
+  {
+  "description": "The app could not be found: 4ccbb24c-268e-421a-9d1b-3678b6eb40d0", 
+  "error_code": "CF-AppNotFound", 
+  "code": 100004 
+  }
+</pre>
+
+Call the events endpoint in conjunction with the <b>process\_guid</b> to obtain historical information from an app that has since been deleted. The events record catalogues past events and as such cannot give operators the most up-to-date information on their applications. These events are also eventually removed from the system. 
+
+To call the events record run the `cf curl` command in the following way: 
+`$ cf curl /v2/events?q=actee:CONTAINER_ID`. 
+
+The resulting terminal output will contain the <b>space\_guid</b>, <b>organization\_guid</b>, and other relevant information. 
+
+Example below:
+
+<pre class= "terminal">
+  $ cf curl /v2/events?q=actee:4ccbb24c-268e-421a-9d1b-3678b6eb40d0
+  {
+  "total_results": 6,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+  {
+  "metadata": {
+  "guid": "d343a7dc-8882-4529-b3b9-83677ee2017e",
+  "url": "/v2/events/d343a7dc-8882-4529-b3b9-83677ee2017e",
+  "created_at": "2017-06-16T23:13:55Z",
+  "updated_at": null
+  },
+  "entity": {
+  "type": "audit.app.create",
+  "actor": "7b2d6421-db00-4a1d-86d3-dc07edbe8afd",
+  "actor_type": "user",
+  "actor_name": "admin",
+  "actee": "4ccbb24c-268e-421a-9d1b-3678b6eb40d0",
+  "actee_type": "app",
+  "actee_name": "proxy",
+  "timestamp": "2017-06-16T23:13:55Z",
+  "metadata": {
+  "request": {
+  "name": "proxy",
+  "space_guid": "c65add41-d85b-4823-9e2a-545a5e0e5812",
+  "memory": 32,
+  "disk_quota": 32,
+  "buildpack": "go_buildpack",
+  "environment_json": "PRIVATE DATA HIDDEN",
+  "console": false,
+  "docker_credentials_json": "PRIVATE DATA HIDDEN",
+  "health_check_type": "port",
+  "instances": 1,
+  "production": false,
+  "state": "STOPPED"
+  }
+  },
+  "space_guid": "c65add41-d85b-4823-9e2a-545a5e0e5812",
+  "organization_guid": "2c279d6c-6f15-4cc0-99ed-72ef76ec50eb"
+  }
+  --snip--
+</pre>
+
+###<a id="cidr"></a> Trace the Traffic Logs of a CIDR Range
+
+To trace logs from a CIDR Range, set the `destination` attribute in the rules file as a range of addresses.
+
+<%= vars.enable_syslog_forwarding_link %>
+
+Example below:
+
+<pre class="terminal">
+  [ 
+    { 
+      "protocol": "tcp", 
+      "destination": "0.0.0.0-0.0.0.255", 
+      "ports":"80",   
+      "log": true, 
+      "description": "Allow apps to reach gorouter" 
+    } 
+  ]
+</pre>
+
+Use the same method outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page to obtain the app <b>name</b>, <b>space\_url</b>, space <b>name</b>, <b>organization\_url</b>, organization <b>name</b>,  <b>container\_id</b>, and <b>process\_guid</b> for a CIDR range.
+
 
 <% end %>
