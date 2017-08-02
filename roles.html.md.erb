@@ -9,6 +9,8 @@ owners: CAPI, Identity
 
 Admins, Org Managers, and Space Managers can assign user roles using the [cf CLI](../cf-cli/getting-started.html#user-roles)<%= vars.or_apps_man %>.
 
+<p class="note"><strong>Note</strong>: Before you assign a <strong>space role</strong> to a user, you must assign an <strong>org role</strong> to the user.</p>
+
 ## <a id='orgs'></a>Orgs ##
 
 An org is a development account that an individual or multiple collaborators
@@ -16,6 +18,8 @@ can own and use.
 All collaborators access an org with user accounts.
 Collaborators in an org share a resource quota plan, applications, services
 availability, and custom domains.
+
+Before you assign a space role to a user, you must assign an org role to the user. The error message `Server error, error code: 1002, message: cannot set space role because user is not part of the org` occurs when you try to set a space role before setting an org role for the user.
 
 ## <a id='users'></a>User Accounts ##
 
