@@ -84,6 +84,14 @@ The Gorouter uses the round-robin algorithm for load balancing incoming requests
 
 WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
 
-## <a id="keepalive"></a>Idle Keepalive Connections ##
+## <a id="keepalive"></a>Keepalive Connections ##
 
-When an operator has chosen to disable support for Keepalive Connections, the Gorouter will close the TCP connection to an app instance or system component after sending a single HTTP request. When Keepalive Connections is enabled the Gorouter will maintain established connections, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual backend is limited to 100. <% if vars.product_name == 'CF' || vars.product_name == 'PCF' %> <%= vars.keepalive %> <% else %> <% end %>
+### From Frontend Clients
+
+Gorouter supports keepalive connections from clients; it will not close the TCP connection with clients immediately after returning an HTTP response. It is up to clients to close these connections.
+
+### To Backend Servers
+
+By default, Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response. 
+
+When Keepalive Connections is enabled Gorouter will maintain established TCP connections to backends, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual backend is limited to 100. <% if vars.product_name == 'CF' || vars.product_name == 'PCF' %> <%= vars.keepalive %> <% else %> <% end %>
