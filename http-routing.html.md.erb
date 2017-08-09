@@ -66,37 +66,23 @@ Perform the following steps to make an HTTP request to a specific app instance:
 	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
 
 ### <a id="forward-client-cert"></a> Forward Client Certificate to Applications
-Applications need metadata from client certificates to authorize requests, but do not want to give up the benefits of L7 load balancing and TLS termination at multiple downstream components.
+Applications that require mutual TLS (mTLS) require metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the CF Router.
 
-The HTTP header `X-Forwarded-Client-Cert` may be used to pass the originating client cert along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
+The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
 
 Supported deployment configurations:
 
-- By default, CF will forward arbitrary headers that are not otherwise mentioned in the docs, and a load balancer can be configured to put the certificate of the originating client, received during the mutual TLS handshake, into an HTTP header which it forwards upstream. We recommend the header `X-Forwarded-Client-Cert` for this, as it is used in other configuration modes described below. The value of the header should be the base64 encoded bytes of the certificate; equivalent to a PEM file with newlines, headers, and footers removed. Example:
-  ```
--H "X-Forwarded-Client-Cert: MIIENTCCAh2gAwIBAgIRAM1sQMvEdTZMaHqOFtb/JpUwDQYJKoZIhvcNAQELBQAwFTETMBEGA1UEAxMKVWx0aW1hdGVDQTAeFw0xNzA4MDIyMTM5MzlaFw0xOTA4MDIyMTM5MzlaMCQxETAPBgNVBAsTCFNjb2VuNE9VMQ8wDQYDVQQDEwZTY29lbjQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDGL9ssY8WgOwoHen3/1JN86Qquc4dEYg0NF9j6GJarCcpzq4x02uz2O/Y/6GgZ+QfYG82GL2doPymLFHR8EC4WXRsELKlnBre8s3VGBX4TA3n/TZ/yro56m1miIpNCbyToNHYgcnGyZcaXPmx2NfHA++xagi/eWbjZ4xBthjEhmMQLDbSQzpbqj66t+hQGp6t1cZw2vZwSIUvmQFEtISVqscZgR54CyBISxi22LILylb2DGc7dtMyYFx2ub0WX4QX5fQdboDqUT251r5vTh5O4vzRxenH4RfG2xqVQPrdUeFA8CziDWy4n7F4diMeR+s+wDGS1Dcv028E4YHj+Cze7AgMBAAGjcTBvMA4GA1UdDwEB/wQEAwIDuDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwHQYDVR0OBBYEFLZM4ObUdkKD0fpR+2LM9+3+RuXTMB8GA1UdIwQYMBaAFIn0suOVQpGym4kh2Iq382Dhu3U/MA0GCSqGSIb3DQEBCwUAA4ICAQCQ3DDqaXGWvqxlN6wuhEj7UsSc9uerMAZQ9Esjw8HyNiuo/ssljmiinjHq9XdeY+akSMkymJsEEnKHuv1ve0XzX6Aqjnqt9xt2VZ44cknj8kqqEDw92/wxJnAeOJn5ABhc869AROjwPui9u4n9GFrmQTWFvCufmmeEfCO5BHLxllEp3BlIGujqNo8qJNfxGa6dh8SFICfHg6o69Bbz1cQ0kxFueevXxQabdzZKHO/OqLnKIGCuiUySuSVnGE+tMR2fz2kdid8n6vbjWMv86hRhAeXlTd8DXGnEWm0IQ7i8JpQ4OzitLBViwD8ZuO1g6Z0T04ovMtnR+jq1xeLw/7njNkTdv/jQbdEClgYoT21THCKNbKVSsEhwMTr23vLF8FT0UEzejL5DuTNDiiagibcjt5VzeRxoZwN8Kqub5SnM0gyddK2L7T77cOF1l2cyfS6KCTfjoxok23pMN+Q1WD+cZDfVl7RXmMHs+fiMKhCVpyYtYcqR6YUuMQ5pkHJwqyOzzXwqbWKREqF/2EgIbmXXbabJWxdyKUaT4erFc1mOs4c58AW03iuBDbLj2XFtWQygli5HSjjyAoXxnFbf0TTGo/ELcaj/7beWoX6KowiKtXSdDKjtXqFR524UPgDMJkhG0XEi60Hv9GzZ09Gv7oEsJ90MeGbXA87976IlIXPRnw=="
-  ```
+- By default, CF will forward arbitrary headers that are not otherwise mentioned in the docs, and a load balancer can be configured to put the certificate of the originating client, received during the mutual TLS handshake, into an HTTP header which it forwards upstream. We recommend the header `X-Forwarded-Client-Cert` for this, as it is used in other configuration modes described below. The value of the header should be the base64 encoded bytes of the certificate; equivalent to a PEM file with newlines, headers, and footers removed.
 
-- Using the `router.forwarded_client_cert` manifest property (see below), the operator may configure the CF Router to either forward this header only when the front-end connection with the router is mutual TLS. This mode would also be used when a downstream component receives the certificate of the originating client during a mutual TLS handshake.
+	This mode is enabled by default or when `router.forwarded_client_cert: always_forward`.
 
-- If the CF Router is the first component to terminate TLS, such that it receives the certificate of the originating client in the mutual TLS handshake, the operator should configure the `router.forwarded_client_cert` manifest property (see below) to strip the `X-Forwarded-Client-Cert` header from requests, set the header to the client certificate received in the mutual handshake, and forward this upstream to the application.
+- The operator may configure the CF Router to forward the XFCC header only when the front-end connection with the client is mutual TLS. This is a more secure version of the default behavior and as such, may be used when a downstream component receives the originating client certificate in a mutual TLS handshake and puts it in the `X-Forwarded-Client-Cert` HTTP header. The client certificate received by Gorouter in the mutual TLS handshake will not be forwarded in the header.
 
+	This mode is enabled when `router.forwarded_client_cert: forward`.
 
+- If the CF Router is the first component to terminate TLS, such that it receives the certificate of the originating client in the mutual TLS handshake, the operator should configure the CF Router to strip any instances of the `X-Forwarded-Client-Cert` header from client requests, set the value of the header to the base64 encoded bytes of the client certificate received in the mutual handshake, and forward the header upstream to the application.
 
-The `forwarded_client_cert` BOSH property specifies how to handle the `x-forwarded-client-cert` (XFCC) HTTP header. Possible values are:
-
-- `always_forward`: Always forward the XFCC header in the request, regardless of whether the client connection is mTLS.
-Use this value when your load balancer is forwarding the client certificate and requests are not forwarded to Gorouter over mTLS. In the case where the connection between load balancer and Gorouter is mTLS, the client certificate received by Gorouter in the TLS handshake will not be forwarded.
-
-- `forward`: Forward the XFCC header received from the client only when the client connection is mTLS.
-This is a more secure version of `always_forward`. The client certificate received by Gorouter in the TLS handshake will not be forwarded.
-
-- `sanitize_set`: Strip any instances of XFCC headers from the client request.
-When the client connection is mTLS, the client certificate received by Gorouter in the TLS handshake will be forwarded in this header.
-Values will be base64 encoded PEM. Use this value when Gorouter is the first component to terminate TLS.
-
-
-
+	This mode is enabled when `router.forwarded_client_cert: sanitize_set`.
 
 ## <a id="tls"></a>SSL/TLS Termination ##
 
@@ -124,6 +110,6 @@ Gorouter supports keepalive connections from clients; it will not close the TCP 
 
 ### To Backend Servers
 
-By default, Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response. 
+By default, Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response.
 
 When Keepalive Connections is enabled Gorouter will maintain established TCP connections to backends, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual backend is limited to 100. <% if vars.product_name == 'CF' || vars.product_name == 'PCF' %> <%= vars.keepalive %> <% else %> <% end %>
