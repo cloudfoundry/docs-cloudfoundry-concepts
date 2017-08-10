@@ -107,3 +107,9 @@ The metrics collector gathers metrics and statistics from the components.
 Operators can use this information to monitor a Cloud Foundry deployment.
 
 The <%= vars.loggregator_name_or_link %> (log aggregator) system streams application logs to developers.
+
+## <a id='data-stores'></a>Data Stores
+
+### <a id='etcd'></a> etcd
+
+TCP Routing uses etcd for storage. etcd is also used by loggregator for doppler discovery and storage. Diego uses etcd to store information about running and desired application instances.
