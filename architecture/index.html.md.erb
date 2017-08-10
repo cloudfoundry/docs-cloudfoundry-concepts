@@ -103,6 +103,12 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 
 The <%= vars.loggregator_name_or_link %> (log aggregator) system streams application logs to developers.
 
+## <a id='data-stores'></a>Data Stores
+
+### <a id='etcd'></a> etcd
+
+etcd is used by loggregator for doppler discovery and storage. TCP Routing and Diego no longer use etcd. etcd now requires TLS encryption by default.
+
 <% if vars.product_name == 'CF' %>
 <%= partial 'old_collector' %>
 <% end %>
