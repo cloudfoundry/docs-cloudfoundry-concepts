@@ -103,7 +103,13 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 
 The <%= vars.loggregator_name_or_link %> (log aggregator) system streams application logs to developers.
 
-<% if vars.product_name == 'CF' %>
+## <a id='data-stores'></a>Data Stores
+
+### <a id='etcd'></a> etcd
+
+etcd is used by the loggregator system for doppler discovery.
+
+<% if vars.prodct_name == 'CF' %>
 <%= partial 'old_collector' %>
 <% end %>
 
