@@ -65,6 +65,24 @@ Perform the following steps to make an HTTP request to a specific app instance:
 1. Make a request to the app route using the HTTP header `X-CF-APP-INSTANCE` set to the concatenated values of the app GUID and the instance index:
 	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
 
+### <a id="forward-client-cert"></a> Forward Client Certificate to Applications
+Applications that require mutual TLS (mTLS) require metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the CF Router.
+
+The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
+
+Supported deployment configurations:
+
+- By default, CF will forward arbitrary headers that are not otherwise mentioned in the docs, and a load balancer can be configured to put the certificate of the originating client, received during the mutual TLS handshake, into an HTTP header which it forwards upstream. We recommend the header `X-Forwarded-Client-Cert` for this, as it is used in other configuration modes described below. The value of the header should be the base64 encoded bytes of the certificate; equivalent to a PEM file with newlines, headers, and footers removed.
+
+	This mode is enabled by default or when `router.forwarded_client_cert: always_forward`.
+
+- The operator may configure the CF Router to forward the XFCC header only when the front-end connection with the client is mutual TLS. This is a more secure version of the default behavior and as such, may be used when a downstream component receives the originating client certificate in a mutual TLS handshake and puts it in the `X-Forwarded-Client-Cert` HTTP header. The client certificate received by Gorouter in the mutual TLS handshake will not be forwarded in the header.
+
+	This mode is enabled when `router.forwarded_client_cert: forward`.
+
+- If the CF Router is the first component to terminate TLS, such that it receives the certificate of the originating client in the mutual TLS handshake, the operator should configure the CF Router to strip any instances of the `X-Forwarded-Client-Cert` header from client requests, set the value of the header to the base64 encoded bytes of the client certificate received in the mutual handshake, and forward the header upstream to the application.
+
+	This mode is enabled when `router.forwarded_client_cert: sanitize_set`.
 
 ## <a id="tls"></a>SSL/TLS Termination ##
 
@@ -84,6 +102,14 @@ The Gorouter uses the round-robin algorithm for load balancing incoming requests
 
 WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
 
-## <a id="keepalive"></a>Idle Keepalive Connections ##
+## <a id="keepalive"></a>Keepalive Connections ##
 
-When an operator has chosen to disable support for Keepalive Connections, the Gorouter will close the TCP connection to an app instance or system component after sending a single HTTP request. When Keepalive Connections is enabled the Gorouter will maintain established connections, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual backend is limited to 100. <% if vars.product_name == 'CF' || vars.product_name == 'PCF' %> <%= vars.keepalive %> <% else %> <% end %>
+### From Frontend Clients
+
+Gorouter supports keepalive connections from clients; it will not close the TCP connection with clients immediately after returning an HTTP response. It is up to clients to close these connections.
+
+### To Backend Servers
+
+By default, Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response.
+
+When Keepalive Connections is enabled Gorouter will maintain established TCP connections to backends, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual backend is limited to 100. <% if vars.product_name == 'CF' || vars.product_name == 'PCF' %> <%= vars.keepalive %> <% else %> <% end %>
