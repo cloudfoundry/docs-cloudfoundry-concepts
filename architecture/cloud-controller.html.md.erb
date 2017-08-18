@@ -45,21 +45,6 @@ services like Amazon S3, WebDAV, or the NFS filesystem for storage.
 Typically, the same blobstore is used to store all five types of blobs, but
 the Cloud Controller may be configured to use a separate blobstore for each type.
 
-##<a id='nats'></a>NATS Messaging ##
-
-The Cloud Controller interacts with other core components of the Cloud Foundry
-platform using the NATS message bus.
-For example, the Cloud Controller uses NATS when performing the following
-interactions:
-
-* Instructing a cell to stage an application by processes a buildpack for the app
-    and to prepare it to run
-* Instructing a cell to start or stop an application
-* Receiving information from the Health Manager about applications
-* Subscribing to Service Gateways that advertise available services
-* Instructing Service Gateways to handle provisioning, unprovisioning, binding,
-    and unbinding operations for services
-
 ##<a id='testing'></a>Testing ##
 
 By default `rspec` runs a test suite with the SQLite in-memory database.
