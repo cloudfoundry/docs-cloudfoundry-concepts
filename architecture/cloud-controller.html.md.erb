@@ -90,21 +90,6 @@ To clean up the resource cache, delete it as follows:
 
 Do not manually delete app package, buildpack, or droplet blobs from the blobstore. To free up resources from those locations, run `cf delete-buildpack` for buildpacks or `cf delete` for app packages and droplets.
 
-##<a id='nats'></a>NATS Messaging
-
-The Cloud Controller interacts with other core components of the Cloud Foundry
-platform using the NATS message bus.
-For example, the Cloud Controller uses NATS when performing the following
-interactions:
-
-* Instructing a cell to stage an application by processes a buildpack for the app
-    and to prepare it to run
-* Instructing a cell to start or stop an application
-* Receiving information from the Health Manager about applications
-* Subscribing to Service Gateways that advertise available services
-* Instructing Service Gateways to handle provisioning, unprovisioning, binding,
-    and unbinding operations for services
-
 ##<a id='testing'></a>Testing
 
 <% if vars.product_name == 'OSS' %>
