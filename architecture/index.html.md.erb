@@ -74,7 +74,7 @@ You can configure the blobstore as either an internal server or an external S3 o
 
 ### <a id='diego-cell'></a> Diego Cell
 
-Each application VM has a Diego Cell that executes application start and stop actions locally, manages the VM's containers, and reports app status and other data to the BBS and [Loggregator](#metrics-logging).
+Application instances, application tasks, and staging tasks all run as Garden containers on the Diego Cell VMs. The Diego cell rep component manages the lifecycle of those containers and the processes running in them, reports their status to the Diego BBS, and emits their logs and metrics to [Loggregator](#metrics-logging).
 
 <%=vars.pre_diego_node%>
 
