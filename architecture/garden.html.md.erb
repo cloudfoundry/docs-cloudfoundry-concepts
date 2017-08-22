@@ -24,7 +24,7 @@ For more information, see the [Garden repository](https://github.com/cloudfoundr
 
 ##<a id='garden-runc'></a>Garden-runC
 
-Cloud Foundry currently uses the [Garden-runC](https://github.com/cloudfoundry-incubator/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of Cloud Foundry used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend. 
+Cloud Foundry currently uses the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of Cloud Foundry used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend.
 
 <%= vars.garden_runc %>
 
@@ -36,4 +36,22 @@ by default for all unprivileged containers
 * Seccomp whitelisting restricts the set of system calls a container can access, reducing the risk of container breakout
 * Allows pluggable networking and rootfs management
 
-For more information, see the [Garden-runC repository](https://github.com/cloudfoundry-incubator/garden-runc-release) on GitHub.
+For more information, see the [Garden-runC repository](https://github.com/cloudfoundry/garden-runc-release) on GitHub.
+
+##<a id='garden-rootfs'></a>Garden RootFS (Grootfs)
+
+Garden has a plugin interface for managing containers filesystems,
+CloudFoundry uses the [Grootfs](https://github.com/cloudfoundry/grootfs) plugin for this task.
+Grootfs is a Linux-specific implementation of the Garden volume plugin interface.
+
+Grootfs is responsible for the following actions:
+
+- Create containers filesystems based on buildpacks and droplets
+- Create containers filesystems based on remote docker images
+- Authenticate with remote registries when using remote images
+- Properly map UID/GID for all the files inside the image
+- Execute garbage collection to remove unused volumes
+- Apply per container disk quotas
+- Provide per container disk usage stats
+
+For more information, see the [Grootfs repository](https://github.com/cloudfoundry/grootfs) on GitHub.
