@@ -65,6 +65,30 @@ Perform the following steps to make an HTTP request to a specific app instance:
 1. Make a request to the app route using the HTTP header `X-CF-APP-INSTANCE` set to the concatenated values of the app GUID and the instance index:
 	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
 
+### <a id="forward-client-cert"></a> Forward Client Certificate to Applications
+Applications that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the Gorouter.
+
+The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
+
+The following sections describe supported deployment configurations.
+
+#### <a id='always-forward'></a>Always Forward Headers
+
+By default, CF forwards arbitrary headers that are not otherwise mentioned in the docs, and a load balancer can be configured to put the certificate of the originating client, received during the mutual TLS handshake, into an HTTP header that the load balancer forwards upstream. We recommend the header `X-Forwarded-Client-Cert` for this use case, as this header is used in other configuration modes described below. The value of the header should be the base64 encoded bytes of the certificate; equivalent to a PEM file with newlines, headers, and footers removed.
+
+<%= vars.xfcc_always_forward %>
+
+#### <a id='forward-mtls'></a>Forward XFCC Headers for mTLS Connections
+
+The operator can configure the Gorouter to forward the XFCC header only when the front-end connection with the client is mutual TLS. This is a more secure version of the default behavior. As such, this configuration can be used when a downstream component receives the originating client certificate in a mutual TLS handshake and puts the certificate in the `X-Forwarded-Client-Cert` HTTP header. The client certificate received by the Gorouter in the mutual TLS handshake will not be forwarded in the header.<br/><br/>
+
+<%= vars.xfcc_mtls_forward %>
+
+#### <a id='forward-mtls'></a>Remove XFCC Headers
+
+If the Gorouter is the first component to terminate TLS, such that it receives the certificate of the originating client in the mutual TLS handshake, the operator should configure the Gorouter to strip any instances of the `X-Forwarded-Client-Cert` header from client requests, set the value of the header to the base64 encoded bytes of the client certificate received in the mutual handshake, and forward the header upstream to the application.
+
+<%= vars.xfcc_strip %>
 
 ## <a id="tls"></a>SSL/TLS Termination ##
 
