@@ -17,11 +17,12 @@ Each instance of an app deployed to CF runs within its own self-contained enviro
 
 CF achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
 
-CF uses the [Garden Rootfs](./architecture/garden.html#garden-rootfs) (Grootfs) tool to create the container filesystem by stacking a read-only base filesystem and a container-specific read-write layer, specifically by using OverlayFS.
-The read-only filesystem contains the minimal set of operating system packages and Garden-specific modifications common to all containers.
+CF creates container filesystems using the [Garden Rootfs](./architecture/garden.html#garden-rootfs) (Grootfs) tool. It stacks the following using OverlayFS:
+
+* A **read-only base filesystem**: This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers.
 Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.
-The read-write layer is unique to each container and has it's size limited by XFS project quotas.
-This quota prevents the read-write layer from overflowing into unallocated space.
+* A **container-specific read-write layer**: This layer is unique to each container and its size is limited by XFS project quotas.
+The quotas prevent the read-write layer from overflowing into unallocated space.
 
 Resource control is managed using Linux control groups ([cgroups](https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt)). Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers. 
 
