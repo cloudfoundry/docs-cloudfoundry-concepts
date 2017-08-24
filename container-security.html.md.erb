@@ -17,7 +17,7 @@ Each instance of an app deployed to CF runs within its own self-contained enviro
 
 CF achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
 
-CF creates container filesystems using the [Garden Rootfs](./architecture/garden.html#garden-rootfs) (Grootfs) tool. It stacks the following using OverlayFS:
+CF creates container filesystems using the [Garden Rootfs](./architecture/garden.html#garden-rootfs) (GrootFS) tool. It stacks the following using OverlayFS:
 
 * A **read-only base filesystem**: This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers.
 Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.

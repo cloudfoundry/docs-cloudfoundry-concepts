@@ -38,13 +38,13 @@ by default for all unprivileged containers
 
 For more information, see the [Garden-runC repository](https://github.com/cloudfoundry/garden-runc-release) on GitHub.
 
-##<a id='garden-rootfs'></a>Garden RootFS (Grootfs)
+##<a id='garden-rootfs'></a>Garden RootFS (GrootFS)
 
 Garden manages container filesystems through a plugin interface.
-Cloud Foundry uses the [Grootfs](https://github.com/cloudfoundry/grootfs) plugin for this task.
-Grootfs is a Linux-specific implementation of the Garden volume plugin interface.
+Cloud Foundry uses the [GrootFS](https://github.com/cloudfoundry/Grootfs) plugin for this task.
+GrootFS is a Linux-specific implementation of the Garden volume plugin interface.
 
-Grootfs performs the following actions:
+GrootFS performs the following actions:
 
 - Creates container filesystems based on buildpacks and droplets
 - Creates container filesystems based on remote docker images
@@ -54,4 +54,4 @@ Grootfs performs the following actions:
 - Applies per container disk quotas
 - Provides per container disk usage stats
 
-For more information, see the [Grootfs repository](https://github.com/cloudfoundry/grootfs) on GitHub.
+For more information, see the [GrootFS repository](https://github.com/cloudfoundry/grootfs) on GitHub.
