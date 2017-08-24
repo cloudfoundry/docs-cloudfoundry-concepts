@@ -40,18 +40,18 @@ For more information, see the [Garden-runC repository](https://github.com/cloudf
 
 ##<a id='garden-rootfs'></a>Garden RootFS (Grootfs)
 
-Garden has a plugin interface for managing containers filesystems,
-CloudFoundry uses the [Grootfs](https://github.com/cloudfoundry/grootfs) plugin for this task.
+Garden manages container filesystems through a plugin interface.
+Cloud Foundry uses the [Grootfs](https://github.com/cloudfoundry/grootfs) plugin for this task.
 Grootfs is a Linux-specific implementation of the Garden volume plugin interface.
 
-Grootfs is responsible for the following actions:
+Grootfs performs the following actions:
 
-- Create containers filesystems based on buildpacks and droplets
-- Create containers filesystems based on remote docker images
-- Authenticate with remote registries when using remote images
-- Properly map UID/GID for all the files inside the image
-- Execute garbage collection to remove unused volumes
-- Apply per container disk quotas
-- Provide per container disk usage stats
+- Creates container filesystems based on buildpacks and droplets
+- Creates container filesystems based on remote docker images
+- Authenticates with remote registries when using remote images
+- Properly maps UID/GID for all files inside an image
+- Executes garbage collection to remove unused volumes
+- Applies per container disk quotas
+- Provides per container disk usage stats
 
 For more information, see the [Grootfs repository](https://github.com/cloudfoundry/grootfs) on GitHub.
