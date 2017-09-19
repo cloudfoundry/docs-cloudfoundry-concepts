@@ -43,6 +43,8 @@ A user can have one or more roles.
 The combination of these roles defines the user’s overall permissions in the
 org and within specific spaces in that org.
 
+For non-admin users, the `cloud_controller.read` scope is required to view resources, and the `cloud_controller.write` scope is required to create/update/delete resources.
+
 <%= vars.admin_role %>
 <%= vars.admin_read_only_role %>
 <%= vars.global_auditor_role %>
