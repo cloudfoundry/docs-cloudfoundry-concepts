@@ -70,6 +70,8 @@ Applications that require mutual TLS (mTLS) need metadata from client certificat
 
 The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
 
+If you configure the load balancer to terminate TLS and set the XFCC header from the received client certificate, then you must also configure the load balancer to strip this header if it is present in client requests. This configuration is required to prevent spoofing of the client certificate.
+
 The following sections describe supported deployment configurations.
 
 #### <a id='always-forward'></a>Always Forward Headers
