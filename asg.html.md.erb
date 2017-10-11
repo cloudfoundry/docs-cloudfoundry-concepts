@@ -35,20 +35,26 @@ when multiple ASGs apply to the same space or deployment.
 The platform sets up rules to filter and log outbound network traffic from app and task instances.
 ASGs apply to both buildpack-based and Docker-based apps and tasks.
 
+#### Staging vs. Running ASGs
+
 When apps or tasks begin staging, they need traffic rules permissive enough to
 allow them to pull resources from the network.
 After an app or task is running, the traffic rules can be more restrictive and
 secure.
 To distinguish between these two security requirements, administrators can
-define one ASG for app and task staging, and another for app and task runtime.
+define a `staging` ASG for app and task staging, and a `running` ASG for app and task runtime.
+
+#### Platform-wide vs. Space-scoped ASGs
 
 To provide granular control when securing a deployment, an administrator can
-assign ASGs to apply to all app and task instances for the entire deployment,
-or assign ASGs to spaces to apply only to apps and tasks in a particular space.
+assign platform-wide ASGs that apply to all app and task instances for the entire deployment,
+or space-scoped ASGs that apply only to apps and tasks in a particular space.
+
+#### Simplifying ASGs with a Services Subnet
 
 ASGs can be complicated to configure correctly, especially when the specific IP
 addresses listed in a group change.
-To simplify securing a deployment while still permitting apps reach external
+To simplify securing a deployment while still letting apps reach external
 services, operators can deploy the services into a subnet that is separate from
 their Cloud Foundry deployment.
 Then the operators can create ASGs for the apps that whitelist those service
