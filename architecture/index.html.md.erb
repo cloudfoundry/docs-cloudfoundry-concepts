@@ -60,7 +60,7 @@ Here is how the components work together:
 
 ### <a id='blob'></a> Blobstore
 
-The blobstore is a repository for large binary files, which Github cannot easily manage because Github is designed for code. Blobstore binaries include:
+The blobstore is a repository for large binary files, which Github cannot easily manage because Github is designed for code. The blobstore contains the following:
 
 * Application code packages
 * Buildpacks
@@ -98,6 +98,12 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 ### <a id='metrics'></a> Loggregator
 
 The <%= vars.loggregator_name_or_link %> (log aggregator) system streams application logs to developers.
+
+## <a id='data-stores'></a>Data Stores
+
+### <a id='etcd'></a> etcd
+
+Cloud Foundry no longer depends on etcd. etcd is required during the deploy that upgrades loggregator to remove etcd-based doppler discovery, but afterwards etcd can be removed.
 
 <% if vars.product_name == 'CF' %>
 <%= partial 'old_collector' %>
