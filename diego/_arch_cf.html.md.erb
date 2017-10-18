@@ -1,6 +1,6 @@
 This topic includes the following sections:
 
-* [Managing Desired Instances in Diego](#diagram)
+* [Introduction to Diego](#overview)
 * [Diego Flow and Architecture Diagram](#diagram)
 * [Diego Component Glossary](#core)
 	* [Diego Cell Components](#cell-components)
@@ -8,7 +8,7 @@ This topic includes the following sections:
 	* [Database VMs](#database-vms)
 	* [Component Coordination](#component-coordination)
 
-##<a id="overview"></a> Managing Desired Instances in Diego
+##<a id="overview"></a> Introduction to Diego
 
 Diego is a self-healing container management system that attempts to keep the correct number of instances running in Diego Cells to avoid network failures and crashes. Diego schedules and runs Tasks and Long-Running Processes (LRP):
 
@@ -18,7 +18,9 @@ Diego is a self-healing container management system that attempts to keep the co
  * **LRPs** <br>
  LRPs may have multiple instances.
 
-You can submit, update, and retrieve the desired number of Tasks and LRPs using the <a href="https://github.com/cloudfoundry/bbs" target="_blank">Bulletin Board System (BBS) API</a>. 
+You can submit, update, and retrieve the desired number of Tasks and LRPs using the [Bulletin Board System (BBS) API](https://github.com/cloudfoundry/bbs).
+
+For more about Tasks and LRPs, see [How the Diego Auction Allocates Jobs](diego-auction.html).
 
 ##<a id='diagram'></a> Diego Flow and Architecture Diagram
 
@@ -75,7 +77,7 @@ Diego Cell directly manages and maintains Tasks and LRPs with the following comp
 	* Knows nothing about actions and simply provides a concrete implementation of a platform-specific containerization technology that can run arbitrary commands in containers.
 
  * <a id='metron-agent'></a> **Metron Agent** <br>
- 	* Forwards application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component
+ 	Forwards application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component
 
 ###<a id='brain-components'></a> Diego Brain
 
@@ -86,35 +88,32 @@ Diego Brain components distribute Tasks and LRPs to Diego Cells, and correct dis
 	* Runs auctions using the auction package. Auction communication goes over HTTP and is between the Auctioneer and the Cell Reps.
 	* Maintains a lock in consul to ensure only one auctioneer handles auctions at a time.
 * <a id="converger"></a> **Converger** <br>
-	* Maintains a lock in consul to ensure that only one converger performs convergence. This exclusivity is primarily for performance considerations, as convergence is idempotent.
-	* Compares `DesiredLRPs` and their `ActualLRPs` and takes action to enforce the desired state:
+	The Converger maintains a lock in consul to ensure that only one converger performs convergence. This exclusivity is primarily for performance considerations, as convergence is idempotent. The compares `DesiredLRPs` and their `ActualLRPs` and takes action to enforce the desired state:
 	* Resends auction requests for Tasks that have been pending for too long and completion callbacks for Tasks that have remained completed for too long,
 	* Periodically sends aggregate metrics about DesiredLRPs, ActualLRPs, and Tasks to Loggregator.
 
 ###<a id='database-vms'></a>Database VMs ###
 
- * <a id='bbs'></a>**Diego Bulletin Board System** <br>
- Maintains a real-time representation of the state of the Diego cluster, including all desired LRPs, running LRP instances, and in-flight Tasks
+ * <a id='bbs'></a>**BBS** <br>
+ BBS maintains a real-time representation of the state of the Diego cluster, including all desired LRPs, running LRP instances, and in-flight Tasks
 
  * <a id='mysql'></a>**MySQL** <br>
- Provides a consistent key-value data store to Diego
+ MySQL provides a consistent key-value data store to Diego.
 
 ###<a id='access-vms'></a>Access VMs
 
  * <a id='file-server'></a>**File Server** <br>
- 	* Serves static assets used by our various components, such as the App Lifecycle binaries.
+ 	The **File Server** serves static assets used by our various components, such as the App Lifecycle binaries.
 
  * <a id='ssh-proxy'></a>**SSH Proxy** <br>
-	* Brokers connections between SSH clients and SSH servers running inside instance containers,
-	* Authorizes access to CF app instances based on Cloud Controller roles.
+	The SSH Proxy brokers connections between SSH clients and SSH servers running inside instance containers and authorizes access to CF app instances based on Cloud Controller roles.
 
 ###<a id='component-coordination'></a>Service Registration and Component Coordination
 
- * <a id="consul"></a>**Consul**
-	* Provides dynamic service registration and load-balancing via DNS resolution,
-	* Provides a consistent key-value store for maintenance of distributed locks and component presence.
- * <a id="locket"></a> **Locket**
-	* Provides abstractions for locks and service registration that encapsulate interactions with consul.
+ * <a id="consul"></a>**Consul** <br>
+	The Consul provides dynamic service registration and load-balancing via DNS resolution and a consistent key-value store for maintenance of distributed locks and component presence.
+ * <a id="locket"></a> **Locket** <br>
+	The Locket provides abstractions for locks and service registration that encapsulate interactions with consul.
 
 
 
