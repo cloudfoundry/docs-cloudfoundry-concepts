@@ -75,7 +75,7 @@ Diego Brain distribute Tasks and LRPs to Diego Cells and correct discrepancies b
 
 * <a id='auctioneer'></a> **Auctioneer** <br>
 	* Holds auctions for Tasks and LRP instances.
-	* Distributes work using the [auction algorithm](/concepts/diego/diego-auction.html). Auction communication goes over HTTPS and is between the Auctioneer and the Cell Reps.
+	* Distributes work using the [auction algorithm](/concepts/diego/diego-auction.html). Auction communication goes over HTTPS and is between the Auctioneer and the Cell Reps. For more about the auction algorithm, see [How the Diego Auction Allocates Jobs](diego-auction.html).
 	* Maintains a lock in Consul/Locket to ensure only one auctioneer handles auctions at a time.
 
 ###<a id='database-vms'></a>Database VMs ###
