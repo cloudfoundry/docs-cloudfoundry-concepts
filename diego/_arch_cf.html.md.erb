@@ -24,8 +24,8 @@ When you push an application to Cloud Foundry using Diego, Cloud Foundry will go
  1. Diego sends real-time streaming logs for Tasks and LRPs to the [Loggregator](https://github.com/cloudfoundry/loggregator) system. Diego also registers its running LRP instances with the [Gorouter](https://github.com/cloudfoundry/gorouter) to route external web traffic to them.
 
 <% if vars.product_name == 'CF' %>
-<%= image_tag("../images/diego/diego-flow.png") %>
-View a larger version of this image at the [Diego Design Notes repo](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html).
+<a target="_blank" href="../images/diego/diego-flow.png"><%= image_tag("../images/diego/diego-flow.png") %></a>
+Click the image for a larger representation.
 <% else %>
 <%= image_tag("../images/diego/diego-flow-other.png") %>
 <% end %>
