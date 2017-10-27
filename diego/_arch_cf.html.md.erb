@@ -15,7 +15,7 @@ You can submit, update, and retrieve the desired number of Tasks and LRPs using 
 ##<a id='diagram'></a> Diego Flow and Architecture Diagram
 
 
-When you push an application to Cloud Foundry using Diego, Cloud Foundry will go through the following process:
+When you push an app to Cloud Foundry using Diego, Cloud Foundry performs the following process:
 
  1. The Cloud Controller sends a request to the BBS API.
  1. The BBS contacts the Auctioneer to create an Auction based on the desired resources for that LRP. The Rep accepts the Auction request.
@@ -49,21 +49,21 @@ The following summarizes the roles and responsibilities of various components de
 Diego Cell directly manages and maintains Tasks and LRPs with the following components:
 
  * <a id='rep'></a>**Rep** <br>
-	* Maintains a presence record for the Cell in the Consul/Locket.
-	* Participates in auctions to accept new Tasks and LRP instances.
-	* Runs Tasks and LRPs by creating a container and then running actions in it.
-	* Reacts to container events.
-	* Periodically ensures its set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Cell.
- 	* Manages container allocations against resource constraints on the Cell, such as memory and disk space.
-	* Streams stdout and stderr from container processes to the metron-agent running on the Cell, which in turn forwards to the Loggregator system.
-	* Periodically collects container metrics and emits them to Loggregator.
+	* Maintains a presence record for the Cell in the Consul/Locket
+	* Participates in auctions to accept new Tasks and LRP instances
+	* Runs Tasks and LRPs by creating a container and then running actions in it
+	* Reacts to container events
+	* Periodically ensures its set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Cell
+ 	* Manages container allocations against resource constraints on the Cell, such as memory and disk space
+	* Streams stdout and stderr from container processes to the metron-agent running on the Cell, which in turn forwards to the Loggregator system
+	* Periodically collects container metrics and emits them to Loggregator
 
  * <a id="garden"></a> **Garden** <br>
-	* Provides a platform-independent server and client to manage garden containers.
-	* Defines the API for creating and managing containers. 
+	* Provides a platform-independent server and client to manage garden containers
+	* Defines the API for creating and managing containers
 
  * <a id='metron-agent'></a> **Metron Agent** <br>
- 	* Forwards application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
+ 	* Forwards app logs, errors, and app and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component.
 
  * <a id="route-emitter"></a> **Route-Emitter**
 	* Monitors DesiredLRP and ActualLRP states.
@@ -71,52 +71,52 @@ Diego Cell directly manages and maintains Tasks and LRPs with the following comp
 
 ###<a id='brain-components'></a> Diego Brain
 
-Diego Brain distribute Tasks and LRPs to Diego Cells and correct discrepancies between Actual and Desired counts to ensure fault-tolerance and long-term consistency. The Diego Brain consists of the Auctioneer:
+Diego Brain distribute Tasks and LRPs to Diego Cells and corrects discrepancies between Actual and Desired counts to ensure fault-tolerance and long-term consistency. The Diego Brain consists of the Auctioneer.
 
 * <a id='auctioneer'></a> **Auctioneer** <br>
-	* Holds auctions for Tasks and LRP instances.
-	* Distributes work using the auction algorithm. Auction communication goes over HTTPS and is between the Auctioneer and the Cell Reps. For more about the auction algorithm, see [How the Diego Auction Allocates Jobs](diego-auction.html).
-	* Maintains a lock in Consul/Locket to ensure only one auctioneer handles auctions at a time.
+	* Holds auctions for Tasks and LRP instances
+	* Distributes work using the auction algorithm. Auction communication is sent between the Auctioneer and the Cell Reps over HTTPS. For more information about the auction algorithm, see [How the Diego Auction Allocates Jobs](diego-auction.html).
+	* Maintains a lock in Consul/Locket to ensure only one auctioneer handles auctions at a time
 
 ###<a id='database-vms'></a>Database VMs ###
 
  * <a id='bbs'></a>**BBS** <br>
-  * Maintains a real-time representation of the state of the Diego cluster, including all desired LRPs, running LRP instances, and in-flight Tasks.
-  * Maintains a lock in Consul/Locket to ensure that only one BBS is active.
-  * Periodically compares DesiredLRPs and ActualLRPs and takes action to enforce the desired state.
-  * Resends auction requests for Tasks that have been pending for too long and completion callbacks for Tasks that have remained completed for too long.
+  * Maintains a real-time representation of the state of the Diego cluster, including all desired LRPs, running LRP instances, and in-flight Tasks
+  * Maintains a lock in Consul/Locket to ensure that only one BBS is active
+  * Periodically compares DesiredLRPs and ActualLRPs and takes action to enforce the desired state
+  * Resends auction requests for Tasks that have been pending for too long and completion callbacks for Tasks that have remained completed for too long
 
  * <a id='mysql'></a>**MySQL** <br>
-  * MySQL provides a consistent key-value data store to Diego.
+  * MySQL provides a consistent key-value data store to Diego
 
 ###<a id='access-vms'></a>Access VMs
 
  * <a id='file-server'></a>**File Server** <br>
- 	* Serves static assets used in the app lifecycle.
+ 	* Serves static assets used in the app lifecycle
 
  * <a id='ssh-proxy'></a>**SSH Proxy** <br>
-	* Brokers connections between SSH clients and SSH servers.
-	* Runs inside instance containers and authorizes access to CF app instances based on Cloud Controller roles.
+	* Brokers connections between SSH clients and SSH servers
+	* Runs inside instance containers and authorizes access to app instances based on Cloud Controller roles
 
 ##<a id='bridge-components'></a>Cloud Controller Bridge Components
 
 The Cloud Controller Bridge (CC-Bridge) components translate app-specific requests from the Cloud Controller to the BBS. These components include the following:
 
 * <a id='stager'></a> **Stager**
- * Translates staging requests from the Cloud Controller into generic Tasks and LRPs.
- * Sends a response to the Cloud Controller when a Task completes.
+ * Translates staging requests from the Cloud Controller into generic Tasks and LRPs
+ * Sends a response to the Cloud Controller when a Task completes
 
 * <a id='cc-uploader'></a>**CC-Uploader**
- * Mediates uploads from the Rep to the Cloud Controller.
- * Translates simple HTTP POST requests from the Rep into complex multipart-form uploads for the Cloud Controller.
+ * Mediates uploads from the Rep to the Cloud Controller
+ * Translates simple HTTP POST requests from the Rep into complex multipart-form uploads for the Cloud Controller
 
 
 * <a id='nsync'></a>**Nsync Bulker**
- * Periodically polls the Cloud Controller for each app to ensure that Diego maintains accurate DesiredLRPs counts.
+ * Periodically polls the Cloud Controller for each app to ensure that Diego maintains accurate DesiredLRPs counts
 
 * **Nsync Listener**
- * Listens for app requests.
- * Updates and creates the DesiredLRPs count and updates DesiredLRPs through the BBS.
+ * Listens for app requests
+ * Updates and creates the DesiredLRPs count and updates DesiredLRPs through the BBS
 
 
 * <a id='tps'></a> **TPS Listener**
@@ -128,26 +128,22 @@ The Cloud Controller Bridge (CC-Bridge) components translate app-specific reques
 
 ### <a id='service-registration'></a>Service Registration and Component Coordination
  * <a id="consul"></a>**Consul** <br>
-	* Provides dynamic service registration and load-balancing via DNS resolution.
-	* Provides a consistent key-value store for maintenance of distributed locks and component presence.
+	* Provides dynamic service registration and load-balancing via DNS resolution
+	* Provides a consistent key-value store for maintenance of distributed locks and component presence
  * <a id="locket"></a> **Locket** <br>
-	* Provides abstractions for locks and service registration.
-	* Relies on a SQL backend for persistence.
-	* Lives in the Database VM.
+	* Provides abstractions for locks and service registration
+	* Relies on a SQL backend for persistence
+	* Lives in the Database VM
 
 ###<a id="app-lifecycle"></a>App Lifecycle Binaries
 
-The following three platform-specific binaries deploy applications and govern their lifecycle:
+The following three platform-specific binaries deploy apps and govern their lifecycle:
 
-* **The Builder**, which stages a CF application. The [CC-Bridge](#bridge-components) runs the Builder as a Task on every staging request. The Builder performs static analysis on the application code and does any necessary pre-processing before the application is first run.
-* **The Launcher**, which runs a CF application. The CC-Bridge sets the Launcher as the Action on the DesiredLRP for the application. The Launcher executes the start command with the correct system context, including working directory and environment variables.
-* **The Healthcheck**, which performs a status check on running CF application from inside the container. 
+* **The Builder**, which stages an app. The [CC-Bridge](#bridge-components) runs the Builder as a Task on every staging request. The Builder performs static analysis on the app code and performs any necessary pre-processing before the app is first run.
+* **The Launcher**, which runs an app. The CC-Bridge sets the Launcher as the Action on the DesiredLRP for the app. The Launcher executes the start command with the correct system context, including working directory and environment variables.
+* **The Healthcheck**, which performs a status check on running apps from inside the container. 
 
 #### Current Implementations
 
 * [Buildpack App Lifecycle](https://github.com/cloudfoundry-incubator/buildpack-app-lifecycle) implements the Cloud Foundry buildpack-based deployment strategy.
 * [Docker App Lifecycle](https://github.com/cloudfoundry-incubator/docker-app-lifecycle) implements a Docker deployment strategy.
-
-
-
-

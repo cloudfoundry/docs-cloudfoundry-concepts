@@ -12,8 +12,7 @@ This topic includes the following sections:
 
 ##<a id='diagram'></a> Architecture Diagram
 
-Cloud Foundry uses the Diego architecture to manage application containers. Diego components assume application scheduling and
-management responsibility from the Cloud Controller. 
+Cloud Foundry uses the Diego architecture to manage application containers. Diego components assume application scheduling and management responsibility from the Cloud Controller. 
 
 Refer to the following diagram and descriptions for information about the way Diego handles application requests.
 
@@ -69,7 +68,7 @@ The Diego Brain consists of the following:
 
 - Maintains a lock in the BBS that restricts auctions to one Auctioneer at a time
 
-Refer to the [Auctioneer repo](https://github.com/cloudfoundry-incubator/auctioneer) on GitHub for more information.
+Refer to the [Auctioneer repository](https://github.com/cloudfoundry-incubator/auctioneer) on GitHub for more information.
 
 ####<a id='cc-uploader'></a>CC-Uploader ####
 
@@ -77,19 +76,19 @@ Refer to the [Auctioneer repo](https://github.com/cloudfoundry-incubator/auction
 
 - Translates simple HTTP POST requests from the Executor into complex multipart-form uploads for the Cloud Controller
 
-Refer to the [CC-Uploader repo](https://github.com/cloudfoundry-incubator/cc-uploader) on GitHub for more information.
+Refer to the [CC-Uploader repository](https://github.com/cloudfoundry-incubator/cc-uploader) on GitHub for more information.
 
 ####<a id='file-server'></a>File Server ####
 
 - This "blobstore" serves static assets that can include general-purpose [App Lifecycle binaries](#app-lifecycles) and application-specific droplets and build artifacts.
 
-Refer to the [File Server repo](https://github.com/cloudfoundry-incubator/file-server) on GitHub for more information.
+Refer to the [File Server repository](https://github.com/cloudfoundry-incubator/file-server) on GitHub for more information.
 
 ####<a id='ssh-proxy'></a>SSH Proxy ####
 
 - Brokers connections between SSH clients and SSH servers running inside instance containers
 
-Refer to [Understanding Application SSH](./ssh-conceptual.html), [Application SSH Overview](../../devguide/deploy-apps/app-ssh-overview.html), or the [Diego SSH Github repo](https://github.com/cloudfoundry-incubator/diego-ssh) for more information.
+Refer to [Understanding Application SSH](./ssh-conceptual.html), [Application SSH Overview](../../devguide/deploy-apps/app-ssh-overview.html), or the [Diego SSH Github repository](https://github.com/cloudfoundry-incubator/diego-ssh) for more information.
 
 ####<a id='tps'></a>TPS Watcher ####
 
@@ -97,7 +96,7 @@ Refer to [Understanding Application SSH](./ssh-conceptual.html), [Application SS
 
 - Monitors `ActualLRP` activity for crashes and reports them the Cloud Controller
 
-Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub for more information.
+Refer to the [TPS repository](https://github.com/cloudfoundry-incubator/tps) on GitHub for more information.
 
 ####<a id='tcp'></a>TCP Route-emitter ####
 
@@ -111,7 +110,7 @@ Refer to the [TPS repo](https://github.com/cloudfoundry-incubator/tps) on GitHub
 
 - Periodically polls the Cloud Controller for each app to ensure that Diego maintains accurate `DesiredLRPs` counts
 
-Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on GitHub for more information.
+Refer to the [Nsync repository](https://github.com/cloudfoundry-incubator/nsync) on GitHub for more information.
 
 #### <a id='stager'></a>Stager ####
 
@@ -119,7 +118,7 @@ Refer to the [Nsync repo](https://github.com/cloudfoundry-incubator/nsync) on Gi
 
 - Sends a response to the Cloud Controller when a Task completes
 
-Refer to the [Stager repo](https://github.com/cloudfoundry-incubator/stager) on GitHub for more information.
+Refer to the [Stager repository](https://github.com/cloudfoundry-incubator/stager) on GitHub for more information.
 
 ###<a id='cell-components'></a>Diego Cell ###
 
@@ -145,7 +144,7 @@ The Diego Cell consists of the following:
 
 - Runs Tasks and LRPs by asking the in-process Executor to create a container and `RunAction` recipes
 
-Refer to the [Rep repo](https://github.com/cloudfoundry-incubator/rep) on GitHub for more information.
+Refer to the [Rep repository](https://github.com/cloudfoundry-incubator/rep) on GitHub for more information.
 
 ####<a id='executor'></a>Executor ####
 
@@ -155,7 +154,7 @@ Refer to the [Rep repo](https://github.com/cloudfoundry-incubator/rep) on GitHub
 
 - Streams `STDOUT` and `STDERR` to the Metron agent running on the Cell
 
-Refer to the [Executor repo](https://github.com/cloudfoundry-incubator/executor) on GitHub for more information.
+Refer to the [Executor repository](https://github.com/cloudfoundry-incubator/executor) on GitHub for more information.
 
 ####<a id='garden'></a>Garden ####
 
