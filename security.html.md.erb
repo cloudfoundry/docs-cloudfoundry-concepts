@@ -38,7 +38,7 @@ BOSH includes the following functionality for security:
 
 * Communicates with the VMs it launches over NATS. Because NATS cannot be accessed from outside Cloud Foundry, this ensures that published messages can only originate from a component within your deployment.
 
-* Provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with BOSH.
+* Provides an audit trail through the `bosh tasks --all` and `bosh tasks --recent=VALUE` commands. `bosh tasks --all` returns a table that shows all BOSH actions taken by an operator or other running processes. `bosh tasks --recent=VALUE` returns a table of recent tasks, with `VALUE` being the number of recent tasks you want to view.
 
 * Allows you to set up individual login accounts for each operator. BOSH operators have root access.
 
