@@ -1,0 +1,20 @@
+The Gorouter and HAProxy trust the Diego intermediate certificate authority. 
+This trust enables mutual authentication between applications that are running on Cloud Foundry. 
+Operators should configure the Gorouter with the root certificate authority by editing their `manifest.yml` to include the `router.ca_certs` manifest property within the Gorouter job.
+
+<pre>
+---
+properties:
+router:
+	ca_certs:
+		-----BEGIN CERTIFICATE-----
+	    (contents of certificate)
+	    -----END CERTIFICATE-----
+</pre>
+
+The `router.ca_certs` property is a string of concatenated certificate authorities in PEM format. 
+
+This manifest property is used to sign the Diego intermediate certificate authority. 
+In turn, the Diego intermediate certificate authority is used to sign the instance credentials.
+These signatures enable applications to present instance credentials in a TLS handshake with the Gorouter when being authenticated by other applications.  
+
