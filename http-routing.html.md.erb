@@ -66,6 +66,11 @@ Perform the following steps to make an HTTP request to a specific app instance:
 	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
 
 ### <a id="forward-client-cert"></a> Forward Client Certificate to Applications
+<% if vars.product_name == 'CF' %>
+<%= partial 'router_haproxy_diego_oss' %>
+<% else %>
+<%= partial '_router_haproxy_diego' %>
+<% end %>
 Applications that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the Gorouter.
 
 The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
