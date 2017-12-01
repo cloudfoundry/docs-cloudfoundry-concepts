@@ -78,18 +78,18 @@ The following sections describe supported deployment configurations.
 <% if vars.product_name == 'CF' %> 
 <%= partial 'oss_xfcc_loadbalancer' %> 
 <% else %> 
-<%= partial '../appsman-services/xfcc_loadbalancer' %> 
+<%= partial '../console/xfcc_loadbalancer' %> 
 <% end %>
 
 <% if vars.product_name == 'CF' %>
 <% else %> 
-<%= partial '../appsman-services/xfcc_haproxy' %> 
+<%= partial '../console/xfcc_haproxy' %> 
 <% end %>
 
 <% if vars.product_name == 'CF' %> 
 <%= partial 'oss_xfcc_router' %> 
 <% else %> 
-<%= partial '../appsman-services/xfcc_router' %> 
+<%= partial '../console/xfcc_router' %> 
 <% end %>
 
 ## <a id="tls"></a>SSL/TLS Termination ##
