@@ -1,6 +1,0 @@
-#### <a id="remove-tls"></a> Remove XFCC Headers
-
-If the Gorouter is the first component to terminate TLS, such that it receives the certificate of the originating client in the mutual TLS handshake, the operator should configure the Gorouter to strip any instances of the X-Forwarded-Client-Cert header from client requests, set the value of the header to the base64 encoded bytes of the client certificate received in the mutual handshake, and forward the header upstream to the application.
-
-This mode is enabled when <code>router.forwarded\_client\_cert: sanitize\_set</code>.
-

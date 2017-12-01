@@ -1,5 +1,0 @@
-#### <a id='forward-mtls'></a>Forward XFCC Headers for mTLS Connections
-
-The operator can configure the Gorouter to forward the XFCC header only when the front-end connection with the client is mutual TLS. This is a more secure version of the default behavior. As such, this configuration can be used when a downstream component receives the originating client certificate in a mutual TLS handshake and puts the certificate in the `X-Forwarded-Client-Cert` HTTP header. The client certificate received by the Gorouter in the mutual TLS handshake will not be forwarded in the header.
-
-This mode is enabled when <code>router.forwarded\_client\_cert: forward</code>.
