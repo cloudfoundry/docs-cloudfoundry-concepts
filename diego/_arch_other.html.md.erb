@@ -18,7 +18,7 @@ Refer to the following diagram and descriptions for information about the way Di
 
 <% if vars.product_name == 'CF' %>
 <%= image_tag("../images/diego/diego-flow.png") %>
-View a larger version of this image at the [Diego Design Notes repo](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html).
+View a larger version of this image at the [Diego Design Notes repository](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html).
 <% else %>
 <%= image_tag("../images/diego/diego-flow-other.png") %>
 <a href="../images/diego/diego-flow-other.png" target="_blank">View a larger version of this image.</a>
@@ -168,7 +168,7 @@ See the [Garden](../architecture/garden.html) topic or the [Garden repository](h
 
 Forwards application logs, errors, and application and Diego metrics to the [Loggregator](https://github.com/cloudfoundry/loggregator) Doppler component
 
-Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron) on GitHub for more information.
+Refer to the [Metron repository](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron) on GitHub for more information.
 
 ####<a id='route-emitter'></a>Route-emitter ###
 
@@ -176,7 +176,7 @@ Refer to the [Metron repo](https://github.com/cloudfoundry/loggregator/tree/deve
 
 - Periodically emits the entire routing table to the Cloud Foundry Gorouter
 
-Refer to the [Route-Emitter repo](https://github.com/cloudfoundry-incubator/route-emitter) on GitHub for more information.
+Refer to the [Route-Emitter repository](https://github.com/cloudfoundry-incubator/route-emitter) on GitHub for more information.
 
 ###<a id='database-vms'></a>Database VMs ###
 
@@ -196,7 +196,7 @@ The Diego database VM consists of the following components.
 
 - Monitors for potentially missed messages, resending them if necessary
 
-Refer to the [Bulletin Board System repo](https://github.com/cloudfoundry-incubator/bbs) on GitHub for more information.
+Refer to the [Bulletin Board System repository](https://github.com/cloudfoundry-incubator/bbs) on GitHub for more information.
 
 ####<a id='mysql'></a>MySQL ####
 
@@ -211,13 +211,13 @@ Refer to the [Bulletin Board System repo](https://github.com/cloudfoundry-incuba
 
 The Diego BBS stores data in MySQL. Diego uses the Go MySQL Driver to communicate with MySQL.
 
-Refer to the [Go MySQL Driver repo](https://github.com/go-sql-driver/mysql) on GitHub for more information.
+Refer to the [Go MySQL Driver repository](https://github.com/go-sql-driver/mysql) on GitHub for more information.
 
 ###<a id='consul'></a>Consul ###
 
 - Provides dynamic service registration and load balancing through DNS resolution
 
-Refer to the [Consul repo](https://github.com/hashicorp/consul) on GitHub for more information.
+Refer to the [Consul repository](https://github.com/hashicorp/consul) on GitHub for more information.
 
 ##<a id='platform-specific'></a>Platform-specific Components ##
 
