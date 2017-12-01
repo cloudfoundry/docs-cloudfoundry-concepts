@@ -67,11 +67,6 @@ Perform the following steps to make an HTTP request to a specific app instance:
 
 ### <a id="forward-client-cert"></a> Forward Client Certificate to Applications
 
-<% if vars.product_name == 'CF' %>
-<%= partial 'router_haproxy_diego_oss' %>
-<% else %>
-<%= partial '_router_haproxy_diego' %>
-<% end %>
 Applications that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the Gorouter.
 
 The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
@@ -81,19 +76,18 @@ If you configure the load balancer to terminate TLS and set the XFCC header from
 The following sections describe supported deployment configurations.
 
 <% if vars.product_name == 'CF' %> 
-<%= partial 'oss_xfcc_always_forward' %> 
+<%= partial 'oss_xfcc_loadbalancer' %> 
 <% else %> 
 <%= partial '../customizing/xfcc_loadbalancer' %> 
 <% end %>
 
 <% if vars.product_name == 'CF' %>
-<%= partial 'oss_xfcc_forward'  %>
 <% else %> 
 <%= partial '../customizing/xfcc_haproxy' %> 
 <% end %>
 
 <% if vars.product_name == 'CF' %> 
-<%= partial 'oss_xfcc_sanitize_set' %> 
+<%= partial 'oss_xfcc_router' %> 
 <% else %> 
 <%= partial '../customizing/xfcc_router' %> 
 <% end %>
