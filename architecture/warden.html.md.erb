@@ -130,8 +130,8 @@ of the <code>cpu.shares</code> of all the cgroups that are currently doing CPU a
 
 In Cloud Foundry, cgroup shares range from 2/10 (for DEA/Diego, respectively) to
 1024, with 1024 being the default. The actual amount of shares a cgroup gets
-can be read from the <code>cpu.shares</code> of the c-group configurations
-pseudo-file-system located in the host VM under the <code>/tmp/warden/cgroups</code> folder.
+can be read from the <code>cpu.shares</code> file of the cgroup configurations
+pseudo-file-system available in the container at <code>/sys/fs/cgroup/cpu</code>.
 
 The actual amount of shares given to a cgroup depends on the amount of memory
 the application declares to need in the manifest. Both Diego and DEA apps scale
@@ -167,7 +167,7 @@ takes place:
 If P3 finishes or becomes idle then P2 can consume all the CPU as another
 recalculation will be performed.
 
-<p class="note"><strong>Summary:</strong> The cgroup shares are the minimum guaranteed CPU share that the process can get.</p>
+<p class="note"><strong>Summary:</strong> The cgroup shares are the minimum guaranteed CPU share that the process can get. This limitation becomes effective only when processes on the same host compete for resources.</p>
 
 ### <a id='linux'></a>Networking ###
 
