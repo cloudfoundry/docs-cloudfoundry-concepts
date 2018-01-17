@@ -93,10 +93,7 @@ This means that these containers are given their own Process ID (PID),
 namespace, network namespace, and mount namespace.
 
 Resource control is managed through the use of Linux Control Groups
-([cgroups](http://kernel.org/doc/Documentation/cgroups/cgroups.txt)).
-Every container is placed in its own control group, where it is configured to
-use a fair share of CPU compared to other containers and their relative CPU
-share, and the maximum amount of memory it may use.
+(cgroups). Every container is placed in its own control group, where it is configured to use a fair share of CPU compared to other containers and their relative CPU share, and the maximum amount of memory it may use.
 
 ### <a id='cpu'></a>CPU ###
 
