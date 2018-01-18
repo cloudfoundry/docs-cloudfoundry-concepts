@@ -36,7 +36,7 @@ To meet demand, multiple host VMs run duplicate instances of the same app. This 
 
 ###<a id='organize'></a> How CF Organizes Users and Workspaces
 
-CF manages user accounts through two [User Authentication and Authorization](./architecture/uaa.html) (UAA) servers, which support access control as [OAuth2](http://oauth.io) services and can store user information internally, or connect to external user stores through LDAP or SAML.
+CF manages user accounts through two [User Authentication and Authorization](./architecture/uaa.html) (UAA) servers, which support access control as [OAuth2](https://oauth.io) services and can store user information internally, or connect to external user stores through LDAP or SAML.
 
 One UAA server grants access to BOSH, and holds accounts for the CF operators who deploy runtimes, services, and other software onto the BOSH layer directly. The other UAA server controls access to the Cloud Controller, and determines who can tell it to do what. The Cloud Controller UAA defines different user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run CF commands. The Cloud Controller UAA also scopes the roles to separate, compartmentalized [Orgs and Spaces](./roles.html) within an installation, to manage and track use.
 
