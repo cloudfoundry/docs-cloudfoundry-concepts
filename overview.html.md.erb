@@ -14,7 +14,7 @@ Not all cloud platforms are created equal. Some have limited language and framew
 
 Cloud Foundry is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps. Developers can deploy their apps to Cloud Foundry using their existing tools and with zero modification to their code.
 
-##<a id=''></a> How Cloud Foundry Works
+##<a id='how-it-works'></a> How Cloud Foundry Works
 
 To flexibly serve and scale apps online, Cloud Foundry has subsystems that perform specialized functions. Here's how some of these main subsystems work.
 
@@ -36,7 +36,7 @@ To meet demand, multiple host VMs run duplicate instances of the same app. This 
 
 ###<a id='organize'></a> How CF Organizes Users and Workspaces
 
-To organize user access to the cloud and to control resource use, a cloud operator defines [Orgs and Spaces](./roles.html) within an installation and assigns Roles such as admin, developer, or auditor to each user. The [User Authentication and Authorization](./architecture/uaa.html) (UAA) server supports access control as an [OAuth2](http://oauth.io) service, and can store user information internally or connect to external user stores through LDAP or SAML.
+To organize user access to the cloud and to control resource use, a cloud operator defines [Orgs and Spaces](./roles.html) within an installation and assigns Roles such as admin, developer, or auditor to each user. The [User Authentication and Authorization](./architecture/uaa.html) (UAA) server supports access control as an [OAuth2](https://oauth.io) service, and can store user information internally or connect to external user stores through LDAP or SAML.
 
 ###<a id='resources'></a> Where CF Stores Resources
 
