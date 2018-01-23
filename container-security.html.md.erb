@@ -30,6 +30,78 @@ Resource control is managed using Linux control groups. Associating each contain
     <strong>Note</strong>: CF does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
 </p>
 
+### <a id='cpu'></a>CPU ###
+
+Each container is placed in its own cgroup. Cgroups make each container use a 
+fair share of CPU relative to the other containers. This prevents
+oversubscription on the host VM where one or more containers hog the CPU and
+leave no computing resources to the others.
+
+The way cgroups allocate CPU time is based on shares. CPU shares do not work
+as direct percentages of total CPU usage. Instead, a share is relative in
+a given time window to the shares held by the other containers. The total
+amount of CPU that can be overall divided among the cgroups is what is left
+by other processes that may run in the host VM.
+
+Generally, cgroups offers two possibilities for limiting the CPU usage:
+<em>CPU affinity</em> and <em>CPU bandwidth</em>, the latter of which is used
+in Cloud Foundry.
+
+* CPU affinity: It consists of binding a cgroup to certain CPU cores. The actual amount of CPU cycles that can be consumed by the cgroup is thus limited to what is available on the bound CPU cores.
+
+* CPU bandwidth: Sets the weight of a cgroup with the process scheduler. The process scheduler divides the available CPU cycles among cgroups depending on the shares held by each cgroup, relative to the shares held by the others.  
+For example, consider two cgroups, one holding two shares and one holding four. Assuming the process scheduler gets to administer 60 CPU cycles, the first cgroup with two shares will get one third of those available CPU cycles, as it holds one third of the overall shares. Similarly, the second cgroup will get 40 cycles, as it holds two thirds of the collective shares.
+
+The calculation of the CPU usage based on the percentage of the total CPU power
+available is quite sophisticated and is performed regularly as the CPU demands
+of the various containers fluctuates. Specifically, the percentage of CPU cycles
+a cgroup gets can be calculated by dividing the <code>cpu.shares</code> it holds by the sum
+of the <code>cpu.shares</code> of all the cgroups that are currently doing CPU activity:
+
+<code>process\_cpu\_share\_percent = cpu.shares / sum\_cpu\_shares * 100</code>
+
+In Cloud Foundry, cgroup shares range from 2/10 (for DEA/Diego, respectively) to
+1024, with 1024 being the default. The actual amount of shares a cgroup gets
+can be read from the <code>cpu.shares</code> file of the cgroup configurations
+pseudo-file-system available in the container at <code>/sys/fs/cgroup/cpu</code>.
+
+The actual amount of shares given to a cgroup depends on the amount of memory
+the application declares to need in the manifest. Both Diego and DEA apps scale
+the number of allocated shares linearly with the amount of memory, with an app
+instance requesting 8G of memory getting the upper limit of 1024 shares. 
+
+<code>process\_cpu.shares = max( (application\_memory / 8), 1024)</code>
+
+The next example helps to illustrate this better. Consider three processes. P1, P2 and P3, which are assigned <code>cpu.shares</code> of 5, 20 and 30, respectively.
+
+P1 is active, while P2 and P3 require no CPU. Hence, P1 may use the whole CPU.
+When P2 joins in and is doing some actual work (e.g. a request comes in),
+the CPU share between P1 and P2 will be calculated as follows:
+
+* P1 -> 5 / (5+20) = 0.2 = 20%
+* P2 -> 20 / (5+20) = 0.8 = 80%
+* P3 (idle)
+
+At some point process P3 joins in as well. Then the distribution will
+be recalculated again:
+
+* P1 -> 5 / (5+20+30) = 0.0909 = ~9%
+* P2 -> 20 / (5+20+30) = 0.363 = ~36%
+* P3 -> 30 / (5+20+30) = 0.545 = ~55%
+
+Should P1 become idle, the following recalculation between P2 and P3
+takes place:
+
+* P1 (idle)
+* P2 -> 20 / (20+30) = 0.4 = 40%
+* P3 -> 30 / (20+30) = 0.6 = 60%
+
+If P3 finishes or becomes idle then P2 can consume all the CPU as another
+recalculation will be performed.
+
+<p class="note"><strong>Summary:</strong> The cgroup shares are the minimum guaranteed CPU share that the process can get. This limitation becomes effective only when processes on the same host compete for resources.</p>
+
+
 ## <a id='networking'></a>Inbound and Outbound Traffic from CF
 
 ### <a id='net-overview'></a>Networking Overview ###
