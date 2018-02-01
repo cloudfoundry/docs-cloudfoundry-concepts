@@ -79,7 +79,7 @@ Formerly, CF ran apps based on Docker images in unprivileged containers, and bui
 
 CF mitigates against container breakout and denial of service attacks in the following ways:
 
-* CF uses the full set of [Linux namespaces](http://manpages.ubuntu.com/manpages/wily/man7/namespaces.7.html) (IPC, Network, Mount, PID, User, UTS) to provide isolation between containers running on the same host. The User namespace is not used for privileged containers.
+* CF uses the full set of [Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) (IPC, Network, Mount, PID, User, UTS) to provide isolation between containers running on the same host. The User namespace is not used for privileged containers.
 * In unprivileged containers, CF maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an app from inheriting UID/GID 0 on the host if it breaks out of the container. 
 	* CF uses the same UID/GID for all containers.
     * CF maps all UIDs except UID 0 to themselves. CF maps UID 0 inside the container namespace to `MAX_UID-1` outside of the container namespace.
@@ -113,7 +113,7 @@ CF mitigates against container breakout and denial of service attacks in the fol
 	* `/dev/zero`
 	* `/dev/tap`
 	* `/dev/tun`
-* CF drops the following [Linux capabilities](http://manpages.ubuntu.com/manpages/wily/man7/capabilities.7.html) for all container processes. Every dropped capability limits what actions the root user can perform.
+* CF drops the following [Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) for all container processes. Every dropped capability limits the actions the root user can perform.
 	* `CAP_DAC_READ_SEARCH`
 	* `CAP_LINUX_IMMUTABLE`
 	* `CAP_NET_BROADCAST`
