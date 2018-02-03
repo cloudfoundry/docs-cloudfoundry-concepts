@@ -5,29 +5,7 @@ owner: Routing
 
 <strong><%= modified_date %></strong>
 
-This topic describes features of HTTP routing handled by the Gorouter, which is part of the Cloud Foundry (CF) [routing](./architecture/#routing) tier.
-
-## <a id="sessions"></a>Session Affinity ##
-
-The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
-
-With sticky sessions, when multiple instances of an app are running on CF, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
-
-* To support sticky sessions, configure your app to return a `JSESSIONID` cookie in responses. The app generates a `JSESSIONID` as a long hash in the following format:
-<pre class="terminal">
-1A530637289A03B07199A44E8D531427
-</pre>
-
-* If an app returns a `JSESSIONID` cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the app instance based on its GUID in the following format:
-<pre class="terminal">
-323f211e-fea3-4161-9bd1-615392327913
-</pre>
-
-* On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies.
-
-The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The `JSESSIONID` cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
-
-<p class="note"><strong>Note</strong>: CF does not persist or replicate HTTP session data across app instances. If an app instance crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared by all instances of an app, store session data in a CF marketplace service that offers data persistence.</p>
+This topic describes how the Gorouter, the main component in Cloud Foundry's [routing](./architecture/#routing) tier, routes HTTP traffic within Cloud Foundry (CF).
 
 ## <a id="http-headers"></a>HTTP Headers ##
 
@@ -92,25 +70,86 @@ The following sections describe supported deployment configurations.
 <%= partial '../console/xfcc_router' %> 
 <% end %>
 
-## <a id="tls"></a>SSL/TLS Termination ##
+## <a id="tls"></a>SSL/TLS Termination
 
 Depending on your needs, you can configure your deployment to terminate SSL/TLS at the Gorouter, at the Gorouter and the load balancer, or at the load balancer only. <%= vars.http_routing %>
 
-## <a id="transparent"></a>Transparent Retries ##
+## <a id="apps"></a>Routing to App Instances
+
+As CF manages and balances apps, routes to app instances change. To keep the Gorouter's routing tables current, a route emitter on each Diego cell updates NATS with new app instance locations.
+
+Upstream, the Gorouter subscribes to the NATS updates to keep its route information current. But network partitions can cause the Gorouter's routing tables to fall out of sync.
+
+You can configure the Gorouter to direct traffic to app instances and preserve routing integrity in two modes:
+
+  * [**App Instance Validation over TLS**](#app-valid-tls): The router uses TLS to send traffic securely and validate the app instance identity when routing.
+  * [**Stale Route Pruning**](#stale): The router sends traffic unsecured, and NATS prunes routes to app instances that it loses contact with for 120 seconds.
+
+The first mode is newer, and it works with Linux cells but not Windows cells. This first mode improves route availability and security. Both modes are described below.
+
+### <a id="app-valid-tls"></a>App Instance Validation over TLS
+
+In this mode, each app instance has its own GUID and identity credentials for TLS verification. The Gorouter's routing table includes a GUID for each app instance, along with its address and port.
+
+Before routing traffic to an app instance, the Gorouter checks whether the instance is still running at the address and port in its routing table. It initiates a TLS handshake with an [Envoy](https://www.envoyproxy.io/) proxy that runs in each app container and listens to port 8443.
+
+If the Envoy proxy confirms the correct GUID identity of the app instance, the Gorouter sends the traffic to port 8080 of the container. If the instance identities do not match, Gorouter prunes its routing table record and re-tries with another instance of the app.
+
+<p class="note"><strong>Note</strong>: The Gorouter can validate and communicate with Linux cells in this mode, but not Windows cells.</p>
+
+#### <a id="app-valid-tls-config"></a>Configure App Instance Validation with TLS
+
+<% if vars.product_name == 'CF' %> 
+<%= partial 'router_app_tls_oss' %> 
+<% else %> 
+<%= partial '../console/router_app_tls_pcf' %> 
+<% end %>
+
+### <a id="stale"></a> Stale Route Pruning
+
+In this mode, the Gorouter's routing table lists a name, address, and port for each app instance, but it does not include GUIDs for the app instances.
+
+Route Emitters on each cell "heartbeat" to the NATS by sending the cell's route information every 20 seconds. Upstream, the Gorouter subscribes to the NATS to receive route updates. If the Gorouter does not receive an app instance route for 120 seconds, it prunes the route from its table.
+
+This pruning method was developed before app instances had identity credentials.
+
+## <a id="transparent"></a>Transparent Retries
 
 If the Gorouter cannot establish a TCP connection with a selected application instance, the Gorouter considers the instance ineligible for requests for 30 seconds, and the Gorouter transparently attempts to connect to another application instance. Once the Gorouter has established a TCP connection with an application instance, the Gorouter forwards the HTTP request.
 
 See the <a href="#round-robin">Round-Robin Load Balancing</a> section below for more information about how the Gorouter forwards requests to application instances.
 
-## <a id="round-robin"></a>Round-Robin Load Balancing ##
+## <a id="round-robin"></a>Round-Robin Load Balancing
 
 The Gorouter uses the round-robin algorithm for load balancing incoming requests to application instances. The Gorouter maintains a dynamically updated list of application instances for each route, and forwards each request for a given route to the next application instance in the list.
 
-## <a id="sockets"></a>WebSockets ##
+## <a id="sockets"></a>WebSockets
 
 WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
 
-## <a id="keepalive"></a>Keepalive Connections ##
+## <a id="sessions"></a>Session Affinity
+
+The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
+
+With sticky sessions, when multiple instances of an app are running on CF, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
+
+* To support sticky sessions, configure your app to return a `JSESSIONID` cookie in responses. The app generates a `JSESSIONID` as a long hash in the following format:
+<pre class="terminal">
+1A530637289A03B07199A44E8D531427
+</pre>
+
+* If an app returns a `JSESSIONID` cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the app instance based on its GUID in the following format:
+<pre class="terminal">
+323f211e-fea3-4161-9bd1-615392327913
+</pre>
+
+* On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies.
+
+The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The `JSESSIONID` cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
+
+<p class="note"><strong>Note</strong>: CF does not persist or replicate HTTP session data across app instances. If an app instance crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared by all instances of an app, store session data in a CF marketplace service that offers data persistence.</p>
+
+## <a id="keepalive"></a>Keepalive Connections
 
 ### From Frontend Clients
 

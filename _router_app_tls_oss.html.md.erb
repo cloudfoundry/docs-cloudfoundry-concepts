@@ -1,0 +1,13 @@
+To enable the Gorouter to validate app instances and send them secure traffic using TLS, do the following:
+
+* Enable app instance identity credentials by setting properties in the Diego cell:
+  - `diego.executor.instance_identity_ca_cert`: the signing certificate for the Diego cell rep
+  - `diego.executor.instance_identity_key`: the private key for the Diego cell rep
+  You can set these properties by using the [ops file](https://github.com/cloudfoundry/cf-deployment/blob/master/operations/experimental/enable-instance-identity-credentials.yml) for enabling instance identity credentials with your [cf-deployment](https://github.com/cloudfoundry/cf-deployment) manifest.  
+  You may have already enabled app instance identity credentials to let app instances retrieve binding credentials from runtime CredHub. . See the [Instance Identity notes in diego-release](https://github.com/cloudfoundry/diego-release/blob/v1.32.0/docs/instance-identity.md) for details.
+
+* Enable the Gorouter to validate app containers and prune invalid routes by setting properties in the Gorouter and Diego cell:
+  - `router.backends.enable_tls: true` 
+  - `router.ca_certs`: a list that includes the certificate for the Certification Authority (CA) that issued the signing certificate for the Diego cell rep
+  - `containers.proxy.enabled: true` to enable the per container proxy (Envoy)  
+  You can set these properties by using the [ops file](https://github.com/cloudfoundry/cf-deployment/blob/v1.6.0/operations/experimental/enable-routing-integrity.yml) for enabling TLS to app container with your [cf-deployment](https://github.com/cloudfoundry/cf-deployment) manifest. 
