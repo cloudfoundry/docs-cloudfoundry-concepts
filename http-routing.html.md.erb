@@ -97,7 +97,7 @@ You can configure the Gorouter to direct traffic to app instances and preserve r
   </tr>
 </table>
 
-The first mode is newer, and it works with Linux cells but not Windows cells. This first mode improves route availability and security. Both modes are described below.
+The first mode is newer, and it improves route availability and security. Both modes are described below.
 
 ### <a id="app-valid-tls"></a>Validate App Instances over TLS
 
@@ -137,17 +137,19 @@ The following table explains how the Gorouter uses app instance validation to ke
 
 In this mode, the Gorouter's routing table lists a name, address, and port for each app instance, but it does not include GUIDs for the app instances.
 
-Route Emitters on each cell "heartbeat" to the NATS by sending the cell's route information every 20 seconds. Upstream, the Gorouter subscribes to the NATS to receive route updates. If the Gorouter does not receive an app instance route for 120 seconds, it prunes the route from its table.
+Route Emitters on each cell "heartbeat" to the NATS by sending the cell's route information every 20 seconds. Upstream, the Gorouter subscribes to the NATS to receive route updates. If the Gorouter does not receive an app instance route for the time-to-live (TTL) interval, which defaults to 120 seconds, it prunes the route from its table.
 
 This pruning method was developed before app instances had identity credentials.
 
 ### <a id="multiple"></a>Gorouter Behavior with Multiple Runtimes
 
-The Gorouter can only [validate app instances over TLS](#app-valid-tls) when the Diego cells it routes to support [app instance identity credentials](../security/networking/tls-info.html#container-creds) and TLS. If they do not, the Gorouter falls back to [pruning stale routes](#stale) and sending unsecured traffic to those cells.
+The Gorouter can [validate app instances over TLS](#app-valid-tls) only with Diego cells that support [app instance identity credentials](../security/networking/tls-info.html#container-creds) and TLS.
 
-PCF operators can configure Linux cells but not Windows cells to validate app instances over TLS. For apps running in Windows cells, the Gorouter sends unsecured traffic and prunes stale routes.
+If cells do not support TLS validation and routing, the Gorouter falls back to [pruning stale routes](#stale) and sending unsecured traffic to the cells.
 
-Diego cell configuration comes from the runtime or isolation segment that the cells run in run in. This means that the Gorouter can prune routes and send traffic in different ways to different runtimes. For example, it can use TLS to validate app instances within a PAS deployment, but send unsecured traffic and prune stale routes to apps in an [../adminguide/isolation-segments.html] or running on Windows cells.
+PCF operators can configure Linux cells, but not Windows cells, to support TLS validation and routing. With Windows apps, the Gorouter sends unsecured traffic and prunes stale routes.
+
+Diego cells are configured through the runtime or isolation segment that they run in, so Gorouter behavior can differ for cells in different runtimes. For example, the Gorouter can use TLS to validate app instances within a PAS deployment, but send unsecured traffic and prune stale routes to apps running in an [Isolation Segment](../adminguide/isolation-segments.html) or on Windows cells.
 
 ## <a id="transparent"></a>Transparent Retries
 
