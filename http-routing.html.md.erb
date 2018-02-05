@@ -80,22 +80,50 @@ As CF manages and balances apps, routes to app instances change. To keep the Gor
 
 Upstream, the Gorouter subscribes to the NATS updates to keep its route information current. But network partitions can cause the Gorouter's routing tables to fall out of sync.
 
-You can configure the Gorouter to direct traffic to app instances and preserve routing integrity in two modes:
+You can configure the Gorouter to direct traffic to app instances and preserve routing integrity in two modes, by validating app instances over TLS, or by pruning stale routes:
 
-  * [**App Instance Validation over TLS**](#app-valid-tls): The router uses TLS to send traffic securely and validate the app instance identity when routing.
-  * [**Stale Route Pruning**](#stale): The router sends traffic unsecured, and NATS prunes routes to app instances that it loses contact with for 120 seconds.
+<table border="1" id="gorouter-modes" class="nice">
+  <tr><th>Gorouter mode:</th>
+  	<th>How Gorouter sends traffic to Diego cells:</th>
+  	<th>How Gorouter updates its routing table:</th>
+  </tr><tr>
+  	<td><a href="#app-valid-tls"><strong>Validate App Instances over TLS</strong></a></td>
+  	<td>Secured, over TLS</td>
+  	<td>Prunes routes with instance identity mismatch; see <a href="#when-tls-prune">Gorouter TLS pruning behavior</a></td>
+  </tr><tr>
+  	<td><a href="#stale"><strong>Prune Stale Routes</strong></a></td>
+  	<td>Unsecured</td>
+  	<td>Prunes routes that do not update for time-to-live (TTL), which defaults to 120 seconds.</td>
+  </tr>
+</table>
 
 The first mode is newer, and it works with Linux cells but not Windows cells. This first mode improves route availability and security. Both modes are described below.
 
-### <a id="app-valid-tls"></a>App Instance Validation over TLS
+### <a id="app-valid-tls"></a>Validate App Instances over TLS
 
 In this mode, each app instance has its own GUID and identity credentials for TLS verification. The Gorouter's routing table includes a GUID for each app instance, along with its address and port.
 
 Before routing traffic to an app instance, the Gorouter checks whether the instance is still running at the address and port in its routing table. It initiates a TLS handshake with an [Envoy](https://www.envoyproxy.io/) proxy that runs in each app container and listens to port 8443.
 
-If the Envoy proxy confirms the correct GUID identity of the app instance, the Gorouter sends the traffic to port 8080 of the container. If the instance identities do not match, Gorouter prunes its routing table record and re-tries with another instance of the app.
+If the Envoy proxy confirms the correct GUID identity of the app instance, the Gorouter sends the traffic to port 8080 of the container. If the instance identities do not match, Gorouter temporarily stops traffic to the container or prunes it from the routing table, and re-tries with another instance of the app.
 
-<p class="note"><strong>Note</strong>: The Gorouter can validate and communicate with Linux cells in this mode, but not Windows cells.</p>
+The following table explains how the Gorouter uses app instance validation to keep its routing table current:
+
+
+<table border="1" id="when-tls-prune" class="nice">
+  <tr><th>Gorouter pruning behavior with TLS instance validation</th>
+  	<th>TLS handshake succeeds and app instance matches routing table</th>
+  	<th>TLS handshake fails; app instance mismatch</th>
+  </tr><tr>
+  	<td>Time to Live (TTL) Expired</td>
+  	<td>Do not prune the route</td>
+  	<td>Prune the route</td>
+  </tr><tr>
+  	<td>TTL Not Expired</td>
+  	<td>Do not prune the route</td>
+  	<td>Do not prune the route, but mark container ineligible for requests for next 30 seconds</td>
+  </tr>
+</table>
 
 #### <a id="app-valid-tls-config"></a>Configure App Instance Validation with TLS
 
@@ -105,13 +133,21 @@ If the Envoy proxy confirms the correct GUID identity of the app instance, the G
 <%= partial '../console/router_app_tls_pcf' %> 
 <% end %>
 
-### <a id="stale"></a> Stale Route Pruning
+### <a id="stale"></a>Prune Stale Routes
 
 In this mode, the Gorouter's routing table lists a name, address, and port for each app instance, but it does not include GUIDs for the app instances.
 
 Route Emitters on each cell "heartbeat" to the NATS by sending the cell's route information every 20 seconds. Upstream, the Gorouter subscribes to the NATS to receive route updates. If the Gorouter does not receive an app instance route for 120 seconds, it prunes the route from its table.
 
 This pruning method was developed before app instances had identity credentials.
+
+### <a id="multiple"></a>Gorouter Behavior with Multiple Runtimes
+
+The Gorouter can only [validate app instances over TLS](#app-valid-tls) when the Diego cells it routes to support [app instance identity credentials](../security/networking/tls-info.html#container-creds) and TLS. If they do not, the Gorouter falls back to [pruning stale routes](#stale) and sending unsecured traffic to those cells.
+
+PCF operators can configure Linux cells but not Windows cells to validate app instances over TLS. For apps running in Windows cells, the Gorouter sends unsecured traffic and prunes stale routes.
+
+Diego cell configuration comes from the runtime or isolation segment that the cells run in run in. This means that the Gorouter can prune routes and send traffic in different ways to different runtimes. For example, it can use TLS to validate app instances within a PAS deployment, but send unsecured traffic and prune stale routes to apps in an [../adminguide/isolation-segments.html] or running on Windows cells.
 
 ## <a id="transparent"></a>Transparent Retries
 
