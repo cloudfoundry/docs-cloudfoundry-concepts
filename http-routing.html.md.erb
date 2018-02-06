@@ -141,6 +141,8 @@ Route Emitters on each cell "heartbeat" to the NATS by sending the cell's route 
 
 This pruning method was developed before app instances had identity credentials.
 
+<% if vars.product_name.include? "CF" %>
+
 ### <a id="multiple"></a>Gorouter Behavior with Multiple Runtimes
 
 The Gorouter can [validate app instances over TLS](#app-valid-tls) only with Diego cells that support [app instance identity credentials](../security/networking/tls-info.html#container-creds) and TLS.
@@ -150,6 +152,8 @@ If cells do not support TLS validation and routing, the Gorouter falls back to [
 PCF operators can configure Linux cells, but not Windows cells, to support TLS validation and routing. With Windows apps, the Gorouter sends unsecured traffic and prunes stale routes.
 
 Diego cells are configured through the runtime or isolation segment that they run in, so Gorouter behavior can differ for cells in different runtimes. For example, the Gorouter can use TLS to validate app instances within a PAS deployment, but send unsecured traffic and prune stale routes to apps running in an [Isolation Segment](../adminguide/isolation-segments.html) or on Windows cells.
+
+<% end %>
 
 ## <a id="transparent"></a>Transparent Retries
 
