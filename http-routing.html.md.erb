@@ -80,18 +80,18 @@ As CF manages and balances apps, routes to app instances change. To keep the Gor
 
 Upstream, the Gorouter subscribes to the NATS updates to keep its route information current. But network partitions can cause the Gorouter's routing tables to fall out of sync.
 
-You can configure the Gorouter to direct traffic to app instances and preserve routing integrity in two modes, by validating app instances over TLS, or by pruning stale routes:
+You can configure the Gorouter to direct traffic to app instances in two modes, with and without TLS enabled to containers:
 
 <table border="1" id="gorouter-modes" class="nice">
   <tr><th>Gorouter mode:</th>
   	<th>How Gorouter sends traffic to Diego cells:</th>
   	<th>How Gorouter updates its routing table:</th>
   </tr><tr>
-  	<td><a href="#app-valid-tls"><strong>Validate App Instances over TLS</strong></a></td>
+  	<td><a href="#with-tls"><strong>With TLS Enabled</strong></a></td>
   	<td>Secured, over TLS</td>
   	<td>Prunes routes with instance identity mismatch; see <a href="#when-tls-prune">Gorouter TLS pruning behavior</a></td>
   </tr><tr>
-  	<td><a href="#stale"><strong>Prune Stale Routes</strong></a></td>
+  	<td><a href="#without-tls"><strong>Without TLS Enabled</strong></a></td>
   	<td>Unsecured</td>
   	<td>Prunes routes that do not update for time-to-live (TTL), which defaults to 120 seconds.</td>
   </tr>
@@ -99,7 +99,7 @@ You can configure the Gorouter to direct traffic to app instances and preserve r
 
 The first mode is newer, and it improves route availability and security. Both modes are described below.
 
-### <a id="app-valid-tls"></a>Validate App Instances over TLS
+### <a id="with-tls"></a>With TLS Enabled
 
 In this mode, each app instance has its own GUID and identity credentials for TLS verification. The Gorouter's routing table includes a GUID for each app instance, along with its address and port.
 
@@ -111,17 +111,17 @@ The following table explains how the Gorouter uses app instance validation to ke
 
 
 <table border="1" id="when-tls-prune" class="nice">
-  <tr><th>Gorouter pruning behavior with TLS instance validation</th>
+  <tr><th>Gorouter pruning behavior with TLS enabled</th>
   	<th>TLS handshake succeeds and app instance matches routing table</th>
   	<th>TLS handshake fails; app instance mismatch</th>
   </tr><tr>
-  	<td>Time to Live (TTL) Expired</td>
+  	<th>Time to Live (TTL) has expired</th>
   	<td>Do not prune the route</td>
-  	<td>Prune the route</td>
+  	<td>Prune the route and re-try with another instance of the app</td>
   </tr><tr>
-  	<td>TTL Not Expired</td>
+  	<th>TTL has not expired</th>
   	<td>Do not prune the route</td>
-  	<td>Do not prune the route, but mark container ineligible for requests for next 30 seconds</td>
+  	<td>Do not prune the route, but mark container ineligible for requests for next 30 seconds and re-try with another instance of the app</td>
   </tr>
 </table>
 
@@ -133,7 +133,7 @@ The following table explains how the Gorouter uses app instance validation to ke
 <%= partial '../console/router_app_tls_pcf' %> 
 <% end %>
 
-### <a id="stale"></a>Prune Stale Routes
+### <a id="without-tls"></a>Without TLS Enabled
 
 In this mode, the Gorouter's routing table lists a name, address, and port for each app instance, but it does not include GUIDs for the app instances.
 
@@ -145,9 +145,9 @@ This pruning method was developed before app instances had identity credentials.
 
 ### <a id="multiple"></a>Gorouter Behavior with Multiple Runtimes
 
-The Gorouter can [validate app instances over TLS](#app-valid-tls) only with Diego cells that support [app instance identity credentials](../security/networking/tls-info.html#container-creds) and TLS.
+The Gorouter can [validate app instances over TLS](#with-tls) only with Diego cells that support [app instance identity credentials](../security/networking/tls-info.html#container-creds) and TLS.
 
-If cells do not support TLS validation and routing, the Gorouter falls back to [pruning stale routes](#stale) and sending unsecured traffic to the cells.
+If cells do not support TLS validation and routing, the Gorouter falls back to its [without TLS mode](#without-tls) pruning routes based on TTL and sending unsecured traffic to the cells.
 
 PCF operators can configure Linux cells, but not Windows cells, to support TLS validation and routing. With Windows apps, the Gorouter sends unsecured traffic and prunes stale routes.
 
