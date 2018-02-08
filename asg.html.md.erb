@@ -62,7 +62,7 @@ subnets, while denying access to any virtual machine (VM) hosting other apps.
 
 For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section of this topic.
 
-### <a id='default-asg'></a>Default ASGs ##
+### <a id='default-asg'></a>Default ASGs
 
 <% if vars.product_name == 'CF' %>
 <%= partial 'default_asg_oss' %>
@@ -116,7 +116,7 @@ You use different commands to apply an ASG to each of the four sets. For more in
 <p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use cf CLI 6.28.0 or later.
 </p>
 
-### <a id='creating-groups'></a>The Structure and Attributes of ASGs ##
+### <a id='creating-groups'></a>The Structure and Attributes of ASGs 
 
 ASG rules are specified as a JSON array of ASG objects. An ASG object has the following attributes:
 
@@ -228,7 +228,7 @@ $ cf create-security-group my-asg ~/workspace/my-asg.json
 After the ASG is created, you must bind it to an ASG set before it takes effect.
 See <a href="#binding-groups">Bind ASGs</a> below.
 
-### <a id='binding-groups'></a>Bind ASGs ##
+### <a id='binding-groups'></a>Bind ASGs 
 
 <p class='note'><strong>Note</strong>: Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
 </p>
@@ -303,7 +303,7 @@ Example:
 $ cf unbind-security-group my-asg my-org my-space --lifecycle staging
 </pre>
 
-### <a id='deleting-groups'></a>Delete ASGs ##
+### <a id='deleting-groups'></a>Delete ASGs 
 
 <p class='note'><strong>Note</strong>: You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.
 </p>
