@@ -17,7 +17,7 @@ HTTP traffic passed from the Gorouter to an app includes the following HTTP head
 
 If your load balancer terminates TLS upstream from the Gorouter, it must append these headers to requests forwarded to the Gorouter. <%= vars.http_routing %>
 
-### <a id="zipkin-headers"></a> Zipkin Tracing in HTTP Headers
+### <a id="zipkin-headers"></a> HTTP Headers for Zipkin Tracing
 
 Zipkin is a tracing system that enables app developers to troubleshoot failures or latency issues. Zipkin provides the ability to trace requests and responses across distributed systems. See [Zipkin.io](http://zipkin.io/) for more information.
 
@@ -30,7 +30,7 @@ Developers can then add Zipkin trace IDs to their application logging in order t
 
 After adding Zipkin HTTP headers to app logs, developers can use `cf logs myapp` to correlate the trace and span ids logged by the Gorouter with the trace ids logged by their app. To correlate trace IDs for a request through multiple apps, each app must forward appropriate values for the headers with requests to other applications.
 
-### <a id="app-instance-routing"></a> App Instance Routing in HTTP Headers
+### <a id="app-instance-routing"></a> HTTP Headers for App Instance Routing
 
 Developers who want to obtain debug data for a specific instance of an app can use the HTTP header `X-CF-APP-INSTANCE` to make a request to an app instance.
 
@@ -53,104 +53,129 @@ If you configure the load balancer to terminate TLS and set the XFCC header from
 
 The following sections describe supported deployment configurations.
 
-<% if vars.product_name == 'CF' %> 
-<%= partial 'oss_xfcc_loadbalancer' %> 
-<% else %> 
-<%= partial '../console/xfcc_loadbalancer' %> 
+<% if vars.product_name == 'CF' %>
+<%= partial 'oss_xfcc_loadbalancer' %>
+<% else %>
+<%= partial '../console/xfcc_loadbalancer' %>
 <% end %>
 
 <% if vars.product_name == 'CF' %>
-<% else %> 
-<%= partial '../console/xfcc_haproxy' %> 
+<% else %>
+<%= partial '../console/xfcc_haproxy' %>
 <% end %>
 
-<% if vars.product_name == 'CF' %> 
-<%= partial 'oss_xfcc_router' %> 
-<% else %> 
-<%= partial '../console/xfcc_router' %> 
+<% if vars.product_name == 'CF' %>
+<%= partial 'oss_xfcc_router' %>
+<% else %>
+<%= partial '../console/xfcc_router' %>
 <% end %>
 
-## <a id="tls"></a>SSL/TLS Termination
+## <a id="tls-downstream"></a>SSL/TLS Termination for Clients
 
 Depending on your needs, you can configure your deployment to terminate SSL/TLS at the Gorouter, at the Gorouter and the load balancer, or at the load balancer only. <%= vars.http_routing %>
 
-## <a id="apps"></a>Routing to App Instances
+## <a id="tls-upstream"></a>TLS to Applications and other Upstream Services
 
-As CF manages and balances apps, routes to app instances change. To keep the Gorouter's routing tables current, a route emitter on each Diego cell updates NATS with new app instance locations.
+Gorouter supports TLS and mutual authentication to upstream destinations, including application instances, platform services, and any other routable endpoint.
 
-Upstream, the Gorouter subscribes to the NATS updates to keep its route information current. But network partitions can cause the Gorouter's routing tables to fall out of sync.
+This is enabled by configuring the following manifest properties:
 
-You can configure the Gorouter to direct traffic to app instances in two modes, with or without TLS enabled to containers:
+- `router.backends.enable_tls: true`
+- `router.ca_certs`: must include the CA certificate used to sign any backend for which Gorouter should initiate a TLS handshake.
+
+Gorouter will not automatically initiate TLS handshakes with upstream destinations. Each component responsible for registering routes via NATS may optionally specify that Gorouter should initiate a TLS handshake to the backend before forwarding HTTP requests. This is done by including the following additional fields in the `route.register` message to NATS:
+
+- `"tls_port"`: The port to which Gorouter should open a connection and initiate a TLS handshake
+- `"server_cert_domain_san"`: An identifier for the backend which Gorouter expects to find in the Domain Subject Alternative Name of the certificate presented by the backend. This is used to prevent misrouting for backends whose IPs and/or ports are expected to change; see [Consistency](#consistency).
+
+To enable TLS from Gorouter to application instances, some additional configuration is required in addition to the properties above; see [Configuring Consistency with TLS](#consistency-with-tls).
+
+Authors of routable components can configure [Route Registrar](https://github.com/cloudfoundry/route-registrar) to send the necessary NATS message automatically.
+
+Optionally, operators may enable support in Gorouter for mutual authentication with backends by configuring it with a certificate and private key using the following manifest properties:
+
+- `router.backends.cert_chain`
+- `router.backends.private_key`
+
+Gorouter will present the certificate if requested by the backend during the TLS handshake.
+
+## <a id="consistency"></a>Preventing Misrouting
+
+As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route Emitter on each Diego cell sends a periodic update to all Gorouters via NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. Gorouter tracks a time-to-live (TTL) for each route to backend mapping; this TTL defaults to 120 seconds and is reset when Gorouter receives an updated registration message.
+
+Network partitions or NATS failures can cause Gorouter's routing table to fall out of sync, as CF will continue to recreate containers across hosts to keep applications running. This can lead to routing of requests to incorrect destinations.
+
+Gorouter can be configured to deal with this problem in two ways:
 
 <table border="1" id="gorouter-modes" class="nice">
-  <tr><th>Gorouter mode:</th>
-  	<th>How Gorouter sends traffic to Diego cells:</th>
-  	<th>How Gorouter updates its routing table:</th>
+  <tr><th>Consistency mode</th>
+  	<th>Security of traffic between Gorouter and Containers</th>
+  	<th>Gorouter Route Pruning</th>
   </tr><tr>
-  	<td><a href="#with-tls"><strong>With TLS Enabled</strong></a></td>
-  	<td>Secured, over TLS</td>
-  	<td>Prunes routes with instance identity mismatch; see <a href="#when-tls-prune">Gorouter TLS pruning behavior</a></td>
+  	<td><a href="#consistency-with-tls"><strong>With TLS Enabled</strong></a></td>
+  	<td>Encrypted via TLS</td>
+  	<td>Routes are pruned on failure of TLS handshake only. See <a href="#when-tls-prune">Gorouter TLS pruning behavior.</a></td>
   </tr><tr>
   	<td><a href="#without-tls"><strong>Without TLS Enabled</strong></a></td>
-  	<td>Unsecured</td>
-  	<td>Prunes routes that do not update for time-to-live (TTL), which defaults to 120 seconds.</td>
+  	<td>Plain text</td>
+  	<td>Routes are pruned on TTL expiry</td>
   </tr>
 </table>
 
-The first mode is newer and improves route availability and security. Both modes are described below.
+Both modes are described below.
 
-### <a id="with-tls"></a>With TLS Enabled
+### <a id="consistency-with-tls"></a>With TLS Enabled
 
-In this mode, each app instance has its own GUID and identity credentials for TLS verification. The Gorouter's routing table includes a GUID for each app instance, along with its address and port.
+This mode is newer and has the following benefits:
 
-Before routing traffic to an app instance, the Gorouter checks whether the instance is still running at the address and port in its routing table. It initiates a TLS handshake with an [Envoy](https://www.envoyproxy.io/) proxy that runs in each app container and listens on port 8443.
+- Improved availability for applications by keeping routes in Gorouters routing table when TTL expires
+- Increased guarantees against misrouting, by validating the identity of backends before forwarding requests
+- Increased security by encrypting data in flight from Gorouter to backends
 
-If the Envoy proxy confirms the correct GUID identity of the app instance, Gorouter sends the traffic to port 8080 of the container. If the instance identities do not match, the Gorouter temporarily stops traffic to the container by pruning it from the routing table, and re-tries with another instance of the app.
+In this mode, the Diego Route Emitters send a modified route registration message to NATS that includes a unique identifier for the app instance, as well instructions to use TLS when communicating with the instance. See [TLS to Upstream Applications and Platform Services](#tls-upstream) for details.
 
-The following table explains how the Gorouter uses app instance validation to keep its routing table current:
+Before forwarding traffic to an app instance, Gorouter will initiate a TLS handshake with an [Envoy proxy](https://www.envoyproxy.io/) that runs in each app container and listens on port 8443. In the TLS handshake, the Envoy proxy will present a certificate generated by Diego for each container which uniquely identifies the container using the same app instance identifier sent by the Router Emitter, configured in the certificate as a domain Subject Alternative Name (SAN).
+
+If Gorouter confirms that the app instance identifier in the certificate matches the one received in the route registration message, Gorouter will forward the HTTP request over the TLS session. If the instance identifiers do not match, the Gorouter will transparently retry another instance of the app. If the TTL of the failed backend has expired, Gorouter will prune the route to it from its routing table.
+
+The following table explains how the Gorouter will keep routes in its routing table after TTL has expired, as long as TLS handshakes continue to succeed.
 
 <table border="1" id="when-tls-prune" class="nice">
-  <tr><th>Gorouter pruning behavior with TLS enabled</th>
-  	<th>TLS handshake succeeds and app instance matches routing table</th>
-  	<th>TLS handshake fails; app instance mismatch</th>
+  <tr><th>&nbsp;</th>
+  	<th>TLS handshake succeeds AND app instance identity valid</th>
+  	<th>TLS handshake fails OR app instance identity invalid</th>
   </tr><tr>
-  	<th>Time to Live (TTL) has expired</th>
-  	<td>Do not prune the route</td>
-  	<td>Prune the route and re-try with another instance of the app</td>
+  	<th>TTL has expired</th>
+  	<td>Request forwarded</td>
+  	<td>Route is pruned; transparent retry of another instance</td>
   </tr><tr>
   	<th>TTL has not expired</th>
-  	<td>Do not prune the route</td>
-  	<td>Do not prune the route, but mark container ineligible for requests for next 30 seconds and re-try with another instance of the app</td>
+  	<td>Request forwarded</td>
+  	<td>Route is not pruned but ineligible for requests for 30 seconds;  transparent retry of another instance</td>
   </tr>
 </table>
 
-#### <a id="app-valid-tls-config"></a>Configure App Instance Validation with TLS
+#### <a id="app-valid-tls-config"></a>Configure Validation of App Instance Identity with TLS
 
-<% if vars.product_name == 'CF' %> 
-<%= partial 'router_app_tls_oss' %> 
-<% else %> 
-<%= partial '../console/router_app_tls_pcf' %> 
+<% if vars.product_name == 'CF' %>
+<%= partial 'router_app_tls_oss' %>
+<% else %>
+<%= partial '../console/router_app_tls_pcf' %>
 <% end %>
 
-### <a id="without-tls"></a>Without TLS Enabled
+### <a id="consistency-without-tls"></a>Without TLS Enabled
 
-In this mode, the Gorouter's routing table lists a name, address, and port for each app instance, but it does not include GUIDs for the app instances.
+In this mode, Diego Route Emitters on each cell send route registration messages that include instructions for Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route will be pruned from Gorouter's routing table. See [TLS to Upstream Applications and Platform Services](#tls-upstream) for details.
 
-Route Emitters on each cell issue a "heartbeat" to NATS by sending the cell's route information every 20 seconds. Upstream, the Gorouter subscribes to NATS to receive route updates. If the Gorouter does not receive an app instance route for the time-to-live (TTL) interval, which defaults to 120 seconds, it prunes the route from its table.
-
-This pruning method was developed before app instances had identity credentials.
+This pruning method was developed before the alternative was available.
 
 <% if vars.product_name.include? "CF" %>
 
-### <a id="multiple"></a>Gorouter Behavior with Multiple Runtimes
+### <a id="config-by-instance-group"></a>Consistency Behavior can vary by Instance Group
 
-The Gorouter can [validate app instances over TLS](#with-tls) only with Diego cells that support [app instance identity credentials](../security/networking/tls-info.html#container-creds) and TLS.
+The Gorouter can [validate app instance identity using TLS](#consistency-with-tls) only when Diego Cells are configured appropriately. As this configuration is scoped to an instance group of Cells, some Cells (such as in an [Isolation Segment](../adminguide/isolation-segments.html)) can be configured to receive TLS requests from Gorouter and others plain text [without validation of instance identity](#without-tls). This behavior can be
 
-If cells do not support TLS validation and routing, the Gorouter falls back to its [without TLS mode](#without-tls) of pruning routes based on TTL and sending unsecured traffic to the cells.
-
-PCF operators can configure Linux cells, but not Windows cells, to support TLS validation and routing. With Windows apps, the Gorouter sends unsecured traffic and prunes stale routes.
-
-Diego cells are configured through the runtime or isolation segment that they run in, so Gorouter behavior can differ for cells in different runtimes. For example, the Gorouter can use TLS to validate app instances within a PAS deployment, but send unsecured traffic and prune stale routes to apps running in an [Isolation Segment](../adminguide/isolation-segments.html) or on Windows cells.
+Validation of app instance identity using TLS is supported for Linux Cells only. Support for Windows Cells may be added later. Gorouter forwards requests to Windows apps over plain text and prunes based on route TTL.
 
 <% end %>
 
