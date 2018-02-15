@@ -123,6 +123,27 @@ If traffic and its direction is not explicitly allowed, it is denied. For exampl
 
 ![Post Container-to-Container Networking](./images/post-c2c.png)
 
+##<a id="policies"></a> Policies
+
+Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances.
+The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
+
+The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly 
+without going through the Gorouter, a load balancer, or a firewall. 
+Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. 
+These policies apply immediately without having to restart the app. 
+
+##<a id='service-discovery'></a> App Service Discovery (Experimental)
+
+The <%= vars.product_full %> platform supports DNS-based service discovery that lets apps find each others' internal addresses. For example, a front-end app instance can use the service discovery mechanism to establish communications with a back-end app instance.
+
+Container-to-Container app service discovery does not provide client-side load balancing or circuit-breaking, and it does not apply to `cf marketplace` services or require [application binding](..//devguide/services/application-binding.html). It just lets apps publish service endpoints to each other, unbrokered and unmediated.
+
+##<a id="alt-stack"></a> Alternative Network Stacks
+
+The BOSH release that contains the Container-to-Container Networking feature is composed of a 
+pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
+
 ##<a id="c2cvsasg"></a> Container-to-Container Networking versus ASGs
 
 Both application security groups (ASGs) and Container-to-Container Networking policies affect traffic from app instances.
@@ -160,18 +181,3 @@ The following table highlights differences between ASGs and Container-to-Contain
    <td>Immediately</td>
   </tr>
 </table>
-
-##<a id="policies"></a> Policies
-
-Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances.
-The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
-
-The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly 
-without going through the Gorouter, a load balancer, or a firewall. 
-Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. 
-These policies apply immediately without having to restart the app. 
-
-##<a id="alt-stack"></a> Alternative Network Stacks
-
-The BOSH release that contains the Container-to-Container Networking feature is composed of a 
-pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
