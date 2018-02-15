@@ -20,45 +20,47 @@ owner: Security
 
 <strong><%= modified_date %></strong>
 
-_This page assumes you are using cf CLI v6.4 or later._
-
-## <a id='introduction'></a>Introduction ##
-
 This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool. 
 <%= vars.asg_first_time %>
 
-###<a id="defn"></a>Application Security Groups
+## <a id='introduction'></a>About Application Security Groups
 
 Application Security Groups (ASGs) are a collections of egress rules that
 specify the protocols, ports, and IP address ranges where app or task instances 
 send traffic.
-Because ASGs define **allow** rules, their order of evaluation is unimportant
+
+ASGs define **allow** rules, and their order of evaluation is unimportant
 when multiple ASGs apply to the same space or deployment.
 The platform sets up rules to filter and log outbound network traffic from app and task instances.
 ASGs apply to both buildpack-based and Docker-based apps and tasks.
 
-When apps or tasks begin staging, they need traffic rules permissive enough to
-allow them to pull resources from the network.
-After an app or task is running, the traffic rules can be more restrictive and
-secure.
-To distinguish between these two security requirements, administrators can
-define one ASG for app and task staging, and another for app and task runtime.
+### Staging and Running ASGs
 
-To provide granular control when securing a deployment, an administrator can
-assign ASGs to apply to all app and task instances for the entire deployment,
-or assign ASGs to spaces to apply only to apps and tasks in a particular space.
+Administrators can define a `staging` ASG for app and task staging, and a `running` ASG for app and task runtime.
+
+When apps or tasks begin staging, they require traffic rules permissive enough to allow them to pull resources from the network.
+A running app or task no longer needs to pull traffic rules can be more restrictive and secure.
+To distinguish between these two security requirements, administrators can define a `staging` ASG for app and task staging with more permissive rules, and a `running` ASG for app and task runtime with less permissive rules.
+
+### Platform-wide and Space-scoped ASGs
+
+To provide granular control when securing a deployment, administrator can
+assign platform-wide ASGs that apply to all app and task instances for the entire deployment, or space-scoped ASGs that apply only to apps and tasks in a particular space.
+
+In environments with both platform-wide and space-specific ASGs, combine the ASGs for a particular space with the platform ASGs to determine the rules for that space.
+
+### Simplifying ASGs with a Services Subnet
 
 ASGs can be complicated to configure correctly, especially when the specific IP
 addresses listed in a group change.
-To simplify securing a deployment while still permitting apps reach external
+
+To simplify securing a deployment while still allowing apps reach external
 services, operators can deploy the services into a subnet that is separate from
-their Cloud Foundry deployment.
-Then the operators can create ASGs for the apps that whitelist those service
-subnets, while denying access to any virtual machine (VM) hosting other apps.
+their Cloud Foundry deployment, then create ASGs for the apps that whitelist those service subnets, while denying access to any virtual machine (VM) hosting other apps.
 
 For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section of this topic.
 
-### <a id='default-asg'></a>Default ASGs 
+### <a id='default-asg'></a>Default ASGs
 
 <% if vars.product_name == 'CF' %>
 <%= partial 'default_asg_oss' %>
@@ -76,6 +78,8 @@ Currently, four ASG sets exist in Cloud Foundry:
 + Platform-wide running ASG set, also called "default-running"
 + Space-scoped staging ASG set
 + Space-scoped running ASG set
+
+In environments with both platform-wide and space-specific ASG sets, combine the ASG sets for a particular space with the platform ASG sets to determine the rules for that space.
 
 The following table indicates the differences between the four sets.
 
@@ -109,9 +113,10 @@ dependencies.
 
 You use different commands to apply an ASG to each of the four sets. For more information, see the [Procedures](#procedures) section of this topic.
 
-<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use the Cloud Controller (CC) API. The cf CLI <code>cf bind-security-group</code> command supports space-scoped running ASGs, but not space-scoped staging ASGs.</p>
+<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use the Cloud Controller (CC) API. The cf CLI <code>cf bind-security-group</code> command supports space-scoped running ASGs, but not space-scoped staging ASGs.
+</p>
 
-### <a id='creating-groups'></a>The Structure and Attributes of ASGs ##
+### <a id='creating-groups'></a>The Structure and Attributes of ASGs 
 
 ASG rules are specified as a JSON array of ASG objects. An ASG object has the following attributes:
 
@@ -223,9 +228,10 @@ $ cf create-security-group my-asg ~/workspace/my-asg.json
 After the ASG is created, you must bind it to an ASG set before it takes effect.
 See <a href="#binding-groups">Bind ASGs</a> below.
 
-### <a id='binding-groups'></a>Bind ASGs ##
+### <a id='binding-groups'></a>Bind ASGs 
 
-<p class='note'><strong>Note</strong>: Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+<p class='note'><strong>Note</strong>: Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
+</p>
 
 To apply an ASG, you must first bind it to an ASG set.
 
@@ -251,6 +257,7 @@ $ cf bind-security-group my-asg my-org my-space
 </pre>
 
 To bind an ASG to a space-scoped staging ASG set, run the following Cloud Controller (CC) API commands:
+
 <pre>
 GET /v2/security\_groups/:guid/staging\_spaces
 PUT /v2/spaces/:guid/staging\_security\_groups/:security\_group\_guid data
@@ -302,16 +309,17 @@ Example:
 $ cf unbind-running-security-group my-asg
 </pre>
 
-To unbind an ASG from a specific space, run `cf unbind-security-group SECURITY-GROUP ORG SPACE`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to unbind the ASG set.
+To unbind an ASG from a specific space, run `cf unbind-security-group SECURITY-GROUP ORG SPACE`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to unbind the ASG set. 
 
 Example:
 <pre class="terminal">
 $ cf unbind-security-group my-asg my-org my-space
 </pre>
 
-### <a id='deleting-groups'></a>Delete ASGs ##
+### <a id='deleting-groups'></a>Delete ASGs 
 
-<p class='note'><strong>Note</strong>: You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.</p>
+<p class='note'><strong>Note</strong>: You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.
+</p>
 
 To delete an ASG, run `cf delete-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
@@ -364,7 +372,8 @@ to integrate with services available on public networks.
 Example app dependencies include public Maven repositories, NPM, RubyGems, and 
 Docker registries.
 
-<p class='note'><strong>Note</strong>: You should exclude IaaS metadata endpoints, such as <code>169.254.169.254</code>, because the metadata endpoint can expose sensitive environment information to untrusted apps. The <code>public_networks</code> example below accounts for this recommendation.</p>
+<p class='note'><strong>Note</strong>: You should exclude IaaS metadata endpoints, such as <code>169.254.169.254</code>, because the metadata endpoint can expose sensitive environment information to untrusted apps. The <code>public_networks</code> example below accounts for this recommendation.
+</p>
 
 Example `public_networks` ASG:
 
@@ -401,7 +410,8 @@ messaging servers, directory servers, and file servers. Configure appropriate
 private network ASGs as appropriate. You may find it helpful to use a naming
 convention with `private_networks` as part of the ASG name, such as `private_networks_databases`.
 
-<p class='note'><strong>Note</strong>: You should exclude any private networks and IP addresses that app and task instances should not have access to. </p>
+<p class='note'><strong>Note</strong>: You should exclude any private networks and IP addresses that app and task instances should not have access to.
+</p>
 
 Example `private_networks` ASG:
 
@@ -441,7 +451,7 @@ that you want to disallow traffic to, as well as the addresses that you want to 
 Based on these disallow/allow (exclude/include) lists that you provide as
 input, the ASG Creator formulates a JSON file of allow rules.
 
-In turn, the JSON file is the input for the `cf bind-security-group ` command
+In turn, the JSON file is the input for the `cf create-security-group` command
 that creates an ASG.
 
 You can download the latest release of the ASG Creator from the Cloud Foundry incubator repository on Github:  [https://github.com/cloudfoundry-incubator/asg-creator/releases/latest](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest)
