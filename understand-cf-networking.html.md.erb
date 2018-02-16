@@ -133,11 +133,15 @@ without going through the Gorouter, a load balancer, or a firewall.
 Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. 
 These policies apply immediately without having to restart the app. 
 
+<% if vars.product_name != 'PWS' %>
+
 ##<a id='service-discovery'></a> App Service Discovery (Experimental)
 
-The <%= vars.product_full %> platform supports DNS-based service discovery that lets apps find each others' internal addresses. For example, a front-end app instance can use the service discovery mechanism to establish communications with a back-end app instance.
+The <%= vars.product_full %> platform supports DNS-based service discovery that lets apps find each others' internal addresses. For example, a front-end app instance can use the service discovery mechanism to establish communications with a back-end app instance. See the [Developer Guide](../devguide/deploy-apps/cf-networking.html#discovery) for how to set up and use app service discovery.
 
-Container-to-Container app service discovery does not provide client-side load balancing or circuit-breaking, and it does not apply to `cf marketplace` services or require [application binding](..//devguide/services/application-binding.html). It just lets apps publish service endpoints to each other, unbrokered and unmediated.
+Container-to-Container app service discovery does not provide client-side load balancing or circuit-breaking, and it does not apply to `cf marketplace` services or require [application binding](../devguide/services/application-binding.html). It just lets apps publish service endpoints to each other, unbrokered and unmediated.
+
+<% end %>
 
 ##<a id="alt-stack"></a> Alternative Network Stacks
 
