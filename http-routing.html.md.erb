@@ -15,7 +15,7 @@ HTTP traffic passed from the Gorouter to an app includes the following HTTP head
 
 * `X-Forwarded-For` gives the IP address of the client originating the request.
 
-If your load balancer terminates TLS upstream from the Gorouter, it must append these headers to requests forwarded to the Gorouter. <%= vars.http_routing %>
+If your load balancer terminates TLS on the client side of the Gorouter, it must append these headers to requests forwarded to the Gorouter. <%= vars.http_routing %>
 
 ### <a id="zipkin-headers"></a> HTTP Headers for Zipkin Tracing
 
@@ -47,7 +47,7 @@ Perform the following steps to make an HTTP request to a specific app instance:
 
 Applications that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the Gorouter.
 
-The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the downstream component has not allowed the header to be tampered with.
+The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the back-end component has not allowed the header to be tampered with.
 
 If you configure the load balancer to terminate TLS and set the XFCC header from the received client certificate, then you must also configure the load balancer to strip this header if it is present in client requests. This configuration is required to prevent spoofing of the client certificate.
 
@@ -70,42 +70,42 @@ The following sections describe supported deployment configurations.
 <%= partial '../console/xfcc_router' %>
 <% end %>
 
-## <a id="tls-downstream"></a>SSL/TLS Termination for Clients
+## <a id="client-side-tls"></a>Client-Side TLS
 
-Depending on your needs, you can configure your deployment to terminate SSL/TLS at the Gorouter, at the Gorouter and the load balancer, or at the load balancer only. <%= vars.http_routing %>
+Depending on your needs, you can configure your deployment to terminate TLS at the Gorouter, at the Gorouter and the load balancer, or at the load balancer only. <%= vars.http_routing %>
 
-## <a id="tls-upstream"></a>TLS to Applications and other Upstream Services
+## <a id="tls-to-back-end"></a>TLS to Apps and Other Back-End Services
 
-Gorouter supports TLS and mutual authentication to upstream destinations, including application instances, platform services, and any other routable endpoint.
+The Gorouter supports TLS and mutual authentication to back-end destinations, including app instances, platform services, and any other routable endpoints.
 
 This is enabled by configuring the following manifest properties:
 
 - `router.backends.enable_tls: true`
-- `router.ca_certs`: must include the CA certificate used to sign any backend for which Gorouter should initiate a TLS handshake.
+- `router.ca_certs`: must include the CA certificate used to sign any back end to which the Gorouter initiates a TLS handshake.
 
-Gorouter will not automatically initiate TLS handshakes with upstream destinations. Each component responsible for registering routes via NATS may optionally specify that Gorouter should initiate a TLS handshake to the backend before forwarding HTTP requests. This is done by including the following additional fields in the `route.register` message to NATS:
+The Gorouter does not automatically initiate TLS handshakes with back-end destinations. To register that the Gorouter must initiate a TLS handshake before forwarding HTTP requests to a component, the component must include the following optional fields in its `route.register` message to NATS:
 
-- `"tls_port"`: The port to which Gorouter should open a connection and initiate a TLS handshake
-- `"server_cert_domain_san"`: An identifier for the backend which Gorouter expects to find in the Domain Subject Alternative Name of the certificate presented by the backend. This is used to prevent misrouting for backends whose IPs and/or ports are expected to change; see [Consistency](#consistency).
+- `"tls_port"`: The port to which the Gorouter should open a connection and initiate a TLS handshake
+- `"server_cert_domain_san"`: An identifier for the back end which the Gorouter expects to find in the Domain Subject Alternative Name of the certificate presented by the back end. This is used to prevent misrouting for back ends whose IPs and/or ports are expected to change; see [Consistency](#consistency).
 
-To enable TLS from Gorouter to application instances, some additional configuration is required in addition to the properties above; see [Configuring Consistency with TLS](#consistency-with-tls).
+To enable TLS from the Gorouter to application instances, some additional configuration is required in addition to the properties above; see [Configuring Consistency with TLS](#consistency-with-tls).
 
 Authors of routable components can configure [Route Registrar](https://github.com/cloudfoundry/route-registrar) to send the necessary NATS message automatically.
 
-Optionally, operators may enable support in Gorouter for mutual authentication with backends by configuring it with a certificate and private key using the following manifest properties:
+To enable mutual authentication between the Gorouter and back ends, operators configure the Gorouter with a certificate and private key using the following manifest properties:
 
 - `router.backends.cert_chain`
 - `router.backends.private_key`
 
-Gorouter will present the certificate if requested by the backend during the TLS handshake.
+Gorouter presents the certificate if requested by the back end during the TLS handshake.
 
 ## <a id="consistency"></a>Preventing Misrouting
 
-As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route Emitter on each Diego cell sends a periodic update to all Gorouters via NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. Gorouter tracks a time-to-live (TTL) for each route to backend mapping; this TTL defaults to 120 seconds and is reset when Gorouter receives an updated registration message.
+As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route Emitter on each Diego cell sends a periodic update to all Gorouters via NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back-end mapping; this TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
 
-Network partitions or NATS failures can cause Gorouter's routing table to fall out of sync, as CF will continue to recreate containers across hosts to keep applications running. This can lead to routing of requests to incorrect destinations.
+Network partitions or NATS failures can cause the Gorouter's routing table to fall out of sync, as CF continues to re-create containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
 
-Gorouter can be configured to deal with this problem in two ways:
+You can configure the Gorouter to deal with this problem in two ways:
 
 <table border="1" id="gorouter-modes" class="nice">
   <tr><th>Consistency mode</th>
@@ -128,17 +128,17 @@ Both modes are described below.
 
 This mode is newer and has the following benefits:
 
-- Improved availability for applications by keeping routes in Gorouters routing table when TTL expires
-- Increased guarantees against misrouting, by validating the identity of backends before forwarding requests
-- Increased security by encrypting data in flight from Gorouter to backends
+- Improved availability for applications by keeping routes in the Gorouters routing table when TTL expires
+- Increased guarantees against misrouting, by validating the identity of back ends before forwarding requests
+- Increased security by encrypting data in flight from the Gorouter to back ends
 
-In this mode, the Diego Route Emitters send a modified route registration message to NATS that includes a unique identifier for the app instance, as well instructions to use TLS when communicating with the instance. See [TLS to Upstream Applications and Platform Services](#tls-upstream) for details.
+In this mode, the Diego Route Emitters send a modified route registration message to NATS that includes a unique identifier for the app instance, as well instructions to use TLS when communicating with the instance. See [TLS to Apps and Other Back-End Services](#tls-back-end) for details.
 
-Before forwarding traffic to an app instance, Gorouter will initiate a TLS handshake with an [Envoy proxy](https://www.envoyproxy.io/) that runs in each app container and listens on port 8443. In the TLS handshake, the Envoy proxy will present a certificate generated by Diego for each container which uniquely identifies the container using the same app instance identifier sent by the Router Emitter, configured in the certificate as a domain Subject Alternative Name (SAN).
+Before forwarding traffic to an app instance, the Gorouter initiates a TLS handshake with an [Envoy proxy](https://www.envoyproxy.io/) that runs in each app container and listens on port 8443. In the TLS handshake, the Envoy proxy presents a certificate generated by Diego for each container which uniquely identifies the container using the same app instance identifier sent by the Router Emitter, configured in the certificate as a domain Subject Alternative Name (SAN).
 
-If Gorouter confirms that the app instance identifier in the certificate matches the one received in the route registration message, Gorouter will forward the HTTP request over the TLS session. If the instance identifiers do not match, the Gorouter will transparently retry another instance of the app. If the TTL of the failed backend has expired, Gorouter will prune the route to it from its routing table.
+If the Gorouter confirms that the app instance identifier in the certificate matches the one received in the route registration message, the Gorouter forwards the HTTP request over the TLS session. If the instance identifiers do not match, the Gorouter transparently retries another instance of the app. If the TTL of the failed back end has expired, Gorouter prunes the route to it from its routing table.
 
-The following table explains how the Gorouter will keep routes in its routing table after TTL has expired, as long as TLS handshakes continue to succeed.
+The following table explains how the Gorouter keeps routes in its routing table after TTL has expired, as long as TLS handshakes continue to succeed.
 
 <table border="1" id="when-tls-prune" class="nice">
   <tr><th>&nbsp;</th>
@@ -165,7 +165,7 @@ The following table explains how the Gorouter will keep routes in its routing ta
 
 ### <a id="consistency-without-tls"></a>Without TLS Enabled
 
-In this mode, Diego Route Emitters on each cell send route registration messages that include instructions for Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route will be pruned from Gorouter's routing table. See [TLS to Upstream Applications and Platform Services](#tls-upstream) for details.
+In this mode, the Diego Route Emitters on each cell send route registration messages that include instructions for the Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned from the Gorouter's routing table. See [TLS to Apps and Other Back-End Services](#tls-back-end) for details.
 
 This pruning method was developed before the alternative was available.
 
@@ -173,9 +173,9 @@ This pruning method was developed before the alternative was available.
 
 ### <a id="config-by-instance-group"></a>Consistency Behavior can vary by Instance Group
 
-The Gorouter can [validate app instance identity using TLS](#consistency-with-tls) only when Diego Cells are configured appropriately. As this configuration is scoped to an instance group of Cells, some Cells (such as in an [Isolation Segment](../adminguide/isolation-segments.html)) can be configured to receive TLS requests from Gorouter and others plain text [without validation of instance identity](#without-tls). This behavior can be
+The Gorouter can [validate app instance identity using TLS](#consistency-with-tls) only when Diego Cells are configured appropriately. As this configuration is scoped to an instance group of Cells, some Cells (such as in an [Isolation Segment](../adminguide/isolation-segments.html)) can be configured to receive TLS requests from the Gorouter and others plain text [without validation of instance identity](#without-tls). This behavior can be
 
-Validation of app instance identity using TLS is supported for Linux Cells only. Support for Windows Cells may be added later. Gorouter forwards requests to Windows apps over plain text and prunes based on route TTL.
+Validation of app instance identity using TLS is supported for Linux Cells only. Support for Windows Cells may be added later. The Gorouter forwards requests to Windows apps over plain text and prunes based on route TTL.
 
 <% end %>
 
@@ -191,7 +191,7 @@ The Gorouter uses the round-robin algorithm for load balancing incoming requests
 
 ## <a id="sockets"></a>WebSockets
 
-WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
+WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and holds the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
 
 ## <a id="sessions"></a>Session Affinity
 
@@ -219,10 +219,10 @@ The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the 
 
 ### From Frontend Clients
 
-The Gorouter supports keepalive connections from clients; it will not close the TCP connection with clients immediately after returning an HTTP response. It is up to clients to close these connections.
+The Gorouter supports keepalive connections from clients; it does not close the TCP connection with clients immediately after returning an HTTP response. It is up to clients to close these connections.
 
-### To Backend Servers
+### To Back-End Servers
 
 By default, the Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response.
 
-When Keepalive Connections is enabled Gorouter will maintain established TCP connections to backends, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual backend is limited to 100. <% if vars.product_name == 'CF' || vars.product_name == 'PCF' %> <%= vars.keepalive %> <% else %> <% end %>
+When Keepalive Connections is enabled, the Gorouter maintains established TCP connections to back ends, with a configurable maximum that limits the number of total idle connections from each Gorouter instance. The Gorouter reuses idle connections for routing of subsequent requests if one exists for the selected back end, lowering latency and increasing throughput. If no idle connection exists, the Gorouter establishes a new connection and maintains the connection unless it has reached its idle connections limit. The number of idle connections from each Gorouter instance to an individual back end is limited to 100. <% if vars.product_name == 'CF' || vars.product_name == 'PCF' %> <%= vars.keepalive %> <% else %> <% end %>
