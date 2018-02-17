@@ -1,10 +1,7 @@
 To enable validation of app instance identity, follow these steps:
 
-1. Configure the Gorouter to initiate a TLS handshake to back ends. See instructions at [TLS to Apps and Other Back-End Services](#tls-back-end). Note: `router.ca_certs` should include the CA certificate used to sign the certificate configured in `diego.executor.instance_identity_ca_cert`.
+1. Configure the Gorouter to initiate a TLS handshake to backends that require it. See instructions at [TLS to Apps and Other Back-End Services](#tls-back-end). Note: `router.ca_certs` should include the CA certificate used to sign the certificate configured in `diego.executor.instance_identity_ca_cert`.
 - Configure Diego to run a proxy in each container with the following manifest property:
   - `containers.proxy.enabled: true`: This proxy will be used to terminate TLS for requests from Gorouter and present the App Instance certificate in the handshake.<br><br>
-  You can configure the above properties by using [this ops file](https://github.com/cloudfoundry/cf-deployment/blob/v1.6.0/operations/experimental/enable-routing-integrity.yml) with your [cf-deployment](https://github.com/cloudfoundry/cf-deployment) manifest.
-- Configure Diego to generate app instance identity credentials with the following manifest properties:
-  - `diego.executor.instance_identity_ca_cert`: the signing certificate for the Diego cell rep
-  - `diego.executor.instance_identity_key`: the private key for the Diego cell rep<br/></br/>
-  You can configure the above properties by using [this ops file](https://github.com/cloudfoundry/cf-deployment/blob/master/operations/experimental/enable-instance-identity-credentials.yml) with your [cf-deployment](https://github.com/cloudfoundry/cf-deployment) manifest. You may have already configured these properties to support apps retrieving service binding credentials from runtime CredHub. See the [Instance Identity notes in diego-release](https://github.com/cloudfoundry/diego-release/blob/v1.32.0/docs/instance-identity.md) for details.
+
+You can configure the above properties for both Gorouter and Diego by using [this ops file](https://github.com/cloudfoundry/cf-deployment/blob/v1.6.0/operations/experimental/enable-routing-integrity.yml) with your [cf-deployment](https://github.com/cloudfoundry/cf-deployment) manifest.
