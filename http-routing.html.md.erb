@@ -230,4 +230,23 @@ If keepalive connections are enabled, Gorouter maintains established TCP connect
 * If an idle connection exists for a given back end, Gorouter reuses it to route subsequent requests.
 * If no idle connection exists for this back end, Gorouter creates a new connection.
 
-<% if vars.product_name.include? "CF" %> <%= vars.keepalive %> <% else %> <% end %>
+<% if vars.product_name == "CF" %> <%= vars.keepalive %> <% else %> <% end %>
+
+## <a id="retry"></a>Gorouter Retry Behavior ##
+
+When you deploy an app that requires Diego cells to restart or recreate, the app may not respond to a Gorouter request before the keepalive connection breaks. The following table describes how Gorouter behaves if it cannot establish a TCP connection to an app:
+
+<table>
+  <tr>
+    <th>If Gorouter ...</th>
+    <th>then Gorouter ...</th>
+  </tr><tr>
+    <td>cannot establish a TCP connection to the routing back end for the app</td>
+    <td>retries the request three times.</td>
+  </tr><tr>
+    <td>establishes a TCP connection to the routing back end, but the app does not respond</td>
+    <td>waits 15 minutes for a response.</td>
+  </tr>
+</table>
+
+In both cases, if the app still does not respond to the request, Gorouter returns a `502` error.
