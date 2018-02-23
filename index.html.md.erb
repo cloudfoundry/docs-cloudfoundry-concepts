@@ -22,8 +22,7 @@ This guide presents an overview of how Cloud Foundry works and a discussion of k
 
 * <a href="./understand-cf-networking.html" class="subnav">Understanding Container-to-Container Networking</a>
 
-<% if vars.product_name == 'PWS' %>
-<% else %>
+<% if vars.product_name.include? "CF" %>
 <ul>
 <li><a href="./asg.html" class="subnav">Understanding Application Security Groups</a></li>
 </ul>

@@ -3,20 +3,8 @@ title: Understanding Application Security Groups
 owner: Security
 ---
 
-<% if vars.product_name == 'PWS' %>
 
-<% else %>
-
-<style>
-    .note.warning {
-        background-color: #fdd;
-        border-color: #fbb
-    }
-
-    .note.warning:before {
-        color: #f99;
-     }
-</style>
+<% if vars.product_name.include? "CF" %>
 
 <strong><%= modified_date %></strong>
 

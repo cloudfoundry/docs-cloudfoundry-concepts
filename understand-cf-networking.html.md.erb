@@ -133,7 +133,7 @@ without going through the Gorouter, a load balancer, or a firewall.
 Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. 
 These policies apply immediately without having to restart the app. 
 
-<% if vars.product_name != 'PWS' %>
+<% if vars.product_name.include? "CF" %>
 
 ##<a id='service-discovery'></a> App Service Discovery (Experimental)
 
