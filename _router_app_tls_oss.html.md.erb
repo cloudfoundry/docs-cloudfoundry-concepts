@@ -1,7 +1,7 @@
 To enable validation of app instance identity, follow these steps:
 
-1. Configure the Gorouter to initiate a TLS handshake to back ends that require it. See instructions at [TLS to Apps and Other Back-End Services](#tls-to-back-end). Note: `router.ca_certs` should include the CA certificate used to sign the certificate configured in `diego.executor.instance_identity_ca_cert`.
+1. Configure Gorouter to initiate a TLS handshake to back ends that require it. See instructions at [TLS to Apps and Other Back-End Services](#tls-to-back-end). Note: `router.ca_certs` should include the CA certificate used to sign the certificate configured in `diego.executor.instance_identity_ca_cert`.
 - Configure Diego to run a proxy in each container with the following manifest property:
   - `containers.proxy.enabled: true`: This proxy will be used to terminate TLS for requests from Gorouter and present the App Instance certificate in the handshake.<br><br>
 
-You can configure the above properties for both Gorouter and Diego by using [this ops file](https://github.com/cloudfoundry/cf-deployment/blob/v1.6.0/operations/experimental/enable-routing-integrity.yml) with your [cf-deployment](https://github.com/cloudfoundry/cf-deployment) manifest.
+Use the [enable-routing-integrity.yml](https://github.com/cloudfoundry/cf-deployment/blob/v1.6.0/operations/experimental/enable-routing-integrity.yml) file from the cf-deployment GitHub repository with your [cf-deployment](https://github.com/cloudfoundry/cf-deployment) manifest to configure the above properties for both Gorouter and Diego.
