@@ -16,7 +16,7 @@ Reasons to contribute to the Cloud Foundry documentation include:
 
 ## <a id='how'></a>How Can You Contribute?
 
-The content for the Cloud Foundry documentation lives in several GitHub repos within the [cloudfoundry GitHub org](https://github.com/cloudfoundry/). Each topic is represented by a source file in Markdown/HTML/embedded Ruby (`html.md.erb`) format. 
+The content for the Cloud Foundry documentation lives in several GitHub repositories within the [cloudfoundry GitHub org](https://github.com/cloudfoundry/). Each topic is represented by a source file in Markdown/HTML/embedded Ruby (`html.md.erb`) format. 
 
 Follow the procedures below to [consult best practices](#best-practices), [sign the Contributor License Agreement (CLA)](#cla), and contribute to the documentation by [submitting a pull request](#pull-request) or [raising an issue](#issue).
 
@@ -51,7 +51,7 @@ You can contribute to the documentation by [submitting a pull request](#pull-req
 
 If you have identified a problem with the documentation, and know the required content change, submit a pull request.
 
-If you do not know the required content change, file a GitHub issue against the repo that contains the content.
+If you do not know the required content change, file a GitHub issue against the repository that contains the content.
 
 ####<a id='pull-request'></a> Option 1: Submit a Pull Request
 
@@ -66,11 +66,11 @@ Perform the following steps to contribute to the documentation by submitting a p
 
 ####<a id='issue'></a> Option 2: Raise an Issue
 
-Perform the following steps to create an issue on a GitHub repo:
+Perform the following steps to create an issue on a GitHub repository:
 
 1. Navigate to the topic that you want to modify.
 1. To locate the GitHub source file that contains the content for the topic, scroll to the bottom of the page and click **Create a pull request or raise an issue on the source for this page in GitHub.**
-1. Click the name of the repo where the topic is located. For example, `docs-deploying-cf`.
+1. Click the name of the repository where the topic is located. For example, `docs-deploying-cf`.
 1. Click the **Issues** tab.
 1. Click **New issue**.
 1. Enter a title for your issue, and in the text box, describe the issue and provide links to the affected topic(s).
@@ -87,12 +87,12 @@ Perform the following steps to preview documentation changes with Bookbinder:
 1. If you do not already have a workspace directory within your home directory, create one.
 	<pre class="terminal">$ mkdir ~/workspace</pre>
 
-2. Clone the layout repo. This contains layouts, formatting, and styles used across all documentation sets.
+2. Clone the layout repository. This contains layouts, formatting, and styles used across all documentation sets.
 	<pre class="terminal">git clone git<span>@</span>github.com:pivotal-cf/docs-layout-repo</pre>
 
-3. Identify the content repo where your documentation lives. For example, `https://github.com/cloudfoundry/docs-cloudfoundry-concepts`.
+3. Identify the content repository where your documentation lives. For example, `https://github.com/cloudfoundry/docs-cloudfoundry-concepts`.
 
-4. Clone the content repo. For example:
+4. Clone the content repository. For example:
  	<pre class="terminal">$ git clone git<span>@</span>github.com:cloudfoundry/docs-cloudfoundry-concepts.git</pre>
 
 5. Return to your workspace directory and clone the Cloud Foundry book.
@@ -108,4 +108,4 @@ Perform the following steps to preview documentation changes with Bookbinder:
 
 9. Navigate to `http://localhost:4567` in a browser and navigate to the route where your docs are published. For instance, `http://localhost:4567/cf-cli/install-go-cli.html`.
 	<br><br>
-	Bookbinder automatically updates the live version of the docs whenever you make a change to the content repo.
+	Bookbinder automatically updates the live version of the docs whenever you make a change to the content repository.
