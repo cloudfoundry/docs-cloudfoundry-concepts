@@ -3,8 +3,6 @@ title: Understanding Application Security Groups
 owner: Security
 ---
 
-<% if vars.product_name.include? "CF" %>
-
 <strong><%= modified_date %></strong>
 
 This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool. 
@@ -29,9 +27,9 @@ When apps or tasks begin staging, they require traffic rules permissive enough t
 A running app or task no longer needs to pull traffic rules can be more restrictive and secure.
 To distinguish between these two security requirements, administrators can define a `staging` ASG for app and task staging with more permissive rules, and a `running` ASG for app and task runtime with less permissive rules.
 
-### Platform-wide and Space-scoped ASGs
+### Platform-Wide and Space-Scoped ASGs
 
-To provide granular control when securing a deployment, administrator can
+To provide granular control when securing a deployment, administrators can
 assign platform-wide ASGs that apply to all app and task instances for the entire deployment, or space-scoped ASGs that apply only to apps and tasks in a particular space.
 
 In environments with both platform-wide and space-specific ASGs, the ASGs for a particular space combine with the platform ASGs to determine the rules for that space.
@@ -119,6 +117,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 | `description`   |An optional text field for operators managing security group rules
 
 
+<% if vars.product_name.include? "CF" %>
 
 ##<a id="process"></a> Process for Administering ASGs
 
