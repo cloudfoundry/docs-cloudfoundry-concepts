@@ -45,12 +45,16 @@ their Cloud Foundry deployment, then create ASGs for the apps that whitelist tho
 
 For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section of this topic.
 
+<% if vars.product_name.include? "CF" %>
+
 ### <a id='default-asg'></a>Default ASGs
 
 <% if vars.product_name == 'CF' %>
 <%= partial 'default_asg_oss' %>
 <% else %>
 <%= partial '../opsguide/default_asg' %>
+<% end %>
+
 <% end %>
 
 ### <a id="asg-sets"></a> ASG Sets
