@@ -90,28 +90,6 @@ The Container-to-Container Networking BOSH release includes the following swappa
 
 ##<a id='app-comm'></a> App Instance Communication
 
-Container-to-Container Networking uses an overlay network to manage communication
-between app instances.
-
-Each Diego cell assigns IP addresses to its containers using a /24 subnet range,
-which supports up to 250 containers per cell. The subnet range you choose for
-your overlay network determines how many Diego cells your network supports.
-
-Using the /16 subnet range, <%= vars.product_full %> supports up to 250 Diego cells.
-To support a higher or lower number of Diego cells, choose a different subnet range.
-For example, use /12 to support more Diego cells or /24 to support fewer Diego cells.
-<p class="note"><strong>NOTE</strong>: The overlay network IP range must not conflict with any other IP addresses in the network. If there is a conflict, the Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
-
-### <a id='without-cf'></a>Without Container-to-Container Networking
-
-The diagram below illustrates how two app instances communicate in a deployment without Container-to-Container Networking enabled. 
-Traffic from **App A** must route out and back in through the Gorouter, 
-which restricts performance and the protocol used to send the traffic. 
-In this scenario, **App B** does not know the real source of the traffic it receives and must trust all inbound traffic. 
-
-![Pre Container-to-Container Networking](./images/pre-c2c.png)
-
-### <a id='with-cf'></a>With Container-to-Container Networking
 
 The diagram below illustrates how app instances communicate in a deployment with Container-to-Container Networking enabled. 
 In this example, the operator creates two policies to regulate the flow of traffic between **App A**, **App B**, and **App C**. 
@@ -123,7 +101,28 @@ If traffic and its direction is not explicitly allowed, it is denied. For exampl
 
 ![Post Container-to-Container Networking](./images/post-c2c.png)
 
-##<a id="policies"></a> Policies
+
+### <a id='overlay-network'></a> Overlay Network
+
+Container-to-Container Networking uses an overlay network to manage communication between app instances. 
+
+Overlay networks are not externally routable, and traffic sent between containers does not exit the overlay. You can use the same overlay network range for different Cloud Foundry deployments in your environment.
+
+The overlay network range defaults to `10.255.0.0/16`.
+You can modify the default to any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range that meets the following requirements:
+
+  * The range is not used by services that app containers access. 
+  * The range is not used by the underlying Cloud Foundry infrastructure.
+
+All Diego cells in your Cloud Foundry deployment share this overlay network. By default, each cell is allocated a /24 range that supports 254 containers per cell, one container for each of the usable IP addresses, `.1` through `.254`. To modify the number of Diego cells your overlay network supports, see [Overlay Network](../devguide/deploy-apps/cf-networking.html#overlay) in _Configuring Container-to-Container Networking_.
+
+Cloud Foundry container networking is currently supported only on Linux.
+
+<p class="note warning"><strong>Warning</strong>: The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
+
+<p class="note"><strong>Note</strong>: Traffic to app containers from Gorouter or from app containers to external services uses cell IP addresses and NAT, not the overlay network.</p>
+
+###<a id="policies"></a> Policies
 
 Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances.
 The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
