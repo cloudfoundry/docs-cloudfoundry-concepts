@@ -3,22 +3,7 @@ title: Understanding Application Security Groups
 owner: Security
 ---
 
-<% if vars.product_name == 'PWS' %>
-
-<% else %>
-
-<style>
-    .note.warning {
-        background-color: #fdd;
-        border-color: #fbb
-    }
-
-    .note.warning:before {
-        color: #f99;
-     }
-</style>
-
-<strong><%= modified_date %></strong>
+<% if vars.product_name.include? == 'CF' %>
 
 _This page assumes you are using cf CLI v6.4 or later._
 
@@ -721,5 +706,5 @@ Example below:
 </pre>
 
 Use the same method outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page to obtain the app <b>name</b>, <b>space\_url</b>, space <b>name</b>, <b>organization\_url</b>, organization <b>name</b>,  <b>container\_id</b>, and <b>process\_guid</b> for a CIDR range.
-
+<% else %>
 <% end %>
