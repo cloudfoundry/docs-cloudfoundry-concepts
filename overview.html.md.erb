@@ -50,9 +50,9 @@ Cloud Foundry components communicate with each other by posting messages interna
 
 ###<a id='monitor'></a> How to Monitor and Analyze a CF Deployment
 
-Pivotal Cloud Foundry (PCF) generates two types of logs, system logs from PCF components and app logs from hosted apps
+Cloud Foundry generates system logs from Cloud Foundry components and app logs from hosted apps
 
-As Cloud Foundry runs, its component and host VMs continuously generate logs and metrics, and Cloud Foundry apps also typically generate logs. The <%=vars.loggregator_name_or_link%> system aggregates the component metrics and app logs into a structured, usable form, the **Firehose**. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying **nozzles**.
+As Cloud Foundry runs, its component and host VMs generate logs and metrics. Cloud Foundry apps also typically generate logs. The <%=vars.loggregator_name_or_link%> system aggregates the component metrics and app logs into a structured, usable form, the _Firehose_. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying _nozzles_.
 
 The component logs follow a different path. They stream from rsyslog agents, and the cloud operator can configure them to stream out to a syslog drain.
 
