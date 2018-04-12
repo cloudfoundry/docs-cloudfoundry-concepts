@@ -23,20 +23,6 @@ During product updates and platform upgrades, the VMs in a deployment restart in
 
 Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
 
-### <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
-
-You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
-
-<%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
-
-To scale vertically, ensure that you allocate and maintain enough of the following:
-
-* Free space on host Diego cell VMs so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory in your deployment such that if one host VM is down, all instances of apps can be placed on the remaining Host VMs.
-* Free space to handle one AZ going down if deploying in multiple AZs.
-
-Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine how you should scale vertically vs. horizontally.
-
 ### <a id='external-lbs'></a> External Load Balancers
 
 Pivotal Cloud Foundry (PCF) deploys with a single instance of HAProxy for use in lab and test environments. Production environments should use a highly-available customer-provided load balancing solution that does the following:
@@ -55,6 +41,20 @@ For storing blobs, large binary files, the best approach for high availability i
 If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
 
 <%= vars.collector_singleton %> not affect platform availability.
+
+### <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
+
+You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
+
+<%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
+
+To scale vertically, ensure that you allocate and maintain enough of the following:
+
+* Free space on host Diego cell VMs so that apps expected to deploy can successfully be staged and run.
+* Disk space and memory in your deployment such that if one host VM is down, all instances of apps can be placed on the remaining Host VMs.
+* Free space to handle one AZ going down if deploying in multiple AZs.
+
+Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine how you should scale vertically vs. horizontally.
 
 ### <a id='processes'></a> Scalable Components
 
@@ -85,7 +85,7 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 <%=vars.pcf_pools%>
 
-#### <a id='databases'></a>Databases
+#### <a id='databases'></a> Databases
 
 For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
@@ -94,7 +94,7 @@ For database services deployed outside Cloud Foundry, plan to leverage your infr
 <%= vars.contact_support %>
 
 
-## <a id='cf-ha'></a>How CF Maintains High Availability
+## <a id='cf-ha'></a> How CF Maintains High Availability
 
 This section explains how <%= vars.first_product_name %> deployments include several layers of HA to keep applications running in the face of system failure. These layers include AZs, application health management, process monitoring, and VM resurrection.
 
