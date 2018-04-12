@@ -18,7 +18,7 @@ Scaling component VMs means changing the number of VM instances dedicated to run
 
 Deploying or scaling applications to at least two instances per app also helps maintain high availability. For information about scaling applications and maintaining app uptime, see the [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html) topics.
 
-### <a id='azs'></a>Availability Zones
+### <a id='azs'></a> Availability Zones
 
 During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
 
