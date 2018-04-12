@@ -9,7 +9,7 @@ This topic explains how to configure Cloud Foundry (CF) for high availability (H
 
 <%= vars.ha_ert %>
 
-## <a id='capacity'></a>Configuring High Availability
+## <a id='capacity'></a> Configuring High Availability
 
 This section describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
@@ -89,7 +89,7 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 <%=vars.pcf_pools%>
 
-#### <a id='databases'></a>Databases
+#### <a id='databases'></a> Databases
 
 For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
@@ -98,7 +98,7 @@ For database services deployed outside Cloud Foundry, plan to leverage your infr
 <%= vars.contact_support %>
 
 
-## <a id='cf-ha'></a>How CF Maintains High Availability
+## <a id='cf-ha'></a> How CF Maintains High Availability
 
 This section explains how <%= vars.first_product_name %> deployments include several layers of HA to keep applications running in the face of system failure. These layers include availability zones (AZs), application health management, process monitoring, and VM resurrection.
 
