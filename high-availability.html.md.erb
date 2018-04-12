@@ -9,7 +9,8 @@ This topic explains how to configure Cloud Foundry (CF) for high availability (H
 
 <%= vars.ha_ert %>
 
-## <a id='capacity'></a>Configuring High Availability ##
+
+## <a id='capacity'></a> Configuring High Availability
 
 This section describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
@@ -23,7 +24,26 @@ During product updates and platform upgrades, the VMs in a deployment restart in
 
 Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
 
-### <a id='vert-and-horiz'></a>Vertical and Horizontal Scaling ##
+### <a id='external-lbs'></a> External Load Balancers
+
+Pivotal Cloud Foundry (PCF) deploys with a single instance of HAProxy for use in lab and test environments. Production environments should use a highly-available customer-provided load balancing solution that does the following:
+
+* Provides load balancing to each of the PCF Router IP addresses
+* Supports SSL termination with wildcard DNS location
+* Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
+* (Optional) Supports WebSockets
+
+For more information, see the [Using Your Own Load Balancer](../1-12/customizing/custom-load-balancer.html) topic.
+
+### <a id='blobstore'></a> Blob Storage
+
+For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
+
+If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
+
+<%= vars.collector_singleton %> not affect platform availability.
+
+### <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
 
 You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
 
@@ -37,7 +57,7 @@ To scale vertically, ensure that you allocate and maintain enough of the followi
 
 Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine how you should scale vertically vs. horizontally.
 
-### <a id='processes'></a>Scalable Components
+### <a id='processes'></a> Scalable Components
 
 You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. 
 
@@ -49,14 +69,6 @@ If you do not require a high-availability deployment (for example, you are deplo
 
 <%= partial vars.scale_table %>
 
-### <a id='blobstore'></a>Blob Storage ###
-
-For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
-
-If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
-
-<%= vars.collector_singleton %> not affect platform availability.
-
 ### <a id='supporting-scaling'></a> Supporting Component Scaling
 
 <% if vars.product_name == 'CF' %>
@@ -66,7 +78,7 @@ If you store blobs internally using WebDAV or NFS, these components run as singl
 <%= vars.om_resurrector_header%>
 <%= vars.om_resurrector_text%>
 
-####Resource Pools####
+#### <a id='resource-pools'></a> Resource Pools
 
 Configure your <%=vars.pools_link%> according to the requirements of your deployment.
 
@@ -74,7 +86,7 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 <%=vars.pcf_pools%>
 
-#### <a id='databases'></a>Databases ####
+#### <a id='databases'></a> Databases
 
 For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
@@ -82,28 +94,27 @@ For database services deployed outside Cloud Foundry, plan to leverage your infr
 
 <%= vars.contact_support %>
 
-## <a id='cf-ha'></a>How CF Maintains High Availability ##
+
+## <a id='cf-ha'></a> How CF Maintains High Availability
 
 This section explains how <%= vars.first_product_name %> deployments include several layers of HA to keep applications running in the face of system failure. These layers include availability zones (AZs), application health management, process monitoring, and VM resurrection.
 
-### <a id='azs'></a>Availability Zones ###
+### <a id='azs-2'></a>Availability Zones
 
 <%= vars.product_name %> supports deploying applications instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.product_name %> balances the applications you deploy across the AZs you defined. If an AZ goes down, you still have application instances running in another. 
 
 <%= vars.azs %>
 
-
-### <a id='health-management-apps'></a>Health Management for App Instances ###
+### <a id='health-management-apps'></a> Health Management for App Instances
 
 If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. Under Diego architecture, the [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) components  track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
 
-### <a id='monitored-processes'></a>Process Monitoring ###
+### <a id='monitored-processes'></a> Process Monitoring
 
 <%= vars.product_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, BBS, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
 
-### <a id='health-monitoring'></a>Resurrection for VMs ###
+### <a id='health-monitoring'></a> Resurrection for VMs
 
 BOSH detects if a VM is present by listening for heartbeat messages that are sent from the BOSH agent every 60 seconds. The BOSH Health Monitor listens for those heartbeats. When the Health Monitor finds that a VM is not responding, it passes an alert to the Resurrector component. If the Resurrector is enabled, it sends the IaaS a request to create a new VM instance to replace the one that failed.
-
 
 <%= vars.resurrector %>
