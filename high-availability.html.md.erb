@@ -9,7 +9,8 @@ This topic explains how to configure Cloud Foundry (CF) for high availability (H
 
 <%= vars.ha_ert %>
 
-## <a id='capacity'></a>Configuring High Availability
+
+## <a id='capacity'></a> Configuring High Availability
 
 This section describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
@@ -22,6 +23,25 @@ Deploying or scaling applications to at least two instances per app also helps m
 During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
 
 Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
+
+### <a id='external-lbs'></a> External Load Balancers
+
+Pivotal Cloud Foundry (PCF) deploys with a single instance of HAProxy for use in lab and test environments. Production environments should use a highly-available customer-provided load balancing solution that does the following:
+
+* Provides load balancing to each of the PCF Router IP addresses
+* Supports SSL termination with wildcard DNS location
+* Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
+* (Optional) Supports WebSockets
+
+For more information, see the [Using Your Own Load Balancer](../customizing/custom-load-balancer.html) topic.
+
+### <a id='blobstore'></a> Blob Storage
+
+For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
+
+If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
+
+<%= vars.collector_singleton %> not affect platform availability.
 
 ### <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
 
@@ -36,25 +56,6 @@ To scale vertically, ensure that you allocate and maintain enough of the followi
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
 Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine how you should scale vertically vs. horizontally.
-
-### <a id='external-lbs'></a> External Load Balancers
-
-Pivotal Cloud Foundry (PCF) deploys with a single instance of HAProxy for use in lab and test environments. Production environments should use a highly-available customer-provided load balancing solution that does the following:
-
-* Provides load balancing to each of the PCF Router IP addresses
-* Supports SSL termination with wildcard DNS location
-* Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
-* (Optional) Supports WebSockets
-
-For more information, see the [Using Your Own Load Balancer](https://docs.pivotal.io/pivotalcf/2-0/customizing/custom-load-balancer.html) topic.
-
-### <a id='blobstore'></a> Blob Storage
-
-For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
-
-If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
-
-<%= vars.collector_singleton %> not affect platform availability.
 
 ### <a id='processes'></a> Scalable Components
 
@@ -85,7 +86,7 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 <%=vars.pcf_pools%>
 
-#### <a id='databases'></a>Databases
+#### <a id='databases'></a> Databases
 
 For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
@@ -94,7 +95,7 @@ For database services deployed outside Cloud Foundry, plan to leverage your infr
 <%= vars.contact_support %>
 
 
-## <a id='cf-ha'></a>How CF Maintains High Availability
+## <a id='cf-ha'></a> How CF Maintains High Availability
 
 This section explains how <%= vars.first_product_name %> deployments include several layers of HA to keep applications running in the face of system failure. These layers include AZs, application health management, process monitoring, and VM resurrection.
 
