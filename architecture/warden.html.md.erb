@@ -136,7 +136,7 @@ They both use the same Linux kernel primitives to achieve their goals.
 Early versions of Warden used LXC.
 
 The major difference between the two projects is that LXC is explicitly tied to Linux, while you can implement Warden backends for any operating system that implements some way of isolating environments.
-It is a daemon that manages containers and can be controlled though a simple API, rather than a set of tools that are individually executed.
+It is a daemon that manages containers and can be controlled through a simple API, rather than a set of tools that are individually executed.
 
 While the Linux backend for Warden was initially implemented with LXC, the current version no longer depends on it.
 Because Warden relies on a very small subset of the functionality that LXC offers, we decided to create a tool that only implements the functionality we need in under 1k LOC of C code.
