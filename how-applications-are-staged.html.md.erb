@@ -24,7 +24,7 @@ This topic describes how the Diego architecture stages [buildpack applications](
 
 4. Before uploading all the application source files, the cf CLI issues a resource match request to the Cloud Controller to determine if any of the application files already exist in the resource cache. When the application files are uploaded, the cf CLI omits files that exist in the resource cache by supplying the result of the resource match request. The uploaded application files are combined with the files from the resource cache to create the application package.
 
-5. The Cloud Controller stores the application package in the [blobstore](../concepts/architecture/#blob).
+5. The Cloud Controller stores the application package in the [blobstore](../concepts/architecture/index.html#blob).
 
 6. The cf CLI issues an app start command.
 
