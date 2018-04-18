@@ -10,9 +10,9 @@ This topic describes components and functions that changed significantly when Cl
 
 The DEA architecture system is largely written in Ruby and the Diego architecture system is written in Go. When Cloud Foundry contributors decided to migrate the system's core code from Ruby to Go, the rewrite offered the opportunity to make improvements to Cloud Foundry's overall design.
 
-In a pre-Diego Cloud Foundry deployment, the Cloud Controller's [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
+In a pre-Diego Cloud Foundry deployment, the Cloud Controller's Droplet Execution Agent (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
 
-DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the [DEA Placement Algorithm](../architecture/dea-algorithm.html) with the [Diego Auction](./diego-auction.html).
+DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the DEA placement algorithm with the [Diego auction](./diego-auction.html).
 
 In addition to these broad changes, the Cloud Foundry migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table](#table) provides a summary.
 
@@ -20,12 +20,12 @@ In addition to these broad changes, the Cloud Foundry migration to Diego archite
 
 ### <a id='dea'></a>DEA Node &rarr; Diego Cell
 
-The pre-Diego [Droplet Execution Agent](../architecture/execution-agent.html) (DEA) node component managed application
+The pre-Diego Droplet Execution Agent (DEA) node component managed application
 instances, tracked started instances, and broadcast state messages on each application VM. These functions are now performed by the [Diego cell](../architecture/index.html#diego-cell).
 
 ### <a id='warden'></a> Warden &rarr; Garden
 
-Pre-Diego application instances lived inside [Warden](../architecture/warden.html) containers, which are analogous to [Garden](../diego/diego-architecture.html#cell-components) containers in Diego architecture.
+Pre-Diego application instances lived inside Warden containers, which are analogous to [Garden](../diego/diego-architecture.html#cell-components) containers in Diego architecture.
 Containerization ensures that application instances run in isolation, get their
 fair share of resources, and are protected from "noisy neighbors," or other applications running on the same machine.
 
@@ -71,9 +71,9 @@ information about the HM9000 architecture.
 
 ### <a id='dea-placement'></a>DEA Placement Algorithm &rarr; Diego Auction
 
-In pre-Diego architecture, the Cloud Controller used the [DEA Placement Algorithm](../architecture/dea-algorithm.html) to select the host DEA nodes for application instances that needed hosting.
+In pre-Diego architecture, the Cloud Controller used the DEA placement algorithm to select the host DEA nodes for application instances that needed hosting.
 
-Diego architecture moves this allocation process out of the Cloud Controller and into the Diego Brain, which uses the [Diego Auction](../diego/diego-auction.html) algorithm. The Diego Auction prioritizes one-time tasks like staging apps without affecting the uptime of ongoing, running applications like web servers.
+Diego architecture moves this allocation process out of the Cloud Controller and into the Diego Brain, which uses the [Diego auction](../diego/diego-auction.html) algorithm. The Diego auction prioritizes one-time tasks like staging apps without affecting the uptime of ongoing, running applications like web servers.
 
 ### <a id='nats'></a> Message Bus (NATS)
 
@@ -96,7 +96,7 @@ communication between components. Diego retains NATS for some communications, bu
 <td>Source code language</td>
 <td></td></tr>
 <tr>
-<td><a href="../architecture/execution-agent.html">DEA</a></td>
+<td>DEA</td>
 <td><a href="./diego-architecture.html#brain-components">Diego Brain</a></td>
 <td>High-level coordinator that allocates processes to containers in application VMs and keeps them running</td>
 <td>DEA is part of the Cloud Controller. Diego is outside the Cloud Controller.</td></tr>
@@ -106,15 +106,15 @@ communication between components. Diego retains NATS for some communications, bu
 <td>Mid-level manager on each VM that runs apps as directed and communicates &ldquo;heartbeat&rdquo;, application status and container location, and other messages</td>
 <td>Runs on each VM that hosts apps, as opposed to special-purpose component VMs.</td></tr>
 <tr>
-<td><a href="../architecture/execution-agent.html">Warden</a></td>
+<td>Warden</td>
 <td>Garden</td>
 <td>Low-level manager and API protocol on each VM for creating, configuring, destroying, monitoring, and addressing application containers</td>
 <td>Warden is Linux-only. Garden uses platform-specific Garden-backends to run on multiple OS. </td></tr>
 <tr>
-<td><a href="../architecture/cloud-controller.html#dea-placement">DEA Placement Algorithm</a></td>
-<td><a href="./diego-auction.html">Diego Auction</a></td>
+<td>DEA placement algorithm</td>
+<td><a href="./diego-auction.html">Diego auction</a></td>
 <td>Algorithm used to allocate processes to VMs</td>
-<td>Diego Auction distinguishes between Task and Long-Running Process (LRP) job types</td></tr>
+<td>Diego auction distinguishes between Task and Long-Running Process (LRP) job types</td></tr>
 <tr>
 <td>Health Manager (HM9000)</td>
 <td><a href="../architecture/index.html#nsync-bbs">nSync, BBS, and Cell Reps</a></td>
