@@ -32,6 +32,8 @@ Cloud Foundry deploys with a single instance of HAProxy for use in lab and test 
 * Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
 * (Optional) Supports WebSockets
 
+<%= vars.external_lb %>
+
 ### <a id='blobstore'></a> Blob Storage
 
 For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
