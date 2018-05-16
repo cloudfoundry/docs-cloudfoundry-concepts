@@ -11,9 +11,14 @@ This topic describes how Gorouter, the main component in Cloud Foundry's [routin
 
 HTTP traffic passed from Gorouter to an app includes the following HTTP headers:
 
-* `X-Forwarded-Proto` gives the scheme of the HTTP request from the client. The scheme is HTTP if the client made an insecure request or HTTPS if the client made a secure request. Developers can configure their apps to reject insecure requests by inspecting the HTTP headers of incoming traffic and rejecting traffic that includes `X-Forwarded-Proto` with the scheme of HTTP.
+#### <a id="X-Forwarded-Proto"></a>X-Forwarded-Proto ####
 
-* `X-Forwarded-For` gives the IP address of the client originating the request.
+`X-Forwarded-Proto` header gives the scheme of the HTTP request from the client. The scheme is HTTP if the client made an insecure request (on port 80) or HTTPS if the client made a secure request (on port 443). Developers can configure their apps to reject insecure requests by inspecting the HTTP headers of incoming traffic and rejecting traffic that includes `X-Forwarded-Proto` with the scheme of HTTP. 
+
+
+#### <a id="X-Forwarded-For"></a>X-Forwarded-For ####
+
+If X-Forwarded-For is present, Gorouter will append the LB IP to it and forward the list. If X-Forwarded-For is not present, Gorouter will set it to the IP of the LB in the forwarded request (some LBs masquerade the client IP). If an LB sends the client IP using the PROXY protocol Gorouter will use it to set X-Forwarded-For. 
 
 If your load balancer terminates TLS on the client side of Gorouter, it must append these headers to requests forwarded to Gorouter. <%= vars.http_routing %>
 
