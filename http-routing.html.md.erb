@@ -48,7 +48,7 @@ Perform the following steps to make an HTTP request to a specific app instance:
 
 Applications that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the Gorouter.
 
-The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the back-end component has not allowed the header to be tampered with.
+The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the back end component has not allowed the header to be tampered with.
 
 If you configure the load balancer to terminate TLS and set the XFCC header from the received client certificate, then you must also configure the load balancer to strip this header if it is present in client requests. This configuration is required to prevent spoofing of the client certificate.
 
@@ -79,14 +79,14 @@ Depending on your needs, you can configure your deployment to terminate TLS at t
 
 ## <a id="tls-to-back-end"></a> TLS to Apps and Other Back End Services
 
-The Gorouter supports TLS and mutual authentication to back-end destinations, including app instances, platform services, and any other routable endpoints.
+The Gorouter supports TLS and mutual authentication to back end destinations, including app instances, platform services, and any other routable endpoints.
 
 This is enabled by configuring the following manifest properties:
 
 - `router.backends.enable_tls: true`
 - `router.ca_certs`: must include the CA certificate used to sign any back end to which the Gorouter initiates a TLS handshake.
 
-The Gorouter does not automatically initiate TLS handshakes with back-end destinations. To register that the Gorouter must initiate a TLS handshake before forwarding HTTP requests to a component, the component must include the following optional fields in its `route.register` message to NATS:
+The Gorouter does not automatically initiate TLS handshakes with back end destinations. To register that the Gorouter must initiate a TLS handshake before forwarding HTTP requests to a component, the component must include the following optional fields in its `route.register` message to NATS:
 
 - `"tls_port"`: The port to which the Gorouter should open a connection and initiate a TLS handshake
 - `"server_cert_domain_san"`: An identifier for the back end which the Gorouter expects to find in the Domain Subject Alternative Name of the certificate presented by the back end. This is used to prevent misrouting for back ends whose IPs and/or ports are expected to change; see [Consistency](#consistency).
@@ -105,7 +105,7 @@ The Gorouter presents the certificate if requested by the back end during the TL
 
 ## <a id="consistency"></a> Preventing Misrouting
 
-As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route Emitter on each Diego cell sends a periodic update to all Gorouters through NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back-end mapping; this TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
+As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route Emitter on each Diego cell sends a periodic update to all Gorouters through NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back end mapping; this TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
 
 Network partitions or NATS failures can cause the Gorouter's routing table to fall out of sync, as CF continues to re-create containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
 
@@ -171,7 +171,7 @@ The following table explains how the Gorouter keeps routes in its routing table 
 
 ### <a id="without-tls"></a> Without TLS Enabled
 
-In this consistency mode, the Diego Route Emitters on each cell send route registration messages that include instructions for the Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned from the Gorouter's routing table. See [TLS to Apps and Other Back-End Services](#tls-to-back-end) for details.
+In this consistency mode, the Diego Route Emitters on each cell send route registration messages that include instructions for the Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned from the Gorouter's routing table. See [TLS to Apps and Other Back End Services](#tls-to-back-end) for details.
 
 This pruning method was developed before the alternative was available.
 
