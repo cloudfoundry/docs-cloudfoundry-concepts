@@ -7,7 +7,8 @@ owner: Routing
 
 This topic describes features of HTTP routing handled by the Gorouter, which is part of the Cloud Foundry (CF) [routing](./architecture/#routing) tier.
 
-## <a id="sessions"></a>Session Affinity ##
+
+## <a id="sessions"></a> Session Affinity
 
 The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
 
@@ -29,7 +30,8 @@ The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the 
 
 <p class="note"><strong>Note</strong>: CF does not persist or replicate HTTP session data across app instances. If an app instance crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared by all instances of an app, store session data in a CF marketplace service that offers data persistence.</p>
 
-## <a id="http-headers"></a>HTTP Headers ##
+
+## <a id="http-headers"></a> HTTP Headers
 
 HTTP traffic passed from the Gorouter to an app includes the following HTTP headers:
 
@@ -92,32 +94,37 @@ The following sections describe supported deployment configurations.
 <%= partial '../console/xfcc_router' %> 
 <% end %>
 
-## <a id="tls"></a>SSL/TLS Termination ##
+
+## <a id="tls"></a> SSL/TLS Termination
 
 Depending on your needs, you can configure your deployment to terminate SSL/TLS at the Gorouter, at the Gorouter and the load balancer, or at the load balancer only. <%= vars.http_routing %>
 
-## <a id="transparent"></a>Transparent Retries ##
+
+## <a id="transparent"></a> Transparent Retries
 
 If the Gorouter cannot establish a TCP connection with a selected application instance, the Gorouter considers the instance ineligible for requests for 30 seconds, and the Gorouter transparently attempts to connect to another application instance. Once the Gorouter has established a TCP connection with an application instance, the Gorouter forwards the HTTP request.
 
-See the <a href="#round-robin">Round-Robin Load Balancing</a> section below for more information about how the Gorouter forwards requests to application instances.
+See the [Round-Robin Load Balancing](#round-robin) section below for more information about how the Gorouter forwards requests to application instances.
 
-## <a id="round-robin"></a>Round-Robin Load Balancing ##
+
+## <a id="round-robin"></a> Round-Robin Load Balancing
 
 The Gorouter uses the round-robin algorithm for load balancing incoming requests to application instances. The Gorouter maintains a dynamically updated list of application instances for each route, and forwards each request for a given route to the next application instance in the list.
 
-## <a id="sockets"></a>WebSockets ##
+
+## <a id="sockets"></a> WebSockets
 
 WebSockets is a protocol providing bi-directional communication over a single, long-lived TCP connection, commonly implemented by web clients and servers. WebSockets are initiated through HTTP as an upgrade request. The Gorouter supports this upgrade handshake, and will hold the TCP connection open with the selected application instance. <%= vars.port_limitations_1 %>
 
-## <a id="keepalive"></a>Keepalive Connections ##
 
-### From Frontend Clients
+## <a id="keepalive"></a> Keepalive Connections
+
+### <a id='front-end'></a> From Front End Clients
 
 The Gorouter supports keepalive connections from clients; it will not close the TCP connection with clients immediately after returning an HTTP response. It is up to clients to close these connections.
 
-### To Backend Servers
+### <a id='back-end'></a> To Back End Servers
 
 By default, the Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response.
 
-When Keepalive Connections is enabled Gorouter will maintain established TCP connections to backends, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected backend, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual backend is limited to 100. <% if vars.product_name.include? 'CF' %> <%= vars.keepalive %> <% else %> <% end %>
+When Keepalive Connections is enabled, Gorouter will maintain established TCP connections to backends, with a configurable maximum that limits the number of total idle connections from each Gorouter. The Gorouter will reuse idle connections for routing of subsequent requests if one exists for the selected back end, lowering latency and increasing throughput. If no idle connection exists, a new connection will be established, and if the Gorouter limit has not been reached that connection will be maintained. The number of idle connections from each Gorouter to an individual back end is limited to 100. <% if vars.product_name.include? 'CF' %> <%= vars.keepalive %> <% else %> <% end %>
