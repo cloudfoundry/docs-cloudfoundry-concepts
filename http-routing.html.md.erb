@@ -52,7 +52,7 @@ Perform the following steps to make an HTTP request to a specific app instance:
 
 Applications that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. Cloud Foundry supports this use case without bypassing layer-7 load balancers and the Gorouter.
 
-The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the back-end component has not allowed the header to be tampered with.
+The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the back end component has not allowed the header to be tampered with.
 
 If you configure the load balancer to terminate TLS and set the XFCC header from the received client certificate, then you must also configure the load balancer to strip this header if it is present in client requests. This configuration is required to prevent spoofing of the client certificate.
 
@@ -107,7 +107,7 @@ The Gorouter presents the certificate if requested by the back end during the TL
 
 ## <a id="consistency"></a>Preventing Misrouting
 
-As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route Emitter on each Diego cell sends a periodic update to all Gorouters through NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back-end mapping; this TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
+As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route Emitter on each Diego cell sends a periodic update to all Gorouters through NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back end mapping; this TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
 
 Network partitions or NATS failures can cause the Gorouter's routing table to fall out of sync, as CF continues to re-create containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
 
@@ -173,7 +173,7 @@ The following table explains how the Gorouter keeps routes in its routing table 
 
 ### <a id="without-tls"></a> Without TLS Enabled
 
-In this consistency mode, the Diego Route Emitters on each cell send route registration messages that include instructions for the Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned from the Gorouter's routing table. See [TLS to Apps and Other Back-End Services](#tls-to-back-end) for details.
+In this consistency mode, the Diego Route Emitters on each cell send route registration messages that include instructions for the Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned from the Gorouter's routing table. See [TLS to Apps and Other Back End Services](#tls-to-back-end) for details.
 
 This pruning method was developed before the alternative was available.
 
