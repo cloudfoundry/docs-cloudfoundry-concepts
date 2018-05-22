@@ -136,7 +136,7 @@ This consistency mode is newer and has the following benefits:
 - Increased guarantees against misrouting, by validating the identity of back ends before forwarding requests
 - Increased security by encrypting data in flight from the Gorouter to back ends
 
-<p class='note-warning'><strong>WARNING:</strong> TLS routing requires an additional 32 MB of RAM capacity on your Diego cells per app instance, as well as additional CPU capacity. Pivotal recommends you adjust your RAM and CPU capacity before upgrading PCF if you want to enable TLS routing to back ends. Check the total amount of Diego cell memory available to allocate in your environment, and if it is less than 32 MB times the number of running app instances, scale out your Diego cells.</p>
+<p class='note-warning'><strong>WARNING:</strong> TLS routing requires an additional 32&nbsp;MB of RAM capacity on your Diego cells per app instance, as well as additional CPU capacity. Pivotal recommends you adjust your RAM and CPU capacity before upgrading PCF if you want to enable TLS routing to back ends. Check the total amount of Diego cell memory available to allocate in your environment, and if it is less than 32&nbsp;MB times the number of running app instances, scale out your Diego cells.</p>
 
 <p class='note-warning'><strong>WARNING:</strong> You may see an increase of memory and CPU usage for your Gorouters after enabling TLS routing. Check the total amount of memory and CPU usage of the Gorouters in your environment, and if they are close to the size limit, consider scaling out your Gorouters before enabling TLS routing.</p>
 
