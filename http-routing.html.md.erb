@@ -136,7 +136,7 @@ Both of these consistency modes are described below.
 This consistency mode is newer and has the following benefits:
 
 - Improved availability for applications by keeping routes in the Gorouter's routing table when TTL expires
-- Increased guarantees against misrouting, by validating the identity of back ends before forwarding requests
+- Increased guarantees against misrouting by validating the identity of back ends before forwarding requests
 - Increased security by encrypting data in flight from the Gorouter to back ends
 
 <p class='note warning'><strong>WARNING:</strong> TLS routing requires an additional 32&nbsp;MB of RAM capacity on your Diego cells per app instance, as well as additional CPU capacity. Check the total amount of Diego cell memory available to allocate in your environment, and if it is less than 32&nbsp;MB times the number of running app instances, scale out your Diego cells.</p>
