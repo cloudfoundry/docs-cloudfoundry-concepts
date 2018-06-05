@@ -46,17 +46,35 @@ Follow the steps below to access and use a locally-deployed UAA server.
 
 1. Run the UAA server as described in the [Deploy Locally](#local) section, above. 
 
-2. Open another terminal window. From the project base directory, run `curl -H "Accept: application/json" localhost:8080/uaa/login` to query the login endpoint about the system. For example:
+2. Open another terminal window. From the project base directory, run `curl localhost:8080/uaa/info -H "Accept: application/json"` to confirm the UAA is running. You should see basic information about the system. For example:
 
     <pre class="terminal">
-    $ curl -H "Accept: application/json" localhost:8080/uaa/login
+    $ curl localhost:8080/uaa/info -H "Accept: application/json"
     {
-      "timestamp":"2012-03-28T18:25:49+0100",
-      "app" : {"version":"1.8.3"},
-      "commit_id":"cba0958",
-      "prompts":{"username":["text","Email"],
-        "password":["password","Password"]
-      }
+      "app": {
+        "version": "4.19.0"
+      },
+      "links": {
+        "uaa": "http://localhost:8080/uaa",
+        "passwd": "/forgot_password",
+        "login": "http://localhost:8080/uaa",
+        "register": "/create_account"
+      },
+      "zone_name": "uaa",
+      "entityID": "cloudfoundry-saml-login",
+      "commit_id": "af93628",
+      "idpDefinitions": {},
+      "prompts": {
+        "username": [
+          "text",
+          "Email"
+        ],
+        "password": [
+          "password",
+          "Password"
+        ]
+      },
+      "timestamp": "2018-05-25T15:34:31-0700"
     }
     </pre>
 
@@ -66,46 +84,60 @@ Follow the steps below to access and use a locally-deployed UAA server.
     $ gem install cf-uaac
     </pre>
 
-3. Run `uaac target http://localhost:8080/uaa` to target the local UAA Server endpoint.
+3. Run `uaac target http://localhost:8080/uaa` to target the local UAA server endpoint.
 
     <pre class="terminal">
     $ uaac target http://localhost:8080/uaa
- </pre>
-
-3. Run `uaac token get USERNAME PASSWORD` to log in. Replace `USERNAME` with your user name, and `PASSWORD` with your password. For example:
-
-    <pre class="terminal">
-    $ uaac token get marissa koala
     </pre>
 
-    If you do not specify a username and password, the UAAC prompts you to 
-    supply them.
-    <br><br>
-    The `uaac token client get` command authenticates and obtains an access 
-    token from the server using the OAuth2 implicit grant, similar to the 
-    approach intended for a standalone client like the Cloud Foundry Command 
-    Line Interface (cf CLI). 
-    <br><br>
-    UAAC stores the access token in the `~/.uaac.yml` file. Open the 
-    `~/.uaac.yml` in a text editor and copy this access token to use in the 
-    next step.
-
-4. Run `uaac token decode ACCESS-TOKEN-VALUE` to retrieve the token details. Replace `ACCESS-TOKEN-VALUE` with your access token, copied from your `~/.uaac.yml` file. The UAAC should display your username and the client id of the original token grant. For example:
+3. Run `uaac token client get CLIENT_NAME -s CLIENT_SECRET` to obtain an access token. Replace `CLIENT_NAME` and `CLIENT_SECRET` with actual values. For example, when starting up the UAA locally for development there should be a predefined [admin client](https://github.com/cloudfoundry/uaa/blob/a776ac3f2e6bf86e247097dc00df93c05a239c6e/uaa/src/main/webapp/WEB-INF/spring/oauth-clients.xml#L54) you can use:
 
     <pre class="terminal">
-    $ uaac token decode abcdef0123456789ABCDEF0123456789ghijklmnopqr01234567890
-    jti: e3a7d065-8514-43c2-b1f8-f8ab761791e2
-    sub: f796d1a2-eca3-4079-a317-f3224f8f7832
-    scope: scim.userids password.write openid cloud_controller.write cloud_controller.read
-    client_id: cf
-    cid: cf
-    user_id: f796d1a2-eca3-4079-a317-f3224f8f7832
-    user_name: marissa
-    email: marissa@example.org
-    iat: 1413495264
-    exp: 1413538464
-    iss: http://localhost:8080/uaa/oauth/token
-    aud: scim openid cloud_controller password
+    $ uaac token client get admin -s adminsecret
+    </pre>
+
+    If you do not specify the client secret, UAAC will show an interactive prompt where you must enter the client secret value.
+    
+    The `uaac token client get` command requests an access token from the server using the OAuth2 [client credentials](https://tools.ietf.org/html/rfc6749#section-1.3.4) grant type.
+    
+4. View your UAAC token context. When UAAC obtains a token, the token and other metadata is stored in the `~/.uaac.yml` file on your local machine. To view the token you have obtained, use the command `uaac context`. For example:
+
+    <pre class="terminal">
+    $ uaac context
+    [0]*[http://localhost:8080/uaa]
+
+    [0]*[admin]
+      client_id: admin
+      access_token: eyJhbGciOiJIUzI1NiIsImtpZCI6ImxlZ2FjeS10b2tlbi1rZXkiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiIxOWYyNWU2Y2E5Y2M0ZWIyYTdmNTAxNmU0NDFjZThkNCIsInN1YiI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiY2xpZW50cy5yZWFkIiwiY2xpZW50cy5zZWNyZXQiLCJjbGllbnRzLndyaXRlIiwidWFhLmFkbWluIiwiY2xpZW50cy5hZG1pbiIsInNjaW0ud3JpdGUiLCJzY2ltLnJlYWQiXSwic2NvcGUiOlsiY2xpZW50cy5yZWFkIiwiY2xpZW50cy5zZWNyZXQiLCJjbGllbnRzLndyaXRlIiwidWFhLmFkbWluIiwiY2xpZW50cy5hZG1pbiIsInNjaW0ud3JpdGUiLCJzY2ltLnJlYWQiXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJjaWQiOiJhZG1pbiIsImF6cCI6ImFkbWluIiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsInJldl9zaWciOiIyNjcxOTlkMSIsImlhdCI6MTUyODIzMjAxNywiZXhwIjoxNTI4Mjc1MjE3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdWFhL29hdXRoL3Rva2VuIiwiemlkIjoidWFhIiwiYXVkIjpbInNjaW0iLCJjbGllbnRzIiwidWFhIiwiYWRtaW4iXX0.L2cn6HqLQAEyqTrYYkL9Al_8JyfwB330er7DshUb9wg
+      token_type: bearer
+      expires_in: 43199
+      scope: clients.read clients.secret clients.write uaa.admin clients.admin scim.write scim.read
+      jti: 19f25e6ca9cc4eb2a7f5016e441ce8d4
+    </pre>
+
+    Copy the access token from this output for the following step.
+
+5. Run `uaac token decode ACCESS-TOKEN-VALUE` to view information in the token, which is encoded using the [JSON Web Token](https://tools.ietf.org/html/rfc7519) format. Replace `ACCESS-TOKEN-VALUE` with your access token, copied from the `uaac context` output. The UAAC should display all the claims inside the token body. For example:
+
+    <pre class="terminal">
+    $ uaac token decode eyJhbGciOiJIUzI1NiIsImtpZCI6ImxlZ2FjeS10b2tlbi1rZXkiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiIxOWYyNWU2Y2E5Y2M0ZWIyYTdmNTAxNmU0NDFjZThkNCIsInN1YiI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiY2xpZW50cy5yZWFkIiwiY2xpZW50cy5zZWNyZXQiLCJjbGllbnRzLndyaXRlIiwidWFhLmFkbWluIiwiY2xpZW50cy5hZG1pbiIsInNjaW0ud3JpdGUiLCJzY2ltLnJlYWQiXSwic2NvcGUiOlsiY2xpZW50cy5yZWFkIiwiY2xpZW50cy5zZWNyZXQiLCJjbGllbnRzLndyaXRlIiwidWFhLmFkbWluIiwiY2xpZW50cy5hZG1pbiIsInNjaW0ud3JpdGUiLCJzY2ltLnJlYWQiXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJjaWQiOiJhZG1pbiIsImF6cCI6ImFkbWluIiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsInJldl9zaWciOiIyNjcxOTlkMSIsImlhdCI6MTUyODIzMjAxNywiZXhwIjoxNTI4Mjc1MjE3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdWFhL29hdXRoL3Rva2VuIiwiemlkIjoidWFhIiwiYXVkIjpbInNjaW0iLCJjbGllbnRzIiwidWFhIiwiYWRtaW4iXX0.L2cn6HqLQAEyqTrYYkL9Al_8JyfwB330er7DshUb9wg
+
+    Note: no key given to validate token signature
+
+      jti: 19f25e6ca9cc4eb2a7f5016e441ce8d4
+      sub: admin
+      authorities: clients.read clients.secret clients.write uaa.admin clients.admin scim.write scim.read
+      scope: clients.read clients.secret clients.write uaa.admin clients.admin scim.write scim.read
+      client_id: admin
+      cid: admin
+      azp: admin
+      grant_type: client_credentials
+      rev_sig: 267199d1
+      iat: 1528232017
+      exp: 1528275217
+      iss: http://localhost:8080/uaa/oauth/token
+      zid: uaa
+      aud: scim clients uaa admin
     </pre>
 
 ### <a id='cf'></a>Deploy UAA to Cloud Foundry ###
