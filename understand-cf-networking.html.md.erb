@@ -8,7 +8,8 @@ This topic provides an overview of how Container-to-Container Networking works.
 The Container-to-Container Networking feature enables app instances to communicate with each other directly.
 <%= vars.cf_networking %>
 
-##<a id="architecture"></a> Architecture
+
+## <a id="architecture"></a> Architecture
 
 ### <a id='overview'></a>Overview
 
@@ -58,7 +59,7 @@ The Container-to-Container Networking BOSH release includes the following core c
   </tr>
 </table>
 
-###<a id='swap'></a> Swappable Components
+### <a id='swap'></a> Swappable Components
 
 The Container-to-Container Networking BOSH release includes the following swappable components:
 
@@ -88,8 +89,8 @@ The Container-to-Container Networking BOSH release includes the following swappa
   </tr>
 </table> 
 
-##<a id='app-comm'></a> App Instance Communication
 
+## <a id='app-comm'></a> App Instance Communication
 
 The diagram below illustrates how app instances communicate in a deployment with Container-to-Container Networking enabled. 
 In this example, the operator creates two policies to regulate the flow of traffic between **App A**, **App B**, and **App C**. 
@@ -100,7 +101,6 @@ In this example, the operator creates two policies to regulate the flow of traff
 If traffic and its direction is not explicitly allowed, it is denied. For example, **App B** cannot send traffic to **App C**.
 
 ![Post Container-to-Container Networking](./images/post-c2c.png)
-
 
 ### <a id='overlay-network'></a> Overlay Network
 
@@ -118,11 +118,11 @@ All Diego cells in your Cloud Foundry deployment share this overlay network. By 
 
 Cloud Foundry container networking is currently supported only on Linux.
 
-<p class="note warning"><strong>Warning</strong>: The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
+<p class="note warning"><strong>Warning:</strong> The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
 
-<p class="note"><strong>Note</strong>: Traffic to app containers from Gorouter or from app containers to external services uses cell IP addresses and NAT, not the overlay network.</p>
+<p class="note"><strong>Note:</strong> Traffic to app containers from Gorouter or from app containers to external services uses cell IP addresses and NAT, not the overlay network.</p>
 
-###<a id="policies"></a> Policies
+### <a id="policies"></a> Policies
 
 Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances.
 The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
@@ -134,7 +134,8 @@ These policies apply immediately without having to restart the app.
 
 <% if vars.product_name.include? "CF" %>
 
-##<a id='service-discovery'></a> App Service Discovery (Experimental)
+
+## <a id='service-discovery'></a> App Service Discovery
 
 The <%= vars.product_full %> platform supports DNS-based service discovery that lets apps find each others' internal addresses. For example, a front-end app instance can use the service discovery mechanism to establish communications with a back-end app instance. See the [Developer Guide](../devguide/deploy-apps/cf-networking.html#discovery) for how to set up and use app service discovery.
 
@@ -142,12 +143,14 @@ Container-to-Container app service discovery does not provide client-side load b
 
 <% end %>
 
-##<a id="alt-stack"></a> Alternative Network Stacks
+
+## <a id="alt-stack"></a> Alternative Network Stacks
 
 The BOSH release that contains the Container-to-Container Networking feature is composed of a 
 pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
 
-##<a id="c2cvsasg"></a> Container-to-Container Networking versus ASGs
+
+## <a id="c2cvsasg"></a> Container-to-Container Networking versus ASGs
 
 Both application security groups (ASGs) and Container-to-Container Networking policies affect traffic from app instances.
 The following table highlights differences between ASGs and Container-to-Container Networking policies.
