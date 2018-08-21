@@ -14,28 +14,37 @@ Reasons to contribute to the Cloud Foundry documentation include:
 * You are a good person, and you want to help your fellow humans.
 * You hate the idea of someone else having to go through what you just went through to figure something out. Such a waste; so inefficient.
 
-## <a id='how'></a>How Can You Contribute?
+## <a id='contribute'></a>How Can You Contribute?
 
-The content for the Cloud Foundry documentation lives in several GitHub repositories within the [cloudfoundry GitHub org](https://github.com/cloudfoundry/). Each topic is represented by a source file in Markdown/HTML/embedded Ruby (`html.md.erb`) format. 
+The source files for all Cloud Foundry docs are hosted on [Github](http://github.com), and each docs page has a link to its Github source file at the bottom. The source files are in Markdown/HTML/embedded Ruby (`html.md.erb`) format.
 
-Follow the procedures below to [consult best practices](#best-practices), [sign the Contributor License Agreement (CLA)](#cla), and contribute to the documentation by [submitting a pull request](#pull-request) or [raising an issue](#issue).
+If you use Github, the most direct and effective way to contribute to the docs is to [submit a pull request](#github-pr) or [raise an issue](#github-issue) in the Github repository containing the docs content that you want to change.
 
-### <a id='best-practices'></a> Step 1: Consult Best Practices
+If you do not already use Github (or want to learn), you can contribute to the CF docs in [other ways](#non-github) that are also greatly appreciated.
 
-The Cloud Foundry Documentation Team reviews and revises all contributions. As a result, the team recommends that contributors **focus on providing correct and complete information, and not worry about style and structure**.
+Whichever way you contribute, please follow our [Advice for Contributors](#advice).
 
-If you want to adopt best practices for documentation, keep in mind the following:
+###<a id='pull-request'></a> Submit a Github Pull Request
 
-* If your contribution is larger than a small correction, put yourselves in the shoes of a novice and read through it. Revise the text to answer any questions that might occur to a less experienced user.
-* Who needs this information? Are they a developer or a platform operator?
-* What are the specifics that a user needs to know in order to understand and perform the task? Instead of "the instance" or “the cluster,” explain the instance or cluster of what. Instead of "revise the code to..." explain where to revise the code.
-* If you're giving instructions, include why you would want to do what you're describing. What's your specific situation, and what result do you seek?
+If you have identified a problem with the docs and know the required content change, the fastest way to make the change is by submitting a pull request (PR).
 
-For further guidance, contact the Cloud Foundry Documentation Team at cf-docs@pivotal.io or through our `#cf-docs` channel on the [Cloud Foundry Slack](https://cloudfoundry.slack.com). 
+The CF docs team typically accepts PRs within a day, but may need to ask follow-up questions.
 
-### <a id='cla'></a> Step 2: Sign and Publicize the CLA
+Before your PRs can be accepted, you must have a [signed Contributor License Agreement](#sign-cla) (CLA) on file.
 
-If you plan to submit a pull request, you must have signed the CLA as an individual or publicized your membership with an organization that has signed the CLA. Perform the following steps:
+To submit a pull request, follow these steps:
+
+1. **Prerequisite**: [Sign the CLA](#sign-cla) if you have not already done so.
+1. Navigate to the topic that you want to modify.
+1. To locate the GitHub source file that contains the content for the topic, scroll to the bottom of the page and click **Create a pull request or raise an issue on the source for this page in GitHub.**
+1. Click the pencil icon in the upper right to edit the file in GitHub.
+1. Make your desired changes.
+1. Under **Commit changes** at the bottom of the page, enter a description of your change and click **Propose file change**.
+1. Click **Create pull request**.
+
+#### <a id='sign-cla'></a> Sign and Publicize the CLA
+
+Before your Github pull request can be accepted, you must sign the Contributor License Agreement (CLA) as an individual or publicize your membership with an organization that has signed the CLA. To do this, perform the following steps:
 
 1. Complete and sign the appropriate CLA, either [individual](https://www.cloudfoundry.org/wp-content/uploads/2017/01/CFF_Individual_CLA.pdf) or [corporate](https://www.cloudfoundry.org/wp-content/uploads/2017/01/CFF_Corporate_CLA.pdf).
 1. Send a scan of the CLA to contributors@cloudfoundry.org, as instructed in the CLA. When sending the individual CLA, provide your GitHub username. When sending the corporate CLA, provide a list of GitHub usernames that can make pull requests on behalf of your organization.
@@ -45,28 +54,15 @@ If you do not have a CLA on file with the Cloud Foundry Foundation, the `cfdredd
 
 If you receive the `cfdreddbot` notification, but are confident that you are already covered under a corporate or organizational CLA, then verify that you have [publicized](https://help.github.com/articles/publicizing-or-hiding-organization-membership/) your membership in an appropriate GitHub org.
 
-###<a id='contribute'></a> Step 3: Contribute
+###<a id='issue'></a> Rais a Github Issue
 
-You can contribute to the documentation by [submitting a pull request](#pull-request) or [raising an issue](#issue).
+If you do not have specific edits to make, but want start a discussion or make a general suggestion, you can raise a Github issue.
 
-If you have identified a problem with the documentation, and know the required content change, submit a pull request.
+Github issues generally take longer to resolve than pull requests. But if you describe the issue with helpful background information and specific and actionable instructions, the CF docs team can address it quickly.
 
-If you do not know the required content change, file a GitHub issue against the repository that contains the content.
+Vague or partially-baked Github issues may remain unaddressed for some time.
 
-####<a id='pull-request'></a> Option 1: Submit a Pull Request
-
-Perform the following steps to contribute to the documentation by submitting a pull request:
-
-1. Navigate to the topic that you want to modify.
-1. To locate the GitHub source file that contains the content for the topic, scroll to the bottom of the page and click **Create a pull request or raise an issue on the source for this page in GitHub.**
-1. Click the pencil icon in the upper right to edit the file in GitHub.
-1. Make your desired changes.
-1. Under **Commit changes** at the bottom of the page, enter a description of your change and click **Propose file change**.
-1. Click **Create pull request**.
-
-####<a id='issue'></a> Option 2: Raise an Issue
-
-Perform the following steps to create an issue on a GitHub repository:
+To raise an issue on a GitHub repository:
 
 1. Navigate to the topic that you want to modify.
 1. To locate the GitHub source file that contains the content for the topic, scroll to the bottom of the page and click **Create a pull request or raise an issue on the source for this page in GitHub.**
@@ -75,6 +71,27 @@ Perform the following steps to create an issue on a GitHub repository:
 1. Click **New issue**.
 1. Enter a title for your issue, and in the text box, describe the issue and provide links to the affected topic(s).
 1. Click **Submit new issue**.
+
+###<a id='non-github'></a> Contribute Without Github
+
+To contribute to the CF docs without using Github, you can use the following:
+
+* **Google Docs**: Write new docs content, or copy-paste existing content, into a [Google Drive](http://drive.google.com) document. Edit or comment on it, and share with the CF docs team at cf-docs@pivotal.io.
+* **Email** the the CF docs team directly at cf-docs@pivotal.io.
+* **Slack** the CF docs team through the [&#35;cf-docs](https://cloudfoundry.slack.com/messages/C03B0T0D5/") channel in Cloud Foundry Slack.
+
+## <a id='advice'></a> Advice for Contributors
+
+The Cloud Foundry Documentation Team reviews and revises all contributions, so you can **focus on providing correct and complete information, and not worry about style and structure**.
+
+Keep in mind:
+
+* If your contribution is larger than a small correction, put yourselves in the shoes of a novice and read through it. Revise the text to answer any questions that might occur to a less experienced user.
+* Who needs this information? Are they a developer or a platform operator?
+* What are the specifics that a user needs to know in order to understand and perform the task? Instead of "the instance" or “the cluster,” explain the instance or cluster of what. Instead of "revise the code to..." explain where to revise the code.
+* If you're giving instructions, include why you would want to do what you're describing. What's your specific situation, and what result do you seek?
+
+For further guidance, contact the Cloud Foundry Documentation Team at cf-docs@pivotal.io or through our `#cf-docs` channel on the [Cloud Foundry Slack](https://cloudfoundry.slack.com). 
 
 ## <a id='preview'></a> How Can You Preview Your Documentation Changes?
 
