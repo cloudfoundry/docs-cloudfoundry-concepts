@@ -11,7 +11,7 @@ The Container-to-Container Networking feature enables app instances to communica
 
 ## <a id="architecture"></a> Architecture
 
-### <a id='overview'></a>Overview
+### <a id='overview'></a> Overview
 
 Container-to-Container Networking integrates with [Garden-runC](./architecture/garden.html#garden-runc) in a [Diego](./diego/diego-architecture.html) deployment. 
 The [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release) includes several core components, as well as swappable components. 
@@ -118,19 +118,15 @@ All Diego cells in your Cloud Foundry deployment share this overlay network. By 
 
 Cloud Foundry container networking is currently supported only on Linux.
 
-<p class="note warning"><strong>Warning:</strong> The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
+<p class="note warning"><strong>WARNING:</strong> The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
 
-<p class="note"><strong>Note:</strong> Traffic to app containers from Gorouter or from app containers to external services uses cell IP addresses and NAT, not the overlay network.</p>
+<p class="note"><strong>Note:</strong> Traffic to app containers from the Gorouter or from app containers to external services uses cell IP addresses and NAT, not the overlay network.</p>
 
 ### <a id="policies"></a> Policies
 
-Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances.
-The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
+Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances. The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
 
-The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly 
-without going through the Gorouter, a load balancer, or a firewall. 
-Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. 
-These policies apply immediately without having to restart the app. 
+The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly without going through the Gorouter, a load balancer, or a firewall. Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. These policies apply immediately without having to restart the app. 
 
 <% if vars.product_name.include? "CF" %>
 
@@ -146,14 +142,12 @@ Container-to-Container app service discovery does not provide client-side load b
 
 ## <a id="alt-stack"></a> Alternative Network Stacks
 
-The BOSH release that contains the Container-to-Container Networking feature is composed of a 
-pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
+The BOSH release that contains the Container-to-Container Networking feature is composed of a pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
 
 
 ## <a id="c2cvsasg"></a> Container-to-Container Networking versus ASGs
 
-Both application security groups (ASGs) and Container-to-Container Networking policies affect traffic from app instances.
-The following table highlights differences between ASGs and Container-to-Container Networking policies.
+Both application security groups (ASGs) and Container-to-Container Networking policies affect traffic from app instances. The following table highlights differences between ASGs and Container-to-Container Networking policies.
 
 <table>
   <tr>
