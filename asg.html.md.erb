@@ -5,13 +5,13 @@ owner: Security
 
 <strong><%= modified_date %></strong>
 
-This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool. 
+This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool.
 <%= vars.asg_first_time %>
 
 ## <a id='introduction'></a> About Application Security Groups
 
-Application Security Groups (ASGs) are a collections of egress rules that
-specify the protocols, ports, and IP address ranges where app or task instances 
+Application Security Groups (ASGs) are a collection of egress rules that
+specify the protocols, ports, and IP address ranges where app or task instances
 send traffic.
 
 ASGs define **allow** rules, and their order of evaluation is unimportant
@@ -95,24 +95,24 @@ The following table indicates the differences between the four sets.
   </tr>
 </table>
 
-Typically, ASGs applied during the staging lifecycle are more permissive than 
+Typically, ASGs applied during the staging lifecycle are more permissive than
 the ASGs applied during the running lifecycle.
 This is because staging often requires access to different resources, such as
 dependencies.
 
 You use different commands to apply an ASG to each of the four sets. For more information, see the [Procedures](#procedures) section of this topic.
 
-<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use cf CLI 6.28.0 or later.
+<p class="note"><strong>Note</strong>: To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.
 </p>
 
-### <a id='creating-groups'></a> The Structure and Attributes of ASGs 
+### <a id='creating-groups'></a> The Structure and Attributes of ASGs
 
 ASG rules are specified as a JSON array of ASG objects. An ASG object has the following attributes:
 
 
 |Attribute        |Description                                                                                                                                                                                                  |Notes
 |---              |---                                                                                                                                                                                                          |---
-|`protocol`       |`tcp`, `udp`, `icmp`, or `all`                                                                                                                                                                               |Required 
+|`protocol`       |`tcp`, `udp`, `icmp`, or `all`                                                                                                                                                                               |Required
 |`destination`    |A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block that can receive traffic
 |`ports`          |A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081`                                                            |Required when `protocol` is `tcp` or `udp`
 |`code`           |ICMP code                                                                                                                                                                                                    |Required when `protocol` is `icmp`. A value of `-1` allows all codes.
@@ -124,7 +124,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 <% if vars.product_name.include? "CF" %>
 
 
-##<a id="process"></a> Process for Administering ASGs
+## <a id="process"></a> Process for Administering ASGs
 
 The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs.
 Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](#procedures) below.
@@ -169,6 +169,8 @@ Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](
 ## <a id='procedures'></a> Managing ASGs with the cf CLI
 
 This section provides the commands you need to create and manage ASGs.
+
+<%= vars.mutual_tls_tcp %>
 
 ### <a id='viewing'></a> View ASGs
 
@@ -220,7 +222,7 @@ $ cf create-security-group my-asg ~/workspace/my-asg.json
 After the ASG is created, you must bind it to an ASG set before it takes effect.
 See <a href="#binding-groups">Bind ASGs</a> below.
 
-### <a id='binding-groups'></a> Bind ASGs 
+### <a id='binding-groups'></a> Bind ASGs
 
 <p class='note'><strong>Note</strong>: Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
 </p>
@@ -229,7 +231,7 @@ To apply an ASG, you must first bind it to an ASG set.
 
 To bind an ASG to the platform-wide staging ASG set, run `cf bind-staging-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
-Example: 
+Example:
 <pre class="terminal">
 $ cf bind-staging-security-group my-asg
 </pre>
@@ -276,7 +278,7 @@ use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-re
 
 To unbind an ASG from the platform-wide staging ASG set, run `cf unbind-staging-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
-Example: 
+Example:
 <pre class="terminal">
 $ cf unbind-staging-security-group my-asg
 </pre>
@@ -295,16 +297,16 @@ Example:
 $ cf unbind-security-group my-asg my-org my-space --lifecycle staging
 </pre>
 
-### <a id='deleting-groups'></a> Delete ASGs 
+### <a id='deleting-groups'></a> Delete ASGs
 
 <p class='note'><strong>Note</strong>: You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.
 </p>
 
 To delete an ASG, run `cf delete-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
-Example: 
+Example:
 <pre class="terminal">
-$ cf delete-security-group my-asg 
+$ cf delete-security-group my-asg
 </pre>
 
 
@@ -323,9 +325,9 @@ Below are examples of typical ASGs. Configure your ASGs in accordance with your 
 
 ### <a id='dns-example'></a> DNS
 
-To resolve hostnames to IP addresses, apps require DNS server connectivity, 
-which typically use port 53. 
-Administrators should create or update a `dns` ASG with appropriate rules. Administrators may further restrict the DNS servers to specific IP addresses or 
+To resolve hostnames to IP addresses, apps require DNS server connectivity,
+which typically use port 53.
+Administrators should create or update a `dns` ASG with appropriate rules. Administrators may further restrict the DNS servers to specific IP addresses or
 ranges of IP addresses.
 
 Example `dns` ASG:
@@ -347,9 +349,9 @@ Example `dns` ASG:
 
 ### <a id='public-networks-example'></a> Public Networks
 
-Apps often require public network connectivity to retrieve app dependencies, or 
-to integrate with services available on public networks. 
-Example app dependencies include public Maven repositories, NPM, RubyGems, and 
+Apps often require public network connectivity to retrieve app dependencies, or
+to integrate with services available on public networks.
+Example app dependencies include public Maven repositories, NPM, RubyGems, and
 Docker registries.
 
 <p class='note'><strong>Note</strong>: You should exclude IaaS metadata endpoints, such as <code>169.254.169.254</code>, because the metadata endpoint can expose sensitive environment information to untrusted apps. The <code>public_networks</code> example below accounts for this recommendation.
@@ -440,6 +442,6 @@ You can download the latest release of the ASG Creator from the Cloud Foundry in
 
 ## <a id='logging'></a> ASG Logging
 
-The KB article [How to use Application Security Group (ASG) logging](https://discuss.pivotal.io/hc/en-us/articles/115005916027) describes how you can use ASGs to correlate emitted logs back to an app. 
+The KB article [How to use Application Security Group (ASG) logging](https://discuss.pivotal.io/hc/en-us/articles/115005916027) describes how you can use ASGs to correlate emitted logs back to an app.
 
 <% end %>
