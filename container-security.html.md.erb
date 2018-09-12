@@ -70,7 +70,7 @@ memory the application declares to need in the manifest. Cloud Foundry scales
 the number of allocated shares linearly with the amount of memory, with an app
 instance requesting 8G of memory getting the upper limit of 1024 shares.
 
-<code>process\_cpu.shares = max( (application\_memory / 8), 1024)</code>
+<code>process\_cpu.shares = min( 1024*(application\_memory / 8 GB), 1024)</code>
 
 The next example helps to illustrate this better. Consider three processes. P1, P2 and P3, which are assigned <code>cpu.shares</code> of 5, 20 and 30, respectively.
 
