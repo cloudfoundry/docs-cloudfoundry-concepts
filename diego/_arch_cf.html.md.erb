@@ -41,7 +41,6 @@ The following summarizes the roles and responsibilities of various components de
 * [Database VMs](#database-vms)
 * [Access VMs](#access-vms)
 * [Cloud Controller Bridge Components](#bridge-components)
-* [Consul](#consul)
 * [App Lifecycle Binaries](#app-lifecycle)
 
 ###<a id='cell-components'></a>Diego Cell Components ###
@@ -49,7 +48,7 @@ The following summarizes the roles and responsibilities of various components de
 Diego Cell directly manages and maintains Tasks and LRPs with the following components:
 
  * <a id='rep'></a>**Rep** <br>
-	* Maintains a presence record for the Cell in the Consul/Locket
+	* Maintains a presence record for the Cell in the Locket
 	* Participates in auctions to accept new Tasks and LRP instances
 	* Runs Tasks and LRPs by creating a container and then running actions in it
 	* Reacts to container events
@@ -76,13 +75,13 @@ Diego Brain distribute Tasks and LRPs to Diego Cells and corrects discrepancies 
 * <a id='auctioneer'></a> **Auctioneer** <br>
 	* Holds auctions for Tasks and LRP instances
 	* Distributes work using the auction algorithm. Auction communication is sent between the Auctioneer and the Cell Reps over HTTPS. For more information about the auction algorithm, see [How the Diego Auction Allocates Jobs](diego-auction.html).
-	* Maintains a lock in Consul/Locket to ensure only one auctioneer handles auctions at a time
+	* Maintains a lock in Locket to ensure only one auctioneer handles auctions at a time
 
 ###<a id='database-vms'></a>Database VMs ###
 
  * <a id='bbs'></a>**BBS** <br>
   * Maintains a real-time representation of the state of the Diego cluster, including all desired LRPs, running LRP instances, and in-flight Tasks
-  * Maintains a lock in Consul/Locket to ensure that only one BBS is active
+  * Maintains a lock in Locket to ensure that only one BBS is active
   * Periodically compares DesiredLRPs and ActualLRPs and takes action to enforce the desired state
   * Resends auction requests for Tasks that have been pending for too long and completion callbacks for Tasks that have remained completed for too long
 
@@ -127,10 +126,7 @@ The Cloud Controller Bridge (CC-Bridge) components translate app-specific reques
 
 
 ### <a id='service-registration'></a>Service Registration and Component Coordination
- * <a id="consul"></a>**Consul** <br>
-	* Provides dynamic service registration and load-balancing via DNS resolution
-	* Provides a consistent key-value store for maintenance of distributed locks and component presence
- * <a id="locket"></a> **Locket** <br>
+#### <a id="locket"></a> **Locket** <br>
 	* Provides abstractions for locks and service registration
 	* Relies on a SQL backend for persistence
 	* Lives in the Database VM

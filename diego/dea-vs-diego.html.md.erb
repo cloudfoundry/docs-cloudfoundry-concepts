@@ -79,7 +79,7 @@ Diego architecture moves this allocation process out of the Cloud Controller and
 
 Pre-Diego Cloud Foundry used [NATS](../architecture/messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
-communication between components. Diego retains NATS for some communications, but adds messaging using HTTP and HTTPS protocols, through which components share information in the Consul and Diego BBS servers.
+communication between components. Diego retains NATS for some communications, but adds messaging using HTTP and HTTPS protocols, through which components share information in the Diego BBS servers.
 
 ##<a id='table'></a>DEA / Diego Differences Summary
 
@@ -122,7 +122,7 @@ communication between components. Diego retains NATS for some communications, bu
 <td>nSync syncs between Cloud Controller and Diego, BBS syncs within Diego, and Cell Reps sync between cells and the Diego BBS.</td></tr>
 <tr>
 <td>NATS Message Bus</td>
-<td><a href="../architecture/index.html#bbs-consul">Bulletin Board System (BBS) and Consul</a> through HTTP, HTTPS, and NATS</td>
+<td><a href="../architecture/index.html#bbs-consul">Bulletin Board System (BBS)</a> through HTTP, HTTPS, and NATS</td>
 <td>Internal communication between components</td>
 <td>BBS stores most runtime data; Consul stores control data.</td></tr>
 </table>
