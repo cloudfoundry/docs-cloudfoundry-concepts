@@ -9,18 +9,19 @@ This topic describes how GrootFS manages disk space in <%= vars.product_full %>.
 
 ## <a id="store"></a> GrootFS Stores
 
-A **GrootFS store** is a root filesystem deployed by GrootFS on top of Overlay and XFS. 
+GrootFS is the container root filesystem management component for Garden. Container rootfses are often referred to as **images**.
+A **GrootFS store** is the directory in which rootfs layers and container images are cached. This directory is configured by GrootFS and mounted on an
+XFS formatted volume during BOSH vm creation, via the Garden job, during BOSH vm creation.
+Individual container root filesystems are provided via OverlayFS mounts.
 
-The store directory acts as an image store for rootfs images and is expected to be inside a mounted XFS volume. 
-If you have an existing XFS filesystem mounted, you can use it to hold GrootFS's image store 
-by creating a store directory within your existing mountpath. 
- 
+Supplying GrootFS with an already formatted XFS volume for its store is not yet supported for BOSH controlled deployments.
+
 ### <a id="garbage_coll"></a> General Garbage Collection Behavior in GrootFS Stores
 
 GrootFS stores are initialized to use the entirety of `/var/vcap/data`. If the `reserved_space_for_other_jobs_in_mb` is not set high enough, 
 or if there are many images with few shared volumes, the store can use up all available space.
 
-The thresholder calculates and sets a value so that GrootFS's garbage collector tries to ensure that 
+The thresholder component calculates and sets a value so that GrootFS's garbage collector tries to ensure that
 a small reserved space is kept free for other jobs.
 GrootFS only tries to garbage collect when that threshold is reached.
 However, if all the rootfs layers are actively in use by images, then garbage collection cannot occur and that space is used up.
@@ -28,7 +29,7 @@ However, if all the rootfs layers are actively in use by images, then garbage co
 ## <a id="volumes"></a> Volumes
 
 Underlying layers in rootfs images are known as `volumes` in GrootFS.
-They are read-only and their changesets are layered together through an **overlay** mount to create the rootfs for containers.
+They are read-only and their changesets are layered together through an **OverlayFS** mount to create the root filesystems for containers.
 
 When GrootFS writes each filesystem volume to disk, it also stores the number of bytes written 
 to a file in a `meta` directory.
