@@ -239,14 +239,20 @@ When you deploy an app that requires Diego cells to restart or recreate, the app
 <table>
   <tr>
     <th>If the Gorouter ...</th>
+    <th>then backend...</th>
     <th>then the Gorouter ...</th>
   </tr><tr>
-    <td>cannot establish a TCP connection to the routing back end for the app</td>
-    <td>retries the request three times.</td>
+    <td>cannot establish a TCP connection to a backend</td>
+    <td>n/a</td>
+    <td>retries another backend, no more than 3 times</td>
   </tr><tr>
-    <td>establishes a TCP connection to the routing back end, but the app does not respond</td>
-    <td>waits 15 minutes for a response.</td>
-  </tr>
+    <td>establishes a TCP connection to a backend and forwards the request</td>
+    <td>does not respond</td>
+    <td>waits 15 minutes for a response then errors; does not retry another backend</td>
+  </tr><tr>
+    <td>establishes a TCP connection to a backend and forwards the request</td>
+    <td>TCP connection error</td>
+    <td>returns error to the client; marks backend ineligible; does not retry another backend</td>
 </table>
 
-In both cases, if the app still does not respond to the request, the Gorouter returns a `502` error.
+In all cases, if the app still does not respond to the request, the Gorouter returns a [`502` error](https://docs.cloudfoundry.org/adminguide/troubleshooting-router-error-responses.html).
