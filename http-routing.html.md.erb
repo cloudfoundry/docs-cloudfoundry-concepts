@@ -119,14 +119,19 @@ You can configure the Gorouter to handle this problem in two ways:
   	<th>Security of traffic between Gorouter and Containers</th>
   	<th>Gorouter Route Pruning</th>
   </tr><tr>
-  	<td><a href="#with-tls"><strong>With TLS</strong></a></td>
+  	<td><a href="#with-tls"><strong>With TLS Enabled</strong></a></td>
   	<td>Encrypted via TLS</td>
   	<td>Routes are pruned on failure of TLS handshake only. See <a href="#when-tls-prune">Gorouter TLS pruning behavior.</a></td>
-  </tr></table>
+  </tr><tr>
+  	<td><a href="#without-tls"><strong>Without TLS Enabled</strong></a></td>
+  	<td>Plain text</td>
+  	<td>Routes are pruned on TTL expiry</td>
+  </tr>
+</table>
 
 Both of these consistency modes are described below.
 
-### <a id="with-tls"></a> With TLS
+### <a id="with-tls"></a> With TLS Enabled
 
 This consistency mode is newer and has the following benefits:
 
@@ -152,14 +157,20 @@ If the Gorouter confirms that the app instance identifier in the certificate mat
 <%= partial '../console/router_app_tls_pcf' %>
 <% end %>
 
+### <a id="without-tls"></a> Without TLS Enabled
+
+In this consistency mode, the Diego Route-Emitters on each cell send route registration messages that include instructions for the Gorouter to send unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned from the Gorouter's routing table. See [TLS to Apps and Other Back End Services](#tls-to-back-end) for details.
+
+This pruning method was developed before the alternative was available.
+
 <% if vars.product_name.include? "CF" %>
 
 ### <a id="config-by-instance-group"></a> Consistency Mode Can Differ by Instance Group
 
-The Gorouter can [validate app instance identity using TLS](#with-tls) only when Diego
-cells are configured appropriately. Because cells are configured for TLS through the
-instance group that they belong to, the Gorouter can run in different consistency modes
-with cells in different instance groups.
+The Gorouter can [validate app instance identity using TLS](#with-tls) only when Diego cells are configured appropriately. Because cells are configured for TLS through the instance group that they belong to, the Gorouter can run in different consistency modes with cells in different instance groups. For example, the Gorouter can communicate over TLS and validate the cells in one Isolation Segment, while communicating with cells in another Isolation Segment via plain text and [without validating instance identity](#without-tls).
+
+Currently, only Linux cells support the Gorouter validating app instance identities [using TLS](#with-tls). With Windows cells, the Gorouter runs [without TLS enabled](#without-tls), forwarding requests to Windows apps over plain text and pruning based on route TTL.
+
 <% end %>
 
 
