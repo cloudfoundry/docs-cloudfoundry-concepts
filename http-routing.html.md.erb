@@ -84,6 +84,7 @@ Depending on your needs, you can configure your deployment to terminate TLS at t
 
 The Gorouter supports one-way TLS to back end destinations, including app instances, platform services, and any other routable endpoints.
 
+<% if vars.product_name == 'CF' %>
 This is enabled by configuring the following manifest properties:
 
 - `router.backends.enable_tls: true`
@@ -104,7 +105,9 @@ To enable mutual authentication between the Gorouter and back ends, operators co
 - `router.backends.private_key`
 
 The Gorouter presents the certificate if requested by the back end during the TLS handshake.
-
+<% else %>
+This is enabled by following the steps in [Configure Validation of App Instance Identity with TLS](#app-valid-tls-config). 
+<% end %>
 
 ## <a id="consistency"></a> Preventing Misrouting
 
