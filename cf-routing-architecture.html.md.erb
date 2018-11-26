@@ -10,7 +10,7 @@ This topic explains routing flow and architecture in Cloud Foundry. Cloud Foundr
 
 Because each app can have many instances, one app route can go to multiple containers. As Diego moves and scales app instances, the route emitter on each cell sends messages to NATS or the Routing API to register and de-register routes to the cell's app instances.
 
-The route emitter periodically emits the routes it discovers from Diego BBS to NATS and the Routing API as registration and unregistration messages every twenty seconds. If NATS or the Routing API do not receive information about a route within two minutes, they prune that route from their memory.
+The route emitter periodically emits the routes it discovers from Diego BBS to NATS and the Routing API as registration and unregistration messages every twenty seconds. When TLS is not enabled, if NATS or the Routing API do not receive information about a route within two minutes, they prune that route from their memory. For more information about how CF maintains route consistency when TLS is or is not enabled, see the [Preventing Misrouting](./http-routing.html#consistency) section of the _HTTP Routing_ topic.
 
 The following process describes how a router obtains information about routes for an app running on Cloud Foundry:
 
@@ -21,8 +21,6 @@ The following process describes how a router obtains information about routes fo
 1. If a route is HTTP, the route emitter on the Diego cells sends app route, IP, and port information to NATS, which then sends it to the Gorouter. If a route is TCP, the route emitter sends that information to the Routing API, which then sends it to the TCP router.
 
 1. The Gorouter and TCP router use the route, IP, and port information from the route emitter to map incoming app requests to back end app instance locations.
-
-For more information about how CF maintains route consistency, see the [Preventing Misrouting](./http-routing.html#consistency) section of the _HTTP Routing_ topic.
 
 ![Diagram of Cloud Foundry routing architecture that includes rounded boxes labeled with component names and arrows pointing between rounded boxes that are labeled with the kind of information that passes between components. On the left is a rounded box labeled 'Cloud Controller', with an arrow labeled 'Route information' pointing to a rounded box labeled 'Diego BBS'. A double-ended arrow labeled 'Route, IP, and port information (discovered from Diego BBS)' points between 'Diego BBS' and a rounded box labeled 'Route Emitter'. 'Route Emitter' and two more rounded boxes, each labeled 'App Instance', are within another rounded box labeled 'Diego Cell'. 'Route Emitter' has two arrows, both labeled 'App route, IP, and port information', pointing to two rounded boxes labeled 'NATS' and 'Routing API'. 'NATS' has an arrow labeled 'App route, IP, and port information', pointing to a rounded box labeled 'Gorouter'. 'Routing API' has an arrow labeled 'App route, IP, and port information', pointing to a rounded box labeled 'TCP Router'. 'Routing API' has a double-ended arrow pointing between it and a database icon labeled 'Routing Database'. On the left of 'NATS' and 'Gorouter' are two rounded boxes labeled 'BOSH Manifest' and 'Route Registrar'. 'BOSH Manifest' has an arrow labeled 'Route metadata for system components' pointing to 'Route Registrar'. 'Route Registrar' has an arrow labeled 'Route metadata for system components' pointing to 'NATS'.](cf-routing-architecture.png)
 
