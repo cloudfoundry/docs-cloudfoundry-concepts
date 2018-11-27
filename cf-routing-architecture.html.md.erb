@@ -10,7 +10,7 @@ This topic explains routing flow and architecture in Cloud Foundry. Cloud Foundr
 
 Because each app can have many instances, one app route can go to multiple containers. As Diego moves and scales app instances, the route emitter on each cell sends messages to NATS or the Routing API to register and de-register routes to the cell's app instances.
 
-The route emitter periodically emits the routes it discovers from Diego BBS to NATS and the Routing API as registration and unregistration messages every twenty seconds. When TLS is not enabled, if NATS or the Routing API do not receive information about a route within two minutes, they prune that route from their memory. For more information about how CF maintains route consistency when TLS is or is not enabled, see the [Preventing Misrouting](./http-routing.html#consistency) section of the _HTTP Routing_ topic.
+The route emitter periodically emits the routes it discovers from Diego BBS to NATS and the Routing API as registration and unregistration messages every twenty seconds. By default, the Gorouter uses TLS to verify app identity and confirm that its routes are up-to-date. With TLS disabled, the Gorouter prunes any routes that the route emitters have not re-registered within the past two minutes. For more information about how CF maintains route consistency when TLS is or is not enabled, see the [Preventing Misrouting](./http-routing.html#consistency) section of the _HTTP Routing_ topic.
 
 The following process describes how a router obtains information about routes for an app running on Cloud Foundry:
 
