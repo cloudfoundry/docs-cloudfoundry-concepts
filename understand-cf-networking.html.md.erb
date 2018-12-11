@@ -132,6 +132,8 @@ without going through the Gorouter, a load balancer, or a firewall.
 Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. 
 These policies apply immediately without having to restart the app. 
 
+Additionally, policies use and and track the GUIDs of the apps. The policies continue to work when apps redeploy, or if they crash and Diego places them in a new container. Pushing a brand new app requires a new policy, but not updates to an existing app because an an app always retains its GUID. 
+
 <% if vars.product_name.include? "CF" %>
 
 ##<a id='service-discovery'></a> App Service Discovery (Experimental)
