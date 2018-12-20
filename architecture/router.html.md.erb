@@ -5,10 +5,16 @@ owner: Routing
 
 <strong><%= modified_date %></strong>
 
-The Gorouter routes traffic coming into Cloud Foundry to the appropriate component, whether it is an operator addressing the [Cloud Controller](./cloud-controller.html) or an application user accessing an app running on a Diego Cell. The router is implemented in Go.
-Implementing a custom router in Go gives the router full control over every connection, which simplifies support for WebSockets and other types of traffic (for example, through HTTP CONNECT). A single process contains all routing logic, removing unnecessary latency.
+Gorouter routes traffic coming into Cloud Foundry to the appropriate component,
+whether it is an operator addressing the [Cloud Controller](./cloud-controller.html)
+or an application user accessing an app running on a Diego Cell. Gorouter is
+implemented in Go.
+Implementing a custom Gorouter in Go gives Gorouter full control over every
+connection, which simplifies support for WebSockets and other types of traffic
+(for example, through HTTP CONNECT). A single process contains all routing logic,
+removing unnecessary latency.
 
-Refer to the following instructions for help getting started with the Gorouter
+Refer to the following instructions for help getting started with Gorouter
 in a standalone environment.
 
 ## <a id='setup'></a>Setup ##
@@ -17,7 +23,7 @@ in a standalone environment.
 $ git clone https://github.com/cloudfoundry/gorouter.git
 $ cd gorouter
 $ git submodule update --init
-$ ./bin/go install router/router
+$ ./bin/go install gorouter/gorouter
 $ gem install nats
 </pre>
 
@@ -28,13 +34,13 @@ $ gem install nats
 $ nats-server -d
 
 # Start gorouter
-$ ./bin/router
+$ ./bin/gorouter
 </pre>
 
 ## <a id='use'></a>Usage ##
 
-The Gorouter receives route updates through [NATS](./messaging-nats.html). 
-By default, routes that have not been updated in two minutes are pruned. Therefore, to maintain an active route, you must ensure that the route is updated at least every two minutes. 
+Gorouter receives route updates through [NATS](./messaging-nats.html).
+By default, routes that have not been updated in two minutes are pruned. Therefore, to maintain an active route, you must ensure that the route is updated at least every two minutes.
 The format of these route updates is as follows:
 
 ~~~json
@@ -52,14 +58,15 @@ The format of these route updates is as follows:
 }
 ~~~
 
-Such a message can be sent to both the `router.register` subject to register URIs, and to the `router.unregister` subject to unregister URIs, respectively.
+Such a message can be sent to both the `gorouter.register` subject to register URIs,
+and to the `gorouter.unregister` subject to unregister URIs, respectively.
 
 <pre class="terminal">
 $ nohup ruby -rsinatra -e 'get("/") { "Hello!" }' &
-$ nats-pub 'router.register' '{"host":"127.0.0.1","port":4567,
+$ nats-pub 'gorouter.register' '{"host":"127.0.0.1","port":4567,
     "uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
     "tags":{"another_key":"another_value","some_key":"some_value"}}'
-Published [router.register] : '{"host":"127.0.0.1","port":4567,
+Published [gorouter.register] : '{"host":"127.0.0.1","port":4567,
     "uris":["my_first_url.vcap.me","my_second_url.vcap.me"],
     "tags":{"another_key":"another_value","some_key":"some_value"}}'
 $ curl my_first_url.vcap.me:8080
@@ -68,11 +75,14 @@ Hello!
 
 ## <a id='instrumentation'></a>Instrumentation ##
 
-The Gorouter provides `/varz` and `/healthz` http endpoints for monitoring.
+Gorouter provides `/varz` and `/healthz` http endpoints for monitoring.
 
-The `/routes` endpoint returns the entire routing table as JSON. Each route has an associated array of `host:port` entries.
+The `/routes` endpoint returns the entire routing table as JSON. Each route has
+an associated array of `host:port` entries.
 
-All of the endpoints require http basic authentication, credentials for which you can acquire through NATS. You can explicitly set the `port`, `user` and password (`pass` is the config attribute) in the gorouter.yml config file `status` section.
+All of the endpoints require http basic authentication, credentials for which you
+can acquire through NATS. You can explicitly set the `port`, `user` and password
+(`pass` is the config attribute) in the gorouter.yml config file `status` section.
 
 ~~~yaml
 status:
@@ -104,3 +114,40 @@ $ curl -vvv "http://someuser:somepass@127.0.0.1:8080/routes"
 {"0295dd314aaf582f201e655cbd74ade5.cloudfoundry.me":["127.0.0.1:34567"],
 "03e316d6aa375d1dc1153700da5f1798.cloudfoundry.me":["127.0.0.1:34568"]}
 </pre>
+
+### Logs
+
+Gorouter logging is specified in its YAML configuration file. It supports the
+following log levels:
+
+* `fatal`: Gorouter is unable to handle any requests due to a fatal error.
+  * **Examples:** Gorouter cannot bind to its TCP port, a CF component has
+  published invalid data to Gorouter.
+* `error`: An unexpected error has occurred.
+  * **Example:** Gorouter failed to fetch token from UAA service.
+* `info`: An expected event has occurred.
+  * **Examples:** Gorouter started or exited, Gorouter has begun to prune
+  routes for stale droplets.
+* `debug`: A lower-level event has occurred.
+  * **Examples:** route registration, route unregistration.
+
+Sample log message in Gorouter:
+
+`[2017-02-01 22:54:08+0000] {"log_level":0,"timestamp":1485989648.0895808,"message":"endpoint-registered","source":"vcap.Gorouter.registry","data":{"uri":"0-*.login.bosh-lite.com","backend":"10.123.0.134:8080","modification_tag":{"guid":"","index":0}}}
+`
+
+- `log_level`: This represents logging level of the message
+- `timestamp`: Epoch time of the log
+- `message`: Content of the log line
+- `source`: The function within Gorouter that initiated the log message
+- `data`: Additional information that varies based on the message
+
+Access logs provide information for the following fields when recieving a request:
+
+`<Request Host> - [<Start Date>] "<Request Method> <Request URL> <Request Protocol>" <Status Code> <Bytes Received> <Bytes Sent> "<Referer>" "<User-Agent>" <Remote Address> <Backend Address> x_forwarded_for:"<X-Forwarded-For>" x_forwarded_proto:"<X-Forwarded-Proto>" vcap_request_id:<X-Vcap-Request-ID> response_time:<Response Time> app_id:<Application ID> app_index:<Application Index> <Extra Headers>`
+
+*Status Code, Response Time, Application ID, Application Index, and Extra Headers are all optional fields
+
+*The absence of Status Code, Response Time, Application ID, or Application Index will result in a "-" in the corresponding field
+
+Access logs are also redirected to syslog.
