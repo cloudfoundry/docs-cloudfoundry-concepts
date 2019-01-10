@@ -83,11 +83,11 @@ broker for that service is responsible for providing the service instance.
 
 ## <a id='messaging'></a>Messaging
 
-### <a id='bbs-consul'></a> Consul and BBS
+### <a id='internal-https-bbs'></a> Internal HTTPS and BBS
 
 Cloud Foundry component VMs communicate with each other internally through HTTP and HTTPS protocols, sharing temporary messages and data stored in two locations:
 
-* A [Consul server](../diego/diego-architecture.html#consul) stores longer-lived control data, such as component IP addresses and distributed locks that prevent components from duplicating actions.
+* A [Consul server](../diego/diego-architecture.html#consul) or BOSH DNS stores longer-lived control data, such as component IP addresses and distributed locks that prevent components from duplicating actions.
 
 * Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS stores data in MySQL, using the [Go MySQL Driver](https://github.com/go-sql-driver/mysql).
 
