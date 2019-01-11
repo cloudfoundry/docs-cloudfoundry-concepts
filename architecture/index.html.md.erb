@@ -4,63 +4,57 @@ title: Cloud Foundry Components
 
 <strong><%= modified_date %></strong>
 
-Cloud Foundry components include a self-service application execution engine, an
-automation engine for application deployment and lifecycle management, and a
-scriptable command line interface (CLI), as well as integration with development
-tools to ease deployment processes.
-Cloud Foundry has an open architecture that includes a buildpack mechanism for
-adding frameworks, an application services interface, and a cloud provider
-interface.
+Cloud Foundry components include a self-service application execution engine, an automation engine for application deployment and lifecycle management, and a scriptable command line interface (CLI), as well as integration with development tools to ease deployment processes. Cloud Foundry has an open architecture that includes a buildpack mechanism for adding frameworks, an application services interface, and a cloud provider interface.
 
-Refer to the descriptions below for more information about Cloud Foundry
-components.
-Some descriptions include links to more detailed documentation.
+See the descriptions below for more information about Cloud Foundry components. Some descriptions include links to more detailed documentation.
 
 ![Cloud Foundry Architecture](../images/cf_architecture_block.png)
 
-## <a id='routing'></a>Routing
 
-### <a id='router'></a>Router
+## <a id='routing'></a> Routing
 
-The [router](./router.html) routes incoming traffic to the appropriate
-component, either a Cloud Controller component or a hosted application running on a Diego Cell.
+### <a id='router'></a> Router
 
-The router periodically queries the Diego Bulletin Board System (BBS) to determine which cells and containers each application currently runs on. Using this information, the router recomputes new routing tables based on the IP addresses of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
+The [router](./router.html) routes incoming traffic to the appropriate component, either a Cloud Controller component or a hosted application running on a Diego Cell.
 
-## <a id='authentication'></a>Authentication
+The router periodically queries the Diego Bulletin Board System (BBS) to determine which cells and containers each app currently runs on. Using this information, the router recomputes new routing tables based on the IP addresses of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
+
+
+## <a id='authentication'></a> Authentication
 
 ### <a id='uaa'></a> OAuth2 Server (UAA) and Login Server
 
-The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to
-provide identity management.
+The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to provide identity management.
 
-## <a id='app-lifecycle'></a>App Lifecycle
+
+## <a id='app-lifecycle'></a> App Lifecycle
 
 ### <a id='cc'></a> Cloud Controller and Diego Brain
 
-The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of applications. To push an app to Cloud Foundry, you target the Cloud Controller. The Cloud Controller then directs the Diego Brain through the CC-Bridge components to coordinate individual [Diego cells](#diego-cell) to stage and run applications.
+The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of apps. To push an app to Cloud Foundry, you target the Cloud Controller. The Cloud Controller then directs the Diego Brain through the CC-Bridge components to coordinate individual [Diego cells](#diego-cell) to stage and run apps.
 
 The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), <%= vars.services_link %>, and more.
 
 ### <a id='nsync-bbs'></a> nsync, BBS, and Cell Reps
 
-To keep applications available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required.
+To keep apps available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required.
 
 ![Cloud Foundry Architecture](../images/diego/app-monitor-sync-diego.png)
 
-The nsync, BBS, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which may crash or become unavailable.
+The nsync, BBS, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of apps running on widely-distributed VMs, which may crash or become unavailable.
 
 Here is how the components work together:
 
 * **nsync** receives a message from the Cloud Controller when the user scales an app. It writes the number of instances into a `DesiredLRP` structure in the Diego BBS database. 
-* **BBS** uses its convergence process to monitor the `DesiredLRP` and `ActualLRP` values. It launches or kills application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
+* **BBS** uses its convergence process to monitor the `DesiredLRP` and `ActualLRP` values. It launches or kills app instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
 * **Cell Rep** monitors the containers and provides the `ActualLRP` value.
 
-## <a id='app-storage-execution'></a>App Storage and Execution
+
+## <a id='app-storage-execution'></a> App Storage and Execution
 
 ### <a id='blob'></a> Blobstore
 
-The blobstore is a repository for large binary files, which Github cannot easily manage because Github is designed for code. The blobstore contains the following:
+The blobstore is a repository for large binary files, which GitHub cannot easily manage because GitHub is designed for code. The blobstore contains the following:
 
 * Application code packages
 * Buildpacks
@@ -70,28 +64,30 @@ You can configure the blobstore as either an internal server or an external S3 o
 
 ### <a id='diego-cell'></a> Diego Cell
 
-Application instances, application tasks, and staging tasks all run as [Garden](garden.html) containers on the Diego Cell VMs. The Diego cell rep component manages the lifecycle of those containers and the processes running in them, reports their status to the Diego BBS, and emits their logs and metrics to [Loggregator](#metrics-logging).
+App instances, app tasks, and staging tasks all run as [Garden](garden.html) containers on the Diego Cell VMs. The Diego cell rep component manages the lifecycle of those containers and the processes running in them, reports their status to the Diego BBS, and emits their logs and metrics to [Loggregator](#metrics-logging).
 
-## <a id='services'></a>Services
+
+## <a id='services'></a> Services
 
 ### <a id='broker'></a> Service Brokers
 
-Applications typically depend on <%= vars.services %> such as databases
-or third-party SaaS providers.
-When a developer provisions and binds a service to an application, the service
-broker for that service is responsible for providing the service instance.
+Apps typically depend on <%= vars.services %> such as databases or third-party SaaS providers. When a developer provisions and binds a service to an app, the service broker for that service is responsible for providing the service instance.
 
-## <a id='messaging'></a>Messaging
+
+## <a id='messaging'></a> Messaging
 
 ### <a id='internal-https-bbs'></a> Internal HTTPS and BBS
 
 Cloud Foundry component VMs communicate with each other internally through HTTP and HTTPS protocols, sharing temporary messages and data stored in Diego's [Bulletin Board System (BBS)](../diego/diego-architecture.html#bbs).
 
-The BBS stores more frequently updated and disposable data such as cell and application status, unallocated work, and heartbeat messages. The BBS stores data in MySQL, using the [Go MySQL Driver](https://github.com/go-sql-driver/mysql).
+* BOSH Director colocates a [BOSH DNS](https://bosh.io/docs/dns/) server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation, enabling service discovery between VMs. BOSH DNS also provides client-side load-balancing.
+
+* Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and app status, unallocated work, and heartbeat messages, as well as longer-lived distributed locks. The BBS stores data in MySQL, using the [Go MySQL Driver](https://github.com/go-sql-driver/mysql).
 
 The route-emitter component uses the NATS protocol to broadcast the latest routing tables to the routers.
 
-## <a id='metrics-logging'></a>Metrics and Logging
+
+## <a id='metrics-logging'></a> Metrics and Logging
 
 ### <a id='metrics'></a> Loggregator
 
