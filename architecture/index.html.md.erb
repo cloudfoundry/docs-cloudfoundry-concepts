@@ -78,7 +78,7 @@ Apps typically depend on <%= vars.services %> such as databases or third-party S
 
 ### <a id='internal-https-bbs'></a> Internal HTTPS and BBS
 
-Cloud Foundry component VMs communicate with each other internally through HTTP and HTTPS protocols, sharing temporary messages and data stored in two locations:
+Cloud Foundry component VMs communicate with each other internally through HTTP and HTTPS protocols, sharing temporary messages and data stored in Diego's [Bulletin Board System (BBS)](../diego/diego-architecture.html#bbs).
 
 * BOSH Director colocates a [BOSH DNS](https://bosh.io/docs/dns/) server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation, enabling service discovery between VMs. BOSH DNS also provides client-side load-balancing.
 
