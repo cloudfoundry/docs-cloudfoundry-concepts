@@ -4,7 +4,7 @@ title: Cloud Foundry Overview
 
 <strong><%= modified_date %></strong>
 
-##<a id='industry-standard'></a> The Industry-Standard Cloud Platform
+## <a id='industry-standard'></a> The Industry-Standard Cloud Platform
 
 Cloud platforms let anyone deploy network apps or services and make them available to the world in a few minutes. When an app becomes popular, the cloud easily scales it to handle more traffic, replacing with a few keystrokes the build-out and migration efforts that once took months. Cloud platforms represent the next step in the evolution of IT, enabling you to focus exclusively on your applications and data without worrying about underlying infrastructure.
 
@@ -14,11 +14,12 @@ Not all cloud platforms are created equal. Some have limited language and framew
 
 Cloud Foundry is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps. Developers can deploy their apps to Cloud Foundry using their existing tools and with zero modification to their code.
 
-##<a id='how-it-works'></a> How Cloud Foundry Works
+
+## <a id='how-it-works'></a> How Cloud Foundry Works
 
 To flexibly serve and scale apps online, Cloud Foundry has subsystems that perform specialized functions. Here's how some of these main subsystems work.
 
-###<a id='balances'></a> How the Cloud Balances Its Load
+### <a id='balances'></a> How the Cloud Balances Its Load
 
 Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. A Cloud Foundry installation accomplishes this at three levels:
 
@@ -28,35 +29,37 @@ Clouds balance their processing loads over multiple machines, optimizing for eff
 
 1. The [router](./architecture/router.html) routes incoming traffic from the world to the VMs that are running the apps that the traffic demands, usually working with a customer-provided load balancer.
 
-###<a id='apps-anywhere'></a> How Apps Run Anywhere
+### <a id='apps-anywhere'></a> How Apps Run Anywhere
 
 Cloud Foundry designates two types of VMs: the component VMs that constitute the platform's infrastructure, and the host VMs that host apps for the outside world. Within CF, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
 
 To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. Cloud Foundry distributes app source code to VMs with everything the VMs need to compile and run the apps locally. This includes the OS [stack](../devguide/deploy-apps/stacks.html) that the app runs on, and a [buildpack](../buildpacks/index.html) containing all languages, libraries, and services that the app uses. Before sending an app to a VM, the Cloud Controller [stages](./how-applications-are-staged.html) it for delivery by combining stack, buildpack, and source code into a droplet that the VM can unpack, compile, and run. For simple, standalone apps with no dynamic pointers, the droplet can contain a pre-compiled executable instead of source code, language, and libraries.
 
-###<a id='organize'></a> How CF Organizes Users and Workspaces
+### <a id='organize'></a> How CF Organizes Users and Workspaces
 
 CF manages user accounts through two [User Authentication and Authorization](./architecture/uaa.html) (UAA) servers, which support access control as [OAuth2](https://oauth.io) services and can store user information internally, or connect to external user stores through LDAP or SAML.
 
 One UAA server grants access to BOSH, and holds accounts for the CF operators who deploy runtimes, services, and other software onto the BOSH layer directly. The other UAA server controls access to the Cloud Controller, and determines who can tell it to do what. The Cloud Controller UAA defines different user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run CF commands. The Cloud Controller UAA also scopes the roles to separate, compartmentalized [Orgs and Spaces](./roles.html) within an installation, to manage and track use.
 
-###<a id='resources'></a> Where CF Stores Resources
+### <a id='resources'></a> Where CF Stores Resources
 
 Cloud Foundry uses the git system on [GitHub](https://github.com/) to version-control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, CF maintains an internal or external blobstore. To store and share temporary information, such as internal component states, CF uses <% if vars.product_name == 'CF' %>MySQL, [Consul](https://github.com/hashicorp/consul), and [etcd](https://github.com/coreos/etcd).<%else%>MySQL and [Consul](https://github.com/hashicorp/consul).<%end%>
 
-###<a id='communicate'></a> How CF Components Communicate
+### <a id='communicate'></a> How CF Components Communicate and Find Each Other
 
-Cloud Foundry components communicate with each other by posting messages internally using http and https protocols, and by sending [NATS](./architecture/messaging-nats.html) messages to each other directly.
+Cloud Foundry components communicate with each other by posting messages internally using HTTP and HTTPS protocols, and by sending [NATS](./architecture/messaging-nats.html) messages to each other directly.
 
-###<a id='monitor'></a> How to Monitor and Analyze a CF Deployment
+BOSH Director colocates a [BOSH DNS](https://bosh.io/docs/dns/) server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation, enabling service discovery between VMs.
 
-Cloud Foundry generates system logs from Cloud Foundry components and app logs from hosted apps
+### <a id='monitor'></a> How to Monitor and Analyze a CF Deployment
+
+Cloud Foundry generates system logs from Cloud Foundry components and app logs from hosted apps.
 
 As Cloud Foundry runs, its component and host VMs generate logs and metrics. Cloud Foundry apps also typically generate logs. The <%=vars.loggregator_name_or_link%> system aggregates the component metrics and app logs into a structured, usable form, the _Firehose_. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying _nozzles_.
 
 The component logs follow a different path. They stream from rsyslog agents, and the cloud operator can configure them to stream out to a syslog drain.
 
-###<a id='services'></a> Using Services with CF
+### <a id='services'></a> Using Services with CF
 
 Typical apps depend on free or metered <%=vars.services_link%> such as databases or third-party APIs. To incorporate these into an app, a developer writes a Service Broker, an API that publishes to the Cloud Controller the ability to list service offerings, provision the service, and enable apps to make calls out to it.
 
