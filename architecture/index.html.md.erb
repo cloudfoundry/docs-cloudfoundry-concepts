@@ -80,7 +80,7 @@ Apps typically depend on <%= vars.services %> such as databases or third-party S
 
 Cloud Foundry component VMs communicate with each other internally through HTTP and HTTPS protocols, sharing temporary messages and data stored in Diego's [Bulletin Board System (BBS)](../diego/diego-architecture.html#bbs).
 
-* BOSH Director colocates a [BOSH DNS](https://bosh.io/docs/dns/) server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation, enabling service discovery between VMs. BOSH DNS also provides client-side load-balancing.
+* BOSH Director colocates a [BOSH DNS](https://bosh.io/docs/dns/) server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation, enabling service discovery between VMs. BOSH DNS also provides client-side load-balancing by randomly selecting a healthy VM when multiple VMs are available.
 
 * Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and app status, unallocated work, and heartbeat messages, as well as longer-lived distributed locks. The BBS stores data in MySQL, using the [Go MySQL Driver](https://github.com/go-sql-driver/mysql).
 
