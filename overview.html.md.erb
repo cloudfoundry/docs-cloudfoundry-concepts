@@ -45,11 +45,18 @@ One UAA server grants access to BOSH, and holds accounts for the CF operators wh
 
 Cloud Foundry uses the git system on [GitHub](https://github.com/) to version-control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, CF maintains an internal or external blobstore. CF uses MySQL to store and share temporary information, such as internal component states.
 
-### <a id='communicate'></a> How CF Components Communicate and Find Each Other
+### <a id='communicate'></a> How CF Components Communicate
 
-Cloud Foundry components communicate with each other by posting messages internally using HTTP and HTTPS protocols, and by sending [NATS](./architecture/messaging-nats.html) messages to each other directly.
+Cloud Foundry components communicate in two of the following ways:
 
-BOSH Director colocates a [BOSH DNS](https://bosh.io/docs/dns/) server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation, enabling service discovery between VMs.
+* By posting messages internally using HTTP and HTTPS protocols
+* By sending [NATS](./architecture/messaging-nats.html) messages to each other directly
+
+BOSH Director colocates a BOSH DNS server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation. This enables service discovery between VMs.
+
+BOSH DNS allows deployments to continue communicating with VMs even when the VMs' IP addresses change. It also provides client-side load-balancing by randomly selecting a healthy VM when multiple VMs are available.
+
+For more information about BOSH DNS, see Native DNS Support](https://bosh.io/docs/dns/) in the BOSH documentation.
 
 ### <a id='monitor'></a> How to Monitor and Analyze a CF Deployment
 
