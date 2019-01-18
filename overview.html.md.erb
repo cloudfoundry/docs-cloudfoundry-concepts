@@ -49,7 +49,7 @@ Cloud Foundry uses the git system on [GitHub](https://github.com/) to version-co
 
 Cloud Foundry components communicate in two of the following ways:
 
-* By posting messages internally using HTTP and HTTPS protocols
+* By sending messages internally using HTTP and HTTPS protocols
 * By sending [NATS](./architecture/messaging-nats.html) messages to each other directly
 
 BOSH Director colocates a BOSH DNS server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation. This enables service discovery between VMs.
