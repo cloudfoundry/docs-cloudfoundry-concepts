@@ -5,14 +5,11 @@ owner: Routing
 
 <strong><%= modified_date %></strong>
 
-Gorouter routes traffic coming into Cloud Foundry to the appropriate component,
-whether it is an operator addressing the [Cloud Controller](./cloud-controller.html)
-or an application user accessing an app running on a Diego Cell. Gorouter is
-implemented in Go.
-Implementing a custom Gorouter in Go gives Gorouter full control over every
-connection, which simplifies support for WebSockets and other types of traffic
-(for example, through HTTP CONNECT). A single process contains all routing logic,
-removing unnecessary latency.
+Gorouter routes traffic coming into Cloud Foundry to the appropriate component, whether
+the request comes from an operator addressing the [Cloud Controller](./cloud-controller.html)
+or from an application user accessing an app running on a Diego Cell. Handling both platform
+and app requests with the same process centralizes routing logic and simplifies support for
+WebSockets and other types of traffic (for example, through HTTP CONNECT).
 
 Refer to the following instructions for help getting started with Gorouter
 in a standalone environment.
