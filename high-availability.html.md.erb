@@ -5,17 +5,16 @@ owner: Release Integration
 
 <strong><%= modified_date %></strong>
 
-This topic explains how to configure Cloud Foundry (CF) for high availability (HA), and how Cloud Foundry is designed to ensure high availability at multiple layers.
+This topic describes high availability (HA) in Cloud Foundry (CF), and how Cloud Foundry is designed to ensure high availability at multiple layers.
 
-<%= vars.ha_ert %>
 
-## <a id='capacity'></a>Configuring High Availability
+## <a id='capacity'></a> About High Availability
 
 This section describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
 Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
-Deploying or scaling applications to at least two instances per app also helps maintain high availability. For information about scaling applications and maintaining app uptime, see the [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html) topics.
+Deploying or scaling applications to at least two instances per app also helps maintain high availability. For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
 
 ### <a id='azs'></a> Availability Zones
 
@@ -81,6 +80,8 @@ This section describes configuring surrounding infrastructure to support scaling
 
 #### <a id='resource-pools'></a> Resource Pools
 
+To configure your resource pools according to the requirements of your deployment, see <%=vars.pools_link%>.
+
 Configure your <%=vars.pools_link%> according to the requirements of your deployment.
 
 Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related resources, like IPs and storage, will be available when scaling.
@@ -91,7 +92,7 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
-<p class="note"><strong>Note</strong>: Data services may have single points of failure depending on their configuration.</p>
+<p class="note"><strong>Note:</strong> Data services may have single points of failure depending on their configuration.</p>
 
 <%= vars.contact_support %>
 
@@ -108,7 +109,9 @@ This section explains how <%= vars.first_product_name %> deployments include sev
 
 ### <a id='health-management-apps'></a> Health Management for App Instances
 
-If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. Under Diego architecture, the [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) components  track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
+If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. Under Diego architecture, the nsync, BBS, and Cell Rep components track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
+
+For more information about the nsync, BBS, and Cell Rep components, see the [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) section of the _Cloud Foundry Components_ topic.
 
 ### <a id='monitored-processes'></a> Process Monitoring
 
