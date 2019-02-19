@@ -12,7 +12,7 @@ information about the publishing process.
 
 ## Container-to-Container Networking Diagrams
 
-If you are a contributor to this documentation and would like to modify or propose a modification to the diagrams used in the _Understanding Container-to-Container Networking_ topic, see the source Google Drawings below:
+If you are a contributor to this documentation and would like to modify or propose a modification to the diagrams used in the _Container-to-Container Networking_ topic, see the source Google Drawings below:
 
 * Architecture: https://docs.google.com/a/pivotal.io/drawings/d/1oc2kr5hmltsD2wCEAm5_KTNErf0KOfFwXjYLoXS6geM/edit?usp=sharing
 * Before c2c: https://docs.google.com/a/pivotal.io/drawings/d/1RIZ6NzpwvN0TINTY2XwNox0ctOzP56IBTHpDkg0n-Kc/edit?usp=sharing
