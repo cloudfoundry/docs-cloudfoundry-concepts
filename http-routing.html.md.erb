@@ -10,11 +10,13 @@ This topic describes how the Gorouter, the main component in Cloud Foundry's [ro
 
 ## <a id="http-headers"></a> HTTP Headers
 
-HTTP traffic passed from the Gorouter to an app includes the following HTTP headers:
+#### <a id="header-size-limit"></a> Header Size Limit
+
+Gorouter has a limit of 1MB for HTTP Headers.
 
 #### <a id="X-Forwarded-Proto"></a> X-Forwarded-Proto
 
-`X-Forwarded-Proto` header gives the scheme of the HTTP request from the client. The scheme is HTTP if the client made an insecure request (on port 80) or HTTPS if the client made a secure request (on port 443). Developers can configure their apps to reject insecure requests by inspecting the HTTP headers of incoming traffic and rejecting traffic that includes `X-Forwarded-Proto` with the scheme of HTTP. 
+`X-Forwarded-Proto` header gives the scheme of the HTTP request from the client. In requests forwarded to backends, Gorouter sets the scheme to HTTP if the client made an insecure request (on port 80) or HTTPS if the client made a secure request (on port 443). Developers can configure their apps to reject insecure requests by inspecting the HTTP headers of incoming traffic and rejecting traffic that includes `X-Forwarded-Proto` with the scheme of HTTP. 
 
 #### <a id="X-Forwarded-For"></a> X-Forwarded-For
 
