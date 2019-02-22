@@ -52,11 +52,6 @@ The following table provides recommended instance counts for a high-availability
                 <td>Scale the router to accommodate the number of incoming requests. Additional instances increase available bandwidth. In general, this load is much less than the load on host VMs.</td>
         </tr>
         <tr>
-                <td>HAProxy</td>
-                <td>0 or &ge; 2</td>
-                <td>For environments that require high availability, you can scale HAProxy to <code>0</code> and then configure a high-availability load balancer (LB) to point directly to each Gorouter instance. Alternately, you can also configure the high availability LB to point to HAProxy instance scaled at <code>&ge; 2</code>. Either way, an LB is required to host Cloud Foundry domains at a single IP address.</td>
-        </tr>
-        <tr>
                 <td>UAA</td>
                 <td>&ge; 2</td>
                 <td></td>
