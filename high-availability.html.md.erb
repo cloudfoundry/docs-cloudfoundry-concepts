@@ -5,12 +5,12 @@ owner: Release Integration
 
 <strong><%= modified_date %></strong>
 
-This topic describes high availability (HA) in Cloud Foundry (CF), and how Cloud Foundry is designed to ensure high availability at multiple layers.
+This topic describes high availability in Cloud Foundry, the components used to ensure high availability, and scaling vertically and horizontally. It also describes how Cloud Foundry ensures high availability using multiple layers.
 
 
 ## <a id='capacity'></a> About High Availability
 
-This section describes how to configure system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
+This section describes configuring system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
 Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
@@ -53,7 +53,7 @@ To scale vertically, ensure that you allocate and maintain enough of the followi
 * Disk space and memory in your deployment such that if one host VM is down, all instances of apps can be placed on the remaining Host VMs.
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
-Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine how you should scale vertically vs. horizontally.
+Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine whether you should scale vertically or horizontally.
 
 ### <a id='processes'></a> Scalable Components
 
@@ -97,9 +97,9 @@ For database services deployed outside Cloud Foundry, plan to leverage your infr
 <%= vars.contact_support %>
 
 
-## <a id='cf-ha'></a> How CF Maintains High Availability
+## <a id='cf-ha'></a> How Cloud Foundry Maintains High Availability
 
-This section explains how <%= vars.first_product_name %> deployments include several layers of HA to keep applications running in the face of system failure. These layers include AZs, application health management, process monitoring, and VM resurrection.
+This section explains how <%= vars.first_product_name %> deployments include several layers of high availability to keep applications running in the face of system failure. These layers include AZs, application health management, process monitoring, and VM resurrection.
 
 ### <a id='azs-2'></a> Availability Zones
 
