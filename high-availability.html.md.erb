@@ -5,23 +5,16 @@ owner: Release Integration
 
 <strong><%= modified_date %></strong>
 
-This topic describes high availability in Cloud Foundry, the components used to ensure high availability, and scaling vertically and horizontally. It also describes how Cloud Foundry ensures high availability using multiple layers.
-
-
-## <a id='capacity'></a> About High Availability
-
-This section describes the system components needed to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
-
-Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
-
-Deploying or scaling applications to at least two instances per app also helps maintain high availability. For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
+This topic describes the components used to ensure high availability in Cloud Foundry, vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
 
 
 ## <a id='components'></a> Components of a High Availability Deployment
 
+This section describes the system components needed to ensure high availability.
+
 ### <a id='azs'></a> Availability Zones
 
-During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across AZs and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
+During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones (AZs) and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
 
 Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
 
@@ -45,13 +38,17 @@ If you store blobs internally using WebDAV or NFS, these components run as singl
 <%= vars.collector_singleton %>
 
 
-## <a id='scaling'></a> Component Scaling for High Availability
+## <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling for High Availability
 
-### <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
-
-You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components.
+You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components. The nature of the applications you host on Cloud Foundry should determine whether you should scale vertically or horizontally.
 
 <%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
+
+For more information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
+
+### <a id='vert-scaling'></a> Scale Vertically
+
+Scaling vertically means adding memory and disk to your component VMs.
 
 To scale vertically, ensure that you allocate and maintain enough of the following:
 
@@ -59,23 +56,22 @@ To scale vertically, ensure that you allocate and maintain enough of the followi
 * Disk space and memory in your deployment such that if one host VM is down, all instances of apps can be placed on the remaining Host VMs.
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
-Scaling up the following components horizontally also increases your capacity to host applications. The nature of the applications you host on Cloud Foundry should determine whether you should scale vertically or horizontally.
+### <a id='horiz-scaling'></a> Scale Horizontally
 
-### <a id='processes'></a> Scalable Components
+Scaling horizontally means increasing the number of VM instances dedicated to running a functional component of the system.
 
 You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. 
 
-You should also distribute the instances of multiply-scaled components across different AZs. If you use more than three AZs, ensure that you use an odd number of AZs. 
-
-If you do not require a high-availability deployment (for example, you are deploying a proof-of-concept or sandbox), you should scale down job instances to the minimum required for a functional deployment.
+You should also distribute the instances of multiply-scaled components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. If you use more than three AZs, ensure that you use an odd number of AZs.
 
 <%= vars.scaling_ert %>
 
 <%= partial vars.scale_table %>
 
-### <a id='supporting-scaling'></a> Configure Support for High Availability Components
 
-This section describes configuring surrounding infrastructure to support scaling component VMs for high availability.
+## <a id='supporting-scaling'></a> Configure Support for High Availability Components
+
+This section describes the surrounding infrastructure required to support scaling component VMs for high availability.
 
 <% if vars.product_name == 'CF' %>
 <%= vars.max_in_flight_header %>
@@ -84,7 +80,7 @@ This section describes configuring surrounding infrastructure to support scaling
 <%= vars.om_resurrector_header%>
 <%= vars.om_resurrector_text%>
 
-#### <a id='resource-pools'></a> Resource Pools
+### <a id='resource-pools'></a> Resource Pools
 
 To configure your resource pools according to the requirements of your deployment, see <%=vars.pools_link%>
 
@@ -92,7 +88,7 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 <%=vars.pcf_pools%>
 
-#### <a id='databases'></a> Databases
+### <a id='databases'></a> Databases
 
 For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
