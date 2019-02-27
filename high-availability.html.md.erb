@@ -10,11 +10,14 @@ This topic describes high availability in Cloud Foundry, the components used to 
 
 ## <a id='capacity'></a> About High Availability
 
-This section describes configuring system components to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
+This section describes the system components needed to ensure high availability. You accomplish this by scaling component VMs and locating them in multiple Availability Zones (AZs), so that their redundancy and distribution minimizes downtime during ongoing operation, product updates, and platform upgrades.
 
 Scaling component VMs means changing the number of VM instances dedicated to running a functional component of the system. Scaling usually means increasing this number, while scaling down or scaling back means decreasing it.
 
 Deploying or scaling applications to at least two instances per app also helps maintain high availability. For information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
+
+
+## <a id='components'></a> Components of a High Availability Deployment
 
 ### <a id='azs'></a> Availability Zones
 
@@ -40,6 +43,9 @@ For storing blobs, large binary files, the best approach for high availability i
 If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
 
 <%= vars.collector_singleton %>
+
+
+## <a id='scaling'></a> Component Scaling for High Availability
 
 ### <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
 
@@ -80,9 +86,7 @@ This section describes configuring surrounding infrastructure to support scaling
 
 #### <a id='resource-pools'></a> Resource Pools
 
-To configure your resource pools according to the requirements of your deployment, see <%=vars.pools_link%>.
-
-Configure your <%=vars.pools_link%> according to the requirements of your deployment.
+To configure your resource pools according to the requirements of your deployment, see <%=vars.pools_link%>
 
 Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related resources, like IPs and storage, will be available when scaling.
 
@@ -95,31 +99,3 @@ For database services deployed outside Cloud Foundry, plan to leverage your infr
 <p class="note"><strong>Note:</strong> Data services may have single points of failure depending on their configuration.</p>
 
 <%= vars.contact_support %>
-
-
-## <a id='cf-ha'></a> How Cloud Foundry Maintains High Availability
-
-This section explains how <%= vars.first_product_name %> deployments include several layers of high availability to keep applications running in the face of system failure. These layers include AZs, application health management, process monitoring, and VM resurrection.
-
-### <a id='azs-2'></a> Availability Zones
-
-<%= vars.product_name %> supports deploying applications instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.product_name %> balances the applications you deploy across the AZs you defined. If an AZ goes down, you still have application instances running in another. 
-
-<%= vars.azs %>
-
-### <a id='health-management-apps'></a> Health Management for App Instances
-
-If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. Under Diego architecture, the nsync, BBS, and Cell Rep components track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
-
-For more information about the nsync, BBS, and Cell Rep components, see the [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) section of the _Cloud Foundry Components_ topic.
-
-### <a id='monitored-processes'></a> Process Monitoring
-
-<%= vars.product_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, BBS, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
-
-### <a id='health-monitoring'></a> Resurrection for VMs
-
-BOSH detects if a VM is present by listening for heartbeat messages that are sent from the BOSH agent every 60 seconds. The BOSH Health Monitor listens for those heartbeats. When the Health Monitor finds that a VM is not responding, it passes an alert to the Resurrector component. If the Resurrector is enabled, it sends the IaaS a request to create a new VM instance to replace the one that failed.
-
-<%= vars.resurrector %>
-
