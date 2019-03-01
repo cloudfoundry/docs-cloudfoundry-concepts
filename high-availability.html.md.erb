@@ -20,12 +20,14 @@ Deploying Cloud Foundry across three or more AZs and assigning multiple componen
 
 ### <a id='external-lbs'></a> External Load Balancers
 
-Cloud Foundry deploys with a single instance of HAProxy for use in lab and test environments. Production environments should use a highly-available customer-provided load balancing solution that does the following:
+Production environments should use a highly-available customer-provided load balancing solution that does the following:
 
 * Provides load balancing to each of the Cloud Foundry Router IP addresses
 * Supports SSL termination with wildcard DNS location
 * Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
 * (Optional) Supports WebSockets
+
+If you are deploying in lab and test environments, the `use-haproxy.yml` ops file enables HAProxy for your foundation.
 
 <%= vars.external_lb %>
 
