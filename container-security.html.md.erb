@@ -168,6 +168,7 @@ CF mitigates against container breakout and denial of service attacks in the fol
 * CF applies disk quotas using container-specific XFS quotas with the specified disk-quota capacity.
 * CF applies a total memory usage quota through the memory cgroup and destroys the container if the memory usage exceeds the quota.
 * CF applies a fair-use limit to CPU usage for processes inside the container through the `cpu.shares` control group.
+* CF allows administrators to rate limit the maximum bandwidth consumed by single application containers, configuring `rate` and `burst` properties on the `silk-cni` job.
 * CF limits access to devices using cgroups but explicitly whitelists the following safe device nodes:
 	* `/dev/full`
 	* `/dev/fuse`
