@@ -1,64 +1,81 @@
 ---
-title: How Applications Are Staged
+title: How Apps Are Staged
 owner:
-  - Runtime OG
   - Diego
   - CAPI
 ---
 
+This topic describes how Diego stages buildpack apps and Docker images. Cloud Foundry uses Diego to manage app containers. For more information about Diego, see [Diego Components and Architecture](../concepts/diego/diego-architecture.html). 
 
 
-Cloud Foundry uses [Diego](../concepts/diego/diego-architecture.html) to manage application containers.
 
-This topic describes how the Diego architecture stages [buildpack applications](#stage-buildpack) and [Docker images](#stage-docker).
+##<a id='stage-buildpack'></a>How Diego Stages Buildpack Apps
 
-##<a id='stage-buildpack'></a>How Diego Stages Buildpack Applications
+This section describes how Diego stages buildpack apps. The following diagram illustrates the steps and components involved in the process of staging a buildpack app. See the text below the diagram for more information about each step. 
 
-<%= image_tag("app_push_flow_diagram_diego.png") %> 
+This section references tasks and long-running processes (LRPs). For more information about these, see [Tasks and Long-Running Processes](diego/diego-auction.html#processes). 
 
-1. At the command line, the developer enters the directory containing her application source code and uses the Cloud Foundry Command Line Interface (cf CLI) to issue a push command.
+![The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCNG Blobstore, CCDB, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Create App from CF Command Line to Cloud Controller (CCNG). Step 3 is Stores App Metadata from CCNG to the CCDB. Step 4 is Upload App Files from the CF Command Line to CCNG. Step 5 is Store App Files from CCNG to CCNG Blobstore. Step 6 is App Start from CF Command Line to CCNG. Step 7 is Stage App from CCNG to Diego Cell (Staging). Step 8 is Stream Staging Output from Diego Cell (Staging) to the Developer. Step 9 is Store App Droplet from Diego Cell (Staging) to CCNG Blobstore. Step 10 is Report Staging Complete from Diego Cell (Staging) to CCNG. Step 11 is Start Staged App from CCNG to Diego Cell (Running). Step 12 is Report App Status from Diego Cell (Running) to CCNG.](app_push_flow_diagram_diego.png)
 
-2. The cf CLI tells the [Cloud Controller](../concepts/architecture/cloud-controller.html) to create a record for the application.
+1. A developer runs `cf push`.
 
-3. The Cloud Controller stores the application metadata. Application metadata can include the app name, number of instances the user specified, and the buildpack, and other information about the application.
+1. The Cloud Foundry Command Line Interface (cf CLI) tells the Cloud Controller to create a record for the app. See the [Cloud Controller](../concepts/architecture/cloud-controller.html) topic for more information about the Cloud Controller. 
 
-4. Before uploading all the application source files, the cf CLI issues a resource match request to the Cloud Controller to determine if any of the application files already exist in the resource cache. When the application files are uploaded, the cf CLI omits files that exist in the resource cache by supplying the result of the resource match request. The uploaded application files are combined with the files from the resource cache to create the application package.
+1. The Cloud Controller stores the app metadata. App metadata can include the app name, number of instances, buildpack, and other information about the app.
 
-5. The Cloud Controller stores the application package in the [blobstore](../concepts/architecture/index.html#blob).
+1. This step includes the following:
+	1. The cf CLI requests a resource match from the Cloud Controller. 
+	1. The cf CLI uploads the app source files, omitting any app files that already exist in the resource cache. 
+	1. The Cloud Controller combines the uploaded app files with files from the resource cache to create the app package.
 
-6. The cf CLI issues an app start command.
+1. The Cloud Controller stores the app package in the blobstore. For more information, see the [Blobstore](../concepts/architecture/index.html#blob) section in the _Cloud Foundry Components_ topic.
 
-7. The Cloud Controller issues a staging request to Diego, which then schedules a [Diego cell](../concepts/diego/diego-architecture.html#cell-components) ("Cell") to run the staging [task](../concepts/diego/diego-auction.html#processes) ("Task"). The Task downloads buildpacks and the app’s buildpack cache, if present. It then uses the buildpack that is detected automatically or specified with the `-b` flag to compile and stage the application.
+1. The cf CLI issues a request to start the app.
 
-8. The Cell streams the output of the staging process so the developer can troubleshoot application staging problems.
+1. This step includes the following:
+	1. The Cloud Controller issues a staging request to Diego. 
+	1. Diego schedules a Diego Cell to run the staging task. 
+	1. The task downloads buildpacks and the app buildpack cache, if present. 
+	1. The task uses the buildpack to compile and stage the app.
 
-9. The Task packages the resulting compiled and staged application into a tarball called a "droplet" and the Cell stores the droplet in the blobstore. The Task also uploads the buildpack cache to the blobstore for use the next time the application is staged. 
+1. The Diego Cell streams the output of the staging process. A developer may need to view the output to troubleshoot staging problems.
 
-10. The [Diego Bulletin Board System](../concepts/diego/diego-architecture.html#database-vms) reports to the Cloud Controller that staging is complete. Staging must complete within 15 minutes or the staging is considered failed. Apps are given a minimum of 1GB memory to stage, even if the requested running memory is smaller.
+1. This step includes the following:
+	1. The task creates a tarball, or droplet, with the compiled and staged app. 
+	1. The Diego Cell stores the droplet in the blobstore. 
+	1. The task uploads the buildpack cache to the blobstore for use the next time the app is staged. 
 
-11. Diego schedules the application as a [Long Running Process](../concepts/diego/diego-auction.html#processes) on one or more Diego cells.
+1. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. If staging does not complete within 15 minutes, it fails. 
 
-12. The Diego cells report the status of the application to the Cloud Controller.
+1. Diego schedules the app as a LRP on one or more Diego Cells.
 
-See the [Diego Architecture](./diego/diego-architecture.html) topic for more information. 
+1. The Diego Cells report the status of the app to the Cloud Controller.
 
 ##<a id='stage-docker'></a>How Diego Stages Docker Images
 
-<%= image_tag("docker_push_flow_diagram_diego.png") %> 
+This section describes how Diego stages Docker images. The following diagram illustrates the steps and components involved in the process of staging a Docker image. See the text below the diagram for more information about each step. 
 
-1. At the command line, the developer enters the name of a Docker image in an accessible Docker Registry and uses the cf CLI to issue a push command.
+![The staging process for Docker images includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCDB, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Create Record from CF Command Line to CCNG. Step 3 is Stage Image from CCNG to CCDB. Step 4 is Stream Staging Output from Diego Cell (Staging) to Developer. Step 5 is Fetch Metadata from Diego Cell (Staging) to CCNG. Step 6 is Store Metadata from CCNG to CCDB. Step 7 is Submit LRP an Run Start Command from CCNG to Diego Cell (Running)](docker_push_flow_diagram_diego.png)  
 
-2. The cf CLI tells the Cloud Controller to create a record for the Docker image.
+1. A developer runs `cf push` and includes the name of a Docker image in an accessible Docker Registry.
 
-2. The Cloud Controller issues a staging request to Diego, which then schedules a Cell to run the Task. 
+1. The cf CLI tells the Cloud Controller to create a record for the Docker image.
 
-2. The Cell streams the output of the staging process so the developer can troubleshoot staging problems.
+1. This step includes the following:
+	1. The Cloud Controller issues a staging request to Diego. 
+	1. Diego schedules a Diego Cell to run the task. 
 
-3. The Task fetches the metadata associated with the Docker image and returns a portion of it to the Cloud Controller, which stores it in the Cloud Controller database (CCDB).
+1. The Diego Cell streams the output of the staging process. A developer may need to view the output to troubleshoot staging problems.
 
-4. The Cloud Controller uses the Docker image metadata to construct a Long Running Process that runs the start command specified in the Dockerfile. The Cloud Controller also takes into account any user-specified overrides specified in the Dockerfile, such as custom environment variables. 
+1. The task fetches the metadata associated with the Docker image and returns a portion of it to the Cloud Controller.
 
-5. The Cloud Controller submits the Long Running Process to Diego. Diego schedules the Long Running Process on one or more Diego Cells.
+1. The Cloud Controller stores the metadata in the Cloud Controller database (CCDB).
 
-6. The Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.
+1. This step includes the following:
+	1. The Cloud Controller uses the Docker image metadata to construct a LRP that runs the start command specified in the Dockerfile. 
+	1. The Cloud Controller submits the LRP to Diego. 
+	1. Diego schedules the LRP on one or more Diego Cells.
+	1. The Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.
+
+	<p class="note"><strong>Note</strong>: The Cloud Controller takes into account any user-specified overrides specified in the Dockerfile, such as environment variables. </p>
 
