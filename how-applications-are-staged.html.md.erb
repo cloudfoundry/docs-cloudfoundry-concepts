@@ -24,26 +24,32 @@ This section references tasks and long-running processes (LRPs). For more inform
 1. The Cloud Controller stores the app metadata. App metadata can include the app name, number of instances, buildpack, and other information about the app.
 
 1. This step includes the following:
-	1. The cf CLI requests a resource match from the Cloud Controller. 
-	1. The cf CLI uploads the app source files, omitting any app files that already exist in the resource cache. 
-	1. The Cloud Controller combines the uploaded app files with files from the resource cache to create the app package.
+	<ol type="a">
+	<li> The cf CLI requests a resource match from the Cloud Controller.</li> 
+	<li> The cf CLI uploads the app source files, omitting any app files that already exist in the resource cache. </li>
+	<li> The Cloud Controller combines the uploaded app files with files from the resource cache to create the app package.</li>
+	</ol>
 
 1. The Cloud Controller stores the app package in the blobstore. For more information, see the [Blobstore](../concepts/architecture/index.html#blob) section in the _Cloud Foundry Components_ topic.
 
 1. The cf CLI issues a request to start the app.
 
 1. This step includes the following:
-	1. The Cloud Controller issues a staging request to Diego. 
-	1. Diego schedules a Diego Cell to run the staging task. 
-	1. The task downloads buildpacks and the app buildpack cache, if present. 
-	1. The task uses the buildpack to compile and stage the app.
+	<ol type="a">
+	<li>The Cloud Controller issues a staging request to Diego.</li>
+	<li>Diego schedules a Diego Cell to run the staging task. </li>
+	<li>The task downloads buildpacks and the app buildpack cache, if present. </li>
+	<li>The task uses the buildpack to compile and stage the app.</li>
+	</ol>
 
 1. The Diego Cell streams the output of the staging process. A developer may need to view the output to troubleshoot staging problems.
 
 1. This step includes the following:
-	1. The task creates a tarball, or droplet, with the compiled and staged app. 
-	1. The Diego Cell stores the droplet in the blobstore. 
-	1. The task uploads the buildpack cache to the blobstore for use the next time the app is staged. 
+	<ol type="a">
+	<li>The task creates a tarball, or droplet, with the compiled and staged app. </li>
+	<li>The Diego Cell stores the droplet in the blobstore. </li>
+	<li>The task uploads the buildpack cache to the blobstore for use the next time the app is staged. </li>
+	</ol>
 
 1. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. If staging does not complete within 15 minutes, it fails. 
 
@@ -62,8 +68,10 @@ This section describes how Diego stages Docker images. The following diagram ill
 1. The cf CLI tells the Cloud Controller to create a record for the Docker image.
 
 1. This step includes the following:
-	1. The Cloud Controller issues a staging request to Diego. 
-	1. Diego schedules a Diego Cell to run the task. 
+	<ol type="a">
+	<li> The Cloud Controller issues a staging request to Diego. </li>
+	<li> Diego schedules a Diego Cell to run the task. </li>
+	</ol>
 
 1. The Diego Cell streams the output of the staging process. A developer may need to view the output to troubleshoot staging problems.
 
@@ -72,10 +80,12 @@ This section describes how Diego stages Docker images. The following diagram ill
 1. The Cloud Controller stores the metadata in the Cloud Controller database (CCDB).
 
 1. This step includes the following:
-	1. The Cloud Controller uses the Docker image metadata to construct a LRP that runs the start command specified in the Dockerfile. 
-	1. The Cloud Controller submits the LRP to Diego. 
-	1. Diego schedules the LRP on one or more Diego Cells.
-	1. The Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.
+	<ol type="a">
+	<li> The Cloud Controller uses the Docker image metadata to construct a LRP that runs the start command specified in the Dockerfile. </li>
+	<li> The Cloud Controller submits the LRP to Diego. </li>
+	<li> Diego schedules the LRP on one or more Diego Cells.</li>
+	<li> The Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.</li>
+	</ol>
 
 	<p class="note"><strong>Note</strong>: The Cloud Controller takes into account any user-specified overrides specified in the Dockerfile, such as environment variables. </p>
 
