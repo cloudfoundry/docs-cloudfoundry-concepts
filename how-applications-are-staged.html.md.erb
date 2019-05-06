@@ -5,17 +5,25 @@ owner:
   - CAPI
 ---
 
-This topic describes how Diego stages buildpack apps and Docker images. Cloud Foundry uses Diego to manage app containers. For more information about Diego, see [Diego Components and Architecture](../concepts/diego/diego-architecture.html). 
+This topic describes how Diego stages buildpack apps and Docker images. 
 
+##<a id='overview'></a> Overview
 
+Cloud Foundry uses Diego to manage app containers. It is a self-healing system that attempts to keep the correct number of instances running in Diego Cells to avoid network failures and crashes. For more information about Diego, see [Diego Components and Architecture](../concepts/diego/diego-architecture.html). 
+
+This topic references tasks and long-running processes (LRPs). For more information about these, see [Tasks and Long-Running Processes](diego/diego-auction.html#processes). 
 
 ##<a id='stage-buildpack'></a>How Diego Stages Buildpack Apps
 
-This section describes how Diego stages buildpack apps. The following diagram illustrates the steps and components involved in the process of staging a buildpack app. See the text below the diagram for more information about each step. 
+This section describes how Diego stages buildpack apps. 
 
-This section references tasks and long-running processes (LRPs). For more information about these, see [Tasks and Long-Running Processes](diego/diego-auction.html#processes). 
+The following diagram illustrates the steps and components involved in the process of staging a buildpack app. 
 
 ![The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCNG Blobstore, CCDB, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Create App from CF Command Line to Cloud Controller (CCNG). Step 3 is Stores App Metadata from CCNG to the CCDB. Step 4 is Upload App Files from the CF Command Line to CCNG. Step 5 is Store App Files from CCNG to CCNG Blobstore. Step 6 is App Start from CF Command Line to CCNG. Step 7 is Stage App from CCNG to Diego Cell (Staging). Step 8 is Stream Staging Output from Diego Cell (Staging) to the Developer. Step 9 is Store App Droplet from Diego Cell (Staging) to CCNG Blobstore. Step 10 is Report Staging Complete from Diego Cell (Staging) to CCNG. Step 11 is Start Staged App from CCNG to Diego Cell (Running). Step 12 is Report App Status from Diego Cell (Running) to CCNG.](app_push_flow_diagram_diego.png)
+
+[//]: https://docs.google.com/drawings/d/1F4vIuCLCtl4hwhMZbeDNcSGImSpaTXFnul4-xpgXOgs/edit?usp=sharing
+
+For a description of each step in the process of staging a buildpack app, see the following:
 
 1. A developer runs `cf push`.
 
@@ -59,9 +67,15 @@ This section references tasks and long-running processes (LRPs). For more inform
 
 ##<a id='stage-docker'></a>How Diego Stages Docker Images
 
-This section describes how Diego stages Docker images. The following diagram illustrates the steps and components involved in the process of staging a Docker image. See the text below the diagram for more information about each step. 
+This section describes how Diego stages Docker images. 
+
+The following diagram illustrates the steps and components involved in the process of staging a Docker image.  
 
 ![The staging process for Docker images includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCDB, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Create Record from CF Command Line to CCNG. Step 3 is Stage Image from CCNG to CCDB. Step 4 is Stream Staging Output from Diego Cell (Staging) to Developer. Step 5 is Fetch Metadata from Diego Cell (Staging) to CCNG. Step 6 is Store Metadata from CCNG to CCDB. Step 7 is Submit LRP an Run Start Command from CCNG to Diego Cell (Running)](docker_push_flow_diagram_diego.png)  
+
+[//]: https://docs.google.com/drawings/d/1ckWGbgTWhyc3LxP4QcVD1IgwnHu1w2XNvT28-r51Z3M/edit?usp=sharing
+
+For a description of each step in the process of staging a Docker image, see the following:
 
 1. A developer runs `cf push` and includes the name of a Docker image in an accessible Docker Registry.
 
