@@ -3,14 +3,227 @@ title: Diego Components and Architecture
 owner: Diego
 ---
 
-<strong><%= modified_date %></strong>
 
-<%= vars.diego_architecture %>
 
-<%=vars.diego_deploy %>
+This topic describes the components that form and interact with the Diego system.
 
-<% if vars.product_name == 'CF' %>
-<%= partial 'arch_cf' %>
-<% else %>
-<%= partial 'arch_other' %>
-<% end %>
+##<a id='overview'></a> Overview 
+
+Cloud Foundry uses the Diego architecture to manage app containers. Diego components assume app scheduling and management responsibility from the Cloud Controller. 
+
+
+Diego is a self-healing container management system that attempts to keep the correct number of instances running in Diego cells to avoid network failures and crashes. Diego schedules and runs Tasks and Long-Running Processes (LRP). For more about Tasks and LRPs, see [How the Diego Auction Allocates Jobs](diego-auction.html).
+
+You can submit, update, and retrieve the desired number of Tasks and LRPs using the [Bulletin Board System (BBS) API](https://github.com/cloudfoundry/bbs).
+
+##<a id='diagram'></a> How Diego Runs an App 
+
+The following sections describe how Diego handles a request to run an app. This is only one of the processes that happen in Diego. For example, running an app assumes the app has already been staged. For more information about the staging process, see [How Applications are Staged](../how-applications-are-staged.html). 
+
+The diagrams below do not include all of the components Diego. For information about each Diego component, see [Diego Components](#components). 
+
+<%= vars.vm_note %>
+
+###<a id='step-1'></a> Receives the Request to Run an App
+
+The Cloud Controller passes requests to run apps to the Diego BBS, which stores information about the request in its database. 
+
+![The cloud_controller_ng process on the api VM communicates to the bbs process on the diego-api VM. The bbs process also communicates to the bbs db on the mysql VM](../images/oss-diego-architecture-1.png)
+[//]: https://docs.google.com/drawings/d/1p2ShJ8yJ3gVzKBh1sw1b_O8qMASXMzC37r2MU3L4xmI/edit?usp=sharing
+
+###<a id='step-2'></a> Passes Request to the Auctioneer Process
+
+The BBS contacts the Auctioneer to create an auction based on the desired resources for the app. It references the information stored in its database. 
+
+![The bbs process on the diego-api VM communicates to the bbs db on the mysql VM. The bbs process also communicates to the auctioneer process on the scheduler VM.](../images/oss-diego-architecture-2.png)
+[//]: https://docs.google.com/drawings/d/1P_aSBm6fyHeqJyZ-8epM_CePS3u8O_GLTSzW-g1-32U/edit?usp=sharing
+
+
+###<a id='step-3'></a> Performs Auction
+
+Through an auction, the Auctioneer finds a Diego cell to run the app on. The Rep job on the Diego cell accepts the auction request. 
+
+![The auctioneer process on the scheduler VM communicates to the rep process on the diego-cell VM. The rep process includes a sub-process called the executor.](../images/oss-diego-architecture-3.png)
+[//]: https://docs.google.com/drawings/d/1ug2RVCiW_fW4U6vH6dvG-sn6-Om9gXHTymnPBiZI8Hk/edit?usp=sharing
+
+###<a id='step-4'></a> Creates Container and Runs App
+
+The in-process Executor creates a Garden container in the Diego cell. Garden downloads the droplet that resulted from the staging process and runs the app in the container. 
+
+![The executor sub-process of the rep process on the diego-cell VM communicates to the garden process on the diego-cell VM to create a new container. The garden process also communicates with the droplets bucket on the singleton-blobstore VM to download the droplet.](../images/oss-diego-architecture-4.png)
+[//]: https://docs.google.com/drawings/d/1IPLl2bKmR9iYOhjXvlRZJSvCeCnoaX_zqARdt04Yjv4/edit?usp=sharing
+
+###<a id='step-5'></a> Emits Route for App
+
+The `route-emitter` process emits a route registration message to Gorouter for the new app running on the the Diego cell.
+
+![The route-emitter process on the diego-cell VM communicates to the gorouter process on the gorouter VM.](../images/oss-diego-architecture-5.png)
+[//]: https://docs.google.com/drawings/d/17ZilpDcvpwh1Ne0SZvQjsCylftuQZSguAHHVJB88Ijs/edit?usp=sharing
+
+###<a id='step-6'></a> Sends Logs to Loggregator
+
+The Loggregator agent forwards app logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
+
+![The container running the app inside the garden process of the diego-cell VM communicates to the loggregator-agent process of the diego-cell VM. The loggregator-agent process then communicates to the doppler process of the dopller VM. The doppler process communicates to the traffic-controller-process of the log-api VM.](../images/oss-diego-architecture-6.png)
+[//]: https://docs.google.com/drawings/d/1ChpsoNXR-zHC2n9bPz2H5qdRvkDfg_M4I8sVr-Vy3So/edit?usp=sharing
+
+## <a id='components'></a> Diego Components
+
+The following table describes the jobs that are part of the Cloud Foundry Diego BOSH release. 
+
+<table>
+	<tr>
+		<th>Component</th>
+		<th>Function</th>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> auctioneer<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> scheduler <% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<td><ul>
+	<li>Distributes work through auction to Cell Reps over SSL/TLS. See <a href="diego-auction.html">How the Diego Auction Allocates Jobs</a>.</li>
+	<li>Maintains a lock in Locket to ensure only one auctioneer handles auctions at a time.</li></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> bbs<br>
+		<strong>VM:<br></strong> <% if vars.product_name == "CF" %> diego-api <% else %> <%= vars.diego_vm_2 %> <% end %></td>
+		<td><ul><li>Maintains a real-time representation of the state of the Diego cluster, including desired LRPs, running LRPs, and in-flight Tasks.</li><li>Provides an RPC-style API over HTTP to Diego Core components and external clients, including the SSH Proxy and Route Emitter.</li><li>Ensures consistency and fault tolerance for Tasks and LRPs by comparing desired state with actual state.</li>
+		<li>Keeps <code>DesiredLRP</code> and <code>ActualLRP</code> counts synchronized. If the <code>DesiredLRP</code> count exceeds the <code>ActualLRP</code> count, requests a start auction from the Auctioneer. If the <code>ActualLRP</code> count exceeds the <code>DesiredLRP</code> count, sends a stop message to the Rep on the Cell hosting an instance</li>
+		<li>Monitors for potentially missed messages, resending them if necessary</li></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> file_server<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> api <% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<td><ul><li>Serves static assets that can include general-purpose App Lifecycle binaries and app-specific droplets and build artifacts</li></ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> locket<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> diego-api<% else %> <%= vars.diego_vm_2 %> <% end %></td>
+		<td><ul><li>Provides a consistent key-value store for maintenance of distributed locks and component presence</li></ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> rep<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
+		<td><ul>
+<li>Represents a Cell in Diego Auctions for Tasks and LRPs</li>
+
+<li>Runs Tasks and LRPs by creating a container and then running actions in it</li>
+
+<li>Periodically ensures its set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Cell</li>
+
+<li>Manages container allocations against resource constraints on the Cell, such as memory and disk space</li>
+
+<li>Streams stdout and stderr from container processes to the metron-agent running on the Cell, which in turn forwards to the Loggregator system</li>
+
+<li>Periodically collects container metrics and emits them to Loggregator</li>
+
+<li>Mediates all communication between the Cell and the BBS</li>
+
+<li>Maintains a presence record for the Cell in BBS and Locket</li>
+
+</ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> route_emitter<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
+		<td><ul><li>Monitors <code>DesiredLRP</code> and <code>ActualLRP</code> states, emitting route registration and unregistration messages to Gorouter when it detects changes.</li>
+		<li>Periodically emits the entire routing table to the Cloud Foundry Gorouter.</li></ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> ssh_proxy<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> scheduler<% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<td><ul><li>Brokers connections between SSH clients and SSH servers</li><li>
+	Runs inside instance containers and authorizes access to app instances based on Cloud Controller roles</li></ul></td>
+	</tr>
+</table>
+
+### <a id='additional-info-diego'></a> Additional Information
+
+The following resources provide more information about Diego components:
+
+* The [Diego Release repository](https://github.com/cloudfoundry/diego-release) on GitHub. 
+
+* The [Auctioneer repository](https://github.com/cloudfoundry-incubator/auctioneer) on GitHub.
+
+* The [Bulletin Board System repository](https://github.com/cloudfoundry-incubator/bbs) on GitHub.
+
+* The [File Server repository](https://github.com/cloudfoundry-incubator/file-server) on GitHub.
+
+* The [Rep repository](https://github.com/cloudfoundry-incubator/rep) on GitHub.
+
+* The [Executor repository](https://github.com/cloudfoundry-incubator/executor) on GitHub.
+
+* The [Route-Emitter repository](https://github.com/cloudfoundry-incubator/route-emitter) on GitHub.
+
+* [Application SSH](./ssh-conceptual.html), [Application SSH Overview](../../devguide/deploy-apps/app-ssh-overview.html), and the [Diego SSH repository](https://github.com/cloudfoundry-incubator/diego-ssh) on GitHub.
+
+## <a id='components-ther'></a> Components from Other Releases
+
+The following table describes jobs that interact closely with Diego but are not part of the Diego Cloud Foundry BOSH release.
+
+<table>
+	<tr>
+		<th>Component</th>
+		<th>Function</th>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> bosh-dns-aliases<br>
+		<strong>VM:</strong><br> all</td>
+		<td><ul>
+	<li>Provides service discovery through colocated DNS servers on all BOSH-deployed VMs</li><li>Provides client-side load-balancing by randomly selecting a healthy VM when multiple VMs are available</li></ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> cc_uploader<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> api <% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<td><ul>
+	<li>Mediates uploads from the Executor to the Cloud Controller</li><li>Translates simple HTTP POST requests from the Executor into complex multipart-form uploads for the Cloud Controller</li></ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> database<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> pxc-mysql <% else %> <%= vars.mysql_vm %> <% end %></td>
+		<td><ul>
+	<li>Provides a consistent key-value data store to Diego</li></ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br>loggregator-agent<br>
+		<strong>VM:</strong><br> all</td>
+		<td><ul>
+	<li>Forwards app logs, errors, and app and Diego metrics to the Loggregator Doppler component</li></ul></td>
+	</tr>
+	<tr>
+		<td><strong>Job:</strong><br> cloud_controller_clock<br>
+		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> scheduler<% else %> <%= vars.clock_vm %> <% end %></td>
+		<td><ul>
+	<li>Runs a Diego sync process to ensure desired app data in Diego is in sync with the Cloud Controller.</li></ul></td>
+	</tr>
+</table>
+
+### <a id='app-lifecycles'></a> App Lifecycle Binaries
+
+The following three platform-specific binaries deploy apps and govern their lifecycle:
+
+- The **Builder**, which stages a CF app. The Builder runs as a Task on every staging request. It performs static analysis on the app code and does any necessary pre-processing before the app is first run.
+
+- The **Launcher**, which runs a CF app. The Launcher is set as the Action on the `DesiredLRP` for the app. It executes the start command with the correct system context, including working directory and environment variables.
+
+- The **Healthcheck**, which performs a status check on running CF app from inside the container. The Healthcheck is set as the Monitor action on the `DesiredLRP` for the app.
+
+#### <a id='lifecycle-implementations'></a> Current Implementations
+
+- [Buildpack App Lifecycle](https://github.com/cloudfoundry-incubator/buildpack-app-lifecycle) implements the Cloud Foundry buildpack-based deployment strategy.
+
+- [Docker App Lifecycle](https://github.com/cloudfoundry-incubator/docker-app-lifecycle) implements a Docker deployment strategy.
+
+### <a id='additional-info-diego'></a> Additional Information
+
+The following resources provide more information about components from other releases that interact closely with Diego:
+
+* The [CC-Uploader repository](https://github.com/cloudfoundry-incubator/cc-uploader) on GitHub.
+
+* The [Garden](../architecture/garden.html) topic or the [Garden repository](https://github.com/cloudfoundry-incubator/garden) on GitHub.
+
+* The [Loggregator Release repository](https://github.com/cloudfoundry/loggregator-release/) on GitHub.
+
+* The [BOSH DNS documentation](https://bosh.io/docs/dns/).
+
+* The [TPS repository](https://github.com/cloudfoundry-incubator/tps) on GitHub.
+
