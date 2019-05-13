@@ -3,11 +3,14 @@ title: Orgs, Spaces, Roles, and Permissions
 owners: CAPI, Identity
 ---
 
-<%= vars.product_name %> uses a role-based access control (RBAC) system to grant <%=vars.product_full %> users permissions appropriate to their role within an org or a space. This topic describes how orgs and spaces work within a <%= vars.product_name %> deployment, and how different <%=vars.product_full %> User roles operate within those contexts.
+This topic describes orgs and spaces within a <%= vars.product_name %> foundation. It also describes the default permissions for user roles in <%= vars.product_name %>.
 
-Admins, Org Managers, and Space Managers can assign user roles using the [cf CLI](../cf-cli/getting-started.html#user-roles)<%= vars.or_apps_man %>.
+## <a id="overview"></a> Overview
 
-<p class="note"><strong>Note</strong>: Before you assign a <strong>space role</strong> to a user, you must assign an <strong>org role</strong> to the user.</p>	
+<%= vars.product_name %> uses a role-based access control (RBAC) system to grant <%=vars.product_full %> users permissions appropriate to their role within an org or a space. 
+
+Admins, Org Managers, and Space Managers can assign user roles using the [cf CLI](../cf-cli/getting-started.html#user-roles)<%= vars.or_apps_man %>.	
+
 
 ## <a id='orgs'></a>Orgs ##
 
@@ -19,13 +22,6 @@ availability, and custom domains.
 
 By default, an org has the status of _active_. An admin can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services. For details on what activities are allowed for suspended orgs, see [Roles and Permissions for Suspended Orgs](#suspendedroles). 
 
-## <a id='users'></a>User Accounts ##
-
-A user account represents an individual person within the context of a <%= vars.product_name %> installation.
-A user can have different roles in different spaces within an org, governing
-what level and type of access they have within that space.
-
-Before you assign a space role to a user, you must assign an org role to the user. The error message `Server error, error code: 1002, message: cannot set space role because user is not part of the org` occurs when you try to set a space role before setting an org role for the user.
 
 ## <a id='spaces'></a>Spaces ##
 
@@ -35,43 +31,52 @@ A space provides users with access to a shared location for application
 development, deployment, and maintenance.
 Each space role applies only to a particular space.
 
-## <a id='roles'></a>Roles and Permissions ##
 
-A user can have one or more roles.
-The combination of these roles defines the user’s overall permissions in the
-org and within specific spaces in that org.
+## <a id='roles'></a> User Roles
+
+A user account represents an individual person within the context of a <%= vars.product_name %> foundation.
+A user can have one or more roles. These roles define the user’s permissions in
+orgs and spaces.
+
 Roles can be assigned different scopes of User Account and Authentication (UAA) privileges. For more information about UAA scopes, see [Scopes](https://docs.cloudfoundry.org/concepts/architecture/uaa.html#scopes) in _Component: User Account and Authentication (UAA) Server_.
 
 For non-admin users, the `cloud_controller.read` scope is required to view resources, and the `cloud_controller.write` scope is required to create, update, and delete resources.
+
+Before you assign a space role to a user, you must assign an org role to the user. The error message `Server error, error code: 1002, message: cannot set space role because user is not part of the org` occurs when you try to set a space role before setting an org role for the user.
+
+The following describes the permissions associated with each type of user role in <%= vars.product_name %>:
 
 <%= vars.admin_role %>
 <%= vars.admin_read_only_role %>
 <%= vars.global_auditor_role %>
 
-* **Org Managers** are managers or other users who need to administer the org.
+* **Org Managers**: Administer the org.
 
-* **Org Auditors** view but cannot edit user information and org quota usage 
+* **Org Auditors**: Read-only access to user information and org quota usage 
 information.
 
 <%= vars.billing_manager_role %>
 <%= vars.billing_manager_role_note %>
 
-* **Org Users** can view the list of other org users and their roles. When an Org Manager gives a person an Org or Space role, that person automatically receives Org User status in that Org.
+* **Org Users**: Read-only access to the list of other org users and their roles. When an Org Manager gives a person an Org or Space role, that person automatically receives Org User status in that org.
 
-* **Space Managers** are managers or other users who administer a space within an org.
+* **Space Managers**: Administer a space within an org.
 
-* **Space Developers** are application developers or other users who manage 
-applications and services in a space.
+* **Space Developers**: Manage applications and services in a space.
 
-* **Space Auditors** view but cannot edit the space.
+* **Space Auditors**: Read-only access to a space.
 
-### <a id='activeroles'></a>Roles and Permissions for Active Orgs ###
+## <a id='roles'></a> Permissions
 
-The following table describes the permissions for various <%= vars.product_name %> roles.
+Each user role includes different permissions for the user account in a <%= vars.product_name %> foundation. The following sections describe the permissions associated with each user role in both active and suspended orgs in <%= vars.product_name %>.
+
+### <a id='activeroles'></a>Roles and Permissions for Active Orgs
+
+The following table describes the permissions for various <%= vars.product_name %> roles in active orgs.
 
 <%= partial vars.roles_table %>
 
-### <a id='suspendedroles'></a>Roles and Permissions for Suspended Orgs ###
+### <a id='suspendedroles'></a>Roles and Permissions for Suspended Orgs
 
 The following table describes roles and permissions applied after an operator sets the status of an org to _suspended_.
 
