@@ -1,18 +1,20 @@
 ---
-title: Istio
+title: Service Mesh Architecture
 owner: Networking
 ---
 
-This topic explains routing flow and architecture over the Istio data and control plane in Cloud Foundry.
+This topic describes the routing flow and architecture of the service mesh data and control plane in <%= vars.product_runtime %> <%= vars.runtime_abbr %>.
 
 
 ## <a id="overview"></a> Overview
 
-The Istio Routing data plane is a parallel routing path for ingress traffic for apps on Cloud Foundry. It is deployed alongside the existing Cloud Foundry routing tier and manages istio routes for applications. We use [Istio's](https://istio.io/) Pilot component to configure ingress [Envoy Proxies](https://www.envoyproxy.io/), and these proxies are the routers. We use a custom component called Copilot to push Cloud Foundry configuration to into Pilot.
+The service mesh data plane is a parallel routing path for ingress traffic for apps on <%= vars.product_runtime %>. It is deployed alongside the existing Cloud Foundry routing tier and manages istio routes for applications. 
+
+We use [Istio's](https://istio.io/) Pilot component to configure ingress [Envoy Proxies](https://www.envoyproxy.io/), and these proxies are the routers. We use a custom component called Copilot to push Cloud Foundry configuration to into Pilot.
 
 A route is managed by istio if it is associated with an istio managed domain. These are specified in the manifest.
 
-[![Istio Routing Architecture](../images/istio_boxes_lines.jpg)](../images/istio_boxes_lines.jpg)
+![Istio Routing Architecture](../images/istio_boxes_lines.jpg)
 
 ## <a id="control-plane"></a> Control Plane
 
@@ -29,18 +31,41 @@ A route is managed by istio if it is associated with an istio managed domain. Th
 0. The app container has an iptables rule which DNATs the request to its local envoy sidecar
 0. The envoy sidecar passes the request along to the application
 
-## <a id="component-manifest"></a> Istio Component Manifest
+## <a id="component-manifest"></a> Service Mesh Components
 
-| Component Name | Summary                                                                                                                                                                                                                                      |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| CAPI           | The Cloud Controller receives api requests from the CLI and stores information about routes. It distributes route information to Copilot                                                                                                     |
-| BBS            | The BBS sends information on all long running processes across all diego cells to copilot.                                                                                                                                                   |
-| [Copilot](https://github.com/cloudfoundry/copilot)        | Copilot acts as an interface between Cloud Foundry route concepts and Istioâ configuration types. Pilot accepts configuration from Copilot via Mesh Configuration Protocol (MCP).                                                           |
-| [Pilot](https://istio.io/docs/concepts/what-is-istio/#pilot)          | Pilot is an Istio component that can accept configuration from multiple sources simultaneously and distribute configuration intelligently across ingress and sidecar envoys.                                                                 |
-| [Envoy](https://www.envoyproxy.io/)          | Envoy Proxy is a lightweight edge proxy designed for microservices. It routes traffic based on configuration it receives from pilot and emits in-depth metrics based on that traffic.                                                        |
-| Load Balancer  | The load balancer is a reverse proxy provided by the IaaS (or a physical machine) that distributes network traffic across the ingress envoys while presenting a single public endpoint. This is not the same load balancer used by GoRouter. |
-| istio-release  | A bosh release that deploys istio related components and configures any existing components to use them.                                                                                                                                      configuration types. Pilot accepts configuration from Copilot via Mesh Configuration Protocol (MCP).                                                           |
-| Pilot          | Pilot is an Istio component that can accept configuration from multiple sources simultaneously and distribute configuration intelligently across ingress and sidecar envoys.                                                                 |
-| Envoy          | Envoy Proxy is a lightweight edge proxy designed for microservices. It routes traffic based on configuration it receives from pilot and emits in-depth metrics based on that traffic.                                                        |
-| Load Balancer  | The load balancer is a reverse proxy provided by the IaaS (or a physical machine) that distributes network traffic across the ingress envoys while presenting a single public endpoint. This is not the same load balancer used by GoRouter. |
-| [istio-release](https://github.com/cloudfoundry/istio-release)  | A bosh release that deploys istio related components and configures any existing components to use them.                                                                                                                                     |
+The following table lists each component in the service mesh architecture and describes its function.
+
+<table>
+	<tr>
+		<th>Component Name</th>
+		<th>Summary</th>
+	</tr>
+	<tr>
+		<td>CAPI</td>
+		<td>Cloud Controller receives API requests from the cf CLI and stores information about routes. It distributes this route information to Copilot.</td>
+	</tr>
+	<tr>
+		<td>BBS</td>
+		<td>BBS sends information about apps across all Diego cells to Copilot.</td>
+	</tr>
+	<tr>
+		<td><a href="https://github.com/cloudfoundry/copilot">Copilot</a> </td>
+		<td>Copilot acts as an interface between Cloud Foundry routes and Istio configuration types. It sends configuration to Pilot through Mesh Configuration Protocol (MCP). </td>
+	</tr>
+	<tr>
+		<td><a href="https://istio.io/docs/concepts/what-is-istio/#pilot">Pilot</a> </td>
+		<td>Pilot is an Istio component that can accept configuration from multiple sources simultaneously and distribute configuration intelligently across ingress and sidecar envoys.</td>
+	</tr>
+	<tr>
+		<td><a href="https://www.envoyproxy.io/">Envoy</a></td>
+		<td>Envoy Proxy is a lightweight edge proxy designed for microservices. It routes traffic based on configuration it receives from Pilot and emits in-depth metrics based on that traffic.</td>
+	</tr>
+	<tr>
+		<td>Load Balancer </td>
+		<td>The load balancer is a reverse proxy provided by the IaaS, or a physical machine, that distributes network traffic across the ingress envoys while presenting a single public endpoint. This is not the same load balancer used by Gorouter.</td>
+	</tr>
+	<tr>
+		<td><a href="https://github.com/cloudfoundry/istio-release">istio-release</a></td>
+		<td>A BOSH release that deploys Istio-related components and configures any existing components to use them.</td>
+	</tr>
+</table>                                                                                                
