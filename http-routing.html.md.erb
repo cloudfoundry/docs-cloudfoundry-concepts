@@ -16,7 +16,7 @@ Gorouter has a limit of 1MB for HTTP Headers.
 
 #### <a id="X-Forwarded-Proto"></a> X-Forwarded-Proto
 
-`X-Forwarded-Proto` header gives the scheme of the HTTP request from the client. In requests forwarded to backends, Gorouter sets the scheme to HTTP if the client made an insecure request (on port 80) or HTTPS if the client made a secure request (on port 443). Developers can configure their apps to reject insecure requests by inspecting the HTTP headers of incoming traffic and rejecting traffic that includes `X-Forwarded-Proto` with the scheme of HTTP. 
+`X-Forwarded-Proto` header gives the scheme of the HTTP request from the client. In requests forwarded to backends, Gorouter sets the scheme to HTTP if the client made an insecure request (on port 80) or HTTPS if the client made a secure request (on port 443). If the `X-Forwarded-Proto` header is present on the incoming request, Gorouter appends to the existing header. Developers can configure their apps to reject insecure requests by inspecting the `X-Forwarded-Proto` HTTP header on incoming traffic, keeping in mind that the header may have multiple values represented as a comma-separated list, and rejecting traffic that includes any `X-Forwarded-Proto` values that are not HTTPS.
 
 #### <a id="X-Forwarded-For"></a> X-Forwarded-For
 
