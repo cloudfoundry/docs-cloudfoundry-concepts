@@ -11,7 +11,9 @@ This topic describes how Diego stages buildpack apps and Docker images.
 
 Cloud Foundry uses Diego to manage app containers. It is a self-healing system that attempts to keep the correct number of instances running in Diego Cells to avoid network failures and crashes. For more information about Diego, see [Diego Components and Architecture](../concepts/diego/diego-architecture.html). 
 
-This topic references tasks and long-running processes (LRPs). For more information about these, see [Tasks and Long-Running Processes](diego/diego-auction.html#processes). 
+This topic references tasks and long-running processes (LRPs). For more information about these, see [Tasks and Long-Running Processes](diego/diego-auction.html#processes).
+
+To better understand the flow and caching of source bits during staging, see [Cloud Controller Blobstore](../concepts/cc-blobstore.html#stage-blobstore).
 
 ##<a id='stage-buildpack'></a>How Diego Stages Buildpack Apps
 
