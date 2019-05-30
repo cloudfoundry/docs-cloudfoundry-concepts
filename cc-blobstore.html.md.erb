@@ -14,8 +14,9 @@ This topic references staging and treats all blobstores as generic (S3-style) ob
 
 For more general information about staging, see [How Apps Are Staged](../concepts/how-applications-are-staged.html).
 
-
+<% if vars.product_name.include? "CF" %>
 For more information about how specific 3rd party blobstores can be configured, see <%= vars.blobstore_link %>.
+<% end %>
 
 ##<a id='stage-blobstore'></a>How staging uses the blobstore
 
