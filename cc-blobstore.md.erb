@@ -22,7 +22,7 @@ This section describes how staging buildpack apps utilizes the blobstore.
 
 The following diagram illustrates, in-depth, how the staging process uses the blobstore:
 
-![The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), Blobstore, cc-uploader, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Checksum source files from Developer to CF Command Line. Step 3 is Resource Match from CF Command Line to the CCNG. Step 4 is Check file existence from the CCNG to Blobstore. Step 5 is Upload unmatched files from CF Command Line to CCNG. Step 6 is Download cached files from Blobstore to CCNG. Step 7 is Upload complete package from CCNG to Blobstore. Step 8 is Download package and buildpack from Blobstore to Diego Cell (Staging). Step 9 is Upload droplet from Diego Cell (Staging) through cc-uploader, then CCNG, to the Blobstore. Step 10 is Download droplet from Blobstore to CCNG.](app_push_flow_diagram_diego.png)
+![The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), Blobstore, cc-uploader, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Checksum source files from Developer to CF Command Line. Step 3 is Resource Match from CF Command Line to the CCNG. Step 4 is Check file existence from the CCNG to Blobstore. Step 5 is Upload unmatched files from CF Command Line to CCNG. Step 6 is Download cached files from Blobstore to CCNG. Step 7 is Upload complete package from CCNG to Blobstore. Step 8 is Download package and buildpack from Blobstore to Diego Cell (Staging). Step 9 is Upload droplet from Diego Cell (Staging) through cc-uploader, then CCNG, to the Blobstore. Step 10 is Download droplet from Blobstore to CCNG.](cc-blobstore-staging.png)
 
 [//]: https://docs.google.com/drawings/d/1LbM5mRjJMOfQXVvJXmDb-csfV61kHaPJaCJy20WVqMI/edit?usp=sharing
 
@@ -39,7 +39,6 @@ For a description of each step where staging a buildpack app interacts with the 
   <li>The Cloud Controller makes a series of "HEAD"-type requests to the blobstore to find out which files it has cached.</li>
   <li>Cloud Controller content-addresses its cached files so that changes to a file result in it being stored as a different object.</li>
   <li>Eventually Cloud Controller is able to compute which files it has and which it needs the CLI to upload.
-  <li>In environments where apps have many files, this can generate unusual load patterns on the blobstore which may cause trouble depending on its implementation.</li>
   <li>In response to the resource match request, Cloud Controller lists the files the CLI needs to upload .</li>
   </ol>
 
@@ -69,18 +68,29 @@ For a description of each step where staging a buildpack app interacts with the 
 	<li>The Diego Cell downloads the app's droplet from the blobstore and runs it.</li>
 	</ol>
 
+##<a id='blobstore-expiry'></a>Blobstore load
+
+The shape of the load CC generates on its blobstore is a bit unusual because of resource matching. Many blobstores that perform
+very well under normal read, write, and delete load are overwhelmed by CC's heavy usage of HEAD requests during resource matching.
+
+Pushing an app with large number of files will cause the CC to check the blobstore for the existence of each and every one of those files.
+
+Parallel BOSH deploys of Diego Cells can also generate significant read load on CC's Blobstore as the cells perform [evacuation](https://docs.cloudfoundry.org/devguide/deploy-apps/app-lifecycle.html#evacuation).
+
 ##<a id='blobstore-expiry'></a>How CC reaps expired packages, droplets, and buildpacks
 
-Nightly, starting at midnight, the Cloud Controller runs a series of scheduled jobs to delete the data associated with
+As new droplets and packages are created, the oldest ones associated with an app are marked as "EXPIRED" if they exceed
+the configured limits for packages and droplets stored per app.
+
+Nightly, starting at midnight, the Cloud Controller runs a series of jobs to delete the data associated with
 expired packages, droplets, and buildpacks.
 
-<describe how expiry works>
-<describe how orphans are reaped>
+Enabling the native [versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) feature on your blobstore
+will increase the number of resources stored and increase costs.
 
-Source files uploaded prior to forming packages are not deleted.
+##<a id='blobstore-timeouts'></a>Blobstore Interaction timeouts
 
-* don't forget note about blobstore-native versioning and how that can effect costs and deletions
-
-##<a id='blobstore-timeouts'></a>How long CC gives the blobstore to respond to its requests
+The Cloud Controller inherits its default blobstore operation timeouts from [excon](github.com/excon/excon). Excon defaults
+to a 60 second read, write, and connect timeouts.
 
 
