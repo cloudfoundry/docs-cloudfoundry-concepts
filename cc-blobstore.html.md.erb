@@ -14,7 +14,8 @@ This topic references staging and treats all blobstores as generic (S3-style) ob
 
 For more general information about staging, see [How Apps Are Staged](../concepts/how-applications-are-staged.html).
 
-For more information about how specific 3rd party blobstores can be configured, see [Cloud Controller Blobstore Configuration](../deploying/common/cc-blobstore-config.html).
+
+For more information about how specific 3rd party blobstores can be configured, see <%= vars.blobstore_link %>.
 
 ##<a id='stage-blobstore'></a>How staging uses the blobstore
 
@@ -90,7 +91,7 @@ will increase the number of resources stored and increase costs.
 
 ##<a id='blobstore-timeouts'></a>Blobstore Interaction timeouts
 
-The Cloud Controller inherits its default blobstore operation timeouts from [excon](github.com/excon/excon). Excon defaults
+The Cloud Controller inherits its default blobstore operation timeouts from [excon](https://github.com/excon/excon). Excon defaults
 to a 60 second read, write, and connect timeouts.
 
 
