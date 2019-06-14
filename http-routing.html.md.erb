@@ -20,9 +20,9 @@ The `X-Forwarded-Proto` header gives the scheme of the HTTP request from the cli
 
 If an incoming request includes the `X-Forwarded-Proto` header, Gorouter does the following:
 
-* Appends it to the existing header. 
-* Sets the scheme to HTTP if the client made an insecure request, meaning a request on port 80. 
-* Sets the scheme to HTTPS if the client made a secure request, meaning a request on port 443. 
+* Appends it to the existing header
+* Sets the scheme to HTTP if the client made an insecure request, meaning a request on port 80
+* Sets the scheme to HTTPS if the client made a secure request, meaning a request on port 443
 
 Developers can configure their apps to reject insecure requests by inspecting the `X-Forwarded-Proto` HTTP header on incoming traffic. The header may have multiple values represented as a comma-separated list, so developers must ensure the app rejects traffic that includes any `X-Forwarded-Proto` values that are not HTTPS.
 
