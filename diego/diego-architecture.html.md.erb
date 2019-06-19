@@ -9,7 +9,7 @@ This topic describes the components that form and interact with the Diego system
 
 ##<a id='overview'></a> Overview 
 
-Cloud Foundry uses the Diego architecture to manage app containers. Diego components assume app scheduling and management responsibility from the Cloud Controller. 
+Cloud Foundry uses the Diego system to manage app containers. Diego components assume app scheduling and management responsibility from the Cloud Controller. 
 
 
 Diego is a self-healing container management system that attempts to keep the correct number of instances running in Diego cells to avoid network failures and crashes. Diego schedules and runs Tasks and Long-Running Processes (LRP). For more about Tasks and LRPs, see [How the Diego Auction Allocates Jobs](diego-auction.html).
@@ -86,14 +86,13 @@ The following table describes the jobs that are part of the Cloud Foundry Diego 
 	<tr>
 		<td><strong>Job:</strong><br> bbs<br>
 		<strong>VM:<br></strong> <% if vars.product_name == "CF" %> diego-api <% else %> <%= vars.diego_vm_2 %> <% end %></td>
-		<td><ul><li>Maintains a real-time representation of the state of the Diego cluster, including desired LRPs, running LRPs, and in-flight Tasks.</li><li>Provides an RPC-style API over HTTP to Diego Core components and external clients, including the SSH Proxy and Route Emitter.</li><li>Ensures consistency and fault tolerance for Tasks and LRPs by comparing desired state with actual state.</li>
-		<li>Keeps <code>DesiredLRP</code> and <code>ActualLRP</code> counts synchronized. If the <code>DesiredLRP</code> count exceeds the <code>ActualLRP</code> count, requests a start auction from the Auctioneer. If the <code>ActualLRP</code> count exceeds the <code>DesiredLRP</code> count, sends a stop message to the Rep on the Cell hosting an instance</li>
-		<li>Monitors for potentially missed messages, resending them if necessary</li></td>
+		<td><ul><li>Maintains a real-time representation of the state of the Diego cluster, including desired LRPs, running LRPs, and in-flight Tasks.</li><li>Provides an RPC-style API over HTTP to Diego Core components for external clients as well as internal clients, including the SSH Proxy and Route Emitter.</li><li>Ensures consistency and fault tolerance for Tasks and LRPs by comparing desired state with actual state.</li>
+		<li>Keeps <code>DesiredLRP</code> and <code>ActualLRP</code> counts synchronized. If the <code>DesiredLRP</code> count exceeds the <code>ActualLRP</code> count, requests a start auction from the Auctioneer. If the <code>ActualLRP</code> count exceeds the <code>DesiredLRP</code> count, sends a stop message to the Rep on the Cell hosting an instance</li></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> file_server<br>
 		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> api <% else %> <%= vars.diego_vm_1 %> <% end %></td>
-		<td><ul><li>Serves static assets that can include general-purpose App Lifecycle binaries and app-specific droplets and build artifacts</li></ul></td>
+		<td><ul><li>Serves static assets that can include general-purpose App Lifecycle binaries</li></ul></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> locket<br>
@@ -118,7 +117,7 @@ The following table describes the jobs that are part of the Cloud Foundry Diego 
 
 <li>Mediates all communication between the Cell and the BBS</li>
 
-<li>Maintains a presence record for the Cell in BBS and Locket</li>
+<li>Maintains a presence record for the Cell in Locket</li>
 
 </ul></td>
 	</tr>
@@ -142,17 +141,17 @@ The following resources provide more information about Diego components:
 
 * The [Diego Release repository](https://github.com/cloudfoundry/diego-release) on GitHub. 
 
-* The [Auctioneer repository](https://github.com/cloudfoundry-incubator/auctioneer) on GitHub.
+* The [Auctioneer repository](https://github.com/cloudfoundry/auctioneer) on GitHub.
 
-* The [Bulletin Board System repository](https://github.com/cloudfoundry-incubator/bbs) on GitHub.
+* The [Bulletin Board System repository](https://github.com/cloudfoundry/bbs) on GitHub.
 
-* The [File Server repository](https://github.com/cloudfoundry-incubator/file-server) on GitHub.
+* The [File Server repository](https://github.com/cloudfoundry/file-server) on GitHub.
 
-* The [Rep repository](https://github.com/cloudfoundry-incubator/rep) on GitHub.
+* The [Rep repository](https://github.com/cloudfoundry/rep) on GitHub.
 
-* The [Executor repository](https://github.com/cloudfoundry-incubator/executor) on GitHub.
+* The [Executor repository](https://github.com/cloudfoundry/executor) on GitHub.
 
-* The [Route-Emitter repository](https://github.com/cloudfoundry-incubator/route-emitter) on GitHub.
+* The [Route-Emitter repository](https://github.com/cloudfoundry/route-emitter) on GitHub.
 
 * [Application SSH](./ssh-conceptual.html), [Application SSH Overview](../../devguide/deploy-apps/app-ssh-overview.html), and the [Diego SSH repository](https://github.com/cloudfoundry-incubator/diego-ssh) on GitHub.
 
@@ -209,21 +208,21 @@ The following three platform-specific binaries deploy apps and govern their life
 
 #### <a id='lifecycle-implementations'></a> Current Implementations
 
-- [Buildpack App Lifecycle](https://github.com/cloudfoundry-incubator/buildpack-app-lifecycle) implements the Cloud Foundry buildpack-based deployment strategy.
+- [Buildpack App Lifecycle](https://github.com/cloudfoundry/buildpackapplifecycle) implements the Cloud Foundry buildpack-based deployment strategy.
 
-- [Docker App Lifecycle](https://github.com/cloudfoundry-incubator/docker-app-lifecycle) implements a Docker deployment strategy.
+- [Docker App Lifecycle](https://github.com/cloudfoundry/dockerapplifecycle) implements a Docker deployment strategy.
 
 ### <a id='additional-info-diego'></a> Additional Information
 
 The following resources provide more information about components from other releases that interact closely with Diego:
 
-* The [CC-Uploader repository](https://github.com/cloudfoundry-incubator/cc-uploader) on GitHub.
+* The [CC-Uploader repository](https://github.com/cloudfoundry/cc-uploader) on GitHub.
 
-* The [Garden](../architecture/garden.html) topic or the [Garden repository](https://github.com/cloudfoundry-incubator/garden) on GitHub.
+* The [Garden](../architecture/garden.html) topic or the [Garden repository](https://github.com/cloudfoundry/garden) on GitHub.
 
 * The [Loggregator Release repository](https://github.com/cloudfoundry/loggregator-release/) on GitHub.
 
 * The [BOSH DNS documentation](https://bosh.io/docs/dns/).
 
-* The [TPS repository](https://github.com/cloudfoundry-incubator/tps) on GitHub.
+* The [TPS repository](https://github.com/cloudfoundry/tps) on GitHub.
 
