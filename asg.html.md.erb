@@ -21,7 +21,7 @@ ASGs apply to both buildpack-based and Docker-based apps and tasks.
 
 ### <a id='staging-running'></a> Staging and Running ASGs
 
-Admins can define a `staging` ASG for app and task staging, and a `running` ASG for app and task runtime.
+Administrators can define a `staging` ASG for app and task staging, and a `running` ASG for app and task runtime.
 
 When apps or tasks begin staging, they require traffic rules permissive enough to allow them to pull resources from the network.
 A running app or task no longer needs to pull resources, so traffic rules can be more restrictive and secure.
@@ -126,7 +126,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 ## <a id="process"></a> Process for Administering ASGs
 
-The following table outlines the flow of tasks that the admin carries out over the lifecycle of ASGs.
+The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs.
 Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](#procedures) below.
 
 <%= vars.asg_first_time %>
@@ -325,7 +325,7 @@ Below are examples of typical ASGs. Configure your ASGs in accordance with your 
 
 To resolve hostnames to IP addresses, apps require DNS server connectivity,
 which typically use port 53.
-Admins should create or update a `dns` ASG with appropriate rules. Admins can further restrict the DNS servers to specific IP addresses or
+Administrators should create or update a `dns` ASG with appropriate rules. Administrators can further restrict the DNS servers to specific IP addresses or
 ranges of IP addresses.
 
 Example `dns` ASG:
