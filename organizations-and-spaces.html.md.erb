@@ -1,0 +1,121 @@
+---
+title: Planning Orgs and Spaces 
+owner: CAPI
+---
+
+<% if vars.product_name != "CF" %>
+<% current_page.data.title = "Planning " + vars.product_short + " Orgs and Spaces"  %>
+<% end %>
+
+
+This topic describes considerations for effectively planning foundations, orgs, and spaces. You can plan your orgs and spaces to make the best use of the authorization features in Cloud Foundry.
+
+## <a id="overview"></a> Overview
+
+An installation of Cloud Foundry is referred to as a _foundation_. Each foundation has _orgs_ and _spaces_. For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html). 
+
+The Cloud Foundry roles described in _Orgs, Spaces, Roles, and Permissions_ use the principle of least privilege. Each role exists for a purpose and features in Cloud Foundry enable these purposes. 
+
+Consider these roles when planning your foundations, orgs, and spaces. This allows for full use of the features and assumptions of Cloud Foundry.
+
+## <a id="mappingfoundations"></a>Mapping Your Company’s Structure: Foundations
+
+![Company and environments roughly map to Foundations](mapping_foundations.png)
+
+Foundations:
+
+- Take a lot of work to maintain
+- Define the outermost boundary for shared components such as domains, service tiles, and physical infrastructure.
+- Generally, the human cost of maintaining a foundation means it maps to your prod/non-prod environments.
+
+A note about environments: environments like sandbox, non-prod, and prod are almost always their own foundation.
+
+More specific environments like dev, UAT, QA, or perf are often mapped at the org or space level with a suffix (ie. space-dev)
+
+![Company-wide environments built for a specific testing stage usually are contained in their own Foundations](mapping_foundations2.png)
+
+Forces to Consider
+
+- How many foundations can your platform team maintain (create, update, and monitor)?
+- How much isolation does your org require?
+- Do you need foundations local to a particular cloud or IaaS environment?
+
+The impact of mapping larger subsets of your company to foundations:
+
+- Less Maintenance
+- Less isolation
+- Better use of shared platform components
+
+The impact of mapping smaller subsets of your company to foundations:
+
+- More maintenance (could be offset with platform automation)
+- Higher likelihood of foundations being different
+- More isolation
+
+## <a id="mappingorgs"></a>Mapping Your Company’s Structure: orgs
+
+![orgs can encompass Business Units, environments, teams, or products](mapping_orgs.png)
+
+orgs:
+
+- Group a set of related people
+- Provide the outer boundary for self-service, enabled by orgs roles.
+- A logical construct with no upper limit
+- Companies should aim for the highest granularity that maximizes the people interested in the same stuff being in the same org and minimized the opposite - often a business unit or product team.
+
+![orgs most often map to a business unit in a particular foundation](mapping_orgs.png)
+
+Forces to Consider
+
+- How will you plan for capacity needs/changes?
+- What groups need to self-organize together?
+- How will you measure cost and perform billing/chargeback?
+
+
+The impact of mapping larger subsets of your company to orgs:
+
+- Less quota micromanagement
+- Ability to delegate user onboarding
+- More likely there are people with divergent needs
+- BU must be platform trained and manage potentially many spaces
+
+The impact of mapping smaller subsets of your company to orgs:
+
+- More quota management from platform team
+- More freedom to create spaces as needed
+
+## <a id="mappingspaces"></a>Mapping Your Company’s Structure: Spaces
+
+![Spaces can encompass Teams, Products and specific deployables](mapping_spaces.png)
+
+Spaces:
+
+- Group a related things that need to share a context
+- Define a fence-line inside which apps can share deployment details such as routes and service bindings
+- Are cheap to create and tear down, providing on-demand isolation for experiments & testing
+- Provide no finer access roles, so all users with access to the space have access to everything within it.  Use this to define the “who” for a space.
+- Companies should map this to the lowest granularity that minimizes the likelihood someone will change something that doesn’t belong to them
+
+![Spaces most often map to one product of the several products a team may work on, which may include several deployed artifacts in a microservice architecture](mapping_spaces2.png)
+
+Forces to Consider
+
+- When should a new space be created or destroyed?
+- What developer processes require the sandboxed isolation?
+- Are teams building single apps or constellations of microservices?
+- Are teams building a portfolio of apps or standalone apps?
+- Do all apps need public routes?
+- What apps need to share the same service instance?
+
+The impact of mapping larger subsets of your company to spaces:
+
+- More likelihood of accidental changes to someone else’s app/service
+- Easier integration between apps
+- More apps can use non-public routes
+
+
+The impact of mapping smaller subsets of your company to spaces:
+
+- More app isolation
+- Security with more specific ASGs
+- More reliant on external services or service instance sharing
