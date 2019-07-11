@@ -1,11 +1,16 @@
 ---
-title: Running Apps in the Cloud
+title: How CFAR Manages App
 owner: Docs
 ---
 
-The following topics provide information about how <%= vars.product_runtime %> <%= vars.runtime_abbr %> runs apps:
+<% if vars.product_name == 'CF' %>
+<% else %>
+<% current_page.data.title = "How " + vars.product_short + " Manages Apps"  %>
+<% end %>
+
+
+The following topics provide information about how <%= vars.product_runtime %> <%= vars.runtime_abbr %> manages apps:
 
 * [How Apps are Staged](how-applications-are-staged.html)
-* [Cloud Controller Blobstore](cc-blobstore.html)
 * [App Container Lifecycle](../devguide/deploy-apps/app-lifecycle.html)
 * [How the Diego Auction Allocates Jobs](./diego/diego-auction.html)
