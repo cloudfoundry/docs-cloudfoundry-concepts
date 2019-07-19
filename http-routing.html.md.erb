@@ -137,11 +137,11 @@ You can configure the Gorouter to handle this problem in two ways:
   </tr><tr>
   	<td><a href="#with-tls"><strong>With TLS Enabled</strong></a></td>
   	<td>Encrypted via TLS</td>
-  	<td>Routes are pruned on failure of TLS handshake only. See <a href="#when-tls-prune">Gorouter TLS pruning behavior.</a></td>
+  	<td>Routes are pruned on failure of TLS handshake. <%= vars.stale_routes_issue %> </a></td>
   </tr><tr>
   	<td><a href="#without-tls"><strong>Without TLS Enabled</strong></a></td>
   	<td>Plain text</td>
-  	<td>Routes are pruned on TTL expiry</td>
+  	<td>Routes are pruned on TTL expiry.</td>
   </tr>
 </table>
 
