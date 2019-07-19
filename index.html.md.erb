@@ -14,45 +14,14 @@ test, deploy, and scale applications. It is an [open source project](https://git
 and is available through a variety of private cloud distributions and public cloud instances.
 <% end %>
 
-This guide presents an overview of how Cloud Foundry works and a discussion of key concepts. Refer to this guide to learn more about Cloud Foundry fundamentals.
+This documentation presents an overview of how Cloud Foundry works and a discussion of key concepts. See the following topics to learn more about Cloud Foundry fundamentals.
 
-## General Concepts
-
-<ul>
-  <li><a href="./overview.html" class="subnav">Cloud Foundry Overview</a></li>
-  <li><a href="./how-applications-are-staged.html" class="subnav">How Apps Are Staged</a></li>
-  <li><a href="./high-availability.html" class="subnav">High Availability in Cloud Foundry</a></li>
-  <li><a href="./roles.html" class="subnav">Orgs, Spaces, Roles, and Permissions</a></li>
-<% if vars.product_name.include? "CF" %>
-  <li><a href="./asg.html" class="subnav">Application Security Groups</a></li>
+* [Cloud Foundry Overview](overview.html)
+* [Security and Networking](security-index.html)
+* [High Availability](ha-index.html)
+<% if vars.product_name == 'CF' %>
+* [How CFAR Manages Apps](apps-index.html)
+<% else %>
+* [How <%= vars.product_short %> Manages Apps](apps-index.html)
 <% end %>
-  <li><a href="./security.html" class="subnav">Cloud Foundry Security</a></li>
-  <li><a href="./container-security.html" class="subnav">Container Security</a></li>
-  <li><a href="./understand-cf-networking.html" class="subnav">Container-to-Container Networking</a></li>
-  <li><a href="./grootfs-disk.html" class="subnav">GrootFS Disk Usage</a></li>
-</ul>
-
-
-## Architecture 
-
-* <a href="./architecture/index.html" class="subnav">Cloud Foundry Components</a>
-
-* <a href="./architecture/cloud-controller.html" class="subnav">Cloud Controller</a>
-
-* <a href="./architecture/messaging-nats.html" class="subnav">Messaging (NATS)</a>
-
-* <a href="./architecture/router.html" class="subnav">Gorouter</a>
-
-* <a href="./architecture/uaa.html" class="subnav">User Account and Authentication (UAA) Server</a>
-
-* <a href="./architecture/garden.html" class="subnav">Garden</a>
-
-* <a href="./http-routing.html" class="subnav">HTTP Routing</a>
-
-## Diego
-
-<ul>
-<li><a href="./diego/diego-architecture.html" class="subnav">Diego Architecture</a></li>
-<li><a href="./diego/ssh-conceptual.html" class="subnav">Application SSH Components and Processes</a></li>
-<li><a href="./diego/diego-auction.html" class="subnav">How the Diego Auction Allocates Jobs</a></li>
-</ul>
+* [Runtime Components](architecture/index.html)
