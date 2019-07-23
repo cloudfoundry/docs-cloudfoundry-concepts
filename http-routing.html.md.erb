@@ -124,9 +124,9 @@ This is enabled by following the steps in [Configure Validation of App Instance 
 
 ## <a id="consistency"></a> Preventing Misrouting
 
-As CF manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route-Emitter on each Diego cell sends a periodic update to all Gorouters through NATS, reminding them of the location of all app instances; the default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back end mapping; this TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
+As Cloud Foundry manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route-Emitter on each Diego cell sends a periodic update to all Gorouters through NATS to remind them of the location of all app instances. The default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back end mapping. This TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
 
-Network partitions or NATS failures can cause the Gorouter's routing table to fall out of sync, as CF continues to re-create containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
+Network partitions or NATS failures can cause the Gorouter's routing table to fall out of sync, as Cloud Foundry continues to re-create containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
 
 You can configure the Gorouter to handle this problem in two ways:
 
@@ -151,7 +151,7 @@ Both of these consistency modes are described below.
 
 This consistency mode is newer and has the following benefits:
 
-- Improved availability for applications by keeping routes in the Gorouter's routing table when TTL expires
+- Improved availability for apps by keeping routes in the Gorouter's routing table when TTL expires
 - Increased guarantees against misrouting by validating the identity of backends before forwarding requests
 - Increased security by encrypting data in flight from the Gorouter to backends
 
