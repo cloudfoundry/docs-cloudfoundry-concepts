@@ -2,6 +2,7 @@
 title: Glossary
 ---
 
+This topic describes <%= vars.product_full %> terms and definitions.
 
 
 | Term          | Definition   |
@@ -12,13 +13,13 @@ title: Glossary
 | CLI           | Command Line Interface |
 | Domains       | A domain is a domain name like `<%=vars.app_domain%>`. Domains can also be multi-level and contain sub-domains like the "myapp" in `myapp.<%=vars.app_domain%>`. Domain objects belong to an org and are not directly bound to apps. |
 | Droplet       | An archive within <%=vars.product_short%> that contains the application ready to run on Diego. A droplet is the result of the application staging process. |
-| Managed Services | Services provided by third-parties, but integrated into Cloud Foundry through APIs so that Cloud Foundry users can provision reserved resources and credentials on demand. Also called **Custom Services**. |
-| Management    | You can manage spaces and orgs with the Cloud Foundry Command Line Interface (cf CLI), the Cloud Controller API, and the Cloud Foundry Eclipse Plugin. |
+| Managed Services | Services provided by third-parties, but integrated into <%= vars.product_short %> through APIs so that <%= vars.product_short %> users can provision reserved resources and credentials on demand. Also called **Custom Services**. |
+| Management    | You can manage spaces and orgs with the CF Command Line Interface (cf CLI), the Cloud Controller API, and the <%= vars.product_short %> Eclipse Plugin. |
 | Org | An org is the top-most meta object within the <%=vars.product_short%> infrastructure. Only an account with administrative privileges on a <%=vars.product_short%> instance can manage its orgs. |
 | Routes        | A route, based on a domain with an optional host as a prefix, may be associated with one or more applications. For example, `myapp` is the host and `<%=vars.app_domain%>` is the domain when using the route `myapp.<%=vars.app_domain%>`. It is possible to have a route that represents `<%=vars.app_domain%>` without a host. Routes are children of domains and are directly bound to apps. |
 | Service       | A "factory" which produces service instances. |
 | Service Instance | A reserved resource provisioned by a service. The resource provisioned will differ by service; could be a database or an account on a multi-tenant application. |
 | Spaces        | An org can contain multiple spaces. You can map a domain to multiple spaces, but you can map a route to only one space. |
 | Staging       | The process in <%=vars.product_short%> by which the raw bits of an application are transformed into a droplet that is ready to execute. |
-| UAA           | User Account and Authentication Service, which provides the technological basis for Dashboard Single Sign-On available to Cloud Foundry users when accessing pertinent Managed Services. |
+| UAA           | User Account and Authentication Service, which provides the technological basis for Dashboard Single Sign-On available to <%= vars.product_short %> users when accessing pertinent Managed Services. |
 | Warden        | The mechanism for containerization on Diego that ensures applications running on <%=vars.product_short%> have a fair share of computing resources and cannot access either the system code or other applications running on Diego. |
