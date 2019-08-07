@@ -5,7 +5,7 @@ owner: Diego
 
 
 
-This topic describes Garden, the component that Cloud Foundry uses to create and manage isolated environments called containers. Each instance of an application deployed to Cloud Foundry runs within a container. For more information about how containers work, see the [Container Mechanics](../container-security.html#mechanics) section of the <em>Container Security</em> topic.
+This topic describes Garden, the component that <%= vars.product_full %> uses to create and manage isolated environments called containers. Each instance of an application deployed to <%= vars.product_short %> runs within a container. For more information about how containers work, see the [Container Mechanics](../container-security.html#mechanics) section of the <em>Container Security</em> topic.
 
 ##<a id='backends'></a>Backends
 
@@ -24,7 +24,7 @@ For more information, see the [Garden repository](https://github.com/cloudfoundr
 
 ##<a id='garden-runc'></a>Garden-runC
 
-Cloud Foundry currently uses the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of Cloud Foundry used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend.
+<%= vars.product_short %> currently uses the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of <%= vars.product_short %> used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend.
 
 <%= vars.garden_runc %>
 
@@ -41,7 +41,7 @@ For more information, see the [Garden-runC repository](https://github.com/cloudf
 ##<a id='garden-rootfs'></a>Garden RootFS (GrootFS)
 
 Garden manages container filesystems through a plugin interface.
-Cloud Foundry uses the [GrootFS](https://github.com/cloudfoundry/Grootfs) plugin for this task.
+<%= vars.product_short %> uses the [GrootFS](https://github.com/cloudfoundry/Grootfs) plugin for this task.
 GrootFS is a Linux-specific implementation of the Garden volume plugin interface.
 
 GrootFS performs the following actions:

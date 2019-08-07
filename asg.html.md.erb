@@ -5,7 +5,7 @@ owner: Security
 
 
 
-This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool.
+This topic provides an overview of Application Security Groups (ASGs) in <%= vars.product_full %>, and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool.
 <%= vars.asg_first_time %>
 
 ## <a id='introduction'></a> About Application Security Groups
@@ -41,7 +41,7 @@ addresses listed in a group change.
 
 To simplify securing a deployment while still allowing apps reach external
 services, operators can deploy the services into a subnet that is separate from
-their Cloud Foundry deployment, then create ASGs for the apps that whitelist those service subnets, while denying access to any VM hosting other apps.
+their <%= vars.product_short %> deployment, then create ASGs for the apps that whitelist those service subnets, while denying access to any VM hosting other apps.
 
 For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section below.
 
@@ -61,7 +61,7 @@ For examples of typical ASGs, see the <a href="#typical-groups">Typical Applicat
 
 ASGs are applied by configuring ASG sets differentiated by _scope_, platform-wide or space specific, and _lifecycle_, staging or running.
 
-Currently, four ASG sets exist in Cloud Foundry:
+Currently, four ASG sets exist in <%= vars.product_short %>:
 
 + Platform-wide staging ASG set, also called "default-staging"
 + Platform-wide running ASG set, also called "default-running"
@@ -435,7 +435,7 @@ input, the ASG Creator formulates a JSON file of allow rules.
 In turn, the JSON file is the input for the `cf create-security-group` command
 that creates an ASG.
 
-You can download the latest release of the ASG Creator from the Cloud Foundry incubator repository on GitHub: [https://github.com/cloudfoundry-incubator/asg-creator/releases/latest](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest)
+You can download the latest release of the ASG Creator from the <%= vars.product_short %> incubator repository on GitHub: [https://github.com/cloudfoundry-incubator/asg-creator/releases/latest](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest)
 
 
 ## <a id='logging'></a> ASG Logging

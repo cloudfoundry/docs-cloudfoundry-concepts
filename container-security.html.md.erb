@@ -5,19 +5,19 @@ owner: Security
 
 
 
-This topic describes how Cloud Foundry (CF) secures the containers that host application instances on Linux. For an overview of other CF security features, see the [Cloud Foundry Security](security.html) topic.
+This topic describes how <%= vars.product_full %> secures the containers that host application instances on Linux. For an overview of other <%= vars.product_short %> security features, see the [<%= vars.product_short %> Security](security.html) topic.
 
 * [Container Mechanics](#mechanics) provides an overview of container isolation. 
-* [Inbound and Outbound Traffic from CF](#networking) provides an [overview](#net-overview) of container networking and describes how CF administrators [customize](#config-traffic) container network traffic rules for their deployment. 
-* [Container Security](#security) describes how CF secures containers by running application instances in [unprivileged](#types) containers and by [hardening](#hardening) them.
+* [Inbound and Outbound Traffic from <%= vars.product_short %>](#networking) provides an [overview](#net-overview) of container networking and describes how <%= vars.product_short %> administrators [customize](#config-traffic) container network traffic rules for their deployment. 
+* [Container Security](#security) describes how <%= vars.product_short %> secures containers by running application instances in [unprivileged](#types) containers and by [hardening](#hardening) them.
 
 ## <a id='mechanics'></a>Container Mechanics###
 
-Each instance of an app deployed to CF runs within its own self-contained environment, a [Garden container](./architecture/garden.html). This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where CF is deployed. 
+Each instance of an app deployed to <%= vars.product_short %> runs within its own self-contained environment, a [Garden container](./architecture/garden.html). This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where <%= vars.product_short %> is deployed. 
 
-CF achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
+<%= vars.product_short %> achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
 
-CF creates container filesystems using the [Garden Rootfs](./architecture/garden.html#garden-rootfs) (GrootFS) tool. It stacks the following using OverlayFS:
+<%= vars.product_short %> creates container filesystems using the [Garden Rootfs](./architecture/garden.html#garden-rootfs) (GrootFS) tool. It stacks the following using OverlayFS:
 
 * A **read-only base filesystem**: This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers.
 Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.
@@ -27,7 +27,7 @@ The quotas prevent the read-write layer from overflowing into unallocated space.
 Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers. 
 
 <p class="note">
-    <strong>Note</strong>: CF does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
+    <strong>Note</strong>: <%= vars.product_short %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
 </p>
 
 ### <a id='cpu'></a>CPU ###
@@ -45,7 +45,7 @@ by other processes that may run in the host VM.
 
 Generally, cgroups offers two possibilities for limiting the CPU usage:
 <em>CPU affinity</em> and <em>CPU bandwidth</em>, the latter of which is used
-in Cloud Foundry.
+in <%= vars.product_short %>.
 
 * CPU affinity: It consists of binding a cgroup to certain CPU cores. The actual amount of CPU cycles that can be consumed by the cgroup is thus limited to what is available on the bound CPU cores.
 
@@ -60,13 +60,13 @@ of the <code>cpu.shares</code> of all the cgroups that are currently doing CPU a
 
 <code>process\_cpu\_share\_percent = cpu.shares / sum\_cpu\_shares * 100</code>
 
-In Cloud Foundry, cgroup shares range from 10 to 1024, with 1024 being the default.
+In <%= vars.product_short %>, cgroup shares range from 10 to 1024, with 1024 being the default.
 The actual amount of shares a cgroup gets can be read from the 
 <code>cpu.shares</code> file of the cgroup configurations pseudo-file-system
 available in the container at <code>/sys/fs/cgroup/cpu</code>.
 
 The amount of shares given to an applications cgroup depends on the amount of 
-memory the application declares to need in the manifest. Cloud Foundry scales
+memory the application declares to need in the manifest. <%= vars.product_short %> scales
 the number of allocated shares linearly with the amount of memory, with an app
 instance requesting 8G of memory getting the upper limit of 1024 shares.
 
@@ -101,7 +101,7 @@ recalculation will be performed.
 
 <p class="note"><strong>Summary:</strong> The cgroup shares are the minimum guaranteed CPU share that the process can get. This limitation becomes effective only when processes on the same host compete for resources.</p>
 
-## <a id='networking'></a>Inbound and Outbound Traffic from CF
+## <a id='networking'></a>Inbound and Outbound Traffic from <%= vars.product_short %>
 
 ### <a id='net-overview'></a>Networking Overview ###
 
@@ -118,7 +118,7 @@ then all traffic goes through the following levels of network address translatio
 ### <a id='config-traffic'></a>Network Traffic Rules ###
 
 Administrators configure rules to govern container network traffic. 
-This is how containers send traffic outside of CF and receive traffic from outside, the Internet.
+This is how containers send traffic outside of <%= vars.product_short %> and receive traffic from outside, the Internet.
 These rules can prevent system access from external networks and between internal components
 and determine if apps can establish connections over the virtual network interface.
 
@@ -126,11 +126,11 @@ Administrators configure these rules at two levels:
 
 * Application Security Groups (ASGs) apply network traffic rules at the container level. <%=vars.app_sec_groups_link%>
 * Container-to-Container networking policies determine app-to-app communication. 
-  Within CF, apps can communicate directly with each other, but the containers are isolated from outside CF. <%=vars.container_network_link %>
+  Within <%= vars.product_short %>, apps can communicate directly with each other, but the containers are isolated from outside <%= vars.product_short %>. <%=vars.container_network_link %>
 
 ## <a id='security'></a>Container Security###
 
-CF secures containers through the following measures:
+<%= vars.product_short %> secures containers through the following measures:
 
 * Running application instances in [unprivileged](#types) containers by default
 * [Hardening](#hardening) containers by limiting functionality and access rights
@@ -138,7 +138,7 @@ CF secures containers through the following measures:
 
 ### <a id="types"></a> Types
 
-Garden has two container types: unprivileged and privileged. Currently, CF runs all application instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
+Garden has two container types: unprivileged and privileged. Currently, <%= vars.product_short %> runs all application instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
 
 <% if vars.product_name == 'CF' %>
 <%= partial 'config_manifest' %>
@@ -146,30 +146,30 @@ Garden has two container types: unprivileged and privileged. Currently, CF runs 
 
 ### <a id='hardening'></a> Hardening
 
-CF mitigates against container breakout and denial of service attacks in the following ways:
+<%= vars.product_short %> mitigates against container breakout and denial of service attacks in the following ways:
 
-* CF uses the full set of [Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) (IPC, Network, Mount, PID, User, UTS) to provide isolation between containers running on the same host. The User namespace is not used for privileged containers.
+* <%= vars.product_short %> uses the full set of [Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) (IPC, Network, Mount, PID, User, UTS) to provide isolation between containers running on the same host. The User namespace is not used for privileged containers.
 * In unprivileged containers, CF maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an app from inheriting UID/GID 0 on the host if it breaks out of the container. 
-	* CF uses the same UID/GID for all containers.
-    * CF maps all UIDs except UID 0 to themselves. CF maps UID 0 inside the container namespace to `MAX_UID-1` outside of the container namespace.
+	* <%= vars.product_short %> uses the same UID/GID for all containers.
+    * <%= vars.product_short %> maps all UIDs except UID 0 to themselves. <%= vars.product_short %> maps UID 0 inside the container namespace to `MAX_UID-1` outside of the container namespace.
     * Container Root does not grant Host Root permissions.
-* CF mounts `/proc` and `/sys` as read-only inside containers.
-* CF disallows `dmesg` access for unprivileged users and all users in unprivileged containers.
-* CF uses `chroot` when importing docker images from docker registries.
-* CF establishes a container-specific overlay filesystem mount. CF uses [`pivot_root`](http://manpages.ubuntu.com/manpages/trusty/man2/pivot_root.2.html) to move the root filesystem into this overlay, in order to isolate the container from the host system’s filesystem.
-* CF does not call any binary or script inside the container filesystem, in order to eliminate any dependencies on scripts and binaries inside the root filesystem.
-* CF avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
-* CF establishes a virtual Ethernet pair for each container for network traffic. See the [Container Network Traffic](#config-traffic) section above for more information. The virtual Ethernet pair has the following features:
+* <%= vars.product_short %> mounts `/proc` and `/sys` as read-only inside containers.
+* <%= vars.product_short %> disallows `dmesg` access for unprivileged users and all users in unprivileged containers.
+* <%= vars.product_short %> uses `chroot` when importing docker images from docker registries.
+* <%= vars.product_short %> establishes a container-specific overlay filesystem mount. <%= vars.product_short %> uses [`pivot_root`](http://manpages.ubuntu.com/manpages/trusty/man2/pivot_root.2.html) to move the root filesystem into this overlay, in order to isolate the container from the host system’s filesystem.
+* <%= vars.product_short %> does not call any binary or script inside the container filesystem, in order to eliminate any dependencies on scripts and binaries inside the root filesystem.
+* <%= vars.product_short %> avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
+* <%= vars.product_short %> establishes a virtual Ethernet pair for each container for network traffic. See the [Container Network Traffic](#config-traffic) section above for more information. The virtual Ethernet pair has the following features:
     * One interface in the pair is inside the container’s network namespace, and is the only non-loopback interface accessible inside the container.
     * The other interface remains in the host network namespace and is bridged to the container-side interface.
     * Egress whitelist rules are applied to these interfaces according to Application Security Groups (ASGs) configured by the administrator.
     * First-packet logging rules may also be enabled on TCP whitelist rules.
     * DNAT rules are established on the host to enable traffic ingress from the host interface to whitelisted ports on the container-side interface.
-* CF applies disk quotas using container-specific XFS quotas with the specified disk-quota capacity.
-* CF applies a total memory usage quota through the memory cgroup and destroys the container if the memory usage exceeds the quota.
-* CF applies a fair-use limit to CPU usage for processes inside the container through the `cpu.shares` control group.
-* CF allows administrators to rate limit the maximum bandwidth consumed by single application containers, configuring `rate` and `burst` properties on the `silk-cni` job.
-* CF limits access to devices using cgroups but explicitly whitelists the following safe device nodes:
+* <%= vars.product_short %> applies disk quotas using container-specific XFS quotas with the specified disk-quota capacity.
+* <%= vars.product_short %> applies a total memory usage quota through the memory cgroup and destroys the container if the memory usage exceeds the quota.
+* <%= vars.product_short %> applies a fair-use limit to CPU usage for processes inside the container through the `cpu.shares` control group.
+* <%= vars.product_short %> allows administrators to rate limit the maximum bandwidth consumed by single application containers, configuring `rate` and `burst` properties on the `silk-cni` job.
+* <%= vars.product_short %> limits access to devices using cgroups but explicitly whitelists the following safe device nodes:
 	* `/dev/full`
 	* `/dev/fuse`
 	* `/dev/null`
@@ -183,7 +183,7 @@ CF mitigates against container breakout and denial of service attacks in the fol
 	* `/dev/zero`
 	* `/dev/tap`
 	* `/dev/tun`
-* CF drops the following [Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) for all container processes. Every dropped capability limits the actions the root user can perform.
+* <%= vars.product_short %> drops the following [Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) for all container processes. Every dropped capability limits the actions the root user can perform.
 	* `CAP_DAC_READ_SEARCH`
 	* `CAP_LINUX_IMMUTABLE`
 	* `CAP_NET_BROADCAST`
