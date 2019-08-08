@@ -3,14 +3,8 @@ title: App Security Groups
 owner: Security
 ---
 
-<<<<<<< HEAD
 This topic provides an overview of App Security Groups (ASGs) in <%= vars.product_full %>, and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool.
-=======
 
-
-This topic provides an overview of Application Security Groups (ASGs), and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool.
->>>>>>> f696ae7e954a40e0d4e60f222e46f7e7a1d2f032
-<%= vars.asg_first_time %>
 
 ## <a id='introduction'></a> Overview
 
@@ -34,13 +28,7 @@ In environments with both platform-wide and space-specific ASGs, the ASGs for a 
 
 ASGs can be complicated to configure correctly, especially when the specific IP addresses listed in a group change.
 
-<<<<<<< HEAD
 To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.product_short %> deployment, then create ASGs for the apps that allow those service subnets, while denying access to any VM hosting other apps.
-=======
-To simplify securing a deployment while still allowing apps reach external
-services, operators can deploy the services into a subnet that is separate from
-their Cloud Foundry deployment, then create ASGs for the apps that whitelist those service subnets, while denying access to any VM hosting other apps.
->>>>>>> f696ae7e954a40e0d4e60f222e46f7e7a1d2f032
 
 For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section below.
 
@@ -94,15 +82,11 @@ The following table indicates the differences between the four sets.
   </tr>
 </table>
 
-Typically, ASGs applied during the staging lifecycle are more permissive than
-the ASGs applied during the running lifecycle.
-This is because staging often requires access to different resources, such as
-dependencies.
+Typically, ASGs applied during the staging lifecycle are more permissive than the ASGs applied during the running lifecycle. This is because staging often requires access to different resources, such as dependencies.
 
 You use different commands to apply an ASG to each of the four sets. For more information, see the [Procedures](#procedures) section below.
 
-<p class="note"><strong>Note:</strong> To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.
-</p>
+<p class="note"><strong>Note:</strong> To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
 
 ### <a id='creating-groups'></a> The Structure and Attributes of ASGs
 
@@ -125,8 +109,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 ## <a id="process"></a> Process for Administering ASGs
 
-The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs.
-Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](#procedures) below.
+The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs. Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](#procedures) below.
 
 <%= vars.asg_first_time %>
 
@@ -219,8 +202,7 @@ After the ASG is created, you must bind it to an ASG set before it takes effect.
 
 ### <a id='binding-groups'></a> Bind ASGs
 
-<p class='note'><strong>Note:</strong> Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
-</p>
+<p class='note'><strong>Note:</strong> Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
 
 To apply an ASG, you must first bind it to an ASG set.
 
@@ -261,15 +243,11 @@ In the following example, `my-asg` is the name of a security group, and `~/works
 $ cf update-security-group my-asg ~/workspace/my-asg-v2.json
 </pre>
 
-<p class='note'><strong>Note</strong>: Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space,
-use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
-</p>
+<p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
 
 ### <a id='unbinding-groups'></a> Unbind ASGs
 
-<p class='note'><strong>Note</strong>: Unbinding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space,
-use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
-</p>
+<p class='note'><strong>Note</strong>: Unbinding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
 
 To unbind an ASG from the platform-wide staging ASG set, run `cf unbind-staging-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
@@ -294,8 +272,7 @@ $ cf unbind-security-group my-asg my-org my-space --lifecycle staging
 
 ### <a id='deleting-groups'></a> Delete ASGs
 
-<p class='note'><strong>Note:</strong> You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.
-</p>
+<p class='note'><strong>Note:</strong> You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.</p>
 
 To delete an ASG, run `cf delete-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
@@ -407,15 +384,11 @@ Each installed Marketplace Service requires its own set of ASG rules to function
 
 ## <a id='asg-baseline'></a> About the ASG Creator Tool
 
-The ASG Creator is a command line tool that you can use to create JSON rules files. The ASG Creator lets you specify IP addresses, CIDRs, and IP address ranges that you want to disallow traffic to, as well as the addresses that you want to allow traffic to. Based on these disallow/allow (exclude/include) lists that you provide as input, the ASG Creator formulates a JSON file of allow rules.
+The ASG Creator is a command line tool that you can use to create JSON rules files. The ASG Creator lets you specify IP addresses, CIDRs, and IP address ranges that you want to disallow traffic to, as well as the addresses that you want to allow traffic to. Based on these disallow/allow (exclude/include) liss that you provide as input, the ASG Creator formulates a JSON file of allow rules.
 
 In turn, the JSON file is the input for the `cf create-security-group` command that creates an ASG.
 
-<<<<<<< HEAD
 To download the latest release of the ASG Creator, see the <%= vars.product_short %> [incubator repository](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) on GitHub.
-=======
-You can download the latest release of the ASG Creator from the Cloud Foundry incubator repository on GitHub: [https://github.com/cloudfoundry-incubator/asg-creator/releases/latest](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest)
->>>>>>> f696ae7e954a40e0d4e60f222e46f7e7a1d2f032
 
 
 ## <a id='logging'></a> ASG Logging
