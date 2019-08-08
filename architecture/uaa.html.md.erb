@@ -5,21 +5,19 @@ owner: Identity
 
 
 
-This topic provides an overview of the User Account and Authentication (UAA) Server, the identity management service for <%= vars.product_full %>.
+This topic provides an overview of the User Account and Authentication (UAA) Server, the identity management service for Cloud Foundry
 
-## <a id="overview"></a> Overview
-
-The primary role of the UAA is as an OAuth2 provider, issuing tokens for client apps to use when they act on behalf of <%= vars.product_short %> users.
-In collaboration with the login server, the UAA can authenticate users with their <%= vars.product_short %> credentials, and can act as an SSO service using those, or other, credentials.
+The primary role of the UAA is as an OAuth2 provider, issuing tokens for client apps to use when they act on behalf of Cloud Foundry users.
+In collaboration with the login server, the UAA can authenticate users with their Cloud Foundry credentials, and can act as an SSO service using those, or other, credentials.
 
 The UAA has endpoints for managing user accounts and for registering OAuth2 clients, as well as various other management functions.
 
 ## <a id='quickstart'></a>Quick Start ##
 
-You can deploy the UAA locally or to <%= vars.product_short %>.
+You can deploy the UAA locally or to Cloud Foundry.
 
 * [Deploy UAA Locally](#local)
-* [Deploy UAA to <%= vars.product_short %>](#cf)
+* [Deploy UAA to Cloud Foundry](#cf)
 
 ### <a id='local'></a>Deploy UAA Locally ###
 
@@ -80,7 +78,7 @@ Follow the steps below to access and use a locally-deployed UAA server.
     }
     </pre>
 
-3. Run `gem install cf-uaac` to install the <%= vars.product_short %> UAA Command Line Client (UAAC) Ruby gem.
+3. Run `gem install cf-uaac` to install the Cloud Foundry UAA Command Line Client (UAAC) Ruby gem.
 
     <pre class="terminal">
     $ gem install cf-uaac
@@ -142,9 +140,9 @@ Follow the steps below to access and use a locally-deployed UAA server.
       aud: scim clients uaa admin
     </pre>
 
-### <a id='cf'></a>Deploy UAA to <%= vars.product_short %> ###
+### <a id='cf'></a>Deploy UAA to Cloud Foundry ###
 
-Follow the instructions below to build the UAA as an app and push it to <%= vars.product_short %> using the Cloud Foundry Command Line Interface (cf CLI). 
+Follow the instructions below to build the UAA as an app and push it to Cloud Foundry using the Cloud Foundry Command Line Interface (cf CLI). 
 
 1. In a terminal window, clone the UAA GitHub repository. 
 
@@ -159,7 +157,7 @@ Follow the instructions below to build the UAA as an app and push it to <%= vars
     $ ./gradlew :cloudfoundry-identity-uaa:war
     </pre>
 
-3. Run the cf CLI `cf push APP-NAME -m 512M -p PATH-TO-WAR-FILE --no-start` command to push the app to <%= vars.product_short %>. Replace `APP-NAME` with a name for your UAA app, and `PATH-TO-WAR-FILE` with the path to the WAR file you created in the previous step. For example:
+3. Run the cf CLI `cf push APP-NAME -m 512M -p PATH-TO-WAR-FILE --no-start` command to push the app to Cloud Foundry. Replace `APP-NAME` with a name for your UAA app, and `PATH-TO-WAR-FILE` with the path to the WAR file you created in the previous step. For example:
 
     <pre class="terminal">
     $ cf push MYUAA -m 512M -p uaa/build/libs/cloudfoundry-identity-uaa-1.8.0.war --no-start
@@ -179,12 +177,12 @@ Follow the instructions below to build the UAA as an app and push it to <%= vars
 
 ### <a id='demo-hosted'></a>Use Remote UAA ###
 
-You use a UAA server that you pushed as an app to <%= vars.product_short %> in a similar way to one you [run locally](#demo-local). You do not need app token encoding because you do not have the client secret.
+You use a UAA server that you pushed as an app to Cloud Foundry in a similar way to one you [run locally](#demo-local). You do not need app token encoding because you do not have the client secret.
 
-Follow the steps below to access and use a UAA server that you pushed as an app to <%= vars.product_short %>.
+Follow the steps below to access and use a UAA server that you pushed as an app to Cloud Foundry.
 
 
-1. [Deploy UAA to <%= vars.product_short %>](#cf) as described above. 
+1. [Deploy UAA to Cloud Foundry](#cf) as described above. 
 
 1. From the project base directory, run `curl -H "Accept: application/json" APP-FQDN/login` to query the external login endpoint about the system. Replace `APP-FQDN` with the FQDN of your app. For example:
 
@@ -222,7 +220,7 @@ Follow the steps below to access and use a UAA server that you pushed as an app 
     <br><br>
     The `uaac token client get` command authenticates and obtains an access 
     token from the server using the OAuth2 implicit grant, similar to the 
-    approach intended for a standalone client like the <%= vars.product_short %> Command 
+    approach intended for a standalone client like the Cloud Foundry Command 
     Line Interface (cf CLI). 
 
 ## <a id='integration'></a>Integration Tests ##

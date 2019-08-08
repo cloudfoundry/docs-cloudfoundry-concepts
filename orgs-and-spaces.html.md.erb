@@ -3,20 +3,20 @@ title: Planning Orgs and Spaces
 owner: CAPI
 ---
 
+<% if vars.product_name != "CF" %>
+<% current_page.data.title = "Planning " + vars.product_short + " Orgs and Spaces"  %>
+<% end %>
 
-<%# Reset page title based on product title %>
-<% current_page.data.title = "Planning " vars.product_short + " Orgs and Spaces" if vars.product_name != 'CF'  %>
 
-
-This topic describes considerations for effectively planning foundations, orgs, and spaces. You can plan your orgs and spaces to make the best use of the authorization features in <%=vars.product_full %>.
+This topic describes considerations for effectively planning foundations, orgs, and spaces. You can plan your orgs and spaces to make the best use of the authorization features in <%=vars.product_short %>.
 
 ## <a id="overview"></a> Overview
 
 An installation of <%= vars.product_short %> is referred to as a _foundation_. Each foundation has _orgs_ and _spaces_. For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html). 
 
-The <%= vars.product_short %> roles described in _Orgs, Spaces, Roles, and Permissions_ use the principle of least privilege. Each role exists for a purpose and features in <%= vars.product_short %> enable these purposes. 
+The Cloud Foundry roles described in _Orgs, Spaces, Roles, and Permissions_ use the principle of least privilege. Each role exists for a purpose and features in Cloud Foundry enable these purposes. 
 
-Consider these roles when planning your foundations, orgs, and spaces. This allows for full use of the features and assumptions of <%= vars.product_short %>.
+Consider these roles when planning your foundations, orgs, and spaces. This allows for full use of the features and assumptions of Cloud Foundry.
 
 
 ## <a id="conceptual"></a> How <%= vars.product_short %> Layers Relate to Your Company
@@ -64,7 +64,7 @@ For an overview of each of the structural <%= vars.product_short %> layers, see 
 
 Foundations roughly map to a company and environments. See the following diagram for an illustration: 
 
-![The diagram shows a box on the left labeled 'Your Company' and a box on the right labeled '<%= vars.product_short %>'. In the 'Your Company' box, there are two smaller boxes labeled 'Company' and 'Environment', which are linked to a section in the 'PCF Organizational Model' labeled 'Foundation'.](mapping_foundations.png)
+![The diagram shows a box on the left labeled 'Your Company' and a box on the right labeled 'Cloud Foundry'. In the 'Your Company' box, there are two smaller boxes labeled 'Company' and 'Environment', which are linked to a section in the 'PCF Organizational Model' labeled 'Foundation'.](mapping_foundations.png)
 
 
 ### <a id="mappingorgs"></a> Orgs
@@ -114,7 +114,7 @@ For examples of environments and how they map to <%= vars.product_short %> layer
 
 ### <a id="considerations"></a> Questions to Consider About Each <%= vars.product_short %> Layer
 
-For guiding questions to help you make decisions about planning your <%= vars.product_short %> structure, see the following table:
+For guiding questions to help you make decisions about planning your Cloud Foundry structure, see the following table:
 
 <table>
 	<tr>
