@@ -5,6 +5,7 @@ owners: CAPI, Identity
 
 This topic describes orgs and spaces in <%= vars.product_name %> foundations. It also describes the default permissions for user roles in <%= vars.product_name %>.
 
+
 ## <a id="overview"></a> Overview
 
 <%= vars.product_name %> uses a role-based access control (RBAC) system to grant appropriate permissions to <%=vars.product_full %> users. 
@@ -12,10 +13,9 @@ This topic describes orgs and spaces in <%= vars.product_name %> foundations. It
 Admins, Org Managers, and Space Managers can assign user roles using the Cloud Foundry Command Line Interface (cf CLI). For more information, see [Users and Roles](../cf-cli/getting-started.html#user-roles) in _Getting Started with the cf CLI_<%= vars.or_apps_man %>.	
 
 
-## <a id='orgs'></a>Orgs ##
+## <a id='orgs'></a>Orgs
 
-An org is a development account that an individual or multiple collaborators
-can own and use. All collaborators access an org with user accounts, which have roles such as Org Manager, Org Auditor, and Org Billing Manager. Collaborators in an org share a resource quota plan, applications, services availability, and custom domains.
+An org is a development account that an individual or multiple collaborators can own and use. All collaborators access an org with user accounts, which have roles such as Org Manager, Org Auditor, and Org Billing Manager. Collaborators in an org share a resource quota plan, applications, services availability, and custom domains.
 
 By default, an org has the status of _active_. An admin can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services. 
 
@@ -23,27 +23,25 @@ For more information about the actions that each role can perform, see [User Rol
 
 For details on what activities are allowed for suspended orgs, see [Roles and Permissions for Suspended Orgs](#suspendedroles). 
 
-## <a id='spaces'></a>Spaces ##
 
-A space provides users with access to a shared location for app
-development, deployment, and maintenance. An org can contain multiple spaces.
-Every app, service, and route is scoped to a space.
-Roles provide access control for these resources and each space role applies only to a particular space.
+## <a id='spaces'></a> Spaces
+
+A space provides users with access to a shared location for app development, deployment, and maintenance. An org can contain multiple spaces. Every app, service, and route is scoped to a space. Roles provide access control for these resources and each space role applies only to a particular space.
 
 Org managers can set quotas on the following for a space:
-    * usage of paid services
-    * number of app instances
-    * number of service keys
-    * number of routes
-    * number of reserved route ports
-    * memory used across the space
-    * memory used by a single app instances
+
+* Usage of paid services
+* Number of app instances
+* Number of service keys
+* Number of routes
+* Number of reserved route ports
+* Memory used across the space
+* Memory used by a single app instances
+
 
 ## <a id='roles'></a> User Roles
 
-A user account represents an individual person within the context of a <%= vars.product_name %> foundation.
-A user can have one or more roles. These roles define the user’s permissions in
-orgs and spaces.
+A user account represents an individual person within the context of a <%= vars.product_name %> foundation. A user can have one or more roles. These roles define the user’s permissions in orgs and spaces.
 
 Roles can be assigned different scopes of User Account and Authentication (UAA) privileges. For more information about UAA scopes, see [Scopes](https://docs.cloudfoundry.org/concepts/architecture/uaa.html#scopes) in _Component: User Account and Authentication (UAA) Server_.
 
@@ -73,11 +71,12 @@ For non-admin users, the `cloud_controller.read` scope is required to view resou
 
 Before you assign a space role to a user, you must assign an org role to the user. The error message `Server error, error code: 1002, message: cannot set space role because user is not part of the org` occurs when you try to set a space role before setting an org role for the user.
 
+
 ## <a id='permissions'></a> User Role Permissions
 
 Each user role includes different permissions in a <%= vars.product_name %> foundation. The following sections describe the permissions associated with each user role in both active and suspended orgs in <%= vars.product_name %>.
 
-### <a id='activeroles'></a>Roles and Permissions for Active Orgs
+### <a id='activeroles'></a> Roles and Permissions for Active Orgs
 
 The following table describes the default permissions for various <%= vars.product_name %> roles in active orgs.
 
@@ -87,7 +86,7 @@ The following table describes the default permissions for various <%= vars.produ
 
 <%= partial vars.roles_table %>
 
-### <a id='suspendedroles'></a>Roles and Permissions for Suspended Orgs
+### <a id='suspendedroles'></a> Roles and Permissions for Suspended Orgs
 
 The following table describes roles and permissions applied after an operator sets the status of an org to _suspended_.
 
