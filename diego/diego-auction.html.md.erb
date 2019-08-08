@@ -4,11 +4,10 @@ owner: Diego
 ---
 
 
-This topic describes how Diego balances app processes in <%= vars.product_full %>.
 
-## <a id="overview"></a> Overview
 
-[Diego](./diego-architecture.html) balances app processes over the virtual machines (VMs) in a <%= vars.product_short %> installation using the Diego Auction. When new processes need to be allocated to VMs, the Diego Auction determines which ones should run on which machines. The auction algorithm balances the load on VMs and optimizes app availability and resilience. This topic explains how the Diego Auction works.
+
+[Diego](./diego-architecture.html) balances app processes over the virtual machines (VMs) in a Cloud Foundry (CF) installation using the Diego Auction. When new processes need to be allocated to VMs, the Diego Auction determines which ones should run on which machines. The auction algorithm balances the load on VMs and optimizes app availability and resilience. This topic explains how the Diego Auction works.
 
 Refer to the [Auction repository](https://github.com/cloudfoundry-incubator/auction) on GitHub for source code and more information.
 
@@ -90,7 +89,7 @@ If the Auctioneer reaches the end of its sequence of jobs, having distributed al
 
 ##<a id='another'></a>Triggering Another Auction
 
-The Diego Auction process repeats to adapt a <%= vars.product_short %> deployment to its changing workload. 
+The Diego Auction process repeats to adapt a Cloud Foundry deployment to its changing workload. 
 For example, the BBS initiates a new auction when it detects that the actual number of running instances of LRPs does not match the number desired. 
 Diego’s BBS component monitors the number of instances of each LRP that are currently running.
 The [BBS](./diego-architecture.html#bbs) component periodically compares this number with the desired number of LRP instances, as configured by the user. 
