@@ -3,20 +3,22 @@ title: Contributing Documentation
 owner: Docs
 ---
 
+This topic describes how to contribute to <%= vars.product_full %> documentation. 
+
 ## <a id='why'></a>Why Should You Contribute?
 
-The Cloud Foundry documentation relies on contributions from the community to remain accurate, complete, and consumable.
+The <%= vars.product_short %> documentation relies on contributions from the community to remain accurate, complete, and consumable.
 
-Reasons to contribute to the Cloud Foundry documentation include:
+Reasons to contribute to the <%= vars.product_short %> documentation include:
 
 * You have noticed that a topic is incorrect or incomplete.
-* You are developing a new Cloud Foundry feature, and want to tell users know how to use it.
+* You are developing a new <%= vars.product_short %> feature, and want to tell users know how to use it.
 * You are a good person, and you want to help your fellow humans.
 * You hate the idea of someone else having to go through what you just went through to figure something out. Such a waste; so inefficient.
 
 ## <a id='contribute'></a>How Can You Contribute?
 
-The source files for all Cloud Foundry docs are hosted on [Github](http://github.com), and each docs page has a link to its Github source file at the bottom. The source files are in Markdown/HTML/embedded Ruby (`html.md.erb`) format.
+The source files for all <%= vars.product_short %> docs are hosted on [Github](http://github.com), and each docs page has a link to its Github source file at the bottom. The source files are in Markdown/HTML/embedded Ruby (`html.md.erb`) format.
 
 If you use Github, the most direct and effective way to contribute to the docs is to [submit a pull request](#github-pr) or [raise an issue](#github-issue) in the Github repository containing the docs content that you want to change.
 
@@ -50,7 +52,7 @@ Before your Github pull request can be accepted, you must sign the Contributor L
 1. Send a scan of the CLA to contributors@cloudfoundry.org, as instructed in the CLA. When sending the individual CLA, provide your GitHub username. When sending the corporate CLA, provide a list of GitHub usernames that can make pull requests on behalf of your organization.
 1. [Publicize](https://help.github.com/articles/publicizing-or-hiding-organization-membership/) your membership in the appropriate GitHub org.
 
-If you do not have a CLA on file with the Cloud Foundry Foundation, the `cfdreddbot` notifies you after you submit the pull request. 
+If you do not have a CLA on file with the <%= vars.product_short %> Foundation, the `cfdreddbot` notifies you after you submit the pull request. 
 
 If you receive the `cfdreddbot` notification, but are confident that you are already covered under a corporate or organizational CLA, then verify that you have [publicized](https://help.github.com/articles/publicizing-or-hiding-organization-membership/) your membership in an appropriate GitHub org.
 
@@ -78,11 +80,11 @@ To contribute to the CF docs without using Github, you can use the following:
 
 * **Google Docs**: Write new docs content, or copy-paste existing content, into a [Google Drive](http://drive.google.com) document. Edit or comment on it, and share with the CF docs team at cf-docs@pivotal.io.
 * **Email** the the CF docs team directly at cf-docs@pivotal.io.
-* **Slack** the CF docs team through the [&#35;cf-docs](https://cloudfoundry.slack.com/messages/C03B0T0D5/") channel in Cloud Foundry Slack.
+* **Slack** the CF docs team through the [&#35;cf-docs](https://cloudfoundry.slack.com/messages/C03B0T0D5/") channel in <%= vars.product_short %> Slack.
 
 ## <a id='advice'></a> Advice for Contributors
 
-The Cloud Foundry Documentation Team reviews and revises all contributions, so you can **focus on providing correct and complete information, and not worry about style and structure**.
+The <%= vars.product_short %> Documentation Team reviews and revises all contributions, so you can **focus on providing correct and complete information, and not worry about style and structure**.
 
 Keep in mind:
 
@@ -91,13 +93,13 @@ Keep in mind:
 * What are the specifics that a user needs to know in order to understand and perform the task? Instead of "the instance" or “the cluster,” explain the instance or cluster of what. Instead of "revise the code to..." explain where to revise the code.
 * If you're giving instructions, include why you would want to do what you're describing. What's your specific situation, and what result do you seek?
 
-For further guidance, contact the Cloud Foundry Documentation Team at cf-docs@pivotal.io or through our `#cf-docs` channel on the [Cloud Foundry Slack](https://cloudfoundry.slack.com). 
+For further guidance, contact the <%= vars.product_short %> Documentation Team at cf-docs@pivotal.io or through our `#cf-docs` channel on the [<%= vars.product_short %> Slack](https://cloudfoundry.slack.com). 
 
 ## <a id='preview'></a> How Can You Preview Your Documentation Changes?
 
-The Cloud Foundry Documentation Team uses the tool [Bookbinder](https://github.com/pivotal-cf/bookbinder) to publish the Cloud Foundry documentation. 
+The <%= vars.product_short %> Documentation Team uses the tool [Bookbinder](https://github.com/pivotal-cf/bookbinder) to publish the <%= vars.product_short %> documentation. 
 
-The instructions below explain how to use Bookbinder to preview your documentation changes locally. But you do not have to install or use Bookbinder in order to contribute to the Cloud Foundry documentation. 
+The instructions below explain how to use Bookbinder to preview your documentation changes locally. But you do not have to install or use Bookbinder in order to contribute to the <%= vars.product_short %> documentation. 
 
 Perform the following steps to preview documentation changes with Bookbinder:
 
@@ -109,10 +111,10 @@ Perform the following steps to preview documentation changes with Bookbinder:
 4. Clone the content repository. For example:
  	<pre class="terminal">$ git clone git<span>@</span>github.com:cloudfoundry/docs-cloudfoundry-concepts.git</pre>
 
-5. Return to your workspace directory and clone the Cloud Foundry book.
+5. Return to your workspace directory and clone the <%= vars.product_short %> book.
 	<pre class="terminal">$ git clone git<span>@</span>github.com:cloudfoundry/docs-book-cloudfoundry.git</pre>
 
-6. Change directory into the Cloud Foundry book.
+6. Change directory into the <%= vars.product_short %> book.
 	<pre class="terminal">cd docs-book-cloudfoundry</a>
 
 7. Run `bundle install` to install the necessary gems, including Bookbinder.

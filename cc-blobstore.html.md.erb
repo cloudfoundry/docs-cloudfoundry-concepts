@@ -3,12 +3,12 @@ title: Cloud Controller Blobstore
 owner: CAPI
 ---
 
-This topic describes how Cloud Controllers and Diego interact with the Cloud Controller blobstore.
+This topic describes how Cloud Controllers and Diego interact with the Cloud Controller blobstore in <%= vars.product_full %>.
 
 
 ## <a id='overview'></a> Overview
 
-Cloud Foundry uses a blobstore to store the source code that developers push, stage, and run.
+<%= vars.product_short %> uses a blobstore to store the source code that developers push, stage, and run.
 
 This topic references staging and treats all blobstores as generic object stores. For more information about staging, see [How Apps Are Staged](../concepts/how-applications-are-staged.html).
 
@@ -33,7 +33,7 @@ The process in which the staging process uses the blobstore is as follows:
 
 1. **Create app:** The Cloud Foundry Command Line Interface (cf CLI) gathers local source code files and computes a checksum of each.
 
-1. **Store app metadata:** The cf CLI makes a `resource_matches` request, which matches resources to Cloud Controller. The request lists file names and their checksums. For more information and an example API request, see [Resource Matches](http://v3-apidocs.cloudfoundry.org/version/3.74.0/index.html#resource-matches) in the Cloud Foundry API documentation.
+1. **Store app metadata:** The cf CLI makes a `resource_matches` request, which matches resources to Cloud Controller. The request lists file names and their checksums. For more information and an example API request, see [Resource Matches](http://v3-apidocs.cloudfoundry.org/version/3.74.0/index.html#resource-matches) in the <%= vars.product_short %> API documentation.
 
 1. **Check file existence** includes the following:
     <ol type="a">

@@ -8,6 +8,7 @@ This topic provides an overview of App Security Groups (ASGs) in <%= vars.produc
 
 ## <a id='introduction'></a> Overview
 
+
 App Security Groups (ASGs) are a collection of egress rules that specify the protocols, ports, and IP address ranges where app or task instances send traffic.
 
 ASGs define **allow** rules, and their order of evaluation is unimportant when multiple ASGs apply to the same space or deployment. The platform sets up rules to filter and log outbound network traffic from app and task instances. ASGs apply to both buildpack-based and Docker-based apps and tasks.
@@ -28,7 +29,9 @@ In environments with both platform-wide and space-specific ASGs, the ASGs for a 
 
 ASGs can be complicated to configure correctly, especially when the specific IP addresses listed in a group change.
 
+
 To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.product_short %> deployment, then create ASGs for the apps that allow those service subnets, while denying access to any VM hosting other apps.
+
 
 For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section below.
 
@@ -48,7 +51,7 @@ For examples of typical ASGs, see the <a href="#typical-groups">Typical Applicat
 
 ASGs are applied by configuring ASG sets differentiated by _scope_, platform-wide or space specific, and _lifecycle_, staging or running.
 
-Currently, four ASG sets exist in Cloud Foundry:
+Currently, four ASG sets exist in <%= vars.product_short %>:
 
 + Platform-wide staging ASG set, also called "default-staging"
 + Platform-wide running ASG set, also called "default-running"

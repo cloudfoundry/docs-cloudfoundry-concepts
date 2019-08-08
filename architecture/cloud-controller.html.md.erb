@@ -5,7 +5,7 @@ owner: CAPI
 
 
 
-The Cloud Controller provides REST API endpoints for clients to access the
+The Cloud Controller in <%= vars.product_full %> provides REST API endpoints for clients to access the
 system.
 The Cloud Controller maintains a database with tables for orgs, spaces,
 services, user roles, and more.
@@ -17,7 +17,7 @@ services, user roles, and more.
 
 ##<a id='auction'></a>Diego Auction
 
-The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to balance application processes over the [cells](index.html#diego-cell) in a Cloud Foundry installation.
+The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to balance application processes over the [Diego Cells](index.html#diego-cell) in a <%= vars.product_short %> installation.
 
 ##<a id='database'></a>Database (CC_DB)
 
@@ -29,7 +29,7 @@ The Cloud Controller database has been tested with MySQL.
 
 ##<a id='blob-store'></a>Blobstore
 
-To stage and run apps, Cloud Foundry manages and stores the following types of binary large object (blob) files:
+To stage and run apps, <%= vars.product_short %> manages and stores the following types of binary large object (blob) files:
 
 <table id="blob-types" border="1" class="nice">
 <tr>
@@ -49,7 +49,7 @@ To stage and run apps, Cloud Foundry manages and stores the following types of b
 </tr>
 <tr>
 <td>Resource Cache</td>
-<td>Large files from app packages that the Cloud Controller stores with a SHA for later re-use. To save bandwidth, the Cloud Foundry Command Line Interface (cf CLI) only uploads large application files that the Cloud Controller has not already stored in the resource cache.</td>
+<td>Large files from app packages that the Cloud Controller stores with a SHA for later re-use. To save bandwidth, the <%= vars.product_short %> Command Line Interface (cf CLI) only uploads large application files that the Cloud Controller has not already stored in the resource cache.</td>
 <td><code>/cc-resources</code></td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@ To stage and run apps, Cloud Foundry manages and stores the following types of b
 </tr>
 </table>
 
-Cloud Foundry blobstores use the [Fog](http://fog.io/) Ruby gem to store blobs in
+<%= vars.product_short %> blobstores use the [Fog](http://fog.io/) Ruby gem to store blobs in
 services like Amazon S3, WebDAV, or the NFS filesystem. The file system location of an internal blobstore is `/var/vcap/store/shared`.
 
 A single blobstore typically stores all five types of blobs, but you can configure the Cloud Controller to use separate blobstores for each type.
