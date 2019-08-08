@@ -3,7 +3,7 @@ title: Container-to-Container Networking
 owner: Container-to-Container Networking
 ---
 
-This topic provides an overview of how Container-to-Container Networking works in <%= vars.product_full %>.
+This topic provides an overview of how Container-to-Container Networking works.
 
 The Container-to-Container Networking feature enables app instances to communicate with each other directly.
 <%= vars.cf_networking %>
@@ -32,7 +32,7 @@ The Container-to-Container Networking BOSH release includes the following core c
     <th>Function</th>
   </tr>
   <tr>
-    <td><%= vars.product_short %> Command Line Interface (CF CLI) plugin</td>
+    <td>Cloud Foundry Command Line Interface (CF CLI) plugin</td>
     <td>A plugin that you download to control network access policies between apps. 
   </tr>
   <tr>
@@ -106,17 +106,17 @@ If traffic and its direction is not explicitly allowed, it is denied. For exampl
 
 Container-to-Container Networking uses an overlay network to manage communication between app instances. 
 
-Overlay networks are not externally routable, and traffic sent between containers does not exit the overlay. You can use the same overlay network range for different <%= vars.product_short %> deployments in your environment.
+Overlay networks are not externally routable, and traffic sent between containers does not exit the overlay. You can use the same overlay network range for different Cloud Foundry deployments in your environment.
 
 The overlay network range defaults to `10.255.0.0/16`.
 You can modify the default to any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range that meets the following requirements:
 
   * The range is not used by services that app containers access. 
-  * The range is not used by the underlying <%= vars.product_short %> infrastructure.
+  * The range is not used by the underlying Cloud Foundry infrastructure.
 
-All Diego cells in your <%= vars.product_short %> deployment share this overlay network. By default, each cell is allocated a /24 range that supports 254 containers per cell, one container for each of the usable IP addresses, `.1` through `.254`. To modify the number of Diego cells your overlay network supports, see [Overlay Network](../devguide/deploy-apps/cf-networking.html#overlay) in _Configuring Container-to-Container Networking_.
+All Diego cells in your Cloud Foundry deployment share this overlay network. By default, each cell is allocated a /24 range that supports 254 containers per cell, one container for each of the usable IP addresses, `.1` through `.254`. To modify the number of Diego cells your overlay network supports, see [Overlay Network](../devguide/deploy-apps/cf-networking.html#overlay) in _Configuring Container-to-Container Networking_.
 
-<%= vars.product_short %> container networking is currently supported only on Linux.
+Cloud Foundry container networking is currently supported only on Linux.
 
 <p class="note warning"><strong>WARNING:</strong> The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
 

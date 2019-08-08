@@ -3,8 +3,10 @@ title: How CFAR Manages App
 owner: Docs
 ---
 
-<%# Reset page title based on product title %>
-<% current_page.data.title = "How " + vars.product_short + " Manages Apps" if vars.product_name != 'CF'  %>
+<% if vars.product_name == 'CF' %>
+<% else %>
+<% current_page.data.title = "How " + vars.product_short + " Manages Apps"  %>
+<% end %>
 
 
 The following topics provide information about how <%= vars.product_runtime %> <%= vars.runtime_abbr %> manages apps:

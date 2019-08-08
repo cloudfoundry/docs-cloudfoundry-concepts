@@ -5,11 +5,11 @@ owner: Diego
 
 
 
-This topic describes the components that form and interact with the Diego system in <%= vars.product_full %>.
+This topic describes the components that form and interact with the Diego system.
 
 ##<a id='overview'></a> Overview 
 
-<%= vars.product_short %> uses the Diego system to manage app containers. Diego components assume app scheduling and management responsibility from the Cloud Controller. 
+Cloud Foundry uses the Diego system to manage app containers. Diego components assume app scheduling and management responsibility from the Cloud Controller. 
 
 
 Diego is a self-healing container management system that attempts to keep the correct number of instances running in Diego cells to avoid network failures and crashes. Diego schedules and runs Tasks and Long-Running Processes (LRP). For more about Tasks and LRPs, see [How the Diego Auction Allocates Jobs](diego-auction.html).
@@ -62,14 +62,14 @@ The `route-emitter` process emits a route registration message to Gorouter for t
 
 ###<a id='step-6'></a> Sends Logs to Loggregator
 
-The Loggregator agent forwards app logs, errors, and metrics to the <%= vars.product_short %> Loggregator. For more information, see the [Application Logging in <%= vars.product_short %>](../../devguide/deploy-apps/streaming-logs.html) topic.
+The Loggregator agent forwards app logs, errors, and metrics to the Cloud Foundry Loggregator. For more information, see the [Application Logging in Cloud Foundry](../../devguide/deploy-apps/streaming-logs.html) topic.
 
 ![An arrow from an unlabeled box inside a box labeled "garden" points to a box labeled "loggregator-agent". This indicates that the container running the app inside the garden process of the diego-cell VM emits logs to the loggregator-agent process of the diego-cell VM. An arrow from loggregator-agent points to a box labeled "doppler", and from doppler to a box labeled "traffic-controller" to indicate the where logs are sent.](../images/oss-diego-architecture-6.png)
 [//]: https://docs.google.com/drawings/d/1ChpsoNXR-zHC2n9bPz2H5qdRvkDfg_M4I8sVr-Vy3So/edit?usp=sharing
 
 ## <a id='components'></a> Diego Components
 
-The following table describes the jobs that are part of the <%= vars.product_short %> Diego BOSH release. 
+The following table describes the jobs that are part of the Cloud Foundry Diego BOSH release. 
 
 <table>
 	<tr>
@@ -125,7 +125,7 @@ The following table describes the jobs that are part of the <%= vars.product_sho
 		<td><strong>Job:</strong><br> route_emitter<br>
 		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
 		<td><ul><li>Monitors <code>DesiredLRP</code> and <code>ActualLRP</code> states, emitting route registration and unregistration messages to Gorouter when it detects changes.</li>
-		<li>Periodically emits the entire routing table to the <%= vars.product_short %> Gorouter.</li></ul></td>
+		<li>Periodically emits the entire routing table to the Cloud Foundry Gorouter.</li></ul></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> ssh_proxy<br>
@@ -157,7 +157,7 @@ The following resources provide more information about Diego components:
 
 ## <a id='components-ther'></a> Components from Other Releases
 
-The following table describes jobs that interact closely with Diego but are not part of the Diego <%= vars.product_short %> BOSH release.
+The following table describes jobs that interact closely with Diego but are not part of the Diego Cloud Foundry BOSH release.
 
 <table>
 	<tr>
@@ -208,7 +208,7 @@ The following three platform-specific binaries deploy apps and govern their life
 
 #### <a id='lifecycle-implementations'></a> Current Implementations
 
-- [Buildpack App Lifecycle](https://github.com/cloudfoundry/buildpackapplifecycle) implements the <%= vars.product_short %> buildpack-based deployment strategy.
+- [Buildpack App Lifecycle](https://github.com/cloudfoundry/buildpackapplifecycle) implements the Cloud Foundry buildpack-based deployment strategy.
 
 - [Docker App Lifecycle](https://github.com/cloudfoundry/dockerapplifecycle) implements a Docker deployment strategy.
 

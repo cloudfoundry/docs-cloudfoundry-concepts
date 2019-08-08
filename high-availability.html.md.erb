@@ -4,12 +4,8 @@ owner: Release Integration
 ---
 
 
-<%# Reset page title based on product title %>
-<% current_page.data.title = "High Availability in " + vars.product_short if vars.product_name != 'CF'  %>
 
-
-
-This topic describes the components used to ensure high availability in <%= vars.product_full %>, vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
+This topic describes the components used to ensure high availability in Cloud Foundry, vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
 
 
 ## <a id='components'></a> Components of a High Availability Deployment
@@ -20,13 +16,13 @@ This section describes the system components needed to ensure high availability.
 
 During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones (AZs) and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
 
-Deploying <%= vars.product_short %> across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. <%= vars.product_short %> maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
+Deploying Cloud Foundry across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. Cloud Foundry maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
 
 ### <a id='external-lbs'></a> External Load Balancers
 
 Production environments should use a highly-available customer-provided load balancing solution that does the following:
 
-* Provides load balancing to each of the <%= vars.product_short %> Router IP addresses
+* Provides load balancing to each of the Cloud Foundry Router IP addresses
 * Supports SSL termination with wildcard DNS location
 * Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
 * (Optional) Supports WebSockets
@@ -46,7 +42,7 @@ If you store blobs internally using WebDAV or NFS, these components run as singl
 
 ## <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling for High Availability
 
-You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of <%= vars.product_short %> components. The nature of the applications you host on <%= vars.product_short %> should determine whether you should scale vertically or horizontally.
+You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of Cloud Foundry components. The nature of the applications you host on Cloud Foundry should determine whether you should scale vertically or horizontally.
 
 <%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
 
@@ -66,7 +62,7 @@ To scale vertically, ensure that you allocate and maintain enough of the followi
 
 Scaling horizontally means increasing the number of VM instances dedicated to running a functional component of the system.
 
-You can horizontally scale most <%= vars.product_short %> components to multiple instances to achieve the redundancy required for high availability. 
+You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. 
 
 You should also distribute the instances of multiply-scaled components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. If you use more than three AZs, ensure that you use an odd number of AZs.
 
@@ -96,7 +92,7 @@ Each IaaS has different ways of limiting resource consumption for scaling VMs. C
 
 ### <a id='databases'></a> Databases
 
-For database services deployed outside <%= vars.product_short %>, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
+For database services deployed outside Cloud Foundry, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
 <p class="note"><strong>Note:</strong> Data services may have single points of failure depending on their configuration.</p>
 

@@ -3,18 +3,18 @@ title: Differences Between DEA and Diego Architectures
 owner: Diego
 ---
 
-This topic describes components and functions that changed significantly when <%= vars.product_full %> migrated to <%= vars.dea_diego_version
- %>. This information informs those who are familiar with <%= vars.product_short %>'s DEA-based architecture and want to learn what has changed under Diego and how its new or changed components work.
+This topic describes components and functions that changed significantly when Cloud Foundry migrated to <%= vars.dea_diego_version
+ %>. This information will inform those who are familiar with Cloud Foundry's DEA-based architecture and want to learn what has changed under Diego and how its new or changed components work.
 
 ##<a id='design'></a>Key Differences
 
-The DEA architecture system is largely written in Ruby and the Diego architecture system is written in Go. When <%= vars.product_short %> contributors decided to migrate the system's core code from Ruby to Go, the rewrite offered the opportunity to make improvements to <%= vars.product_short %>'s overall design.
+The DEA architecture system is largely written in Ruby and the Diego architecture system is written in Go. When Cloud Foundry contributors decided to migrate the system's core code from Ruby to Go, the rewrite offered the opportunity to make improvements to Cloud Foundry's overall design.
 
-In a pre-Diego <%= vars.product_short %> deployment, the Cloud Controller's Droplet Execution Agent (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
+In a pre-Diego Cloud Foundry deployment, the Cloud Controller's Droplet Execution Agent (DEA) scheduled and managed applications on DEA nodes while the [Health Manager (HM9000)](#hm9k) kept them running. The Diego system assumes application scheduling and management responsibility from the Cloud Controller, replacing the DEA and Health Manager.
 
 DEA architecture made no distinction between machine jobs that run once and jobs that run continuously. Diego recognizes the difference and uses it to allocate jobs to virtual machines (VMs) more efficiently, replacing the DEA placement algorithm with the [Diego auction](./diego-auction.html).
 
-In addition to these broad changes, the <%= vars.product_short %> migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table](#table) provides a summary.
+In addition to these broad changes, the Cloud Foundry migration to Diego architecture includes smaller changes and renamings. The following sections describe pre-Diego components and their newer analogs, and the [table](#table) provides a summary.
 
 ##<a id='component'></a>Changed Components and Functions
 
@@ -35,10 +35,10 @@ The <%= vars.diego_ssh_link %> enables developers to log into containers and acc
 
 #### <a id='warden-security'></a> Warden Container-Level Traffic Rules
 
-For network security, pre-Diego releases of <%= vars.product_short %> supported `allow` and `deny`rules that governed outbound traffic from all Warden containers running on the same DEA node. Newer releases use container-specific <%= vars.app_sec_groups %> (ASGs) to restrict traffic at a more granular level. <%= vars.product_short %> recommends using ASGs exclusively, but when a pre-Diego deployment defined both Warden rules and ASGs, they were evaluated in a strict priority order.
+For network security, pre-Diego releases of Cloud Foundry supported `allow` and `deny`rules that governed outbound traffic from all Warden containers running on the same DEA node. Newer releases use container-specific <%= vars.app_sec_groups %> (ASGs) to restrict traffic at a more granular level. Cloud Foundry recommends using ASGs exclusively, but when a pre-Diego deployment defined both Warden rules and ASGs, they were evaluated in a strict priority order.
 
-Pre-Diego <%= vars.product_short %> returned an allow, deny, or reject result for the first rule that matched the outbound traffic request parameters, and did not evaluate any lower-priority rules.
-<%= vars.product_short %> evaluated the network traffic rules for an application in the following order:
+Pre-Diego Cloud Foundry returned an allow, deny, or reject result for the first rule that matched the outbound traffic request parameters, and did not evaluate any lower-priority rules.
+Cloud Foundry evaluated the network traffic rules for an application in the following order:
 
 1. **Security Groups**: The rules described by the Default Staging set, the
 Default Running set, and all security groups bound to the space.
@@ -48,19 +48,19 @@ configuration section of your deployment manifest.
 1. **Warden <i>deny</i> rules**: Any Warden Server configuration `deny` rules.
 Set Warden Server configuration rules in the DEA configuration section of your
 deployment manifest.
-1. **Hard-coded reject rule**: <%= vars.product_short %> returns a reject result for all
+1. **Hard-coded reject rule**: Cloud Foundry returns a reject result for all
 outbound traffic from a container if not allowed by a higher-priority rule.
 
 ### <a id='hm9k'></a>Health Manager (HM9000) &rarr; nsync, BBS, and Cell Rep
 
-The function of the Health Manager (HM9000) component in pre-Diego releases of <%= vars.product_short %> was replaced by the coordinated actions of the [nsync, BBS, and Cell Reps](../architecture/index.html#nsync-bbs). In pre-Diego architecture, the Health Manager (HM9000) had four core responsibilities:
+The function of the Health Manager (HM9000) component in pre-Diego releases of Cloud Foundry was replaced by the coordinated actions of the [nsync, BBS, and Cell Reps](../architecture/index.html#nsync-bbs). In pre-Diego architecture, the Health Manager (HM9000) had four core responsibilities:
 
 * Monitor applications to determine their state (e.g. running, stopped, crashed, etc.), version, and number of instances.  HM9000 updates the actual state of an application based on heartbeats and `droplet.exited` messages issued by the DEA node running the application.
 * Determine applications' expected state, version, and number of instances. HM9000 obtains the desired state of an application from a dump of the Cloud Controller database.
 * Reconcile the actual state of applications with their expected state. For instance, if fewer than expected instances are running, HM9000 will instruct the Cloud Controller to start the appropriate number of instances.
 * Direct Cloud Controller to take action to correct any discrepancies in the state of applications.
 
-HM9000 was essential to ensuring that apps running on <%= vars.product_short %> remained
+HM9000 was essential to ensuring that apps running on Cloud Foundry remained
 available.
 HM9000 restarted applications whenever the DEA node running an app shut down for any
 reason, when Warden killed the app because it violated a quota, or when the
@@ -77,7 +77,7 @@ Diego architecture moves this allocation process out of the Cloud Controller and
 
 ### <a id='nats'></a> Message Bus (NATS)
 
-Pre-Diego <%= vars.product_short %> used [NATS](../architecture/messaging-nats.html), a lightweight
+Pre-Diego Cloud Foundry used [NATS](../architecture/messaging-nats.html), a lightweight
 publish-subscribe and distributed queueing messaging system, for internal
 communication between components. Diego retains NATS for some communications, but adds messaging using HTTP and HTTPS protocols, through which components share information in the Diego BBS servers.
 
