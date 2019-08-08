@@ -29,11 +29,9 @@ In environments with both platform-wide and space-specific ASGs, the ASGs for a 
 
 ASGs can be complicated to configure correctly, especially when the specific IP addresses listed in a group change.
 
-
 To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.product_short %> deployment, then create ASGs for the apps that allow those service subnets, while denying access to any VM hosting other apps.
 
-
-For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section below.
+For examples of typical ASGs, see the <a href="#typical-groups">Typical ASGs</a> section below.
 
 <% if vars.product_name.include? "CF" %>
 
