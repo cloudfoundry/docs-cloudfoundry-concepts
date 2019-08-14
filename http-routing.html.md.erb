@@ -190,9 +190,26 @@ For more information, see [With TLS Enabled](#with-tls) and [Without TLS Enabled
 <% end %>
 
 
-## <a id="round-robin"></a> Round-Robin Load Balancing
+## <a id="balancing-algorithm"></a> Router Balancing Algorithm
 
-The Gorouter uses the round-robin algorithm for load balancing incoming requests to application instances. The Gorouter maintains a dynamically updated list of application instances for each route, and forwards each request for a given route to the next application instance in the list.
+The Gorouter can be configured to use different load balancing algorithms for routing incoming requests to application instances.
+The Gorouter maintains a dynamically updated list of application instances for each route and depending on what algorithm is selected it will forward to one of the application instance.
+
+To configure the behavior operator can change the value of `router.balancing_algorithm` manifest property. The available options are:
+
+* `round-robin` for [round-robin](#round-robin) algorithm,
+* `least-connectoin` for [least connection](#least-connection) algorithm,
+
+By default the router uses [round-robin](#round-robin) algorithm.
+
+### <a id="round-robin"></a> Round-Robin Load Balancing
+
+Incoming requests for a given route will be forwarded to all application instances one after another, looping back to the first one after they've each received a request. This algorithm should be suitable for most use cases and will evenly distribute the load between application instances.
+
+### <a id="least-connection"></a> Least Connection Load Balancing
+
+Each request for a given route will be forwarded to the application instance with the least number of open connections. This algorithm can be more suitable for some cases.
+For instance, if application instances have long-lived connections (e.g. via [WebSockets](#sockets)) and they are scaled up new instances will receive less connections causing a disproportionate load. In this case, choosing least connection algorithm will send new connection to new instances to equalize the load.
 
 
 ## <a id="sockets"></a> WebSockets
