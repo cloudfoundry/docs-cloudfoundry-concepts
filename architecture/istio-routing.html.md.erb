@@ -6,7 +6,6 @@ owner: Networking
 This topic describes the routing flow and architecture of the service mesh data and control plane in <%= vars.product_full %>.
 
 ## <a id="ingress-routing"></a> Ingress Routing with Service Mesh
-### <a id="overview"></a> Overview
 
 The ingress service mesh data plane is a parallel routing path for ingress traffic for apps on <%= vars.product_runtime %>. It is deployed alongside the existing Cloud Foundry routing tier and manages istio routes for applications. 
 
@@ -32,30 +31,37 @@ A route is managed by istio if it is associated with an istio managed domain. Th
 0. The envoy sidecar passes the request along to the application
 
 ## <a id="c2c-service-mesh"></a> Container-to-Container Networking with Service Mesh
-### <a id="c2c-overview"></a> Overview
 
-Service mesh container-to-container networking allows applications to communicate internally via a sidecar envoy. This allows for more featureful internal routing, including client side load balancing, timeouts, and retries.  
+Service mesh container-to-container networking allows apps running on the platform to communicate internally through an Envoy sidecar. This communication has the following features: client-side load balancing, timeouts, and retries. For more information, see [Container-to-Container Networking](../../adminguide/service-mesh.html#c2c) in _Service Mesh (Beta)_. 
 
-![Istio c2c Architecture](../images/istio_c2c_boxes_lines.jpg)
+The following diagram illustrates how container-to-container networking works with service mesh enabled:
+
+![See the Control Plane and Data Plane sections for information about the processes described by the diagram.](../images/istio_c2c_boxes_lines.jpg)
+
+For more details about the processes pictured in the diagram, see the following sections.
 
 ### <a id="c2c-control-plane"></a> Control Plane
 
-0. A new internal route is added to CAPI and mapped to one or more apps. This route gets an associated VIP.
-0. CAPI tells Copilot the route information for the app.
+The following describes how Envoy is configured with route information after a user creates a new internal route using service mesh:
+
+0. CAPI receives a request for a new internal route and maps it to one or more apps. This route gets an associated virtual IP (VIP).
+0. CAPI sends the route information to Copilot.
 0. BBS sends the app location to Copilot.
-0. Copilot tells the Pilot on each Diego cell the route information for the app.
-0. The Pilot on each Diego cell configures every  sidecar Envoy on its cell.
+0. Copilot sends the route information to the Pilot component on each Diego cell.
+0. Pilot configures each Envoy sidecar on its Diego cell.
 
 
 ### <a id="c2c-data-plane"></a> Data Plane
 
-0. AppA makes an HTTP request to an internal service mesh domain for App B.
-0. The internal service mesh domain is resolved to a VIP.
-0. AppA sends traffic to the VIP which gets rerouted to the sidecar Envoy.
-0. The sidecar Envoy picks an instance associated with the VIP based on default load balancing settings and sends traffic to that instance of AppB.
-0. Network policy is enforced on the Diego Cell for AppB. If successful, traffic continues to AppB.
-	a. If the request takes too long to connect to AppB it will time out.
-	b. On a 500 error the Envoy sidecar will retry 3 times.
+The following describes how apps communicate using container-to-container networking with service mesh:
+
+0. App A makes an HTTP request to App B using its route on the internal service mesh domain.
+0. The internal service mesh domain resolves to a VIP.
+0. App A sends traffic to the VIP which gets rerouted to the Envoy sidecar.
+0. The Envoy sidecar selects an instance associated with the VIP based on default load balancing settings and sends traffic to that instance of App B.
+0. Network policy is enforced on the Diego Cell for App B. If successful, traffic continues to AppB.
+	0. If the request takes too long to connect to App B, it times out.
+	0. On a 500 error, the Envoy sidecar retries 3 times.
 
 
 ## <a id="component-manifest"></a> Service Mesh Components
