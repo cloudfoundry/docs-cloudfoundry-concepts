@@ -7,10 +7,6 @@ This topic provides an overview of App Security Groups (ASGs) in <%= vars.produc
 
 
 ## <a id='introduction'></a> Overview
-This topic provides an overview of Application Security Groups (ASGs) in <%= vars.product_full %>, and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool.
-<%= vars.asg_first_time %>
-
-## <a id='introduction'></a> About Application Security Groups
 
 App Security Groups (ASGs) are a collection of egress rules that specify the protocols, ports, and IP address ranges where app or task instances send traffic.
 
@@ -392,7 +388,7 @@ The ASG Creator is a command line tool that you can use to create JSON rules fil
 
 In turn, the JSON file is the input for the `cf create-security-group` command that creates an ASG.
 
-You can download the latest release of the ASG Creator from the <%= vars.product_short %> incubator repository on GitHub: [https://github.com/cloudfoundry-incubator/asg-creator/releases/latest](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest)
+To download the latest release of the ASG Creator, see the <%= vars.product_short %> [incubator repository](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) on GitHub.
 
 
 ## <a id='logging'></a> ASG Logging
