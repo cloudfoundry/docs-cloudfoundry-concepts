@@ -30,7 +30,7 @@ ASGs can be complicated to configure correctly, especially when the specific IP 
 
 To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.product_short %> deployment, then create ASGs for the apps that allow those service subnets, while denying access to any VM hosting other apps.
 
-For examples of typical ASGs, see the <a href="#typical-groups">Typical ASGs</a> section below.
+For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
 <% if vars.product_name.include? "CF" %>
 
@@ -50,10 +50,10 @@ ASGs are applied by configuring ASG sets differentiated by _scope_, platform-wid
 
 Currently, four ASG sets exist in <%= vars.product_short %>:
 
-+ Platform-wide staging ASG set, also called "default-staging"
-+ Platform-wide running ASG set, also called "default-running"
-+ Space-scoped staging ASG set
-+ Space-scoped running ASG set
+* Platform-wide staging ASG set, also called "default-staging"
+* Platform-wide running ASG set, also called "default-running"
+* Space-scoped staging ASG set
+* Space-scoped running ASG set
 
 In environments with both platform-wide and space-specific ASG sets, combine the ASG sets for a particular space with the platform ASG sets to determine the rules for that space.
 
@@ -84,7 +84,7 @@ The following table indicates the differences between the four sets.
 
 Typically, ASGs applied during the staging lifecycle are more permissive than the ASGs applied during the running lifecycle. This is because staging often requires access to different resources, such as dependencies.
 
-You use different commands to apply an ASG to each of the four sets. For more information, see the [Procedures](#procedures) section below.
+You use different commands to apply an ASG to each of the four sets. For more information, see [Procedures](#procedures).
 
 <p class="note"><strong>Note:</strong> To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
 
@@ -100,7 +100,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 |`ports`          |A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081`                                                             |Only possible if `protocol` is `tcp` or `udp`.
 |`code`           |ICMP code                                                                                                                                                                                                    |Required when `protocol` is `icmp`. A value of `-1` allows all codes.
 |`type`           |ICMP type                                                                                                                                                                                                    |Required when `protocol` is `icmp`. A value of `-1` allows all types.
-|`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see the <a href="../devguide/services/log-management.html">Using Log Management Services</a> topic.                                                                                                                                                                                                    |Logging is only supported with protocol type `tcp`
+|`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, <a href="../devguide/services/log-management.html">Using Log Management Services</a>.                                                                                                                                                                                                    |Logging is only supported with protocol type `tcp`
 | `description`   |An optional field for operators managing security group rules
 
 
@@ -109,7 +109,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 ## <a id="process"></a> Process for Administering ASGs
 
-The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs. Procedures for each of these tasks are given in [Managing ASGs with the cf CLI](#procedures) below.
+The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs. For information about procedures for each of these tasks, see [Managing ASGs with the cf CLI](#procedures).
 
 <%= vars.asg_first_time %>
 
@@ -161,16 +161,16 @@ Run the following cf CLI commands to view information about existing ASGs:
 |`cf security-groups`                |All ASGs
 |`cf staging-security-groups`        |All ASGs applied to the platform-wide staging ASG set
 |`cf running-security-groups`        |All ASGs applied to the platform-wide running ASG set
-|`cf security-group SECURITY-GROUP`         |All rules in the ASG named `SECURITY-GROUP`, for example, <code>cf security-group dns</code>
+|`cf security-group SECURITY-GROUP`  |All rules in the ASG named `SECURITY-GROUP`, for example, `cf security-group dns`
 
 <%= vars.asg_note %>
 
 ### <a id='asg-individual'></a> Create ASGs
 
-To create an ASG, do the following:
+To create an ASG:
 
 1. Create a rules file: a JSON-formatted single array containing objects that describe the rules.
-   See the following example, which allows ICMP traffic of code `1` and type `0` to all destinations, and TCP traffic to `10.0.11.0/24` on ports `80` and `443`. For more information, see [The Structure and Attributes of ASGs](#creating-groups) above.
+   See the following example, which allows ICMP traffic of code `1` and type `0` to all destinations, and TCP traffic to `10.0.11.0/24` on ports `80` and `443`. For more information, see [The Structure and Attributes of ASGs](#creating-groups).
 
     <pre>
     [
@@ -192,13 +192,13 @@ To create an ASG, do the following:
 
 1. Run `cf create-security-group SECURITY-GROUP PATH-TO-RULES-FILE`. Replace `SECURITY-GROUP` with the name of your security group, and `PATH-TO-RULES-FILE` with the absolute or relative path to a rules file.
 
-In the following example, `my-asg` is the name of a security group, and `~/workspace/my-asg.json` is the path to a rules file.
+In the following example, `YOUR-ASG` is the name of a security group, and `~/workspace/your-asg.json` is the path to a rules file.
 
 <pre class="terminal">
-$ cf create-security-group my-asg ~/workspace/my-asg.json
+$ cf create-security-group YOUR-ASG ~/workspace/your-asg.json
 </pre>
 
-After the ASG is created, you must bind it to an ASG set before it takes effect. See <a href="#binding-groups">Bind ASGs</a> below.
+After the ASG is created, you must bind it to an ASG set before it takes effect. For more information, see [Bind ASGs](binding-groups).
 
 ### <a id='binding-groups'></a> Bind ASGs
 
@@ -210,69 +210,69 @@ To bind an ASG to the platform-wide staging ASG set, run `cf bind-staging-securi
 
 Example:
 <pre class="terminal">
-$ cf bind-staging-security-group my-asg
+$ cf bind-staging-security-group YOUR-ASG
 </pre>
 
 To bind an ASG to the platform-wide running ASG set, run `cf bind-running-security-group SECURITY-GROUP` command. Replace `SECURITY-GROUP` with the name of your security group.
 
 Example:
 <pre class="terminal">
-$ cf bind-running-security-group my-asg
+$ cf bind-running-security-group YOUR-ASG
 </pre>
 
 To bind an ASG to a space-scoped running ASG set, run `cf bind-security-group SECURITY-GROUP ORG SPACE`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to bind the ASG set.
 
 Example:
 <pre class="terminal">
-$ cf bind-security-group my-asg my-org my-space
+$ cf bind-security-group YOUR-ASG YOUR-ORG YOUR-SPACE
 </pre>
 
 To bind an ASG to a space-scoped staging ASG set, run `cf bind-security-group SECURITY-GROUP ORG SPACE --lifecycle staging`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to bind the ASG set.
 
 ### <a id='updating-groups'></a> Update ASGs
 
-To update an existing ASG, do the following:
+To update an existing ASG:
 
 1. Edit the ASG rules in the JSON file.
 
 2. Run `cf update-security-group SECURITY-GROUP PATH-TO-RULES-FILE`. Replace `SECURITY-GROUP` with the name of the existing ASG you want to change, and `PATH-TO-RULES-FILE` with the absolute or relative path to a rules file.
 
-In the following example, `my-asg` is the name of a security group, and `~/workspace/my-asg-v2.json` is the path to a rules file.
+In the following example, `YOUR-ASG` is the name of a security group, and `~/workspace/your-asg-v2.json` is the path to a rules file.
 
 <pre class="terminal">
-$ cf update-security-group my-asg ~/workspace/my-asg-v2.json
+$ cf update-security-group YOUR-ASG ~/workspace/your-asg-v2.json
 </pre>
 
 <p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
 
 ### <a id='unbinding-groups'></a> Unbind ASGs
 
-<p class='note'><strong>Note</strong>: Unbinding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+<p class='note'><strong>Note:</strong> Unbinding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
 
 To unbind an ASG from the platform-wide staging ASG set, run `cf unbind-staging-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
 Example:
 <pre class="terminal">
-$ cf unbind-staging-security-group my-asg
+$ cf unbind-staging-security-group YOUR-ASG
 </pre>
 
 To unbind an ASG from the platform-wide running ASG set, run `cf unbind-running-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
 Example:
 <pre class="terminal">
-$ cf unbind-running-security-group my-asg
+$ cf unbind-running-security-group YOUR-ASG
 </pre>
 
 To unbind an ASG from a specific space, run `cf unbind-security-group SECURITY-GROUP ORG SPACE --lifecycle running`. Replace `SECURITY-GROUP` with the name of your security group. Replace `ORG` and `SPACE` with the org and space where you want to unbind the ASG set, and replace `running` with `staging` if you want to unbind from the staging ASG set.
 
 Example:
 <pre class="terminal">
-$ cf unbind-security-group my-asg my-org my-space --lifecycle staging
+$ cf unbind-security-group YOUR-ASG YOUR-ORG YOUR-SPACE --lifecycle staging
 </pre>
 
 ### <a id='deleting-groups'></a> Delete ASGs
 
-<p class='note'><strong>Note:</strong> You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a> above.</p>
+<p class='note'><strong>Note:</strong> You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a>.</p>
 
 To delete an ASG, run `cf delete-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
@@ -290,8 +290,8 @@ Below are examples of typical ASGs. Configure your ASGs in accordance with your 
 |---                   |---
 |`dns`                 |DNS, either public or private
 |`public-networks`     |Public networks, excluding IaaS metadata endpoints
-|`private-networks`    |Private networks in accordance with  [RFC-1918](https://tools.ietf.org/html/rfc1918#section-3)
-|`load-balancers`      |The internal <%= vars.product_full %> load balancer and others
+|`private-networks`    |Private networks in accordance with [RFC-1918](https://tools.ietf.org/html/rfc1918#section-3)
+|`load-balancers`      |The internal <%= vars.product_short %> load balancer and others
 |`internal-proxies`    |Internal proxies
 |`internal-databases`  |Internal databases
 
@@ -384,11 +384,11 @@ Each installed Marketplace Service requires its own set of ASG rules to function
 
 ## <a id='asg-baseline'></a> About the ASG Creator Tool
 
-The ASG Creator is a command line tool that you can use to create JSON rules files. The ASG Creator lets you specify IP addresses, CIDRs, and IP address ranges that you want to disallow traffic to, as well as the addresses that you want to allow traffic to. Based on these disallow/allow (exclude/include) liss that you provide as input, the ASG Creator formulates a JSON file of allow rules.
+The ASG Creator is a command line tool that you can use to create JSON rules files. The ASG Creator lets you specify IP addresses, CIDRs, and IP address ranges that you want to disallow traffic to, as well as the addresses that you want to allow traffic to. Based on these disallow/allow (exclude/include) lists that you provide as input, the ASG Creator formulates a JSON file of allow rules.
 
 In turn, the JSON file is the input for the `cf create-security-group` command that creates an ASG.
 
-To download the latest release of the ASG Creator, see the <%= vars.product_short %> [incubator repository](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) on GitHub.
+To download the latest release of the ASG Creator, see the <%= vars.product_short %> [incubator](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) repository on GitHub.
 
 
 ## <a id='logging'></a> ASG Logging
