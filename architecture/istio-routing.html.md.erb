@@ -3,66 +3,33 @@ title: Service Mesh Architecture
 owner: Networking
 ---
 
-This topic describes the routing flow and architecture of the service mesh data and control plane in <%= vars.product_full %>.
+This topic describes the routing flow and architecture of the service mesh data and control plane in <%= vars.product_runtime %> <%= vars.runtime_abbr %>.
 
-## <a id="ingress-routing"></a> Ingress Routing with Service Mesh
 
-The ingress service mesh data plane is a parallel routing path for ingress traffic for apps on <%= vars.product_runtime %>. It is deployed alongside the existing Cloud Foundry routing tier and manages istio routes for applications. 
+## <a id="overview"></a> Overview
+
+The service mesh data plane is a parallel routing path for ingress traffic for apps on <%= vars.product_runtime %>. It is deployed alongside the existing Cloud Foundry routing tier and manages istio routes for applications. 
 
 We use [Istio's](https://istio.io/) Pilot component to configure ingress [Envoy Proxies](https://www.envoyproxy.io/), and these proxies are the routers. We use a custom component called Copilot to push Cloud Foundry configuration to into Pilot.
 
 A route is managed by istio if it is associated with an istio managed domain. These are specified in the manifest.
 
-![Istio Routing Architecture](../images/istio_ingress_boxes_lines.jpg)
+![Istio Routing Architecture](../images/istio_boxes_lines.jpg)
 
-### <a id="control-plane"></a> Control Plane
+## <a id="control-plane"></a> Control Plane
 
 0. A new route is added to CAPI and mapped to one or more applications
 0. The route and mapping are sent to copilot
 0. Copilot then exposes that configuration in a way Pilot can understand, Pilot polls for it
-0. Pilot distributes the configuration to the ingress Envoys
+0. Pilot distributes the configuration to the ingress envoys
 
-### <a id="data-plane"></a> Data Plane
+## <a id="data-plane"></a> Data Plane
 
 0. The request hits your load balancer.
 0. The load balancer directs the request to one of your ingress envoys (on the istio-router vm)
 0. The ingress envoy then chooses which app container to send the request to
-0. The app container has an iptables rule which DNATs the request to its local Envoy sidecar
+0. The app container has an iptables rule which DNATs the request to its local envoy sidecar
 0. The envoy sidecar passes the request along to the application
-
-## <a id="c2c-service-mesh"></a> Container-to-Container Networking with Service Mesh
-
-Service mesh container-to-container networking allows apps running on the platform to communicate internally through an Envoy sidecar. This communication has the following features: client-side load balancing, timeouts, and retries. <% if vars.product_short.include? "CF" %> For more information, see [Container-to-Container Networking](../../adminguide/service-mesh.html#c2c) in _Service Mesh (Beta)_. <% end %>
-
-The following diagram illustrates how container-to-container networking works with service mesh enabled:
-
-![See the Control Plane and Data Plane sections for information about the processes described by the diagram.](../images/istio_c2c_boxes_lines.jpg)
-
-For more details about the processes pictured in the diagram, see the following sections.
-
-### <a id="c2c-control-plane"></a> Control Plane
-
-The following describes how Envoy is configured with route information after a user creates a new internal route using service mesh:
-
-0. CAPI receives a request for a new internal route and maps it to one or more apps. This route gets an associated virtual IP (VIP).
-0. CAPI sends the route information to Copilot.
-0. BBS sends the app location to Copilot.
-0. Copilot sends the route information to the Pilot component on each Diego cell.
-0. Pilot configures each Envoy sidecar on its Diego cell.
-
-
-### <a id="c2c-data-plane"></a> Data Plane
-
-The following describes how apps communicate using container-to-container networking with service mesh:
-
-0. App A makes an HTTP request to App B using its route on the internal service mesh domain.
-0. The internal service mesh domain resolves to a VIP.
-0. App A sends traffic to the VIP which gets rerouted to the Envoy sidecar.
-0. The Envoy sidecar selects an instance associated with the VIP based on default load balancing settings and sends traffic to that instance of App B.
-0. Network policy is enforced on the Diego Cell for App B. If successful, traffic continues to AppB.
-	0. If the request takes too long to connect to App B, it times out.
-	0. On a 500 error, the Envoy sidecar retries 3 times.
-
 
 ## <a id="component-manifest"></a> Service Mesh Components
 
@@ -87,11 +54,11 @@ The following table lists each component in the service mesh architecture and de
 	</tr>
 	<tr>
 		<td><a href="https://istio.io/docs/concepts/what-is-istio/#pilot">Pilot</a> </td>
-		<td>Pilot is an Istio component that can accept configuration from multiple sources simultaneously and distribute configuration intelligently across ingress and sidecar envoys. There is one Pilot on the Istio Control VM and a Pilot on every Diego cell </td>
+		<td>Pilot is an Istio component that can accept configuration from multiple sources simultaneously and distribute configuration intelligently across ingress and sidecar envoys.</td>
 	</tr>
 	<tr>
 		<td><a href="https://www.envoyproxy.io/">Envoy</a></td>
-		<td>Envoy Proxy is a lightweight proxy designed for microservices. It routes traffic based on configuration it receives from Pilot and emits in-depth metrics based on that traffic. There is one edge envoy for ingress traffic and there is a sidecar envoy in every app container. </td>
+		<td>Envoy Proxy is a lightweight edge proxy designed for microservices. It routes traffic based on configuration it receives from Pilot and emits in-depth metrics based on that traffic.</td>
 	</tr>
 	<tr>
 		<td>Load Balancer </td>
@@ -101,5 +68,4 @@ The following table lists each component in the service mesh architecture and de
 		<td><a href="https://github.com/cloudfoundry/istio-release">istio-release</a></td>
 		<td>A BOSH release that deploys Istio-related components and configures any existing components to use them.</td>
 	</tr>
-</table>
-
+</table>                                                                                                
