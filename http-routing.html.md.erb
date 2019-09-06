@@ -3,7 +3,7 @@ title: HTTP Routing
 owner: Routing
 ---
 
-This topic describes how the Gorouter, the main component in the <%= vars.first_product_name %> routing tier, routes HTTP traffic within <%= vars.product_full %>.
+This topic describes how the Gorouter, the main component in the <%= vars.product_name %> routing tier, routes HTTP traffic within <%= vars.product_full %>.
 
 For more information, see the [Routing](./architecture/index.html#routing) section of the _<%= vars.product_short %> Components_ topic.
 
@@ -16,7 +16,7 @@ The Gorouter has a limit of 1&nbsp;MB for HTTP Headers.
 
 #### <a id="X-Forwarded-Proto"></a> X-Forwarded-Proto
 
-The `X-Forwarded-Proto` header gives the scheme of the HTTP request from the client. 
+The `X-Forwarded-Proto` header gives the scheme of the HTTP request from the client.
 
 If an incoming request includes the `X-Forwarded-Proto` header, the Gorouter:
 
@@ -28,7 +28,7 @@ Developers can configure their apps to reject insecure requests by inspecting th
 
 #### <a id="X-Forwarded-For"></a> X-Forwarded-For
 
-If `X-Forwarded-For` is present, the Gorouter appends the load balancer's IP address to it and forwards the list. If `X-Forwarded-For` is not present, then the Gorouter sets it to the IP address of the load balancer in the forwarded request (some load balancers masquerade the client IP). If a load balancer sends the client IP using the PROXY protocol, then the Gorouter uses the client IP address to set `X-Forwarded-For`. 
+If `X-Forwarded-For` is present, the Gorouter appends the load balancer's IP address to it and forwards the list. If `X-Forwarded-For` is not present, then the Gorouter sets it to the IP address of the load balancer in the forwarded request (some load balancers masquerade the client IP). If a load balancer sends the client IP using the PROXY protocol, then the Gorouter uses the client IP address to set `X-Forwarded-For`.
 
 If your load balancer terminates TLS on the client side of the Gorouter, it must append these headers to requests forwarded to the Gorouter. <%= vars.http_routing %>
 
@@ -119,7 +119,7 @@ To enable mutual authentication between the Gorouter and back ends, operators co
 
 The Gorouter presents the certificate if requested by the back end during the TLS handshake.
 <% else %>
-To enable this feature, see [Configure Validation of App Instance Identity with TLS](#app-valid-tls-config). 
+To enable this feature, see [Configure Validation of App Instance Identity with TLS](#app-valid-tls-config).
 <% end %>
 
 
