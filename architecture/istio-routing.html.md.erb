@@ -3,12 +3,12 @@ title: Service Mesh Architecture
 owner: Networking
 ---
 
-This topic describes the routing flow and architecture of the service mesh data and control plane in <%= vars.product_runtime %> <%= vars.runtime_abbr %>.
+This topic describes the routing flow and architecture of the service mesh data and control plane in <%= vars.app_runtime_full %>.
 
 
 ## <a id="overview"></a> Overview
 
-The service mesh data plane is a parallel routing path for ingress traffic for apps on <%= vars.product_runtime %>. It is deployed alongside the existing Cloud Foundry routing tier and manages istio routes for applications. 
+The service mesh data plane is a parallel routing path for ingress traffic for apps on <%= vars.app_runtime %>. It is deployed alongside the existing Cloud Foundry routing tier and manages istio routes for applications.
 
 We use [Istio's](https://istio.io/) Pilot component to configure ingress [Envoy Proxies](https://www.envoyproxy.io/), and these proxies are the routers. We use a custom component called Copilot to push Cloud Foundry configuration to into Pilot.
 
@@ -68,4 +68,4 @@ The following table lists each component in the service mesh architecture and de
 		<td><a href="https://github.com/cloudfoundry/istio-release">istio-release</a></td>
 		<td>A BOSH release that deploys Istio-related components and configures any existing components to use them.</td>
 	</tr>
-</table>                                                                                                
+</table>

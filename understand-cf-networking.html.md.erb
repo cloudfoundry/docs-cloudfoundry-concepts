@@ -3,7 +3,7 @@ title: Container-to-Container Networking
 owner: Container-to-Container Networking
 ---
 
-This topic provides an overview of how Container-to-Container Networking works in <%= vars.product_full %>.
+This topic provides an overview of how Container-to-Container Networking works in <%= vars.app_runtime_full %>.
 
 The Container-to-Container Networking feature enables app instances to communicate with each other directly.
 <%= vars.cf_networking %>
@@ -17,7 +17,7 @@ Container-to-Container Networking integrates with [Garden-runC](./architecture/g
 The [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release) includes several core components, as well as swappable components. 
 
 To understand the components and how they work, see the diagram and tables below. 
-The diagram highlights <%= vars.product_full %> components in blue and green.
+The diagram highlights <%= vars.app_runtime_full %> components in blue and green.
 The diagram also highlights swappable components in red.
 
 ![c2c architecture diagram](./images/c2c-arch.png)
@@ -135,7 +135,7 @@ Additionally, policies use and and track the GUIDs of the apps. The policies con
 
 ## <a id='service-discovery'></a> App Service Discovery
 
-The <%= vars.product_full %> platform supports DNS-based service discovery that lets apps find each others' internal addresses. For example, a front end app instance can use the service discovery mechanism to establish communications with a back end app instance. See the [Developer Guide](../devguide/deploy-apps/cf-networking.html#discovery) for how to set up and use app service discovery.
+The <%= vars.app_runtime_full %> platform supports DNS-based service discovery that lets apps find each others' internal addresses. For example, a front end app instance can use the service discovery mechanism to establish communications with a back end app instance. See the [Developer Guide](../devguide/deploy-apps/cf-networking.html#discovery) for how to set up and use app service discovery.
 
 Container-to-Container app service discovery does not provide client-side load balancing or circuit-breaking, and it does not apply to `cf marketplace` services or require [application binding](../devguide/services/application-binding.html). It just lets apps publish service endpoints to each other, unbrokered and unmediated.
 
