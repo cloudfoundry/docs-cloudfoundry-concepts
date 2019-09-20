@@ -22,7 +22,7 @@ When apps or tasks begin staging, they require traffic rules permissive enough t
 
 To provide granular control when securing a deployment, administrators can assign platform-wide ASGs that apply to all app and task instances for the entire deployment, or space-scoped ASGs that apply only to apps and tasks in a particular space.
 
-In environments with both platform-wide and space-specific ASGs, the ASGs for a particular space combine with the platform ASGs to determine the rules for that space.
+In environments with both platform-wide and space-specific ASGs, the ASGs for a particular space are combined with the platform ASGs to determine the effective rules for that space. Any of the permitted traffic in the set of applicable ASGs is then effectively permitted for that application.
 
 ### <a id='simplifying'></a> Simplifying ASGs with a Services Subnet
 
