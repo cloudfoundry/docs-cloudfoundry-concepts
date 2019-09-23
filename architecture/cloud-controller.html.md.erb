@@ -10,7 +10,7 @@ system.
 The Cloud Controller maintains a database with tables for orgs, spaces,
 services, user roles, and more.
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 <%= partial 'cc_communications' %>
 <% else %>
 <% end %>
@@ -21,7 +21,7 @@ The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to ba
 
 ##<a id='database'></a>Database (CC_DB)
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 The Cloud Controller database has been tested with Postgres and MySQL.
 <% else %>
 The Cloud Controller database has been tested with MySQL.
@@ -92,7 +92,7 @@ Do not manually delete app package, buildpack, or droplet blobs from the blobsto
 
 ##<a id='testing'></a>Testing
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 
 By default `rspec` runs a test suite with the SQLite in-memory database.
 Specify a connection string using the `DB_CONNECTION` environment variable to

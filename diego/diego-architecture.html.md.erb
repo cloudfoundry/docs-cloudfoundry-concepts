@@ -78,30 +78,30 @@ The following table describes the jobs that are part of the <%= vars.product_sho
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> auctioneer<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> scheduler <% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> scheduler <% else %> <%= vars.diego_vm_1 %> <% end %></td>
 		<td><ul>
 	<li>Distributes work through auction to Cell Reps over SSL/TLS. See <a href="diego-auction.html">How the Diego Auction Allocates Jobs</a>.</li>
 	<li>Maintains a lock in Locket to ensure only one auctioneer handles auctions at a time.</li></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> bbs<br>
-		<strong>VM:<br></strong> <% if vars.product_name == "CF" %> diego-api <% else %> <%= vars.diego_vm_2 %> <% end %></td>
+		<strong>VM:<br></strong> <% if vars.platform_code == 'CF' %> diego-api <% else %> <%= vars.diego_vm_2 %> <% end %></td>
 		<td><ul><li>Maintains a real-time representation of the state of the Diego cluster, including desired LRPs, running LRPs, and in-flight Tasks.</li><li>Provides an RPC-style API over HTTP to Diego Core components for external clients as well as internal clients, including the SSH Proxy and Route Emitter.</li><li>Ensures consistency and fault tolerance for Tasks and LRPs by comparing desired state with actual state.</li>
 		<li>Keeps <code>DesiredLRP</code> and <code>ActualLRP</code> counts synchronized. If the <code>DesiredLRP</code> count exceeds the <code>ActualLRP</code> count, requests a start auction from the Auctioneer. If the <code>ActualLRP</code> count exceeds the <code>DesiredLRP</code> count, sends a stop message to the Rep on the Cell hosting an instance</li></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> file_server<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> api <% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> api <% else %> <%= vars.diego_vm_1 %> <% end %></td>
 		<td><ul><li>Serves static assets that can include general-purpose App Lifecycle binaries</li></ul></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> locket<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> diego-api<% else %> <%= vars.diego_vm_2 %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> diego-api<% else %> <%= vars.diego_vm_2 %> <% end %></td>
 		<td><ul><li>Provides a consistent key-value store for maintenance of distributed locks and component presence</li></ul></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> rep<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
 		<td><ul>
 <li>Represents a Cell in Diego Auctions for Tasks and LRPs</li>
 
@@ -123,13 +123,13 @@ The following table describes the jobs that are part of the <%= vars.product_sho
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> route_emitter<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
 		<td><ul><li>Monitors <code>DesiredLRP</code> and <code>ActualLRP</code> states, emitting route registration and unregistration messages to Gorouter when it detects changes.</li>
 		<li>Periodically emits the entire routing table to the <%= vars.product_short %> Gorouter.</li></ul></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> ssh_proxy<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> scheduler<% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> scheduler<% else %> <%= vars.diego_vm_1 %> <% end %></td>
 		<td><ul><li>Brokers connections between SSH clients and SSH servers</li><li>
 	Runs inside instance containers and authorizes access to app instances based on Cloud Controller roles</li></ul></td>
 	</tr>
@@ -172,13 +172,13 @@ The following table describes jobs that interact closely with Diego but are not 
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> cc_uploader<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> api <% else %> <%= vars.diego_vm_1 %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> api <% else %> <%= vars.diego_vm_1 %> <% end %></td>
 		<td><ul>
 	<li>Mediates uploads from the Executor to the Cloud Controller</li><li>Translates simple HTTP POST requests from the Executor into complex multipart-form uploads for the Cloud Controller</li></ul></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> database<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> pxc-mysql <% else %> <%= vars.mysql_vm %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> pxc-mysql <% else %> <%= vars.mysql_vm %> <% end %></td>
 		<td><ul>
 	<li>Provides a consistent key-value data store to Diego</li></ul></td>
 	</tr>
@@ -190,7 +190,7 @@ The following table describes jobs that interact closely with Diego but are not 
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> cloud_controller_clock<br>
-		<strong>VM:</strong><br> <% if vars.product_name == "CF" %> scheduler<% else %> <%= vars.clock_vm %> <% end %></td>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> scheduler<% else %> <%= vars.clock_vm %> <% end %></td>
 		<td><ul>
 	<li>Runs a Diego sync process to ensure desired app data in Diego is in sync with the Cloud Controller.</li></ul></td>
 	</tr>

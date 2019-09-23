@@ -140,7 +140,7 @@ Administrators configure these rules at two levels:
 
 Garden has two container types: unprivileged and privileged. Currently, <%= vars.product_short %> runs all application instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 <%= partial 'config_manifest' %>
 <% end %>
 

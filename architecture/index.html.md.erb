@@ -100,7 +100,7 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 
 The <%= vars.loggregator_name_or_link %> (log aggregator) system streams application logs to developers.
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 <%= partial 'old_collector' %>
 <% end %>
 

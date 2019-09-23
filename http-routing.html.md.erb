@@ -70,18 +70,18 @@ If you configure the load balancer to terminate TLS and set the XFCC header from
 
 The following sections describe supported deployment configurations.
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_loadbalancer' %>
 <% else %>
 <%= partial '../console/xfcc_loadbalancer' %>
 <% end %>
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 <% else %>
 <%= partial '../console/xfcc_haproxy' %>
 <% end %>
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_router' %>
 <% else %>
 <%= partial '../console/xfcc_router' %>
@@ -97,7 +97,7 @@ Depending on your needs, you can configure your deployment to terminate TLS at t
 
 The Gorouter supports TLS and mutual authentication to back end destinations, including app instances, platform services, and any other routable endpoints.
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 This is enabled by configuring the following manifest properties:
 
 - `router.backends.enable_tls: true`
@@ -168,7 +168,7 @@ If the Gorouter confirms that the app instance identifier in the certificate mat
 
 #### <a id="app-valid-tls-config"></a> Configure Validation of App Instance Identity with TLS
 
-<% if vars.product_name == 'CF' %>
+<% if vars.platform_code == 'CF' %>
 <%= partial 'router_app_tls_oss' %>
 <% else %>
 <%= partial '../console/router_app_tls_pcf' %>
@@ -256,7 +256,7 @@ If keep-alive connections are enabled, the Gorouter maintains established TCP co
 * If an idle connection exists for a given back end, the Gorouter reuses it to route subsequent requests.
 * If no idle connection exists for this back end, the Gorouter creates a new connection.
 
-<% if vars.product_name == "CF" %> <%= vars.keepalive %> <% else %> <% end %>
+<% if vars.platform_code == 'CF' %> <%= vars.keepalive %> <% else %> <% end %>
 
 
 ## <a id="retry"></a> Transparent Retries
