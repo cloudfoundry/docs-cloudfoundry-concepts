@@ -4,14 +4,14 @@ owner: Security
 ---
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = vars.product_short + " Security" if vars.product_name != 'CF'  %>
+<% current_page.data.title = vars.platform_name + " Security" if vars.platform_code != 'CF' %>
 
 This topic provides an overview of <%= vars.app_runtime_full %> security. For an overview of container security, see the [Container Security](container-security.html) topic.
 
-<%= vars.product_short %> implements the following measures to mitigate against security threats:
+<%= vars.app_runtime %> implements the following measures to mitigate against security threats:
 
 * Minimizes network surface area
-* Isolates customer applications and data in containers
+* Isolates customer apps and data in containers
 * Encrypts connections
 * Uses  role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access
 * Ensures security of application bits in a multi-tenant environment
@@ -19,9 +19,9 @@ This topic provides an overview of <%= vars.app_runtime_full %> security. For an
 
 ## <a id='system-boundaries'></a>System Boundaries and Access ##
 
-As the image below shows, in a typical deployment of <%= vars.product_short %>, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more <%= vars.product_short %> routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
+As the image below shows, in a typical deployment of <%= vars.app_runtime %>, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more <%= vars.app_runtime %> routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
 
-<p class="note"><strong>Note</strong>: <%=vars.recommended_by%> recommends that you also install a NAT VM for outbound requests and a Jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
+<p class="note"><strong>Note</strong>: <%=vars.recommended_by%> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
   <%= image_tag("images/security/sysbound1.png") %>
 
@@ -31,13 +31,13 @@ All traffic from the public internet to the Cloud Controller and UAA happens ove
 
 ### <a id='bosh'></a>BOSH ###
 
-Operators deploy <%= vars.product_short %> with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
+Operators deploy <%= vars.app_runtime %> with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
 
-<p class="note"><strong>Note</strong>: <%=vars.recommended_by%> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a Jumpbox on the subnet or through VPN.</p>
+<p class="note"><strong>Note</strong>: <%= vars.recommended_by %> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
 
 BOSH includes the following functionality for security:
 
-* Communicates with the VMs it launches over NATS. Because NATS cannot be accessed from outside <%= vars.product_short %>, this ensures that published messages can only originate from a component within your deployment.
+* Communicates with the VMs it launches over NATS. Because NATS cannot be accessed from outside <%= vars.app_runtime %>, this ensures that published messages can only originate from a component within your deployment.
 
 * Provides an audit trail through the `bosh tasks --all` and `bosh tasks --recent=VALUE` commands. `bosh tasks --all` returns a table that shows all BOSH actions taken by an operator or other running processes. `bosh tasks --recent=VALUE` returns a table of recent tasks, with `VALUE` being the number of recent tasks you want to view.
 
@@ -47,17 +47,17 @@ BOSH includes the following functionality for security:
 
 ## <a id='isolation-segments'></a>Isolation Segments
 
-Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. Using isolation segments separates app resources as completely as if they were in different <%= vars.product_short %> deployments but avoids redundant management components and unneeded network complexity.
-				
-You can designate isolation segments for exclusive use by [orgs and spaces](./roles.html) within <%= vars.product_short %>. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces.
+Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. Using isolation segments separates app resources as completely as if they were in different <%= vars.app_runtime %> deployments but avoids redundant management components and unneeded network complexity.
+
+You can designate isolation segments for exclusive use by [orgs and spaces](./roles.html) within <%= vars.app_runtime %>. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces.
 
 Customers can use isolation segments for different reasons, including the following:
 
-* To follow regulatory restrictions that require separation between different types of applications. For example, a health care company may not be able to host medical records and billing systems on the same machines.
-* To dedicate specific hardware to different isolation segments. For example, to guarantee that high-priority apps run on a cluster of high-performance hosts.
+* To follow regulatory restrictions that require separation between different types of apps. For example, a health care company might not be able to host medical records and billing systems on the same machines.
+* To dedicate specific hardware to different isolation segments. For example, to ensure that high-priority apps run on a cluster of high-performance hosts.
 * To separate data on multiple clients, to strengthen a security story, or offer different hosting tiers.
-						
-In <%= vars.product_short %>, the Cloud Controller Database (CCDB) identifies isolation segments by name and GUID, for example `30dd879c-ee2f-11db-8314-0800200c9a66`. The isolation segment object has no internal structure beyond these two properties at the <%= vars.product_short %> level, but BOSH associates the name of the isolation segment with Diego cells, through their `placement_tag` property.
+
+In <%= vars.app_runtime %>, the Cloud Controller database (CCDB) identifies isolation segments by name and GUID, for example `30dd879c-ee2f-11db-8314-0800200c9a66`. The isolation segment object has no internal structure beyond these two properties at the <%= vars.app_runtime %> level, but BOSH associates the name of the isolation segment with Diego Cells, through their `placement_tag` property.
 
 This diagram shows how isolation segments keep apps running on different pools of cells, and how the cells communicate with each other and with the management components:
 
@@ -70,67 +70,77 @@ See the [Isolation Segments](http://v3-apidocs.cloudfoundry.org/version/3.0.0/in
 
 ## <a id='auth'></a>Authentication and Authorization ##
 
-[User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for <%= vars.product_short %> and its various components.
+[User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for <%= vars.app_runtime %> and its various components.
 
-UAA acts as an [OAuth2](https://oauth.io/) Authorization Server and issues access tokens for applications that request platform resources. The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by UAA.
+UAA acts as an [OAuth2](https://oauth.io/) Authorization Server and issues access tokens for apps that request platform resources. The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by UAA.
 
-Operators can configure the identity store in UAA. If users register an account with the <%= vars.product_short %> platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the <%= vars.product_short %> platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the <%= vars.product_short %> platform.
+Operators can configure the identity store in UAA. If users register an account with the <%= vars.app_runtime %> platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the <%= vars.app_runtime %> platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the <%= vars.app_runtime %> platform.
 
 ### <a id='rbac'></a>Managing User Access with Role-Based Access Control ###
 
-Applications that users deploy to <%= vars.product_short %> exist within a space. Spaces exist within orgs. To view and access an org or a space, a user must be a member of it. <%= vars.product_short %> uses role-based access control (RBAC), with each role granted permissions to either an org or a specified space. For more information about roles and permissions, refer to the [Orgs, Spaces, Roles, and Permissions](roles.html) topic.
+Apps that users deploy to <%= vars.app_runtime %> exist within a space. Spaces exist within orgs. To view and access an org or a space, a user must be a member of it. <%= vars.app_runtime %> uses role-based access control (RBAC), with each role granted permissions to either an org or a specified space. For more information about roles and permissions, see [Orgs, Spaces, Roles, and Permissions](roles.html).
 
-<%=vars.console_links%>
+<%= vars.console_links %>
 
 ## <a id='service-broker'></a>Security for Service Broker Integration ##
 
 The Cloud Controller authenticates every request with the Service Broker API using HTTP or HTTPS, depending on which protocol that you specify during broker registration. The Cloud Controller rejects any broker registration that does not contain a username and password.
 
-Service instances bound to an app contain credential data. Users specify the binding credentials for [user-provided service instances](../devguide/services/user-provided.html), while third-party brokers specify the binding credentials for managed service instances. The VCAP_SERVICES environment variable contains credential information for any service bound to an app. <%= vars.product_short %> constructs this value from encrypted data that it stores in the Cloud Controller Database (CCDB).
+Service instances bound to an app contain credential data. Users specify the binding credentials for [user-provided service instances](../devguide/services/user-provided.html), while third-party brokers specify the binding credentials for managed service instances. The VCAP_SERVICES environment variable contains credential information for any service bound to an app. <%= vars.app_runtime %> constructs this value from encrypted data that it stores in the CCDB.
 
 <p class="note"><strong>Note</strong>: The selected third-party broker controls how securely to communicate managed service credentials.</p>
 
-A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. <%= vars.product_short %> does not store this secret in the CCDB. Instead, <%= vars.product_short %> passes the secret to the UAA component for verification using HTTP or HTTPS.
+A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. <%= vars.app_runtime %> does not store this secret in the CCDB. Instead, <%= vars.app_runtime %> passes the secret to the UAA component for verification using HTTP or HTTPS.
 
 ## <a id='vuln-manage'></a>Software Vulnerability Management ##
 
-<%= vars.product_short %> manages software vulnerability using releases and BOSH stemcells. New <%= vars.product_short %> releases are created with updates to address code issues, while new stemcells are created with patches for the latest security fixes to address any underlying operating system issues.
+<%= vars.app_runtime %> manages software vulnerability using releases and BOSH stemcells. New <%= vars.app_runtime %> releases are created with updates to address code issues, while new stemcells are created with patches for the latest security fixes to address any underlying operating system issues.
 
 ## <a id='app-artifacts'></a>Ensuring Security for Application Artifacts ##
 
-<%= vars.product_short %> secures both the code and the configuration of an application using the following functionality:
+<%= vars.app_runtime %> secures both the code and the configuration of an application using the following functionality:
 
-* Application developers push their code using the [<%= vars.product_short %> API](http://apidocs.cloudfoundry.org/). <%= vars.product_short %> secures each call to the <%= vars.product_short %> API using the [UAA](#auth) and SSL.
+* Application developers push their code using the [<%= vars.app_runtime %> API](http://apidocs.cloudfoundry.org/). <%= vars.app_runtime %> secures each call to the <%= vars.app_runtime %> API using the [UAA](#auth) and SSL.
 
 * The Cloud Controller uses [RBAC](#rbac) to ensure that only authorized users can access a particular application.
 
 * The Cloud Controller stores the configuration for an application in an encrypted database table. This configuration data includes user-specified environment variables and service credentials for any services bound to the app.
 
-* <%= vars.product_short %> runs the app inside a secure container. For more information, see the [Container Security](./container-security.html) topic.
+* <%= vars.app_runtime %> runs the app inside a secure container. For more information, see the [Container Security](./container-security.html) topic.
 
-* <%= vars.product_short %> operators can configure network traffic rules to control inbound communication to and outbound communication from an app. For more information, see the [Network Traffic Rules](./container-security.html#config-traffic) section of the [Container Security](./container-security.html) topic.
+* <%= vars.app_runtime %> operators can configure network traffic rules to control inbound communication to and outbound communication from an app. For more information, see the [Network Traffic Rules](./container-security.html#config-traffic) section of the [Container Security](./container-security.html) topic.
 
 ## <a id='logging'></a>Security Event Logging and Auditing ##
 
-For operators, <%= vars.product_short %> provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform.
-Additionally, operators can redirect <%= vars.product_short %> component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
+For operators, <%= vars.app_runtime %> provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform.
+Additionally, operators can redirect <%= vars.app_runtime %> component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
 
-For users, <%= vars.product_short %> records an audit trail of all relevant API invocations of an app. The <%= vars.product_short %> Command Line Interface (cf CLI) command `cf events` returns this information.
+For users, <%= vars.app_runtime %> records an audit trail of all relevant API invocations of an app. The <%= vars.app_runtime %> Command Line Interface (cf CLI) command `cf events` returns this information.
 
 ## <a id='recommendations'></a>Recommendations for Running a Secure Deployment ##
 
-To help run a secure deployment, <%=vars.recommended_by%> recommends the following:
+To help run a secure deployment, <%= vars.recommended_by %> recommends the following:
 
 <ul>
 <li>Configure UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.</li>
 <li>Deploy within a VLAN that limits network traffic to individual VMs. This reduce the possibility of unauthorized access to the VMs within your BOSH-managed cloud.</li>
-<li>Enable HTTPS for applications and SSL database connections to protect sensitive data transmitted to and from applications.</li>
-<li>Ensure that the Jumpbox is secure, along with the load balancer and NAT VM.</li>
+<li>Enable HTTPS for apps and SSL database connections to protect sensitive data transmitted to and from apps.</li>
+<li>Ensure that the jumpbox is secure, along with the load balancer and NAT VM.</li>
 <li>Encrypt stored files and data within databases to meet your data security requirements. Deploy using industry standard encryption and the best practices for your language or framework.</li>
 <li>Prohibit promiscuous network interfaces on the trusted network.</li>
 <li>Review and monitor data sharing and security practices with third-party services that you use to provide additional functionality to your application.</li>
 <li>Store SSH keys securely to prevent disclosure, and promptly replace lost or compromised keys.</li>
-<li>Use <%= vars.product_short %>’s RBAC model to restrict your users' access to only what is necessary to complete their tasks.</li>
-<li>Use a strong passphrase for both your <%= vars.product_short %> user account and SSH keys.</li>
+<li>Use <%= vars.app_runtime %>'s RBAC model to restrict your users' access to only what is necessary to complete their tasks.</li>
+<li>Use a strong passphrase for both your <%= vars.app_runtime %> user account and SSH keys.</li>
 <%= vars.ipsec_note %>
 </ul>
+
+## <a id='compliance'></a>Compliance
+
+For information about compliance in <%= vars.app_runtime %>, see the following topics:
+
+* <a href="https://docs.pivotal.io/nist/index.html">NIST Controls and <%= vars.app_runtime_full %></a>:
+Provides a dedicated site that assesses <%= vars.app_runtime %> against NIST SP 800-53(r4) Controls.
+
+* <a href="/platform/opsguide/gdpr.html">General Data Protection Regulation</a>:
+Provides an overview of the General Data Protection Regulation (GDPR) and where <%= vars.app_runtime %> might store personal data.
