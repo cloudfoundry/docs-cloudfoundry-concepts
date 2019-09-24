@@ -142,35 +142,35 @@ For information about compliance in <%= vars.app_runtime %>, see the following t
 * <a href="https://docs.pivotal.io/nist/index.html">NIST Controls and <%= vars.app_runtime_full %></a>:
 Provides a dedicated site that assesses <%= vars.app_runtime %> against NIST SP 800-53(r4) Controls.
 
-* <a href="/platform/opsguide/gdpr.html">General Data Protection Regulation</a>:
+* <a href="https://docs.pivotal.io/platform/<%= vars.current_major_version.sub('.', '-') %>/opsguide/gdpr.html">General Data Protection Regulation</a>:
 Provides an overview of the General Data Protection Regulation (GDPR) and where <%= vars.app_runtime %> might store personal data.
 
 ## <a id='apps-services'></a>Security for Apps and Services
 
 This section links to topics that describe how <%= vars.app_runtime %> and <%= vars.app_runtime %> users manage security for apps and service instances.
 
-* <a href="/platform/concepts/asg.html">Application Security Groups</a>:
+* <a href="../concepts/asg.html">Application Security Groups</a>:
 Describes how Application Security Groups (ASGs) work and how to manage them in <%= vars.app_runtime %>.
 
-* <a href="/platform/opsguide/config-ssh.html">Configuring SSH Access for <%= vars.app_runtime_full %></a>:
+* <a href="../opsguide/config-ssh.html">Configuring SSH Access for <%= vars.app_runtime_full %></a>:
 Explains how to configure <%= vars.app_runtime %> to allow SSH access to app instances for debugging.
 
-* <a href="/platform/opsguide/app-sec-groups.html">Restricting App Access to Internal <%= vars.app_runtime_full %> Components</a>:
+* <a href="../opsguide/app-sec-groups.html">Restricting App Access to Internal <%= vars.app_runtime_full %> Components</a>:
 Details how to create ASGs, rules that allow internal outgoing communications
 from all apps in <%= vars.app_runtime %>, or the apps running in the same space.
 
-* <a href="/platform/opsguide/notifications-asg.html">Configuring Application Security Groups for Email Notifications</a>:
+* <a href="../opsguide/notifications-asg.html">Configuring Application Security Groups for Email Notifications</a>:
 Describes how to define an ASG to enable app-generated notifications.
 
-* <a href="/platform/devguide/deploy-apps/trusted-system-certificates.html">Trusted System Certificates</a>:
+* <a href="../devguide/deploy-apps/trusted-system-certificates.html">Trusted System Certificates</a>:
 Explains where apps can find trusted system certificates.
 
-* <a href="/platform/services/access-control.html">Managing Access to Service Plans</a>: Describes how to
+* <a href="../services/access-control.html">Managing Access to Service Plans</a>: Describes how to
 enable or disable access to service plans for a subset of users.
 
-* <a href="/platform/devguide/services/application-binding.html">Delivering Service Credentials to an Application</a>:
+* <a href="../devguide/services/application-binding.html">Delivering Service Credentials to an Application</a>:
 Describes how to bind apps to service instances,
 which generate the credentials that enable the apps to use the service.
 
-* <a href="/platform/devguide/services/service-keys.html">Managing Service Keys</a>:
+* <a href="../devguide/services/service-keys.html">Managing Service Keys</a>:
 Explains how to create and manage service keys that enable apps to use service instances.
