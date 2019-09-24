@@ -141,28 +141,11 @@ To help run a secure deployment, <%= vars.recommended_by %> recommends the follo
 
 This section links to topics that describe how <%= vars.app_runtime %> and <%= vars.app_runtime %> users manage security for apps and service instances.
 
-* <a href="../concepts/asg.html">Application Security Groups</a>:
-Describes how Application Security Groups (ASGs) work and how to manage them in <%= vars.app_runtime %>.
-
-* <a href="../opsguide/config-ssh.html">Configuring SSH Access for <%= vars.app_runtime_full %></a>:
-Explains how to configure <%= vars.app_runtime %> to allow SSH access to app instances for debugging.
-
-* <a href="../opsguide/app-sec-groups.html">Restricting App Access to Internal <%= vars.app_runtime_full %> Components</a>:
-Details how to create ASGs, rules that allow internal outgoing communications
-from all apps in <%= vars.app_runtime %>, or the apps running in the same space.
-
-* <a href="../opsguide/notifications-asg.html">Configuring Application Security Groups for Email Notifications</a>:
-Describes how to define an ASG to enable app-generated notifications.
-
-* <a href="../devguide/deploy-apps/trusted-system-certificates.html">Trusted System Certificates</a>:
-Explains where apps can find trusted system certificates.
-
-* <a href="../services/access-control.html">Managing Access to Service Plans</a>: Describes how to
-enable or disable access to service plans for a subset of users.
-
-* <a href="../devguide/services/application-binding.html">Delivering Service Credentials to an Application</a>:
-Describes how to bind apps to service instances,
-which generate the credentials that enable the apps to use the service.
-
-* <a href="../devguide/services/service-keys.html">Managing Service Keys</a>:
-Explains how to create and manage service keys that enable apps to use service instances.
+<ul>
+  <li><a href="../concepts/asg.html">Application Security Groups</a>: Describes how Application Security Groups (ASGs) work and how to manage them in <%= vars.app_runtime %>.</li>
+<%= vars.app_svc_links %>
+  <li><a href="../devguide/deploy-apps/trusted-system-certificates.html">Trusted System Certificates</a>: Explains where apps can find trusted system certificates.</li>
+  <li><a href="../services/access-control.html">Managing Access to Service Plans</a>: Describes how to enable or disable access to service plans for a subset of users.</li>
+  <li><a href="../devguide/services/application-binding.html">Delivering Service Credentials to an Application</a>: Describes how to bind apps to service instances, which generate the credentials that enable the apps to use the service.</li>
+  <li><a href="../devguide/services/service-keys.html">Managing Service Keys</a>: Explains how to create and manage service keys that enable apps to use service instances.</li>
+</ul>
