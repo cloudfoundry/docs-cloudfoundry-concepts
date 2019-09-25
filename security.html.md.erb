@@ -4,7 +4,7 @@ owner: Security
 ---
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = vars.platform_name + " Security" if vars.platform_code != 'CF' %>
+<% current_page.data.title = vars.app_runtime_full + " Security" if vars.platform_code != 'CF' %>
 
 This topic provides an overview of <%= vars.app_runtime_full %> security. For an overview of container security, see the [Container Security](container-security.html) topic.
 
