@@ -41,7 +41,7 @@ This section describes how Cloud Foundry handles load balancing.
 
 Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. A Cloud Foundry installation accomplishes this using the following components:
 
-- **BOSH**: creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs Cloud Foundry on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information about BOSH, see the [BOSH documentation](http://bosh.io).
+- **BOSH**: creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs Cloud Foundry on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information, see the [BOSH documentation](http://bosh.io).
 
 - **Cloud Controller**: runs the apps and other processes on the cloud's VMs, balancing demand and managing app lifecycles. For more information, see [Cloud Controller](./architecture/cloud-controller.html).
 
@@ -49,9 +49,29 @@ Clouds balance their processing loads over multiple machines, optimizing for eff
 
 ### <a id='apps-anywhere'></a> How Apps Run Anywhere
 
-Cloud Foundry designates two types of VMs: the component VMs that constitute the platform's infrastructure, and the host VMs that host apps for the outside world. Within CF, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
+This section describes the VMs that run your apps in Cloud Foundry and how the platform packages your apps to run on these VMs.
 
-To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. Cloud Foundry distributes app source code to VMs with everything the VMs need to compile and run the apps locally. This includes the OS stack that the app runs on and a buildpack containing all languages, libraries, and services that the app uses. Before sending an app to a VM, the Cloud Controller stages it for delivery by combining stack, buildpack, and source code into a droplet that the VM can unpack, compile, and run. For simple, standalone apps with no dynamic pointers, the droplet can contain a pre-compiled executable instead of source code, language, and libraries.
+#### <a id='cf-vms'></a>VMs in Cloud Foundry
+
+Cloud Foundry designates the following types of VMs:
+
+- **Component VMs**: make up the platform's infrastructure.
+- **Host VMs**: host your apps for the outside world.
+
+Within Cloud Foundry, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
+
+For more information, see [Diego Components and Architecture](./diego/diego-architecture.html).
+
+#### <a id='cf-apps'></a>How Cloud Foundry Distributes Apps
+
+To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. Cloud Foundry distributes app source code to VMs with everything the VMs need to compile and run the apps locally.
+
+Cloud Foundry includes the following with your app's source code:
+
+- **Stack**: the operating system the app runs on.
+- **Buildpack**: contains all languages, libraries, and services that the app uses.
+
+Before sending an app to a VM, the Cloud Controller stages it for delivery by combining the stack, buildpack, and source code into a droplet that the VM can unpack, compile, and run. For simple, standalone apps with no dynamic pointers, the droplet can contain a pre-compiled executable instead of source code, language, and libraries.
 
 ### <a id='organize'></a> How CF Organizes Users and Workspaces
 
