@@ -110,26 +110,36 @@ For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
 ### <a id='resources'></a> Where CF Stores Resources
 
-Cloud Foundry uses the git system on [GitHub](https://github.com/) to version-control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, CF maintains an internal or external blobstore. CF uses MySQL to store and share temporary information, such as internal component states.
+This section describes how Cloud Foundry stores its resources.
+
+Cloud Foundry uses the git system on [GitHub](https://github.com/) to version control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, Cloud Foundry maintains an internal or external blobstore. Cloud Foundry uses MySQL to store and share temporary information, such as internal component states.
 
 ### <a id='communicate'></a> How CF Components Communicate
+
+This section describes how Cloud Foundry components communicate with one another.
 
 Cloud Foundry components communicate in two of the following ways:
 
 * By sending messages internally using HTTP and HTTPS protocols
-* By sending [NATS](./architecture/messaging-nats.html) messages to each other directly
+* By sending NATS messages to each other directly
 
-BOSH Director colocates a BOSH DNS server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation. This enables service discovery between VMs.
+For more information, see [Messaging (NATS)](./architecture/messaging-nats.html).
 
-BOSH DNS allows deployments to continue communicating with VMs even when the VMs' IP addresses change. It also provides client-side load-balancing by randomly selecting a healthy VM when multiple VMs are available.
+BOSH Director co-locates a BOSH DNS server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation. This enables service discovery between VMs.
+
+BOSH DNS allows deployments to continue communicating with VMs even when the VMs' IP addresses change. It also provides client-side load balancing by randomly selecting a healthy VM when multiple VMs are available.
 
 For more information about BOSH DNS, see [Native DNS Support](https://bosh.io/docs/dns/) in the BOSH documentation.
 
 ### <a id='monitor'></a> How to Monitor and Analyze a CF Deployment
 
+This section describes logging in Cloud Foundry.
+
 Cloud Foundry generates system logs from Cloud Foundry components and app logs from hosted apps.
 
-As Cloud Foundry runs, its component and host VMs generate logs and metrics. Cloud Foundry apps also typically generate logs. The <%= vars.loggregator_name_or_link %> system aggregates the component metrics and app logs into a structured, usable form, the _Firehose_. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying _nozzles_.
+As Cloud Foundry runs, its component and host VMs generate logs and metrics. Cloud Foundry apps also typically generate logs. The Loggregator system aggregates the component metrics and app logs into a structured, usable form, the _Firehose_. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying _nozzles_.
+
+For more information, see <%= vars.loggregator_arch_link %>.
 
 The component logs follow a different path. They stream from rsyslog agents, and the cloud operator can configure them to stream out to a syslog drain.
 
