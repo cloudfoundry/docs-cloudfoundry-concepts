@@ -40,7 +40,7 @@ The OAuth2 server (the [UAA](./uaa.html)) and Login Server work together to prov
 
 The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of applications. To push an app to <%= vars.product_short %>, you target the Cloud Controller. The Cloud Controller then directs the Diego Brain through the CC-Bridge components to coordinate individual [Diego cells](#diego-cell) to stage and run applications.
 
-The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), <%= vars.services_link %>, and more.
+The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), services, and more.
 
 ### <a id='nsync-bbs'></a> nsync, BBS, and Cell Reps
 
@@ -98,7 +98,9 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 
 ### <a id='metrics'></a> Loggregator
 
-The <%= vars.loggregator_name_or_link %> (log aggregator) system streams application logs to developers.
+The Loggregator (log aggregator) system streams application logs to developers.
+
+For more information, see <%= vars.loggregator_arch_link %>.
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'old_collector' %>
