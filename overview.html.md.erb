@@ -73,11 +73,38 @@ Cloud Foundry includes the following with your app's source code:
 
 Before sending an app to a VM, the Cloud Controller stages it for delivery by combining the stack, buildpack, and source code into a droplet that the VM can unpack, compile, and run. For simple, standalone apps with no dynamic pointers, the droplet can contain a pre-compiled executable instead of source code, language, and libraries.
 
-### <a id='organize'></a> How CF Organizes Users and Workspaces
+For more information, see the following topics:
 
-CF manages user accounts through two [User Authentication and Authorization](./architecture/uaa.html) (UAA) servers, which support access control as [OAuth2](https://oauth.io) services and can store user information internally, or connect to external user stores through LDAP or SAML.
+- [Changing Stacks](../devguide/deploy-apps/stacks.html)
+- [Buildpacks](../buildpacks/index.html)
+- [How Apps Are Staged](./how-applications-are-staged.html)
 
-One UAA server grants access to BOSH, and holds accounts for the CF operators who deploy runtimes, services, and other software onto the BOSH layer directly. The other UAA server controls access to the Cloud Controller, and determines who can tell it to do what. The Cloud Controller UAA defines different user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run CF commands. The Cloud Controller UAA also scopes the roles to separate, compartmentalized [Orgs and Spaces](./roles.html) within an installation, to manage and track use.
+### <a id='organize'></a> How Cloud Foundry Organizes Users and Workspaces
+
+This section describes authentication in Cloud Foundry.
+
+Cloud Foundry manages user accounts through two User Authentication and Authorization (UAA) servers, which support access control as OAuth2 services and can store user information internally, or connect to external user stores through LDAP or SAML.
+
+For more information, see [User Account and Authentication (UAA) Server](./architecture/uaa.html).
+
+The following table describes what the two UAA servers do:
+
+<table>
+  <tr>
+    <th width="25%">Server</th>
+    <th>Purpose</th>
+  </tr>
+  <tr>
+    <td>First UAA server</td>
+    <td><ul><li>Grants access to BOSH</li><li>Holds accounts for Cloud Foundry operators who deploy runtimes, services, and other software onto the BOSH layer directly</li></ul></td>
+  </tr>
+  <tr>
+    <td>Second UAA server</td>
+    <td><ul><li>Controls access to the Cloud Controller</li><li>Defines user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run Cloud Foundry commands</li><li>Scopes the roles to separate, compartmentalized orgs and spaces within an installation to manage and track use</li></ul></td>
+  </tr>
+</table>
+
+For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
 ### <a id='resources'></a> Where CF Stores Resources
 
