@@ -8,16 +8,16 @@ This topic describes orgs and spaces in <%= vars.product_name %> foundations. It
 
 ## <a id="overview"></a> Overview
 
-<%= vars.product_name %> uses a role-based access control (RBAC) system to grant appropriate permissions to <%=vars.product_full %> users. 
+<%= vars.product_name %> uses a role-based access control (RBAC) system to grant appropriate permissions to <%=vars.product_full %> users.
 
-Admins, Org Managers, and Space Managers can assign user roles using the Cloud Foundry Command Line Interface (cf CLI). For more information, see [Users and Roles](../cf-cli/getting-started.html#user-roles) in _Getting Started with the cf CLI_<%= vars.or_apps_man %>.	
+Admins, Org Managers, and Space Managers can assign user roles using the Cloud Foundry Command Line Interface (cf CLI). For more information, see [Users and Roles](../cf-cli/getting-started.html#user-roles) in _Getting Started with the cf CLI_<%= vars.or_apps_man %>.
 
 
 ## <a id='orgs'></a> Orgs
 
 An org is a development account that an individual or multiple collaborators can own and use. All collaborators access an org with user accounts, which have roles such as Org Manager, Org Auditor, and Org Billing Manager. Collaborators in an org share a resource quota plan, apps, services availability, and custom domains.
 
-By default, an org has the status of _active_. An admin can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services. For details on what activities are allowed for suspended orgs, see [Roles and Permissions for Suspended Orgs](#suspendedroles). 
+By default, an org has the status of _active_. An admin can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services. For details on what activities are allowed for suspended orgs, see [Roles and Permissions for Suspended Orgs](#suspendedroles).
 
 
 ## <a id='spaces'></a> Spaces
@@ -39,7 +39,7 @@ The following describes each type of user role in <%= vars.product_name %>:
 
 * **Org Managers**: Administer the org.
 
-* **Org Auditors**: Read-only access to user information and org quota usage 
+* **Org Auditors**: Read-only access to user information and org quota usage
 information.
 
 <%= vars.billing_manager_role %>
@@ -49,7 +49,7 @@ information.
 
 * **Space Managers**: Administer a space within an org.
 
-* **Space Developers**: Manage apps and services in a space.
+* **Space Developers**: Manage apps, services, and space-scoped service brokers in a space.
 
 * **Space Auditors**: Read-only access to a space.
 
