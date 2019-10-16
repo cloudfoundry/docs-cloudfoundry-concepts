@@ -13,7 +13,9 @@ If TLS is terminated for the first time at Gorouter, the Gorouter must be config
 	      ca_certs:
 	        -----BEGIN CERTIFICATE-----
 	        (contents of certificate)
-	        -----END CERTIFICATE-----
+	        ---
+
+<%= partial '/pcf/deprecation-notice' %>--END CERTIFICATE-----
 </pre>
 
 The <code>router.ca_certs</code> property is a string of concatenated certificate authorities in PEM format.

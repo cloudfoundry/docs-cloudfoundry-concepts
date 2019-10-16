@@ -7,7 +7,9 @@ Operators should configure the Gorouter with the root certificate authority by e
 properties:
 router:
 	ca_certs:
-		-----BEGIN CERTIFICATE-----
+		---
+
+<%= partial '/pcf/deprecation-notice' %>--BEGIN CERTIFICATE-----
 	    (contents of certificate)
 	    -----END CERTIFICATE-----
 </pre>
