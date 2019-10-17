@@ -17,11 +17,26 @@ This topic describes <%= vars.product_full %> and how it works with Cloud Foundr
 
 ## <a id='overview'></a>Overview
 
-Cloud platforms let anyone deploy network apps or services and make them available to the world in a few minutes. When an app becomes popular, the cloud easily scales it to handle more traffic, replacing with a few keystrokes the build-out and migration efforts that once took months. Cloud platforms represent the next step in the evolution of IT, enabling you to focus exclusively on your apps and data without worrying about underlying infrastructure.
+Cloud platforms let anyone deploy network apps or services and make them available to the world in a few minutes. When an app becomes popular, the cloud scales it to handle more traffic, replacing build-out and migration efforts that once took months with a few keystrokes. Cloud platforms enable you to focus exclusively on your apps and data without worrying about underlying infrastructure.
+
+The following diagram shows the layers of a typical technology stack, and compares the traditional IT model to the cloud platform model:
 
 ![At the top left of the image is a column with the header 'Traditional IT', below which are nine black boxes labeled 'Applications', 'Data', 'Runtime', 'Middleware', 'O/S', 'Virtualization', 'Servers', 'Storage', and 'Networking'. A vertical line runs along the left side of the nine boxes and is labeled 'You Manage'. At the top center of the image is a column with the header 'IaaS', below which are four black boxes labeled 'Applications', 'Data', 'Runtime', and 'Middleware', followed by five white boxes labeled 'O/S', 'Virtualization', 'Servers', 'Storage', and 'Networking'. A vertical line runs along the left side the four black boxes and is labeled 'You Manage'. A vertical line runs along the right side of the five white boxes and is labeled 'IaaS Provider'. At the top right of the image is a column with the header 'Platform', below which are two black boxes labeled 'Applications' and 'Data', followed by seven white boxes labeled 'Runtime', 'Middleware', 'O/S', 'Virtualization', 'Servers', 'Storage', and 'Networking'. A vertical line runs along the left side the two black boxes and is labeled 'You Manage'. A vertical line runs along the right side of the seven white boxes and is labeled 'Cloud Foundry on IaaS'. At the bottom left of the image is a vertical blue dashed line that is labeled 'Agility and Cost Savings' with an arrow that points to the top of the image. Also at the bottom left of the image is a horizontal blue dashed line that is labeled 'Cloud Enablement' with an arrow that points to the bottom right of the image. At the bottom of the image is the text 'IaaS=Infrastructure as a Service (AWS, vSphere, OpenStack, etc.)'.](images/power-of-platform.png)
 
-Not all cloud platforms are created equal. Some have limited language and framework support, lack key app services, or restrict deployment to a single cloud. Cloud Foundry has become the industry standard. It is an open source platform that you can deploy to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack. You can also use a PaaS deployed by a commercial Cloud Foundry cloud provider. A broad community contributes to and supports Cloud Foundry. The platform's openness and extensibility prevent its users from being locked into a single framework, set of app services, or cloud.
+See the following sections in this topic:
+
+- [About the Cloud Foundry Platform](#about)
+- [How Cloud Foundry Works](#how-it-works)
+
+## <a id='about'></a>About the Cloud Foundry Platform
+
+This section describes why Cloud Foundry is the industry-standard cloud platform.
+
+Not all cloud platforms are created equal. Some have limited language and framework support, lack key app services, or restrict deployment to a single cloud. Cloud Foundry has become the industry standard.
+
+Cloud Foundry is an open source platform that you can deploy to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack. You can also use a PaaS deployed by a commercial Cloud Foundry cloud provider.
+
+A broad community contributes to and supports Cloud Foundry. The platform's openness and extensibility prevent its users from being locked into a single framework, set of app services, or cloud.
 
 Cloud Foundry is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps. Developers can deploy their apps to Cloud Foundry using their existing tools and with zero modification to their code.
 
@@ -31,11 +46,11 @@ See the following links for more information:
 - [Cloud Foundry Certified Platforms](https://www.cloudfoundry.org/certified-platforms/)
 - [Welcome to the Cloud Foundry Community](https://www.cloudfoundry.org/community/)
 
-## <a id='how-it-works'></a> How Cloud Foundry Works
+## <a id='how-it-works'></a>How Cloud Foundry Works
 
 To flexibly serve and scale apps online, Cloud Foundry has subsystems that perform specialized functions. The sections below describe how some of these main subsystems work.
 
-### <a id='balances'></a> How Cloud Foundry Balances its Load
+### <a id='balances'></a>Load Balancing
 
 This section describes how Cloud Foundry handles load balancing.
 
@@ -47,7 +62,7 @@ Clouds balance their processing loads over multiple machines, optimizing for eff
 
 - **Gorouter**: routes incoming traffic from the world to the VMs that are running the apps that the traffic demands, usually working with a customer-provided load balancer. For more information, see [Gorouter](./architecture/router.html).
 
-### <a id='apps-anywhere'></a> How Apps Run Anywhere
+### <a id='apps-anywhere'></a>Running Apps
 
 This section describes the VMs that run your apps in Cloud Foundry and how the platform packages your apps to run on these VMs.
 
@@ -62,7 +77,7 @@ Within Cloud Foundry, the Diego system distributes the hosted app load over all 
 
 For more information, see [Diego Components and Architecture](./diego/diego-architecture.html).
 
-#### <a id='cf-apps'></a>How Cloud Foundry Distributes Apps
+#### <a id='cf-apps'></a>Distributing Apps
 
 To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. Cloud Foundry distributes app source code to VMs with everything the VMs need to compile and run the apps locally.
 
@@ -79,9 +94,9 @@ For more information, see the following topics:
 - [Buildpacks](../buildpacks/index.html)
 - [How Apps Are Staged](./how-applications-are-staged.html)
 
-### <a id='organize'></a> How Cloud Foundry Organizes Users and Workspaces
+### <a id='organize'></a>Organizing Users and Workspaces
 
-This section describes authentication in Cloud Foundry.
+This section describes how Cloud Foundry organizes users and workspaces.
 
 Cloud Foundry manages user accounts through two User Authentication and Authorization (UAA) servers, which support access control as OAuth2 services and can store user information internally, or connect to external user stores through LDAP or SAML.
 
@@ -106,13 +121,13 @@ The following table describes what the two UAA servers do:
 
 For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
-### <a id='resources'></a> Where CF Stores Resources
+### <a id='resources'></a>Storing Resources
 
 This section describes how Cloud Foundry stores its resources.
 
 Cloud Foundry uses the git system on [GitHub](https://github.com/) to version control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, Cloud Foundry maintains an internal or external blobstore. Cloud Foundry uses MySQL to store and share temporary information, such as internal component states.
 
-### <a id='communicate'></a> How CF Components Communicate
+### <a id='communicate'></a>Component Communication
 
 This section describes how Cloud Foundry components communicate with one another.
 
@@ -129,7 +144,7 @@ BOSH DNS allows deployments to continue communicating with VMs even when the VMs
 
 For more information about BOSH DNS, see [Native DNS Support](https://bosh.io/docs/dns/) in the BOSH documentation.
 
-### <a id='monitor'></a> How to Monitor and Analyze a CF Deployment
+### <a id='monitor'></a>Monitoring and Analyzing
 
 This section describes logging in Cloud Foundry.
 
@@ -141,7 +156,7 @@ For more information, see <%= vars.loggregator_arch_link %>.
 
 The component logs follow a different path. They stream from rsyslog agents, and the cloud operator can configure them to stream out to a syslog drain.
 
-### <a id='services'></a> Using Services with CF
+### <a id='services'></a>Using Services
 
 This section describes how you can use services with your apps on Cloud Foundry.
 
