@@ -2,6 +2,8 @@
 title: Cloud Foundry Overview
 ---
 
+<strong><%= modified_date %></strong>
+
 <%# Reset page title based on product title %>
 <% current_page.data.title = vars.product_short + " Overview" if vars.product_name != 'CF' %>
 
@@ -37,19 +39,17 @@ See the following sections in this topic:
 
 This section describes why Cloud Foundry is the industry-standard cloud platform.
 
-Not all cloud platforms are created equal. Some have limited language and framework support, lack key app services, or restrict deployment to a single cloud. Cloud Foundry has become the industry standard.
+Not all cloud platforms are created equal. Some have limited language and framework support, lack key app services, or restrict deployment to a single cloud.
 
-Cloud Foundry is an open source platform that you can deploy to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack. You can also use a PaaS deployed by a commercial Cloud Foundry cloud provider.
+As the industry-standard cloud platform, Cloud Foundry offers the following:
 
-A broad community contributes to and supports Cloud Foundry. The platform's openness and extensibility prevent its users from being locked into a single framework, set of app services, or cloud.
+* **Open source code**: The platform's openness and extensibility prevent its users from being locked into a single framework, set of app services, or cloud. See the [Cloud Foundry project on GitHub](https://github.com/cloudfoundry).
+* **Deployment automation**: Developers can deploy their apps to Cloud Foundry using their existing tools and with zero modification to their code.
+* **Flexible infrastructure**: You can deploy Cloud Foundry to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack.
+* **Commercial options**: You can also use a PaaS deployed by a commercial Cloud Foundry cloud provider. See [Cloud Foundry Certified Platforms](https://www.cloudfoundry.org/certified-platforms/).
+* **Community support**: A broad community contributes to and supports Cloud Foundry. See [Welcome to the Cloud Foundry Community](https://www.cloudfoundry.org/community/).
 
-Cloud Foundry is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps. Developers can deploy their apps to Cloud Foundry using their existing tools and with zero modification to their code.
-
-See the following links for more information:
-
-- [Cloud Foundry project on GitHub](https://github.com/cloudfoundry)
-- [Cloud Foundry Certified Platforms](https://www.cloudfoundry.org/certified-platforms/)
-- [Welcome to the Cloud Foundry Community](https://www.cloudfoundry.org/community/)
+Cloud Foundry is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps.
 
 ## <a id='how-it-works'></a>How Cloud Foundry Works
 
