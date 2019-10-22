@@ -130,7 +130,26 @@ For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
 This section describes how Cloud Foundry stores its resources.
 
-Cloud Foundry uses the git system on [GitHub](https://github.com/) to version control source code, buildpacks, documentation, and other resources. Developers on the platform also use GitHub for their own apps, custom configurations, and other resources. To store large binary files, such as droplets, Cloud Foundry maintains an internal or external blobstore. Cloud Foundry uses MySQL to store and share temporary information, such as internal component states.
+Cloud Foundry stores resources in the following locations:
+
+<table>
+  <tr>
+    <th>Resource</th>
+    <th>Storage Location</th>
+  </tr>
+  <tr>
+    <td><ul><li>Source code</li><li>Buildpacks</li><li>Documentation</li><li>Custom configurations</li><li>Other platform resources</li></ul></td>
+    <td><a href="https://github.com/">GitHub</a></td>
+  </tr>
+  <tr>
+    <td><ul><li>Large binary files</li><li>Droplets</li></ul></td>
+    <td>Internal or external blobstore</td>
+  </tr>
+  <tr>
+    <td><ul><li>Internal component states</li><li>Other temporary information</li></ul></td>
+    <td>MySQL</td>
+  </tr>
+</table>
 
 ### <a id='communicate'></a>Component Communication
 
