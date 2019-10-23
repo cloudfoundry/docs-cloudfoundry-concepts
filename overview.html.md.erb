@@ -2,8 +2,6 @@
 title: Cloud Foundry Overview
 ---
 
-<strong><%= modified_date %></strong>
-
 <%# Reset page title based on product title %>
 <% current_page.data.title = vars.app_runtime_abbr + " Overview" if vars.platform_code != 'CF' %>
 
@@ -128,9 +126,7 @@ For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
 ### <a id='resources'></a>Storing Resources
 
-This section describes how Cloud Foundry stores its resources.
-
-Cloud Foundry stores resources in the following locations:
+The following table describes where Cloud Foundry stores resources:
 
 <table>
   <tr>
@@ -155,7 +151,7 @@ Cloud Foundry stores resources in the following locations:
 
 This section describes how Cloud Foundry components communicate with one another.
 
-Cloud Foundry components communicate in two of the following ways:
+Cloud Foundry components communicate in the following ways:
 
 * By sending messages internally using HTTP and HTTPS protocols
 * By sending NATS messages to each other directly
@@ -172,19 +168,44 @@ For more information about BOSH DNS, see [Native DNS Support](https://bosh.io/do
 
 This section describes logging in Cloud Foundry.
 
-Cloud Foundry generates system logs from Cloud Foundry components and app logs from hosted apps.
+Cloud Foundry generates system logs from Cloud Foundry components and app logs from hosted apps. As Cloud Foundry runs, its component and host VMs generate logs and metrics. Cloud Foundry apps also typically generate logs.
 
-As Cloud Foundry runs, its component and host VMs generate logs and metrics. Cloud Foundry apps also typically generate logs. The Loggregator system aggregates the component metrics and app logs into a structured, usable form, the _Firehose_. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying _nozzles_.
+The following table describes where Cloud Foundry sends logs:
+
+<table>
+  <tr>
+    <th>Log Type</th>
+    <th>Destination</th>
+  </tr>
+  <tr>
+    <td>Cloud Foundry component logs</td>
+    <td>Rsyslog agents</td>
+  </tr>
+  <tr>
+    <td>Cloud Foundry component metrics</td>
+    <td>Loggregator</td>
+  </tr>
+  <tr>
+    <td>App logs</td>
+    <td>Loggregator</td>
+  </tr>
+</table>
+
+Component logs stream from rsyslog agents, and the cloud operator can configure them to stream out to a syslog drain.
+
+The Loggregator system aggregates the component metrics and app logs into a structured, usable form, the Firehose. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying nozzles.
 
 For more information, see <%= vars.loggregator_arch_link %>.
-
-The component logs follow a different path. They stream from rsyslog agents, and the cloud operator can configure them to stream out to a syslog drain.
 
 ### <a id='services'></a>Using Services
 
 This section describes how you can use services with your apps on Cloud Foundry.
 
-Typical apps depend on free or metered services such as databases or third-party APIs. To incorporate these into an app, a developer writes a Service Broker, an API that publishes to the Cloud Controller the ability to list service offerings, provision the service, and enable apps to make calls out to it.
+Typical apps depend on free or metered services such as databases or third-party APIs. To incorporate these into an app:
+
+1. **Write a Service Broker**: This component manages the life cycle of the service. The Service Broker uses the Service Broker API to advertise a catalog of service offerings to Cloud Foundry apps.
+1. **Provision the Service Instance**: Create an instance of the service offering by sending a provision request to the Service Broker API.
+1. **Enable apps to access the Service Instance**: Configure the Cloud Foundry app to make calls to the Service Instance using the Service Broker API.
 
 For more information, see [Services](../services/index.html).
 
