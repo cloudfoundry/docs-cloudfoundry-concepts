@@ -34,17 +34,13 @@ The Container-to-Container Networking BOSH release includes the following core c
     <th>Function</th>
   </tr>
   <tr>
-    <td>Cloud Foundry Command Line Interface (CF CLI) plugin</td>
-    <td>A plugin that you download to control network access policies between apps. 
-  </tr>
-  <tr>
     <td>Policy Server</td>
     <td>A central management node that does the following:
       <ul>
         <li>Maintains a database of policies for traffic between apps. 
-            The CF CLI plugin calls an API to create or update a record 
+            The cf CLI calls an API to create or update a record 
             in the policy database whenever you create or remove a policy.</li>
-        <li>Exposes a JSON REST API used by the CF CLI plugin</li>
+        <li>Exposes a JSON REST API used by the cf CLI. This API serves traffic using TLS.</li>
       </ul></td>
   </tr>
   <tr>
