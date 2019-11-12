@@ -8,16 +8,16 @@ This topic provides an overview of the User Account and Authentication (UAA) Ser
 
 ## <a id="overview"></a> Overview
 
-The primary role of UAA is as an OAuth2 provider, issuing tokens for client apps to use when they act on behalf of <%= vars.product_short %> users. In collaboration with the login server, UAA can authenticate users with their <%= vars.product_short %> credentials, and can act as an SSO service using those, or other, credentials.
+The primary role of UAA is as an OAuth2 provider, issuing tokens for client apps to use when they act on behalf of <%= vars.platform_name %> users. In collaboration with the login server, UAA can authenticate users with their <%= vars.platform_name %> credentials, and can act as an SSO service using those, or other, credentials.
 
 UAA has endpoints for managing user accounts and for registering OAuth2 clients, as well as various other management functions.
 
-Different runtimes and services use separate UAA instances. <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.product_name %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances %= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA. You must log into each runtime or service separately.
+Different runtimes and services use separate UAA instances. <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.platform_name %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances %= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA. You must log into each runtime or service separately.
 
 
 ## <a id='quickstart'></a> Quick Start
 
-You can deploy UAA locally or to <%= vars.product_short %>.
+You can deploy UAA locally or to <%= vars.platform_name %>.
 
 ### <a id='local'></a> Deploy UAA Locally
 
@@ -77,7 +77,7 @@ To access and use a locally-deployed UAA server:
     }
     </pre>
 
-1. To install the <%= vars.product_short %> UAA Command Line Client (UAAC) Ruby gem, run:
+1. To install the <%= vars.platform_name %> UAA Command Line Client (UAAC) Ruby gem, run:
 
     ```
     gem install cf-uaac
@@ -135,9 +135,9 @@ To access and use a locally-deployed UAA server:
       aud: scim clients uaa admin
     </pre>
 
-### <a id='cf'></a> Deploy UAA to <%= vars.product_short %>
+### <a id='cf'></a> Deploy UAA to <%= vars.platform_name %>
 
-To build the UAA as an app and push it to <%= vars.product_short %> using the Cloud Foundry Command Line Interface (cf CLI):
+To build the UAA as an app and push it to <%= vars.platform_name %> using the Cloud Foundry Command Line Interface (cf CLI):
 
 1. Clone the UAA GitHub repository by running: 
 
@@ -153,7 +153,7 @@ To build the UAA as an app and push it to <%= vars.product_short %> using the Cl
     ./gradlew :cloudfoundry-identity-uaa:war
     ```
 
-1. Run the cf CLI `cf push APP-NAME -m 512M -p PATH-TO-WAR-FILE --no-start` command to push the app to <%= vars.product_short %>. Replace `APP-NAME` with a name for your UAA app, and `PATH-TO-WAR-FILE` with the path to the WAR file you created in the previous step. For example:
+1. Run the cf CLI `cf push APP-NAME -m 512M -p PATH-TO-WAR-FILE --no-start` command to push the app to <%= vars.platform_name %>. Replace `APP-NAME` with a name for your UAA app, and `PATH-TO-WAR-FILE` with the path to the WAR file you created in the previous step. For example:
 
     ```
     cf push MYUAA -m 512M -p uaa/build/libs/cloudfoundry-identity-uaa-1.8.0.war --no-start
@@ -173,11 +173,11 @@ To build the UAA as an app and push it to <%= vars.product_short %> using the Cl
 
 ### <a id='demo-hosted'></a> Use Remote UAA
 
-You use a UAA server that you pushed as an app to <%= vars.product_short %> in a similar way to one you run locally. You do not need app token encoding because you do not have the client secret.
+You use a UAA server that you pushed as an app to <%= vars.platform_name %> in a similar way to one you run locally. You do not need app token encoding because you do not have the client secret.
 
-To access and use a UAA server that you pushed as an app to <%= vars.product_short %>:
+To access and use a UAA server that you pushed as an app to <%= vars.platform_name %>:
 
-1. Follow the procedure in [Deploy UAA to <%= vars.product_short %>](#cf). 
+1. Follow the procedure in [Deploy UAA to <%= vars.platform_name %>](#cf). 
 
 1. From the project base directory, run `curl -H "Accept: application/json" APP-FQDN/login` to query the external login endpoint about the system. Replace `APP-FQDN` with the fully qualified domain name (FQDN) of your app. For example:
 
@@ -216,7 +216,7 @@ To access and use a UAA server that you pushed as an app to <%= vars.product_sho
     * `PASSWORD` is your password.
     If you do not specify a username and password, the UAAC prompts you to supply them.
     <br><br>
-    The `uaac token client get` command authenticates and obtains an access token from the server using the OAuth2 implicit grant, similar to the approach intended for a standalone client like the <%= vars.product_short %> Command Line Interface (cf CLI). 
+    The `uaac token client get` command authenticates and obtains an access token from the server using the OAuth2 implicit grant, similar to the approach intended for a standalone client like the cf CLI. 
 
 
 ## <a id='integration'></a> Integration Tests
@@ -527,7 +527,7 @@ The following table describes the scopes of privilege in the router.
 
 ### <a id="other-scopes"></a> Other Scopes
 
-The following table describes the scopes of privilege in other <%= vars.product_short %> services.
+The following table describes the scopes of privilege in other <%= vars.platform_name %> services.
 
 | Scope | Description |
 | ----- | ----------- |
