@@ -12,7 +12,7 @@ The primary role of UAA is as an OAuth2 provider, issuing tokens for client apps
 
 UAA has endpoints for managing user accounts and for registering OAuth2 clients, as well as various other management functions.
 
-Different runtimes and services use separate UAA instances. <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.platform_name %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances %= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA. You must log into each runtime or service separately.
+Different runtimes and services use separate UAA instances. <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.platform_name %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances <%= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA. You must log into each runtime or service separately.
 
 
 ## <a id='quickstart'></a> Quick Start
