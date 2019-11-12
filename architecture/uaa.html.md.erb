@@ -12,11 +12,7 @@ The primary role of UAA is as an OAuth2 provider, issuing tokens for client apps
 
 UAA has endpoints for managing user accounts and for registering OAuth2 clients, as well as various other management functions.
 
-<<<<<<< HEAD
-Different runtimes and services use separate UAA instances. <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.platform_name %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances %= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA. You must log into each runtime or service separately.
-=======
 Different runtimes and services use separate UAA instances. <%= vars.app_runtime_abbr %> has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.platform_name %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances <%= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA. You must log into each runtime or service separately.
->>>>>>> f9abb5e... Corrected variables
 
 
 ## <a id='quickstart'></a> Quick Start
@@ -114,7 +110,7 @@ To access and use a locally-deployed UAA server:
       scope: clients.read clients.secret clients.write uaa.admin clients.admin scim.write scim.read
       jti: 19f25e6ca9cc4eb2a7f5016e441ce8d4
     </pre>
-    Copy the access token from this output for the following step.
+    Copy the access token from this output for the next step.
 
 1. Run `uaac token decode ACCESS-TOKEN-VALUE` to view information in the token, which is encoded using the JSON Web Token (JWT) format. Replace `ACCESS-TOKEN-VALUE` with your access token, copied from the `uaac context` output. The UAAC should display all the claims inside the token body. For example:
 
@@ -197,7 +193,7 @@ To access and use a UAA server that you pushed as an app to <%= vars.platform_na
     }
     </pre>
 
-1. Install the Cloud Foundry UAA Command Line Client (UAAC) Ruby gem by running:
+1. Install the UAA Command Line Client (UAAC) Ruby gem by running:
 
     ```
     gem install cf-uaac
