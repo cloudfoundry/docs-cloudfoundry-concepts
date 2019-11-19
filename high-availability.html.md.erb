@@ -14,7 +14,11 @@ This topic describes the components used to ensure high availability in <%= vars
 
 ## <a id='components'></a> Components of a High Availability Deployment
 
-This section describes the system components needed to ensure high availability.
+This section describes how to ensure high availability for your deployment with the following components:
+
+* Availability zones. See [Availability Zones](#azs).
+* External load balancers. See [External Load Balancers](#external-lbs).
+* Blob storage. See [Blob Storage](#blobstore).
 
 ### <a id='azs'></a> Availability Zones
 
@@ -27,20 +31,20 @@ A deployment with three or more availability zones operates uninterrupted when e
 
 ### <a id='external-lbs'></a> External Load Balancers
 
-Production environments should use a highly-available customer-provided load balancing solution that does the following:
+To ensure high availability for a production environments, use a highly-available customer-provided load balancing solution that does the following:
 
 * Provides load balancing to each of the <%= vars.product_short %> Router IP addresses
 * Supports SSL termination with wildcard DNS location
 * Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
 * (Optional) Supports WebSockets
 
-If you are deploying in lab and test environments, the `use-haproxy.yml` ops file enables HAProxy for your foundation.
+For lab and test environments, the `use-haproxy.yml` ops file enables HAProxy for your foundation.
 
 <%= vars.external_lb %>
 
 ### <a id='blobstore'></a> Blob Storage
 
-For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
+Blobs are large binary files. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible service. 
 
 If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
 
