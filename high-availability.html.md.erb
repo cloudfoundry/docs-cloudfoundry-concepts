@@ -12,15 +12,7 @@ owner: Release Integration
 This topic describes the components used to ensure high availability in <%= vars.app_runtime_full %>, vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
 
 
-## <a id='components'></a> Components of a High Availability Deployment
-
-This section describes how to ensure high availability for your deployment with the following components:
-
-* Availability zones. See [Availability Zones](#azs).
-* External load balancers. See [External Load Balancers](#external-lbs).
-* Blob storage. See [Blob Storage](#blobstore).
-
-### <a id='azs'></a> Availability Zones
+## <a id='azs'></a> Availability Zones for High Availability
 
 Availability Zones (AZs) are locations where public cloud services offer data centers. 
 
@@ -29,7 +21,7 @@ You can assign and scale components in multiple AZs to help maintain high availa
 A deployment with three or more availability zones operates uninterrupted when entire AZs become unavailable. For example, a three-AZ deployment stays available when one entire AZ goes down, and a five-AZ deployment stays available during an outage of up to two AZs.
 
 
-### <a id='external-lbs'></a> External Load Balancers
+## <a id='external-lbs'></a> External Load Balancers for High Availability
 
 To ensure high availability for a production environments, use a highly-available customer-provided load balancing solution that does the following:
 
@@ -42,7 +34,7 @@ For lab and test environments, the `use-haproxy.yml` ops file enables HAProxy fo
 
 <%= vars.external_lb %>
 
-### <a id='blobstore'></a> Blob Storage
+## <a id='blobstore'></a> Blob Storage for High Availability
 
 Blobs are large binary files. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible service. 
 
@@ -75,16 +67,20 @@ Scaling horizontally means increasing the number of VM instances dedicated to ru
 
 You can horizontally scale most <%= vars.product_short %> components to multiple instances to achieve the redundancy required for high availability. 
 
-You should also distribute the instances of multiply-scaled components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. If you use more than three AZs, ensure that you use an odd number of AZs.
+You should also distribute the instances of components with multiple instances across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. If you use more than three AZs, ensure that you use an odd number of AZs.
 
 <%= vars.scaling_ert %>
 
 <%= partial vars.scale_table %>
 
 
-## <a id='supporting-scaling'></a> Configure Support for High Availability Components
+## <a id='supporting-scaling'></a> Support Component Scaling
 
-This section describes the surrounding infrastructure required to support scaling component VMs for high availability.
+The ability to vertically scale component VMs is important for high availability. 
+
+To scale component VMs, you must ensure that the surrounding infrastructure of your deployment supports VM scaling.
+
+This section describes the infrastructure required to support scaling component VMs for high availability.
 
 <% if vars.platform_code == 'CF' %>
 <%= vars.max_in_flight_header %>
@@ -95,15 +91,15 @@ This section describes the surrounding infrastructure required to support scalin
 
 ### <a id='resource-pools'></a> Resource Pools
 
-To configure your resource pools according to the requirements of your deployment, see <%=vars.pools_link%>
+Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related resources, like IPs and storage, are available to scale.
 
-Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related resources, like IPs and storage, will be available when scaling.
+To configure your resource pools according to the requirements of your deployment, see <%=vars.pools_link%>
 
 <%=vars.pcf_pools%>
 
 ### <a id='databases'></a> Databases
 
-For database services deployed outside <%= vars.product_short %>, plan to leverage your infrastructure's high availability features and to configure backup and restore where possible. <%= vars.scaling_ert_db %>
+For database services deployed outside <%= vars.product_short %>, use the high availability features included with your infrastructure. Also, configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
 <p class="note"><strong>Note:</strong> Data services may have single points of failure depending on their configuration.</p>
 
