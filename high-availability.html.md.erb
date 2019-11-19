@@ -28,7 +28,9 @@ Availability Zones (AZs) are locations where public cloud services offer data ce
 
 You can assign and scale components in multiple AZs to help maintain high availability through redundancy. To configure sufficient redundancy, deploy <%= vars.product_short %> across three or more AZs and assign multiple component instances to different AZs. 
 
-<p class="note"><b>Note:</b> Always use an odd number of AZs. This ensures that your deployment remains available when greater than half of the AZs are available. For example, a deployment with three AZs stays available when one AZ goes down and two AZs are still available.</p>
+Always use an odd number of AZs. This ensures that your deployment remains available as long as greater than half of the AZs are available. 
+
+For example, a deployment with three AZs stays available when one AZ is unavailable. A deployment with five AZs stays available when two AZs are unavailable.
 
 ### <a id='external-lbs'></a> External Load Balancers
 
