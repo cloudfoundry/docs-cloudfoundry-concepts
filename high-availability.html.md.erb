@@ -8,11 +8,21 @@ owner: Release Integration
 <% current_page.data.title = "High Availability in " + vars.product_short if vars.product_name != 'CF'  %>
 
 
-
 This topic describes the components used to ensure high availability in <%= vars.app_runtime_full %>, vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
 
 
-## <a id='azs'></a> Availability Zones for High Availability
+## <a id='overview'></a> Overview
+
+A system with high availability provides higher than typical uptime through redundancy of apps and component VMs. You can create the redundancy required for high availability in several ways, such as running VMs in multiple availability zones and using external blob storage solutions. 
+
+The sections in this topic provide guidance on configuring your <%= vars.product_short %> deployment for high availability. 
+
+## <a id='high-availability'></a> Components of High Availability Deployments
+
+This section describes how you can use availability zones, external load balancers, and external blob storage to ensure high availability for your deployment. 
+
+
+### <a id='azs'></a> Availability Zones
 
 Availability Zones (AZs) are locations where public cloud services offer data centers. 
 
@@ -20,7 +30,7 @@ You can assign and scale components in multiple AZs to help maintain high availa
 
 <p class="note"><b>Note:</b> Always use an odd number of AZs. This ensures that your deployment remains available when greater than half of the AZs are available. For example, a deployment with three AZs stays available when one AZ goes down and two AZs are still available.</p>
 
-## <a id='external-lbs'></a> External Load Balancers for High Availability
+### <a id='external-lbs'></a> External Load Balancers
 
 External load balancers distribute traffic coming from the internet to your internal network. 
 
@@ -35,7 +45,7 @@ For lab and test environments, the `use-haproxy.yml` ops file enables HAProxy fo
 
 <%= vars.external_lb %>
 
-## <a id='blobstore'></a> Blob Storage for High Availability
+### <a id='blobstore'></a> External Blob Storage
 
 Blobs are large binary files. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible service. 
 
@@ -53,7 +63,8 @@ You can scale platform capacity vertically by adding memory and disk, or horizon
 For more information about scaling applications and maintaining app uptime, see the following topics:
 
 * [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html)
-*[Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
+
+* [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html)
 
 ### <a id='vert-scaling'></a> Scale Vertically
 
@@ -71,18 +82,18 @@ Scaling horizontally means increasing the number of instances of VMs that run a 
 
 You can horizontally scale most <%= vars.product_short %> component VMs to multiple instances for high availability. 
 
-You should also distribute the instances of components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. For more information about using AZs, see [Availability Zones for High Availability](#azs).
+You should also distribute the instances of components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. For more information about using AZs, see [Availability Zones](#azs).
+
+## <a id='instance-counts'></a> Recommended Instance Counts for High Availability
 
 <%= vars.scaling_ert %>
 
 <%= partial vars.scale_table %>
 
 
-## <a id='supporting-scaling'></a> Support Component Scaling
+## <a id='supporting-scaling'></a> Infrastructure to Support Component Scaling
 
-The ability to scale component VMs is important for high availability. 
-
-To scale component VMs, you must ensure that the surrounding infrastructure of your deployment supports VM scaling.
+The ability to scale component VMs is important for high availability. To scale component VMs, you must ensure that the surrounding infrastructure of your deployment supports VM scaling.
 
 This section describes the infrastructure required to support scaling component VMs for high availability.
 
