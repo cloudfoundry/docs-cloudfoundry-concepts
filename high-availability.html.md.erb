@@ -16,10 +16,9 @@ This topic describes the components used to ensure high availability in <%= vars
 
 Availability Zones (AZs) are locations where public cloud services offer data centers. 
 
-You can assign and scale components in multiple AZs to help maintain high availability through redundancy. To configure sufficient redundancy, deploy <%= vars.product_short %> across three or more AZs and assign multiple component instances to different AZs.
+You can assign and scale components in multiple AZs to help maintain high availability through redundancy. To configure sufficient redundancy, deploy <%= vars.product_short %> across three or more AZs and assign multiple component instances to different AZs. 
 
-A deployment with three or more availability zones operates uninterrupted when entire AZs become unavailable. For example, a three-AZ deployment stays available when one entire AZ goes down, and a five-AZ deployment stays available during an outage of up to two AZs.
-
+<p class="note"><b>Note:</b> Always use an odd number of AZs. This ensures that your deployment remains available when greater than half of the AZs are available. For example, a deployment with three AZs stays available when one AZ goes down and two AZs are still available.</p>
 
 ## <a id='external-lbs'></a> External Load Balancers for High Availability
 
@@ -67,7 +66,7 @@ Scaling horizontally means increasing the number of VM instances dedicated to ru
 
 You can horizontally scale most <%= vars.product_short %> components to multiple instances to achieve the redundancy required for high availability. 
 
-You should also distribute the instances of components with multiple instances across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. If you use more than three AZs, ensure that you use an odd number of AZs.
+You should also distribute the instances of components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. For more information about using AZs, see [Availability Zones for High Availability](#azs).
 
 <%= vars.scaling_ert %>
 
@@ -76,7 +75,7 @@ You should also distribute the instances of components with multiple instances a
 
 ## <a id='supporting-scaling'></a> Support Component Scaling
 
-The ability to vertically scale component VMs is important for high availability. 
+The ability to scale component VMs is important for high availability. 
 
 To scale component VMs, you must ensure that the surrounding infrastructure of your deployment supports VM scaling.
 
