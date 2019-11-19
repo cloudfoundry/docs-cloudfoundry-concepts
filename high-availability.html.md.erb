@@ -18,9 +18,12 @@ This section describes the system components needed to ensure high availability.
 
 ### <a id='azs'></a> Availability Zones
 
-During product updates and platform upgrades, the VMs in a deployment restart in succession, rendering them temporarily unavailable. During outages, VMs go down in a less orderly way. Spreading components across Availability Zones (AZs) and scaling them to a sufficient level of redundancy maintains high availability during both upgrades and outages and can ensure zero downtime.
+Availability Zones (AZs) are locations where public cloud services offer data centers. 
 
-Deploying <%= vars.product_short %> across three or more AZs and assigning multiple component instances to different AZ locations lets a deployment operate uninterrupted when entire AZs become unavailable. <%= vars.product_short %> maintains its availability as long as a majority of the AZs remain accessible. For example, a three-AZ deployment stays up when one entire AZ goes down, and a five-AZ deployment can withstand an outage of up to two AZs with no impact on uptime.
+You can assign and scale components in multiple AZs to help maintain high availability through redundancy. To configure sufficient redundancy, deploy <%= vars.product_short %> across three or more AZs and assign multiple component instances to different AZs.
+
+A deployment with three or more availability zones operates uninterrupted when entire AZs become unavailable. For example, a three-AZ deployment stays available when one entire AZ goes down, and a five-AZ deployment stays available during an outage of up to two AZs.
+
 
 ### <a id='external-lbs'></a> External Load Balancers
 
