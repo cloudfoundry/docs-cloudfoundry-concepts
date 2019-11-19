@@ -22,7 +22,9 @@ You can assign and scale components in multiple AZs to help maintain high availa
 
 ## <a id='external-lbs'></a> External Load Balancers for High Availability
 
-To ensure high availability for a production environments, use a highly-available customer-provided load balancing solution that does the following:
+External load balancers distribute traffic coming from the internet to your internal network. 
+
+To ensure high availability for production environments, use a highly-available customer-provided external load balancing solution that does the following:
 
 * Provides load balancing to each of the <%= vars.product_short %> Router IP addresses
 * Supports SSL termination with wildcard DNS location
@@ -42,29 +44,32 @@ If you store blobs internally using WebDAV or NFS, these components run as singl
 <%= vars.collector_singleton %>
 
 
-## <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling for High Availability
+## <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
 
-You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of <%= vars.product_short %> components. The nature of the applications you host on <%= vars.product_short %> should determine whether you should scale vertically or horizontally.
+You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of <%= vars.product_short %> components. The type of apps you host on <%= vars.product_short %> determines whether you scale vertically or horizontally.
 
 <%= image_tag("scale_cf.png", :height => "450px", :width => "475px") %>
 
-For more information about scaling applications and maintaining app uptime, see [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
+For more information about scaling applications and maintaining app uptime, see the following topics:
+
+* [Scaling an Application Using cf scale](../devguide/deploy-apps/cf-scale.html)
+*[Using Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html).
 
 ### <a id='vert-scaling'></a> Scale Vertically
 
 Scaling vertically means adding memory and disk to your component VMs.
 
-To scale vertically, ensure that you allocate and maintain enough of the following:
+To scale vertically, allocate and maintain the following:
 
 * Free space on host Diego cell VMs so that apps expected to deploy can successfully be staged and run.
-* Disk space and memory in your deployment such that if one host VM is down, all instances of apps can be placed on the remaining Host VMs.
+* Disk space and memory in your deployment so that if one host VM is down, all instances of apps can be placed on the remaining host VMs.
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
 ### <a id='horiz-scaling'></a> Scale Horizontally
 
-Scaling horizontally means increasing the number of VM instances dedicated to running a functional component of the system.
+Scaling horizontally means increasing the number of instances of VMs that run a functional component of a system.
 
-You can horizontally scale most <%= vars.product_short %> components to multiple instances to achieve the redundancy required for high availability. 
+You can horizontally scale most <%= vars.product_short %> component VMs to multiple instances for high availability. 
 
 You should also distribute the instances of components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. For more information about using AZs, see [Availability Zones for High Availability](#azs).
 
