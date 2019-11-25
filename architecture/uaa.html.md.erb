@@ -531,5 +531,5 @@ The following table describes the scopes of privilege in other <%= vars.app_runt
 
 | Scope | Description |
 | ----- | ----------- |
-| `doppler.firehose` | This scope gives the ability to read logs from the <%= vars.loggregator_firehose_link %> endpoint. |
+| `doppler.firehose` / `logs.admin` | This scope gives the ability to read logs and metrics from the <%= vars.loggregator_firehose_link %> or LogCache. |
 | `notifications.write` | This scope gives the ability to send notifications through the <%= vars.notifications_link %>. |
