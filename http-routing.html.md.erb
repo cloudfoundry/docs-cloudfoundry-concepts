@@ -224,19 +224,16 @@ The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP 
 
 With sticky sessions, when multiple instances of an app are running on Cloud Foundry, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
 
-* To support sticky sessions, configure your app to return a `JSESSIONID` cookie in responses. The app generates a `JSESSIONID` as a long hash in the following format:
-<pre class="terminal">
-1A530637289A03B07199A44E8D531427
-</pre>
+* To support sticky sessions, configure your app to return a sticky session cookie in responses. The cookies the routing tier uses for sticky sessions are configurable and can be found under the `router.sticky_session_cookie_names` config key.
 
-* If an app returns a `JSESSIONID` cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the app instance based on its GUID in the following format:
+* If an app returns a sticky session cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the app instance based on its GUID in the following format:
 <pre class="terminal">
 323f211e-fea3-4161-9bd1-615392327913
 </pre>
 
-* On subsequent requests, the client must provide both the `JSESSIONID` and `VCAP_ID` cookies.
+* On subsequent requests, the client must provide both the sticky session and `VCAP_ID` cookies.
 
-The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The `JSESSIONID` cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
+The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The sticky session cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
 
 <p class="note"><strong>Note:</strong> Cloud Foundry does not persist or replicate HTTP session data across app instances. If an app instance crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared by all instances of an app, store session data in a CF marketplace service that offers data persistence.</p>
 
