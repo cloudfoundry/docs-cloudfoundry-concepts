@@ -49,7 +49,7 @@ For lab and test environments, the `use-haproxy.yml` ops file enables HAProxy fo
 
 ### <a id='blobstore'></a> External Blob Storage
 
-Blobs are large binary files. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible service. 
+Blobs are large binary files, such as PDFs or images. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible service. 
 
 You can also store blobs internally using WebDAV or NFS. These components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
 
@@ -57,7 +57,13 @@ You can also store blobs internally using WebDAV or NFS. These components run as
 
 ## <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
 
-You can scale platform capacity vertically by adding memory and disk, or horizontally by adding more VMs running instances of <%= vars.product_short %> components. The type of apps you host on <%= vars.product_short %> determines whether you scale vertically or horizontally.
+You can scale platform capacity in the following ways:
+
+* **Vertical scaling**: Add memory and disk to each VM.
+
+* **Horizontal scaling**: Add more VMs that run instances of <%= vars.product_short %> components. 
+
+The type of apps you host on <%= vars.product_short %> determines whether you scale vertically or horizontally.
 
 For more information about scaling applications and maintaining app uptime, see the following topics:
 
