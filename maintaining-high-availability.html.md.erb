@@ -3,27 +3,29 @@ title: How Cloud Foundry Maintains High Availability
 owner: Release Integration
 ---
 
+<%# Reset page title based on product title %>
+<% current_page.data.title = "How " + vars.product_short + " Maintains High Availability" if vars.product_name != 'CF'  %>
 
-This topic explains how <%= vars.first_product_name %> deployments include several layers of high availability to keep applications running during system failure. These layers include AZs, application health management, process monitoring, and VM resurrection.
+This topic explains how <%= vars.product_runtime %> (<%= vars.product_short %>) deployments include several layers of high availability to keep apps running during system failure. These layers include AZs, app health management, process monitoring, and VM resurrection.
 
 
 ## <a id='azs-2'></a> Availability Zones
 
-<%= vars.product_name %> supports deploying applications instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.product_name %> balances the applications you deploy across the AZs you defined. If an AZ goes down, you still have application instances running in another. 
+<%= vars.product_name %> supports deploying apps instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.product_name %> balances the apps you deploy across the AZs you defined. If an AZ goes down, you still have app instances running in another. 
 
 <%= vars.azs %>
 
 
 ## <a id='health-management-apps'></a> Health Management for App Instances
 
-If you lose application instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. Under Diego architecture, the nsync, BBS, and Cell Rep components track the number of instances of each application that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new application instances.
+If you lose app instances for any reason, such as a bug in the app or an AZ going down, <%= vars.product_name %> restarts new instances to maintain capacity. Under Diego architecture, the nsync, BBS, and Cell Rep components track the number of instances of each app that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new app instances.
 
-For more information about the nsync, BBS, and Cell Rep components, see the [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) section of the _Cloud Foundry Components_ topic.
+For more information about the nsync, BBS, and Cell Rep components, see the [nsync, BBS, and Cell Rep](./architecture/index.html#nsync-bbs) section of the _<%= vars.product_short %> Components_ topic.
 
 
 ## <a id='monitored-processes'></a> Process Monitoring
 
-<%= vars.product_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your applications running, such as nsync, BBS, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
+<%= vars.product_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your apps running, such as nsync, BBS, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
 
 
 ## <a id='health-monitoring'></a> Resurrection for VMs
