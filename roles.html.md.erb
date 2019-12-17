@@ -3,11 +3,16 @@ title: Orgs, Spaces, Roles, and Permissions
 owners: CAPI, Identity
 ---
 
-<%= vars.product_name %> uses a role-based access control (RBAC) system to grant <%=vars.product_full %> users permissions appropriate to their role within an org or a space. This topic describes how orgs and spaces work within a <%= vars.product_name %> deployment, and how different <%=vars.product_full %> User roles operate within those contexts.
+This topic describes orgs and spaces in <%= vars.product_runtime %> (<%= vars.product_short %>) foundations. It also describes the default permissions for user roles in <%= vars.product_short %>.
 
 Admins, Org Managers, and Space Managers can assign user roles using the [cf CLI](../cf-cli/getting-started.html#user-roles)<%= vars.or_apps_man %>.
 
-<p class="note"><strong>Note:</strong> Before you assign a <strong>space role</strong> to a user, you must assign an <strong>org role</strong> to the user.</p>
+
+## <a id="overview"></a> Overview
+
+<%= vars.product_short %> uses a role-based access control (RBAC) system to grant appropriate permissions to <%= vars.product_short %> users.
+
+Admins, Org Managers, and Space Managers can assign user roles using the Cloud Foundry Command Line Interface (cf CLI). For more information, see [Users and Roles](../cf-cli/getting-started.html#user-roles) in _Getting Started with the cf CLI_<%= vars.or_apps_man %>.
 
 
 ## <a id='orgs'></a> Orgs
@@ -36,6 +41,8 @@ A user can have one or more roles. The combination of these roles defines the us
 Roles can be assigned different scopes of User Account and Authentication (UAA) privileges. For more information about UAA scopes, see [Scopes](https://docs.cloudfoundry.org/concepts/architecture/uaa.html#scopes) in _Component: User Account and Authentication (UAA) Server_.
 
 For non-admin users, the `cloud_controller.read` scope is required to view resources, and the `cloud_controller.write` scope is required to create, update, and delete resources.
+
+The following describes each type of user role in <%= vars.product_short %>:
 
 <%= vars.admin_role %>
 <%= vars.admin_read_only_role %>
