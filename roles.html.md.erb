@@ -3,17 +3,17 @@ title: Orgs, Spaces, Roles, and Permissions
 owners: CAPI, Identity
 ---
 
-This topic describes orgs and spaces in <%= vars.app_runtime_full %> foundations. It also describes the default permissions for user roles in <%= vars.app_runtime %>.
+This topic describes orgs and spaces in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) foundations. It also describes the default permissions for user roles in <%= vars.app_runtime_abbr %>.
 
 
 ## <a id="overview"></a> Overview
 
-<%= vars.app_runtime %> uses a role-based access control (RBAC) system to grant appropriate permissions to <%= vars.app_runtime %> users.
+<%= vars.app_runtime_abbr %> uses a role-based access control (RBAC) system to grant appropriate permissions to <%= vars.app_runtime_abbr %> users.
 
 Admins, Org Managers, and Space Managers can assign user roles using the Cloud Foundry Command Line Interface (cf CLI). For more information, see [Users and Roles](../cf-cli/getting-started.html#user-roles) in _Getting Started with the cf CLI_<%= vars.or_apps_man %>.
 
 
-## <a id='orgs'></a>Orgs
+## <a id='orgs'></a> Orgs
 
 An org is a development account that an individual or multiple collaborators can own and use. All collaborators access an org with user accounts, which have roles such as Org Manager, Org Auditor, and Org Billing Manager. Collaborators in an org share a resource quota plan, apps, services availability, and custom domains.
 
@@ -45,7 +45,7 @@ A user account represents an individual person within the context of a <%= vars.
 
 Roles can be assigned different scopes of User Account and Authentication (UAA) privileges. For more information about UAA scopes, see [Scopes](https://docs.cloudfoundry.org/concepts/architecture/uaa.html#scopes) in _Component: User Account and Authentication (UAA) Server_.
 
-The following describes each type of user role in <%= vars.app_runtime %>:
+The following describes each type of user role in <%= vars.app_runtime_abbr %>:
 
 <%= vars.admin_role %>
 <%= vars.admin_read_only_role %>
@@ -74,14 +74,14 @@ Before you assign a space role to a user, you must assign an org role to the use
 
 ## <a id='permissions'></a> User Role Permissions
 
-Each user role includes different permissions in a <%= vars.app_runtime_full %> foundation. The following sections describe the permissions associated with each user role in both active and suspended orgs in <%= vars.app_runtime %>.
+Each user role includes different permissions in a <%= vars.app_runtime_full %> foundation. The following sections describe the permissions associated with each user role in both active and suspended orgs in <%= vars.app_runtime_abbr %>.
 
 ### <a id='activeroles'></a> Roles and Permissions for Active Orgs
 
-The following table describes the default permissions for various <%= vars.app_runtime %> roles in active orgs.
+The following table describes the default permissions for various <%= vars.app_runtime_abbr %> roles in active orgs.
 
 <% if vars.platform_code.include?("CF") %>
-<p class="note"><b>Note:</b> You can use feature flags to edit some of the default permissions in the following table. For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.
+<p class="note"><strong>Note:</strong> You can use feature flags to edit some of the default permissions in the following table. For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.
 <% end %>
 
 <%= partial vars.roles_table %>
