@@ -3,11 +3,11 @@ title: Container-to-Container Networking
 owner: Container-to-Container Networking
 ---
 
-This topic provides an overview of how Container-to-Container Networking works in <%= vars.app_runtime_full %>.
+This topic provides an overview of how container-to-container networking works in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>.
 
-<p class="note"><b>Note:</b> Container-to-container networking is not available for apps hosted on Windows.</p>
+<p class="note"><strong>Note:</strong> Container-to-container networking is not available for apps hosted on Windows.</p>
 
-The Container-to-Container Networking feature enables app instances to communicate with each other directly.
+The container-to-container networking feature enables app instances to communicate with each other directly.
 <%= vars.cf_networking %>
 
 
@@ -15,18 +15,15 @@ The Container-to-Container Networking feature enables app instances to communica
 
 ### <a id='overview'></a> Overview
 
-Container-to-Container Networking integrates with [Garden-runC](./architecture/garden.html#garden-runc) in a [Diego](./diego/diego-architecture.html) deployment. 
-The [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release) includes several core components, as well as swappable components. 
+Container-to-container networking integrates with [Garden-runC](./architecture/garden.html#garden-runc) in a [Diego](./diego/diego-architecture.html) deployment. The [CF Networking Release](https://github.com/cloudfoundry-incubator/cf-networking-release) includes several core components, as well as swappable components. 
 
-To understand the components and how they work, see the diagram and tables below. 
-The diagram highlights <%= vars.app_runtime_full %> components in blue and green.
-The diagram also highlights swappable components in red.
+To understand the components and how they work, see the diagram and tables below. The diagram highlights <%= vars.app_runtime_abbr %> components in blue and green. The diagram also highlights swappable components in red.
 
 ![c2c architecture diagram](./images/c2c-arch.png)
 
 ### <a id='core'></a> Core Components
 
-The Container-to-Container Networking BOSH release includes the following core components:
+The container-to-container networking BOSH release includes the following core components:
 
 <table>
   <tr>
@@ -35,31 +32,27 @@ The Container-to-Container Networking BOSH release includes the following core c
   </tr>
   <tr>
     <td>Policy Server</td>
-    <td>A central management node that does the following:
+    <td>A central management node that:
       <ul>
         <li>Maintains a database of policies for traffic between apps. 
-            The cf CLI calls an API to create or update a record 
-            in the policy database whenever you create or remove a policy.</li>
+            The cf CLI calls an API to create or update a record in the policy database whenever you create or remove a policy.</li>
         <li>Exposes a JSON REST API used by the cf CLI. This API serves traffic using TLS.</li>
       </ul></td>
   </tr>
   <tr>
     <td>Garden External Networker</td>
     <td> 
-      A Garden-runC add-on deployed to every Diego cell that does the following:
+      A Garden-runC add-on deployed to every Diego Cell that:
       <ul>
-        <li>Invokes the CNI plugin component to set up the network for each app</li>
-        <li>Forwards ports to support incoming connections from the Gorouter, TCP Router, and Diego SSH Proxy. 
-            This keeps apps externally reachable.</li>
-        <li>Installs outbound whitelist rules to support Application Security Groups (ASGs). </li>
+        <li>Invokes the CNI plugin component to set up the network for each app.</li>
+        <li>Forwards ports to support incoming connections from the Gorouter, TCP Router, and Diego SSH Proxy. This keeps apps externally reachable.</li>
+        <li>Installs outbound whitelist rules to support Application Security Groups (ASGs).</li>
       </ul>
     </td>
   </tr>
 </table>
 
 ### <a id='swap'></a> Swappable Components
-
-The Container-to-Container Networking BOSH release includes the following swappable components:
 
 <table>
   <tr>
@@ -70,8 +63,8 @@ The Container-to-Container Networking BOSH release includes the following swappa
   <td>Silk CNI plugin<br></td>
   <td>A plugin that provides IP address management and network connectivity to app instances as follows:
   <ul>
-  <li>Uses a shared VXLAN overlay network to assign each container a unique IP address</li>
-  <li>Installs network interface in container using the Silk VXLAN backend. This is a shared, flat L3 network.</li>
+  <li>Uses a shared VXLAN overlay network to assign each container a unique IP address.</li>
+  <li>Installs network interface in container using the Silk VXLAN back end. This is a shared, flat L3 network.</li>
   </td>
   </ul>
   </tr>
@@ -79,9 +72,9 @@ The Container-to-Container Networking BOSH release includes the following swappa
   <td>VXLAN Policy Agent<br></td>
   <td>Enforces network policy for traffic between apps as follows:
   <ul>
-  <li>Discovers desired network policies from the Policy Server Internal API</li>
-  <li>Updates iptables rules on the Diego cell to allow whitelisted inbound traffic</li>
-  <li>Tags outbound traffic with the unique identifier of the source app using the VXLAN Group-Based Policy (GBP) header</li>
+  <li>Discovers desired network policies from the Policy Server Internal API.</li>
+  <li>Updates iptables rules on the Diego Cell to allow approved inbound traffic.</li>
+  <li>Tags outbound traffic with the unique identifier of the source app using the VXLAN Group-Based Policy (GBP) header.</li>
   </ul>
   </td>
   </tr>
@@ -90,7 +83,7 @@ The Container-to-Container Networking BOSH release includes the following swappa
 
 ## <a id='app-comm'></a> App Instance Communication
 
-The diagram below illustrates how app instances communicate in a deployment with Container-to-Container Networking enabled. 
+The diagram below illustrates how app instances communicate in a deployment with container-to-container networking enabled. 
 In this example, the operator creates two policies to regulate the flow of traffic between **App A**, **App B**, and **App C**. 
 
 * Allow traffic from **App A** to **App B**
@@ -102,29 +95,28 @@ If traffic and its direction is not explicitly allowed, it is denied. For exampl
 
 ### <a id='overlay-network'></a> Overlay Network
 
-Container-to-Container Networking uses an overlay network to manage communication between app instances. 
+Container-to-container networking uses an overlay network to manage communication between app instances. 
 
-Overlay networks are not externally routable, and traffic sent between containers does not exit the overlay. You can use the same overlay network range for different <%= vars.product_short %> deployments in your environment.
+Overlay networks are not externally routable, and traffic sent between containers does not exit the overlay. You can use the same overlay network range for different <%= vars.app_runtime_abbr %> deployments in your environment.
 
-The overlay network range defaults to `10.255.0.0/16`.
-You can modify the default to any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range that meets the following requirements:
+The overlay network range defaults to `10.255.0.0/16`. You can modify the default to any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range that meets the following requirements:
 
   * The range is not used by services that app containers access. 
-  * The range is not used by the underlying <%= vars.product_short %> infrastructure.
+  * The range is not used by the underlying <%= vars.app_runtime_abbr %> infrastructure.
 
-All Diego cells in your <%= vars.product_short %> deployment share this overlay network. By default, each cell is allocated a /24 range that supports 254 containers per cell, one container for each of the usable IP addresses, `.1` through `.254`. To modify the number of Diego cells your overlay network supports, see [Overlay Network](../devguide/deploy-apps/cf-networking.html#overlay) in _Configuring Container-to-Container Networking_.
+All Diego Cells in your <%= vars.app_runtime_abbr %> deployment share this overlay network. By default, each Diego Cell is allocated a /24 range that supports 254 containers per Diego Cell, one container for each of the usable IP addresses, `.1` through `.254`. To modify the number of Diego Cells your overlay network supports, see [Overlay Network](../devguide/deploy-apps/cf-networking.html#overlay) in _Configuring Container-to-Container Networking_.
 
-<%= vars.product_short %> container networking is currently supported only on Linux.
+<%= vars.app_runtime_abbr %> container networking is currently supported only on Linux.
 
-<p class="note warning"><strong>WARNING:</strong> The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego cells cannot reach any endpoint that has a conflicting IP address.</p>
+<p class="note warning"><strong>Warning:</strong> The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego Cells cannot reach any endpoint that has a conflicting IP address.</p>
 
 <p class="note"><strong>Note:</strong> Traffic to app containers from the Gorouter or from app containers to external services uses cell IP addresses and NAT, not the overlay network.</p>
 
 ### <a id="policies"></a> Policies
 
-Enabling Container-to-Container Networking for your deployment allows you to create policies for communication between app instances. The Container-to-Container Networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
+Enabling container-to-container networking for your deployment allows you to create policies for communication between app instances. The container-to-container networking feature also provides a unique IP address to each app container and provides direct IP reachability between app instances.
 
-The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly without going through the Gorouter, a load balancer, or a firewall. Container-to-Container Networking supports UDP and TCP, and you can configure policies for multiple ports. These policies apply immediately without having to restart the app. 
+The policies you create specify a source app, destination app, protocol, and port so that app instances can communicate directly without going through the Gorouter, a load balancer, or a firewall. Container-to-container networking supports UDP and TCP, and you can configure policies for multiple ports. These policies apply immediately without having to restart the app. 
 
 Additionally, policies use and and track the GUIDs of the apps. The policies continue to work when apps redeploy, or if they crash and Diego places them in a new container. Pushing a brand new app requires a new policy, but not updates to an existing app because an app always retains its GUID. 
 
@@ -133,21 +125,21 @@ Additionally, policies use and and track the GUIDs of the apps. The policies con
 
 ## <a id='service-discovery'></a> App Service Discovery
 
-The <%= vars.app_runtime_full %> platform supports DNS-based service discovery that lets apps find each others' internal addresses. For example, a front end app instance can use the service discovery mechanism to establish communications with a back end app instance. See the [Developer Guide](../devguide/deploy-apps/cf-networking.html#discovery) for how to set up and use app service discovery.
+The <%= vars.app_runtime_abbr %> platform supports DNS-based service discovery that lets apps find each other's internal addresses. For example, a front end app instance can use the service discovery mechanism to establish communications with a back end app instance. To set up and use app service discovery, see the [Developer Guide](../devguide/deploy-apps/cf-networking.html#discovery).
 
-Container-to-Container app service discovery does not provide client-side load balancing or circuit-breaking, and it does not apply to `cf marketplace` services or require [application binding](../devguide/services/application-binding.html). It just lets apps publish service endpoints to each other, unbrokered and unmediated.
+Container-to-container app service discovery does not provide client-side load balancing or circuit-breaking, and it does not apply to `cf marketplace` services or require app binding. It just lets apps publish service endpoints to each other, unbrokered and unmediated.
 
 <% end %>
 
 
 ## <a id="alt-stack"></a> Alternative Network Stacks
 
-The BOSH release that contains the Container-to-Container Networking feature is composed of a pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see the [Container-to-Container Networking BOSH release](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) documentation.
+The BOSH release that contains the container-to-container networking feature is composed of a pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see [3rd Party Plugin Development for Container Networking](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) in the CF Networking Release repository on GitHub.
 
 
 ## <a id="c2cvsasg"></a> Container-to-Container Networking versus ASGs
 
-Both application security groups (ASGs) and Container-to-Container Networking policies affect traffic from app instances. The following table highlights differences between ASGs and Container-to-Container Networking policies.
+Both app security groups (ASGs) and container-to-container networking policies affect traffic from app instances. The following table highlights differences between ASGs and container-to-container networking policies.
 
 <table>
   <tr>
