@@ -11,11 +11,11 @@ This topic describes Cloud Foundry and how it works.
 
 <% else %>
 
-This topic describes <%= vars.product_full %> and how it works with Cloud Foundry.
+This topic describes <%= vars.product_runtime %> (<%= vars.product_short %>) and how it works with <%= vars.product_name %>.
 
 <% end %>
 
-## <a id='overview'></a>Overview
+## <a id='overview'></a> Overview
 
 Cloud platforms let anyone deploy network apps or services and make them available to the world in a few minutes. When an app becomes popular, the cloud scales it to handle more traffic, replacing build-out and migration efforts that once took months with a few keystrokes. Cloud platforms enable you to focus exclusively on your apps and data without worrying about underlying infrastructure.
 
@@ -28,80 +28,86 @@ The following diagram shows the layers of a typical technology stack, and compar
 See the following sections in this topic:
 
 <ul>
-  <li><a href="#about">About the Cloud Foundry Platform</a></li>
-  <li><a href="#how-it-works">How Cloud Foundry Works</a></li>
+  <li><a href="#about">About <%= vars.product_name %></a></li>
+  <li><a href="#how-it-works">How <%= vars.product_name %> Works</a></li>
   <%= vars.concepts_product_model_link %>
 </ul>
 
-## <a id='about'></a>About the Cloud Foundry Platform
 
-This section describes why Cloud Foundry is an industry-standard cloud platform.
+## <a id='about'></a> About <%= vars.product_name %>
+
+This section describes why <%= vars.product_name %> is an industry-standard cloud platform.
 
 Not all cloud platforms are created equal. Some have limited language and framework support, lack key app services, or restrict deployment to a single cloud.
 
-As an industry-standard cloud platform, Cloud Foundry offers the following:
+As an industry-standard cloud platform, <%= vars.product_name %> offers the following:
 
-* **Open source code**: The platform's openness and extensibility prevent its users from being locked into a single framework, set of app services, or cloud. See the [Cloud Foundry project on GitHub](https://github.com/cloudfoundry).
-* **Deployment automation**: Developers can deploy their apps to Cloud Foundry using their existing tools and with zero modification to their code.
-* **Flexible infrastructure**: You can deploy Cloud Foundry to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack.
-* **Commercial options**: You can also use a PaaS deployed by a commercial Cloud Foundry cloud provider. See [Cloud Foundry Certified Platforms](https://www.cloudfoundry.org/certified-platforms/).
-* **Community support**: A broad community contributes to and supports Cloud Foundry. See [Welcome to the Cloud Foundry Community](https://www.cloudfoundry.org/community/).
+* **Open source code**: The platform's openness and extensibility prevent its users from being locked into a single framework, set of app services, or cloud. For more information, see the [Cloud Foundry](https://github.com/cloudfoundry) project on GitHub.
 
-Cloud Foundry is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps.
+* **Deployment automation**: Developers can deploy their apps to <%= vars.product_name %> using their existing tools and with zero modification to their code.
 
-## <a id='how-it-works'></a>How Cloud Foundry Works
+* **Flexible infrastructure**: You can deploy <%= vars.product_name %> to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack.
 
-To flexibly serve and scale apps online, Cloud Foundry has subsystems that perform specialized functions. The sections below describe how some of these main subsystems work.
+* **Commercial options**: You can also use a PaaS deployed by a commercial <%= vars.product_name %> cloud provider. For more information, see [Cloud Foundry Certified Platforms](https://www.cloudfoundry.org/certified-platforms/).
 
-### <a id='balances'></a>Load Balancing
+* **Community support**: A broad community contributes to and supports <%= vars.product_name %>. See [Welcome to the Cloud Foundry Community](https://www.cloudfoundry.org/community/).
 
-This section describes how Cloud Foundry handles load balancing.
+<%= vars.product_name %> is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps.
 
-Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. A Cloud Foundry installation accomplishes this using the following components:
 
-- **BOSH**: creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs Cloud Foundry on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information, see the [BOSH documentation](http://bosh.io).
+## <a id='how-it-works'></a> How <%= vars.product_name %> Works
+
+To flexibly serve and scale apps online, <%= vars.product_name %> has subsystems that perform specialized functions. The sections below describe how some of these main subsystems work.
+
+### <a id='balances'></a> Load Balancing
+
+This section describes how <%= vars.product_name %> handles load balancing.
+
+Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. A <%= vars.product_name %> installation accomplishes this using the following components:
+
+- **BOSH**: creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs <%= vars.product_name %> on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information, see the [BOSH documentation](http://bosh.io).
 
 - **Cloud Controller**: runs the apps and other processes on the cloud's VMs, balancing demand and managing app lifecycles. For more information, see [Cloud Controller](./architecture/cloud-controller.html).
 
 - **Gorouter**: routes incoming traffic from the world to the VMs that are running the apps that the traffic demands, usually working with a customer-provided load balancer. For more information, see [Gorouter](./architecture/router.html).
 
-### <a id='apps-anywhere'></a>Running Apps
+### <a id='apps-anywhere'></a> Running Apps
 
-This section describes the VMs that run your apps in Cloud Foundry and how the platform packages your apps to run on these VMs.
+This section describes the VMs that run your apps in <%= vars.product_name %> and how the platform packages your apps to run on these VMs.
 
-#### <a id='cf-vms'></a>VMs in Cloud Foundry
+#### <a id='cf-vms'></a> VMs in <%= vars.product_name %>
 
-Cloud Foundry designates the following types of VMs:
+<%= vars.product_name %> designates the following types of VMs:
 
 - **Component VMs**: make up the platform's infrastructure.
 - **Host VMs**: host your apps for the outside world.
 
-Within Cloud Foundry, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
+Within <%= vars.product_name %>, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
 
 For more information, see [Diego Components and Architecture](./diego/diego-architecture.html).
 
-#### <a id='cf-apps'></a>Distributing Apps
+#### <a id='cf-apps'></a> Distributing Apps
 
-To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. Cloud Foundry distributes app source code to VMs with everything the VMs need to compile and run the apps locally.
+To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. <%= vars.product_short %> distributes app source code to VMs with everything the VMs need to compile and run the apps locally.
 
-Cloud Foundry includes the following with your app's source code:
+%= vars.product_short %> includes the following with your app's source code:
 
 - **Stack**: the operating system the app runs on.
 - **Buildpack**: contains all languages, libraries, and services that the app uses.
 
 Before sending an app to a VM, the Cloud Controller stages it for delivery by combining the stack, buildpack, and source code into a droplet that the VM can unpack, compile, and run. For simple, standalone apps with no dynamic pointers, the droplet can contain a pre-compiled executable instead of source code, language, and libraries.
 
-For more information, see the following topics:
+For more information, see:
 
 - [Changing Stacks](../devguide/deploy-apps/stacks.html)
 - [Buildpacks](../buildpacks/index.html)
 - [How Apps Are Staged](./how-applications-are-staged.html)
 
-### <a id='organize'></a>Organizing Users and Workspaces
+### <a id='organize'></a> Organizing Users and Workspaces
 
-This section describes how Cloud Foundry organizes users and workspaces.
+This section describes how <%= vars.product_short %> organizes users and workspaces.
 
-Cloud Foundry manages user accounts through two User Account and Authentication (UAA) servers, which support access control as OAuth2 services and can store user information internally, or connect to external user stores through LDAP or SAML.
+<%= vars.product_short %> manages user accounts through two User Account and Authentication (UAA) servers, which support access control as OAuth2 services and can store user information internally, or connect to external user stores through LDAP or SAML.
 
 For more information, see [User Account and Authentication (UAA) Server](./architecture/uaa.html).
 
@@ -114,19 +120,19 @@ The following table describes what the two UAA servers do:
   </tr>
   <tr>
     <td>First UAA server</td>
-    <td><ul><li>Grants access to BOSH</li><li>Holds accounts for Cloud Foundry operators who deploy runtimes, services, and other software onto the BOSH layer directly</li></ul></td>
+    <td><ul><li>Grants access to BOSH</li><li>Holds accounts for <%= vars.product_name %> operators who deploy runtimes, services, and other software onto the BOSH layer directly</li></ul></td>
   </tr>
   <tr>
     <td>Second UAA server</td>
-    <td><ul><li>Controls access to the Cloud Controller</li><li>Defines user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run Cloud Foundry commands</li><li>Scopes the roles to separate, compartmentalized orgs and spaces within an installation to manage and track use</li></ul></td>
+    <td><ul><li>Controls access to the Cloud Controller</li><li>Defines user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run <%= vars.product_name %> commands</li><li>Scopes the roles to separate, compartmentalized orgs and spaces within an installation to manage and track use</li></ul></td>
   </tr>
 </table>
 
 For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
-### <a id='resources'></a>Storing Resources
+### <a id='resources'></a> Storing Resources
 
-The following table describes where Cloud Foundry stores resources:
+The following table describes where <%= vars.product_short %> stores resources:
 
 <table>
   <tr>
@@ -135,7 +141,7 @@ The following table describes where Cloud Foundry stores resources:
   </tr>
   <tr>
     <td><ul><li>Source code</li><li>Buildpacks</li><li>Documentation</li><li>Custom configurations</li><li>Other platform resources</li></ul></td>
-    <td><a href="https://github.com/">GitHub</a></td>
+    <td>GitHub</td>
   </tr>
   <tr>
     <td><ul><li>Large binary files</li><li>Droplets</li></ul></td>
@@ -147,11 +153,11 @@ The following table describes where Cloud Foundry stores resources:
   </tr>
 </table>
 
-### <a id='communicate'></a>Component Communication
+### <a id='communicate'></a> Component Communication
 
-This section describes how Cloud Foundry components communicate with one another.
+This section describes how <%= vars.product_short %> components communicate with one another.
 
-Cloud Foundry components communicate in the following ways:
+<%= vars.product_short %> components communicate in the following ways:
 
 * By sending messages internally using HTTP and HTTPS protocols
 * By sending NATS messages to each other directly
@@ -164,13 +170,13 @@ BOSH DNS allows deployments to continue communicating with VMs even when the VMs
 
 For more information about BOSH DNS, see [Native DNS Support](https://bosh.io/docs/dns/) in the BOSH documentation.
 
-### <a id='monitor'></a>Monitoring and Analyzing
+### <a id='monitor'></a> Monitoring and Analyzing
 
-This section describes logging in Cloud Foundry.
+This section describes logging in <%= vars.product_short %>.
 
-Cloud Foundry generates system logs from Cloud Foundry components and app logs from hosted apps. As Cloud Foundry runs, its component and host VMs generate logs and metrics. Cloud Foundry apps also typically generate logs.
+<%= vars.product_short %> generates system logs from <%= vars.product_short %> components and app logs from hosted apps. As <%= vars.product_short %> runs, its component and host VMs generate logs and metrics. <%= vars.product_short %> apps also typically generate logs.
 
-The following table describes where Cloud Foundry sends logs:
+The following table describes where <%= vars.product_short %> sends logs:
 
 <table>
   <tr>
@@ -178,11 +184,11 @@ The following table describes where Cloud Foundry sends logs:
     <th>Destination</th>
   </tr>
   <tr>
-    <td>Cloud Foundry component logs</td>
+    <td><%= vars.product_short %> component logs</td>
     <td>Rsyslog agents</td>
   </tr>
   <tr>
-    <td>Cloud Foundry component metrics</td>
+    <td><%= vars.product_short %> component metrics</td>
     <td>Loggregator</td>
   </tr>
   <tr>
@@ -197,15 +203,17 @@ The Loggregator system aggregates the component metrics and app logs into a stru
 
 For more information, see <%= vars.loggregator_arch_link %>.
 
-### <a id='services'></a>Using Services
+### <a id='services'></a> Using Services
 
-This section describes how you can use services with your apps on Cloud Foundry.
+This section describes how you can use services with your apps on <%= vars.product_short %>.
 
 Typical apps depend on free or metered services such as databases or third-party APIs. To incorporate these into an app:
 
-1. **Write a Service Broker**: This component manages the life cycle of the service. The Service Broker uses the Service Broker API to advertise a catalog of service offerings to Cloud Foundry apps.
+1. **Write a Service Broker**: This component manages the life cycle of the service. The Service Broker uses the Service Broker API to advertise a catalog of service offerings to <%= vars.product_short %> apps.
+
 1. **Provision the Service Instance**: Create an instance of the service offering by sending a provision request to the Service Broker API.
-1. **Enable apps to access the Service Instance**: Configure the Cloud Foundry app to make calls to the Service Instance using the Service Broker API.
+
+1. **Enable apps to access the Service Instance**: Configure the <%= vars.product_short %> app to make calls to the Service Instance using the Service Broker API.
 
 For more information, see [Services](../services/index.html).
 
