@@ -3,132 +3,150 @@ title: Cloud Foundry Security
 owner: Security
 ---
 
+<%# Reset page title based on product title %>
+<% current_page.data.title = vars.product_short + " Security" if vars.platform_code != 'CF' %>
 
-This topic provides an overview of Cloud Foundry (CF) security. For an overview of container security, see the [Container Security](container-security.html) topic.
+This topic provides an overview of <%= vars.product_runtime %> (<%= vars.product_short %>) security. For an overview of container security, see [Container Security](container-security.html).
 
-Cloud Foundry implements the following measures to mitigate against security threats:
+<%= vars.product_short %> implements the following measures to mitigate against security threats:
 
 * Minimizes network surface area
 * Isolates customer applications and data in containers
 * Encrypts connections
-* Uses  role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access
-* Ensures security of application bits in a multi-tenant environment
+* Uses role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access
+* Ensures security of app bits in a multi-tenant environment
 * Prevents possible denial of service attacks through resource starvation
 
-## <a id='system-boundaries'></a>System Boundaries and Access ##
 
-As the image below shows, in a typical deployment of Cloud Foundry, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more Cloud Foundry routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
+## <a id='system-boundaries'></a> System Boundaries and Access
 
-<p class="note"><strong>Note</strong>: <%=vars.recommended_by%> recommends that you also install a NAT VM for outbound requests and a Jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
+As the image below shows, in a typical deployment of <%= vars.product_short %>, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more <%= vars.product_short %> routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
+
+<p class="note"><strong>Note:</strong> <%= vars.recommended_by %> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
   <%= image_tag("images/security/sysbound1.png") %>
 
-### <a id='protocols'></a>Protocols ###
+### <a id='protocols'></a> Protocols
 
-All traffic from the public internet to the Cloud Controller and UAA happens over HTTPS. Inside the boundary of the system, components communicate over a publish-subscribe (pub-sub) message bus [NATS](http://nats.io/), HTTP, and SSL/TLS.
+All traffic from the public internet to the Cloud Controller and UAA happens over HTTPS. Inside the boundary of the system, components communicate over a publish-subscribe (pub-sub) message bus NATS, HTTP, and SSL/TLS.
 
-### <a id='bosh'></a>BOSH ###
+### <a id='bosh'></a> BOSH
 
-Operators deploy Cloud Foundry with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
+Operators deploy <%= vars.product_short %> with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
 
-<p class="note"><strong>Note</strong>: <%=vars.recommended_by%> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a Jumpbox on the subnet or through VPN.</p>
+<p class="note"><strong>Note:</strong> <%= vars.recommended_by %> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
 
 BOSH includes the following functionality for security:
 
-* Communicates with the VMs it launches over NATS. Because NATS cannot be accessed from outside Cloud Foundry, this ensures that published messages can only originate from a component within your deployment.
+* Communicates with the VMs it launches over NATS. Because NATS cannot be accessed from outside <%= vars.product_short %>, this ensures that published messages can only originate from a component within your deployment.
 
 * Provides an audit trail through the `bosh tasks --all` and `bosh tasks --recent=VALUE` commands. `bosh tasks --all` returns a table that shows all BOSH actions taken by an operator or other running processes. `bosh tasks --recent=VALUE` returns a table of recent tasks, with `VALUE` being the number of recent tasks you want to view.
 
 * Allows you to set up individual login accounts for each operator. BOSH operators have root access.
 
-<p class="note"><strong>Note</strong>: BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
+<p class="note"><strong>Note:</strong> BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
 
-## <a id='isolation-segments'></a>Isolation Segments
 
-Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. Using isolation segments separates app resources as completely as if they were in different CF deployments but avoids redundant management components and unneeded network complexity.
-				
-You can designate isolation segments for exclusive use by [orgs and spaces](./roles.html) within CF. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces.
+## <a id='isolation-segments'></a> Isolation Segments
 
-Customers can use isolation segments for different reasons, including the following:
+Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. Using isolation segments separates app resources as completely as if they were in different <%= vars.product_short %> deployments but avoids redundant management components and unneeded network complexity.
 
-* To follow regulatory restrictions that require separation between different types of applications. For example, a health care company may not be able to host medical records and billing systems on the same machines.
-* To dedicate specific hardware to different isolation segments. For example, to guarantee that high-priority apps run on a cluster of high-performance hosts.
+You can designate isolation segments for exclusive use by orgs and spaces within <%= vars.product_short %>. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces. For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
+
+Customers can use isolation segments for different reasons, including:
+
+* To follow regulatory restrictions that require separation between different types of apps. For example, a health care company might not be able to host medical records and billing systems on the same machines.
+
+* To dedicate specific hardware to different isolation segments. For example, to ensure that high-priority apps run on a cluster of high-performance hosts.
+
 * To separate data on multiple clients, to strengthen a security story, or offer different hosting tiers.
-						
-In CF, the Cloud Controller Database (CCDB) identifies isolation segments by name and GUID, for example `30dd879c-ee2f-11db-8314-0800200c9a66`. The isolation segment object has no internal structure beyond these two properties at the Cloud Foundry level, but BOSH associates the name of the isolation segment with Diego cells, through their `placement_tag` property.
 
-This diagram shows how isolation segments keep apps running on different pools of cells, and how the cells communicate with each other and with the management components:
+In <%= vars.product_short %>, the Cloud Controller database (CCDB) identifies isolation segments by name and GUID, for example `30dd879c-ee2f-11db-8314-0800200c9a66`. The isolation segment object has no internal structure beyond these two properties at the <%= vars.product_short %> level, but BOSH associates the name of the isolation segment with Diego Cells, through their `placement_tag` property.
+
+This diagram shows how isolation segments keep apps running on different pools of Diego Cells, and how the Diego Cells communicate with each other and with the management components:
 
   <%= image_tag("images/security/isolation-segments.png") %>
 
 <%= vars.manage_iso_seg_link %>
 
-See the [Isolation Segments](http://v3-apidocs.cloudfoundry.org/version/3.0.0/index.html#isolation-segments) section of the _Cloud Controller API (CAPI) Reference_ for API commands related to isolation segments.
+For API commands related to isolation segments, see [Isolation Segments](http://v3-apidocs.cloudfoundry.org/version/3.0.0/index.html#isolation-segments) in the Cloud Controller API (CAPI) Reference.
 
 
-## <a id='auth'></a>Authentication and Authorization ##
+## <a id='auth'></a> Authentication and Authorization
 
-[User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for Cloud Foundry and its various components.
+[User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for <%= vars.product_short %> and its various components.
 
 UAA acts as an [OAuth2](https://oauth.io/) Authorization Server and issues access tokens for applications that request platform resources. The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by UAA.
 
-Operators can configure the identity store in UAA. If users register an account with the Cloud Foundry platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the Cloud Foundry platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the Cloud Foundry platform.
+Operators can configure the identity store in UAA. If users register an account with the <%= vars.product_short %> platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the <%= vars.product_short %> platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the <%= vars.product_short %> platform.
 
-### <a id='rbac'></a>Managing User Access with Role-Based Access Control ###
+### <a id='rbac'></a> Managing User Access with Role-Based Access Control
 
-Applications that users deploy to Cloud Foundry exist within a space. Spaces exist within orgs. To view and access an org or a space, a user must be a member of it. Cloud Foundry uses role-based access control (RBAC), with each role granted permissions to either an org or a specified space. For more information about roles and permissions, refer to the [Orgs, Spaces, Roles, and Permissions](roles.html) topic.
+Apps that users deploy to <%= vars.product_short %> exist within a space. Spaces exist within orgs. To view and access an org or a space, a user must be a member of it. <%= vars.product_short %> uses role-based access control (RBAC), with each role granted permissions to either an org or a specified space. For more information about roles and permissions, see [Orgs, Spaces, Roles, and Permissions](roles.html).
 
 <%=vars.console_links%>
 
-## <a id='service-broker'></a>Security for Service Broker Integration ##
+
+## <a id='service-broker'></a> Security for Service Broker Integration
 
 The Cloud Controller authenticates every request with the Service Broker API using HTTP or HTTPS, depending on which protocol that you specify during broker registration. The Cloud Controller rejects any broker registration that does not contain a username and password.
 
-Service instances bound to an app contain credential data. Users specify the binding credentials for [user-provided service instances](../devguide/services/user-provided.html), while third-party brokers specify the binding credentials for managed service instances. The VCAP_SERVICES environment variable contains credential information for any service bound to an app. Cloud Foundry constructs this value from encrypted data that it stores in the Cloud Controller Database (CCDB).
+Service instances bound to an app contain credential data. Users specify the binding credentials for user-provided service instances, while third-party brokers specify the binding credentials for managed service instances. The VCAP_SERVICES environment variable contains credential information for any service bound to an app. <%= vars.product_short %> constructs this value from encrypted data that it stores in the CCDB. For more information about user-provided service instances, see [User-Provided Service Instances](../devguide/services/user-provided.html).
 
-<p class="note"><strong>Note</strong>: The selected third-party broker controls how securely to communicate managed service credentials.</p>
+<p class="note"><strong>Note:</strong> The selected third-party broker controls how securely to communicate managed service credentials.</p>
 
-A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. Cloud Foundry does not store this secret in the CCDB. Instead, Cloud Foundry passes the secret to the UAA component for verification using HTTP or HTTPS.
+A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. <%= vars.product_short %> does not store this secret in the CCDB. Instead, <%= vars.product_short %> passes the secret to the UAA component for verification using HTTP or HTTPS.
 
-## <a id='vuln-manage'></a>Software Vulnerability Management ##
 
-Cloud Foundry manages software vulnerability using releases and BOSH stemcells. New Cloud Foundry releases are created with updates to address code issues, while new stemcells are created with patches for the latest security fixes to address any underlying operating system issues.
+## <a id='vuln-manage'></a> Software Vulnerability Management
 
-## <a id='app-artifacts'></a>Ensuring Security for Application Artifacts ##
+<%= vars.product_short %> manages software vulnerability using releases and BOSH stemcells. New <%= vars.product_short %> releases are created with updates to address code issues, while new stemcells are created with patches for the latest security fixes to address any underlying operating system issues.
 
-Cloud Foundry secures both the code and the configuration of an application using the following functionality:
 
-* Application developers push their code using the [Cloud Foundry API](http://apidocs.cloudfoundry.org/). Cloud Foundry secures each call to the CF API using the [UAA](#auth) and SSL.
+## <a id='app-artifacts'></a> Ensuring Security for App Artifacts
 
-* The Cloud Controller uses [RBAC](#rbac) to ensure that only authorized users can access a particular application.
+<%= vars.product_short %> secures both the code and the configuration of an app using the following functionality:
 
-* The Cloud Controller stores the configuration for an application in an encrypted database table. This configuration data includes user-specified environment variables and service credentials for any services bound to the app.
+* App developers push their code using the <%= vars.product_short %> API. <%= vars.product_short %> secures each call to the <%= vars.product_short %> API using the [UAA](#auth) and SSL.
 
-* Cloud Foundry runs the app inside a secure container. For more information, see the [Container Security](./container-security.html) topic.
+* The Cloud Controller uses [RBAC](#rbac) to ensure that only authorized users can access a particular app.
 
-* Cloud Foundry operators can configure network traffic rules to control inbound communication to and outbound communication from an app. For more information, see the [Network Traffic Rules](./container-security.html#config-traffic) section of the [Container Security](./container-security.html) topic.
+* The Cloud Controller stores the configuration for an app in an encrypted database table. This configuration data includes user-specified environment variables and service credentials for any services bound to the app.
 
-## <a id='logging'></a>Security Event Logging and Auditing ##
+* <%= vars.product_short %> runs the app inside a secure container. For more information, see [Container Security](./container-security.html).
 
-For operators, Cloud Foundry provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform.
-Additionally, operators can redirect Cloud Foundry component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
+* <%= vars.product_short %> operators can configure network traffic rules to control inbound communication to and outbound communication from an app. For more information, see the [Network Traffic Rules](./container-security.html#config-traffic) section of the _Container Security_ topic.
 
-For users, Cloud Foundry records an audit trail of all relevant API invocations of an app. The Cloud Foundry Command Line Interface (cf CLI) command `cf events` returns this information.
 
-## <a id='recommendations'></a>Recommendations for Running a Secure Deployment ##
+## <a id='logging'></a> Security Event Logging and Auditing
 
-To help run a secure deployment, <%=vars.recommended_by%> recommends the following:
+For operators, <%= vars.product_short %> provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform. Additionally, operators can redirect <%= vars.product_short %> component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
 
-<ul>
-<li>Configure UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.</li>
-<li>Deploy within a VLAN that limits network traffic to individual VMs. This reduce the possibility of unauthorized access to the VMs within your BOSH-managed cloud.</li>
-<li>Enable HTTPS for applications and SSL database connections to protect sensitive data transmitted to and from applications.</li>
-<li>Ensure that the Jumpbox is secure, along with the load balancer and NAT VM.</li>
-<li>Encrypt stored files and data within databases to meet your data security requirements. Deploy using industry standard encryption and the best practices for your language or framework.</li>
-<li>Prohibit promiscuous network interfaces on the trusted network.</li>
-<li>Review and monitor data sharing and security practices with third-party services that you use to provide additional functionality to your application.</li>
-<li>Store SSH keys securely to prevent disclosure, and promptly replace lost or compromised keys.</li>
-<li>Use Cloud Foundry’s RBAC model to restrict your users' access to only what is necessary to complete their tasks.</li>
-<li>Use a strong passphrase for both your Cloud Foundry user account and SSH keys.</li>
+For users, <%= vars.product_short %> records an audit trail of all relevant API invocations of an app. The <%= vars.product_short %> Command Line Interface (cf CLI) command `cf events` returns this information.
+
+
+## <a id='recommendations'></a> Recommendations for Running a Secure Deployment
+
+To help run a secure deployment, <%= vars.recommended_by %> recommends:
+
+* Configure UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.
+
+* Deploy within a VLAN that limits network traffic to individual VMs. This reduce the possibility of unauthorized access to the VMs within your BOSH-managed cloud.
+
+* Enable HTTPS for apps and SSL database connections to protect sensitive data transmitted to and from apps.
+
+* Ensure that the jumpbox is secure, along with the load balancer and NAT VM.
+
+* Encrypt stored files and data within databases to meet your data security requirements. Deploy using industry standard encryption and the best practices for your language or framework.
+
+* Prohibit promiscuous network interfaces on the trusted network.
+
+* Review and monitor data sharing and security practices with third-party services that you use to provide additional functionality to your app.
+
+* Store SSH keys securely to prevent disclosure, and promptly replace lost or compromised keys.
+
+* Use <%= vars.product_short %>'s RBAC model to restrict your users' access to only what is necessary to complete their tasks.
+
+* Use a strong passphrase for both your <%= vars.product_short %> user account and SSH keys.
+
 <%= vars.ipsec_note %>
-</ul>
