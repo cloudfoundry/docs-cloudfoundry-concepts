@@ -3,27 +3,29 @@ title: Cloud Foundry Concepts
 ---
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = vars.product_short + " Concepts" if vars.product_name != 'CF'  %>
+<% current_page.data.title = vars.app_runtime_abbr + " Concepts" if vars.product_name != 'CF'  %>
 
 <% if vars.platform_code == 'CF' %>
-Cloud Foundry is an open source cloud application platform, providing a choice of clouds, developer frameworks, and application services. Cloud Foundry makes it faster and easier to build, test, deploy, and scale applications. It is an [open source project](https://github.com/cloudfoundry) and is available through a variety of private cloud distributions and public cloud instances.
+<%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) is an open-source cloud app platform, providing a choice of clouds, developer frameworks, and app services. Cloud Foundry makes it faster and easier to build, test, deploy, and scale apps. It is an open-source project and is available through a variety of private cloud distributions and public cloud instances. For more information, see [Cloud Foundry](https://github.com/cloudfoundry) on GitHub.
 <% else %>
-<%= vars.app_runtime_full %> is based on Cloud Foundry, which is an open source 
-cloud application platform, providing a choice of clouds, developer frameworks,
-and application services. Cloud Foundry makes it faster and easier to build,
-test, deploy, and scale applications. It is an [open source project](https://github.com/cloudfoundry)
-and is available through a variety of private cloud distributions and public cloud instances.
+<%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) is based on Cloud Foundry Application Runtime (CFAR), which is an open-source cloud app platform, providing a choice of clouds, developer frameworks, and app services. CFAR makes it faster and easier to build, test, deploy, and scale apps. It is an open-source project and is available through a variety of private cloud distributions and public cloud instances. For more information, see [Cloud Foundry](https://github.com/cloudfoundry) on GitHub.
 <% end %>
 
-This documentation presents an overview of how Cloud Foundry works and a discussion of key concepts. See the following topics to learn more about Cloud Foundry fundamentals.
+This documentation presents an overview of how <%= vars.app_runtime_abbr %> works and a discussion of key concepts. To learn more about <%= vars.app_runtime_abbr %> fundamentals, see the following topics:
 
-* [<%= vars.product_short %> Overview](overview.html)
+* [<%= vars.app_runtime_abbr %> Overview](overview.html)
+
 * [Security and Networking](security-index.html)
+
 * [High Availability](ha-index.html)
+
 <% if vars.platform_code == 'CF' %>
 * [How CFAR Manages Apps](apps-index.html)
+
 * [Runtime Components](architecture/index.html)
+
 <% else %>
-* [How <%= vars.product_short %> Manages Apps](apps-index.html)
-* [<%= vars.product_short %> Runtime Components](architecture/index.html)
+* [How <%= vars.app_runtime_abbr %> Manages Apps](apps-index.html)
+
+* [<%= vars.app_runtime_abbr %> Components](architecture/index.html)
 <% end %>
