@@ -19,13 +19,10 @@ This documentation presents an overview of how <%= vars.app_runtime_abbr %> work
 
 * [High Availability](ha-index.html)
 
-<% if vars.platform_code == 'CF' %>
-* [How CFAR Manages Apps](apps-index.html)
+* [How <%= vars.product_short %> Manages Apps](apps-index.html)
 
+<% if vars.product_name == 'CF' %>
 * [Runtime Components](architecture/index.html)
-
 <% else %>
-* [How <%= vars.app_runtime_abbr %> Manages Apps](apps-index.html)
-
 * [<%= vars.app_runtime_abbr %> Components](architecture/index.html)
 <% end %>
