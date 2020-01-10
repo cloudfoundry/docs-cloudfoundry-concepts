@@ -3,112 +3,152 @@ title: Contributing Documentation
 owner: Docs
 ---
 
-This topic describes how to contribute to <%= vars.app_runtime_full %> documentation. 
+This topic describes how to contribute to <%= vars.platform_name %> documentation. 
 
-## <a id='why'></a>Why Should You Contribute?
 
-The <%= vars.product_short %> documentation relies on contributions from the community to remain accurate, complete, and consumable.
+## <a id='why'></a> Why Should You Contribute?
 
-Reasons to contribute to the <%= vars.product_short %> documentation include:
+The <%= vars.platform_name %> documentation relies on contributions from the community to remain accurate, complete, and consumable.
+
+Reasons to contribute to the <%= vars.platform_name %> documentation include:
 
 * You have noticed that a topic is incorrect or incomplete.
-* You are developing a new <%= vars.product_short %> feature, and want to tell users know how to use it.
+* You are developing a new <%= vars.platform_name %> feature, and want to tell users know how to use it.
 * You are a good person, and you want to help your fellow humans.
 * You hate the idea of someone else having to go through what you just went through to figure something out. Such a waste; so inefficient.
 
-## <a id='contribute'></a>How Can You Contribute?
 
-The source files for all <%= vars.product_short %> docs are hosted on [Github](http://github.com), and each docs page has a link to its Github source file at the bottom. The source files are in Markdown/HTML/embedded Ruby (`html.md.erb`) format.
+## <a id='contribute'></a> How Can You Contribute?
 
-If you use Github, the most direct and effective way to contribute to the docs is to [submit a pull request](#github-pr) or [raise an issue](#github-issue) in the Github repository containing the docs content that you want to change.
+The source files for all <%= vars.platform_name %> docs are hosted on [GitHub](http://github.com), and each docs page has a link to its GitHub source file at the bottom. The source files are in Markdown/HTML/embedded Ruby (`html.md.erb`) format.
 
-If you do not already use Github (or want to learn), you can contribute to the CF docs in [other ways](#non-github) that are also greatly appreciated.
+If you use GitHub, the most direct and effective way to contribute to the docs is to submit a pull request (PR) or raise an issue in the GitHub repository containing the docs content that you want to change. For more information, see [Submit a GitHub Pull Request](#github-pr) and [Raise a GitHub Issue](#github-issue).
+
+If you do not already use GitHub, you can contribute to the <%= vars.platform_name %> docs in other ways. For more information, see [Contribute Without GitHub](#non-github).
 
 Whichever way you contribute, please follow our [Advice for Contributors](#advice).
 
-###<a id='pull-request'></a> Submit a Github Pull Request
+### <a id='pull-request'></a> Submit a GitHub Pull Request
 
-If you have identified a problem with the docs and know the required content change, the fastest way to make the change is by submitting a pull request (PR).
+If you have identified a problem with the docs and know the required content change, the fastest way to make the change is by submitting a PR.
 
-The CF docs team typically accepts PRs within a day, but may need to ask follow-up questions.
+The <%= vars.platform_name %> docs team typically accepts PRs within a day, but may need to ask follow-up questions.
 
-Before your PRs can be accepted, you must have a signed Contributor License Agreement (CLA) on file. If you do not, you will be prompted to sign this once you've opened your first PR.  
+Before your PRs can be accepted, you must have a signed Contributor License Agreement (CLA) on file. If you do not, you will be prompted to sign this once you have opened your first PR.  
 
-To submit a pull request, follow these steps:
+To submit a pull request:
 
 1. Navigate to the topic that you want to modify.
+
 1. To locate the GitHub source file that contains the content for the topic, scroll to the bottom of the page and click **Create a pull request or raise an issue on the source for this page in GitHub.**
-1. Click the pencil icon in the upper right to edit the file in GitHub.
+
+1. Click the pencil icon in the upper right corner to edit the file in GitHub.
+
 1. Make your desired changes.
+
 1. Under **Commit changes** at the bottom of the page, enter a description of your change and click **Propose file change**.
+
 1. Click **Create pull request**.
 
-###<a id='issue'></a> Raise a Github Issue
+### <a id='issue'></a> Raise a GitHub Issue
 
-If you do not have specific edits to make, but want start a discussion or make a general suggestion, you can raise a Github issue.
+If you do not have specific edits to make, but want start a discussion or make a general suggestion, you can raise a GitHub issue.
 
-Github issues generally take longer to resolve than pull requests. But if you describe the issue with helpful background information and specific and actionable instructions, the CF docs team can address it quickly.
+GitHub issues generally take longer to resolve than pull requests. But if you describe the issue with helpful background information and specific and actionable instructions, the <%= vars.platform_name %> docs team can address it quickly.
 
-Vague or partially-baked Github issues may remain unaddressed for some time.
+Vague or partially-baked GitHub issues may remain unaddressed for some time.
 
 To raise an issue on a GitHub repository:
 
 1. Navigate to the topic that you want to modify.
-1. To locate the GitHub source file that contains the content for the topic, scroll to the bottom of the page and click **Create a pull request or raise an issue on the source for this page in GitHub.**
+
+1. To locate the GitHub source file that contains the content for the topic:
+	1. Scroll to the bottom of the page.
+	1. Click **Create a pull request or raise an issue on the source for this page in GitHub.**
+
 1. Click the name of the repository where the topic is located. For example, `docs-deploying-cf`.
+
 1. Click the **Issues** tab.
+
 1. Click **New issue**.
-1. Enter a title for your issue, and in the text box, describe the issue and provide links to the affected topic(s).
+
+1. Enter a title for your issue, and in the text box, describe the issue and provide links to the affected topics.
+
 1. Click **Submit new issue**.
 
-###<a id='non-github'></a> Contribute Without Github
+### <a id='non-github'></a> Contribute Without GitHub
 
-To contribute to the CF docs without using Github, you can use the following:
+To contribute to the <%= vars.platform_name %> docs without using GitHub, you can use one of these methods:
 
-* **Google Docs**: Write new docs content, or copy-paste existing content, into a [Google Drive](http://drive.google.com) document. Edit or comment on it, and share with the CF docs team at cf-docs@pivotal.io.
-* **Email** the the CF docs team directly at cf-docs@pivotal.io.
-* **Slack** the CF docs team through the [&#35;cf-docs](https://cloudfoundry.slack.com/messages/C03B0T0D5/") channel in <%= vars.product_short %> Slack.
+* **Google Docs**: Write new docs content, or copy-paste existing content, into a [Google Drive](http://drive.google.com) document. Edit or comment on it, and share with the <%= vars.platform_name %> docs team at cf-docs@pivotal.io.
+
+* **Email** the the <%= vars.platform_name %> docs team directly at cf-docs@pivotal.io.
+
+* **Slack** the <%= vars.platform_name %> docs team through the [&#35;cf-docs](https://cloudfoundry.slack.com/messages/C03B0T0D5/") channel in <%= vars.platform_name %> Slack.
+
 
 ## <a id='advice'></a> Advice for Contributors
 
-The <%= vars.product_short %> Documentation Team reviews and revises all contributions, so you can **focus on providing correct and complete information, and not worry about style and structure**.
+The <%= vars.platform_name %> Documentation Team reviews and revises all contributions, so you can **focus on providing correct and complete information, and not worry about style and structure**.
 
 Keep in mind:
 
 * If your contribution is larger than a small correction, put yourselves in the shoes of a novice and read through it. Revise the text to answer any questions that might occur to a less experienced user.
-* Who needs this information? Are they a developer or a platform operator?
-* What are the specifics that a user needs to know in order to understand and perform the task? Instead of "the instance" or “the cluster,” explain the instance or cluster of what. Instead of "revise the code to..." explain where to revise the code.
-* If you're giving instructions, include why you would want to do what you're describing. What's your specific situation, and what result do you seek?
 
-For further guidance, contact the <%= vars.product_short %> Documentation Team at cf-docs@pivotal.io or through our `#cf-docs` channel on the [<%= vars.product_short %> Slack](https://cloudfoundry.slack.com). 
+* Who needs this information? Are they a developer or a platform operator?
+
+* What are the specifics that a user needs to know in order to understand and perform the task? Instead of "the instance" or "the cluster," explain the instance or cluster of what. Instead of "revise the code to...", explain where to revise the code.
+
+* If you are giving instructions, include why you would want to do what you are describing. What is your specific situation, and what result do you seek?
+
+For further guidance, contact the <%= vars.platform_name %> Documentation Team at cf-docs@pivotal.io or through our `#cf-docs` channel on the [<%= vars.platform_name %> Slack](https://cloudfoundry.slack.com). 
+
 
 ## <a id='preview'></a> How Can You Preview Your Documentation Changes?
 
-The <%= vars.product_short %> Documentation Team uses the tool [Bookbinder](https://github.com/pivotal-cf/bookbinder) to publish the <%= vars.product_short %> documentation. 
+The <%= vars.platform_name %> Documentation Team uses the tool [Bookbinder](https://github.com/pivotal-cf/bookbinder) to publish the <%= vars.platform_name %> documentation. 
 
-The instructions below explain how to use Bookbinder to preview your documentation changes locally. But you do not have to install or use Bookbinder in order to contribute to the <%= vars.product_short %> documentation. 
+The instructions below explain how to use Bookbinder to preview your documentation changes locally. But you do not have to install or use Bookbinder in order to contribute to the <%= vars.platform_name %> documentation. 
 
-Perform the following steps to preview documentation changes with Bookbinder:
+To preview documentation changes with Bookbinder:
 
-1. If you do not already have a workspace directory within your home directory, create one.
-	<pre class="terminal">$ mkdir ~/workspace</pre>
+1. If you do not already have a workspace directory within your home directory, create one by running:
+	
+	```
+	mkdir ~/workspace
+	```
 
-3. Identify the content repository where your documentation lives. For example, `https://github.com/cloudfoundry/docs-cloudfoundry-concepts`.
+1. Identify the content repository where your documentation is located. For example, `https://github.com/cloudfoundry/docs-cloudfoundry-concepts`.
 
-4. Clone the content repository. For example:
- 	<pre class="terminal">$ git clone git<span>@</span>github.com:cloudfoundry/docs-cloudfoundry-concepts.git</pre>
+1. Clone the content repository. For example, to clone the `docs-cloudfoundry-concepts` repository, run:
+ 	```
+ 	git clone git<span>@</span>github.com:cloudfoundry/docs-cloudfoundry-concepts.git
+ 	```
 
-5. Return to your workspace directory and clone the <%= vars.product_short %> book.
-	<pre class="terminal">$ git clone git<span>@</span>github.com:cloudfoundry/docs-book-cloudfoundry.git</pre>
+1. Return to your workspace directory and clone the <%= vars.platform_name %> book by running:
 
-6. Change directory into the <%= vars.product_short %> book.
-	<pre class="terminal">cd docs-book-cloudfoundry</a>
+	```
+	git clone git<span>@</span>github.com:cloudfoundry/docs-book-cloudfoundry.git
+	```
 
-7. Run `bundle install` to install the necessary gems, including Bookbinder.
+1. Change directory into the <%= vars.platform_name %> book by running:
+	
+	```
+	cd docs-book-cloudfoundry
+	```
 
-8. Use Bookbinder to create a live version of your docs:
-	<pre class="terminal">$ bundle exec bookbinder watch</pre>
+1. To install the necessary gems, including Bookbinder, run:
 
-9. Navigate to `http://localhost:4567` in a browser and navigate to the route where your docs are published. For instance, `http://localhost:4567/cf-cli/install-go-cli.html`.
+	```
+	bundle install
+	```
+
+1. To use Bookbinder to create a live version of your docs, run:
+	
+	```
+	bundle exec bookbinder watch
+	```
+
+1. Navigate to `http://localhost:4567` in a browser and navigate to the route where your docs are published. For instance, `http://localhost:4567/cf-cli/install-go-cli.html`.
 	<br><br>
 	Bookbinder automatically updates the live version of the docs whenever you make a change to the content repository.
