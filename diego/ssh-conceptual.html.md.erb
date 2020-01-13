@@ -1,5 +1,5 @@
 ---
-title: Application SSH Components and Processes
+title: App SSH Components and Processes
 owner: Diego
 ---
 
@@ -28,4 +28,3 @@ The daemon can be made available on a file server and Diego LRPs that want to us
 ## <a id="diego-ssh-proxy"></a>SSH Proxy Authentication
 
 The SSH proxy hosts the user-accessible SSH endpoint and is responsible for authentication, policy enforcement, and access controls in the context of <%= vars.product_short %>. After a user has successfully authenticated with the proxy, the proxy will attempt to locate the target container and create an SSH session to a daemon running inside the container. After both sessions have been established, the proxy will manage the communication between the user's SSH client and the container's SSH Daemon.
-
