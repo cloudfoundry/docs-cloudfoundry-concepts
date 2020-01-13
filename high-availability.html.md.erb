@@ -3,6 +3,8 @@ title: High Availability in Cloud Foundry
 owner: Release Integration
 ---
 
+<%# Reset page title based on product title %>
+<% current_page.data.title = "High Availability in " + vars.product_short if vars.product_name != 'CF'  %>
 
 This topic describes the components used to ensure high availability in Cloud Foundry, vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
 
@@ -32,7 +34,7 @@ If you are deploying in lab and test environments, the `use-haproxy.yml` ops fil
 
 ### <a id='blobstore'></a> Blob Storage
 
-For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service. 
+For storing blobs, large binary files, the best approach for high availability is to use external storage such as Amazon S3 or an S3-compatible service.
 
 If you store blobs internally using WebDAV or NFS, these components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
 
@@ -61,7 +63,7 @@ To scale vertically, ensure that you allocate and maintain enough of the followi
 
 Scaling horizontally means increasing the number of VM instances dedicated to running a functional component of the system.
 
-You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability. 
+You can horizontally scale most Cloud Foundry components to multiple instances to achieve the redundancy required for high availability.
 
 You should also distribute the instances of multiply-scaled components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. If you use more than three AZs, ensure that you use an odd number of AZs.
 
