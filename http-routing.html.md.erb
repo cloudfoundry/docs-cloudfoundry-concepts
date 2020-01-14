@@ -3,7 +3,7 @@ title: HTTP Routing
 owner: Routing
 ---
 
-This topic describes how the Gorouter, the main component in the <%= vars.product_name %> routing tier, routes HTTP traffic within <%= vars.app_runtime_full %>.
+This topic describes how the Gorouter, the main component in the <%= vars.product_name %> routing tier, routes HTTP traffic within <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
 
 For more information, see the [Routing](./architecture/index.html#routing) section of the _<%= vars.product_short %> Components_ topic.
 
@@ -43,7 +43,9 @@ Zipkin is a tracing system that enables app developers to troubleshoot failures 
 
 Developers can then add Zipkin trace IDs to their app logging in order to trace app requests and responses in <%= vars.product_short %>.
 
-After adding Zipkin HTTP headers to app logs, developers can use `cf logs myapp` to correlate the trace and span IDs logged by the Gorouter with the trace ids logged by their app. To correlate trace IDs for a request through multiple apps, each app must forward appropriate values for the headers with requests to other applications.
+After adding Zipkin HTTP headers to app logs, developers can use `cf logs myapp` to correlate the trace and span IDs logged by the Gorouter with the trace ids logged by their app. To correlate trace IDs for a request through multiple apps, each app must forward appropriate values for the headers with requests to other apps.
+
+For more information about Zipkin tracing, see [Enabling Zipkin Tracing](../adminguide/zipkin_tracing.html).
 
 ### <a id="app-instance-routing"></a> HTTP Headers for App Instance Routing
 
