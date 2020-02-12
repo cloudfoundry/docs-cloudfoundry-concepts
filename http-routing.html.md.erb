@@ -226,8 +226,13 @@ The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP 
 
 With sticky sessions, when multiple instances of an app are running on Cloud Foundry, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
 
-* To support sticky sessions, configure your app to return a sticky session cookie in responses. <% if vars.platform_code == 'CF' %>The cookies the routing tier uses for sticky sessions are configurable and can be found under the `router.sticky_session_cookie_names` config key. The default value value for this field is `JSESSIONID`.<% else %>Gorouter supports `JSESSIONID` cookies.<% end %>
- 
+* To support sticky sessions, configure your app to return a sticky session cookie in responses.
+The default value for this field is `JSESSIONID`.
+You can configure the cookie names that the routing tier uses for sticky sessions.
+<% if vars.platform_code == 'CF' %>To configure the names of the cookies, edit the
+`router.sticky_session_cookie_names` config key in your manifest.
+<% else %> <%= vars.tas_networking %> <% end %>
+
 * If an app returns a sticky session cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the app instance based on its GUID in the following format:
 <pre class="terminal">
 323f211e-fea3-4161-9bd1-615392327913
