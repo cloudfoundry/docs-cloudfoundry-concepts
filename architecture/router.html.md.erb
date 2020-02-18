@@ -9,9 +9,9 @@ Gorouter routes traffic coming into Cloud Foundry to the appropriate component, 
 the request comes from an operator addressing the [Cloud Controller](./cloud-controller.html)
 or from an application user accessing an app running on a Diego Cell. Handling both platform
 and app requests with the same process centralizes routing logic and simplifies support for
-WebSockets and other types of traffic (for example, through HTTP CONNECT).
+WebSocket and other types of traffic (for example, through HTTP CONNECT).
 
-Refer to the following instructions for help getting started with Gorouter
+See the following instructions for help getting started with Gorouter
 in a standalone environment.
 
 ## <a id='setup'></a>Setup ##
@@ -56,7 +56,7 @@ The format of these route updates is as follows:
 ~~~
 
 Such a message can be sent to both the `gorouter.register` subject to register URIs,
-and to the `gorouter.unregister` subject to unregister URIs, respectively.
+and to the `gorouter.unregister` subject to deregister URIs, respectively.
 
 <pre class="terminal">
 $ nohup ruby -rsinatra -e 'get("/") { "Hello!" }' &
@@ -79,7 +79,7 @@ an associated array of `host:port` entries.
 
 All of the endpoints require http basic authentication, credentials for which you
 can acquire through NATS. You can explicitly set the `port`, `user` and password
-(`pass` is the config attribute) in the gorouter.yml config file `status` section.
+(`pass` is the config attribute) in the `gorouter.yml` config file `status` section.
 
 ~~~yaml
 status:
@@ -114,15 +114,15 @@ $ curl -vvv "http://someuser:somepass@127.0.0.1:8080/routes"
 
 ### <a id="logs"></a> Logs
 
-This section provides details about Gorouter logging. 
+This section provides details about Gorouter logging.
 
 #### <a id="levels"></a> Levels
 
-The following table describes the log levels supported by Gorouter. 
+The following table describes the log levels supported by Gorouter.
 <% if vars.platform_code == 'CF' %>
-The log level is specified in the configuration YAML file for Gorouter. 
+The log level is specified in the configuration YAML file for Gorouter.
 <% else %>
-The log level is set to `debug` and is not configurable. 
+The log level is set to `debug` and is not configurable.
 <% end %>
 
 <table>
@@ -157,7 +157,7 @@ The log level is set to `debug` and is not configurable.
 
 #### <a id="message-contents"></a> Message Contents
 
-This section section provides a sample Gorouter log message and and explanation of the contents.
+This section section provides a sample Gorouter log entry and explanation of the contents.
 
 `[2017-02-01 22:54:08+0000] {"log_level":0,"timestamp":1485989648.0895808,"message":"endpoint-registered","source":"vcap.Gorouter.registry","data":{"uri":"0-*.login.bosh-lite.com","backend":"10.123.0.134:8080","modification_tag":{"guid":"","index":0}}}
 `
@@ -177,11 +177,11 @@ This section section provides a sample Gorouter log message and and explanation 
   </tr>
   <tr>
     <td><code>message</code></td>
-    <td>Content of the log line</td>
+    <td>Content of the log entry</td>
   </tr>
   <tr>
     <td><code>source</code></td>
-    <td>Gorouter function that initiated the log message</td>
+    <td>Gorouter function that initiated the log entry</td>
   </tr>
   <tr>
     <td><code>data</code></td>
@@ -199,9 +199,15 @@ Access logs provide information for the following fields when receiving a reques
 
 * If the access log lacks a <code>Status Code</code>,  <code>Response Time</code>, <code>Application ID</code>, or <code>Application Index</code>, the corresponding field shows `-`.
 
-* `Response Time` is the total time it takes for the request to go through the GoRouter to the app and for the response to travel back through the GoRouter. This includes the time the request spends traversing the network to the app and back again to the GoRouter. It also includes the time the app spends forming a response.
+* `Response Time` is the total time it takes for the request to go through the Gorouter to the app
+   and for the response to travel back through the Gorouter.
+   This includes the time the request spends traversing the network to the app and back again to the Gorouter.
+   It also includes the time the app spends forming a response.
 
-* `GoRouter Time` is the total time it takes for the request to go through the GoRouter initially plus the time it takes for the response to travel back through the GoRouter. This does not include the time the request spends traversing the network to the app. This also does not include the time the app spends forming a response. 
+* `GoRouter Time` is the total time it takes for the request to go through the Gorouter
+   initially plus the time it takes for the response to travel back through the Gorouter.
+   This does not include the time the request spends traversing the network to the app.
+   This also does not include the time the app spends forming a response.
 
 
 <p class="note"><strong>Note</strong>: Access logs are also redirected to syslog.</p>
