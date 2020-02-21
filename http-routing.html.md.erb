@@ -224,21 +224,23 @@ WebSockets is a protocol providing bi-directional communication over a single, l
 
 The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
 
-With sticky sessions, when multiple instances of an app are running on Cloud Foundry, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
+With sticky sessions, when multiple instances of an app are running on Cloud Foundry, requests from a particular client
+always reach the same app instance. This allows apps to store session data specific to a user session.
 
-* To support sticky sessions, configure your app to return a sticky session cookie in responses.
+To support sticky sessions, configure your app to return a sticky session cookie in responses.
 The default value for this field is `JSESSIONID`.
 You can configure the cookie names that the routing tier uses for sticky sessions.
 <% if vars.platform_code == 'CF' %>To configure the names of the cookies, edit the
 `router.sticky_session_cookie_names` config key in your manifest.
 <% else %> <%= vars.tas_networking %> <% end %>
 
-* If an app returns a sticky session cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the app instance based on its GUID in the following format:
+If an app returns a sticky session cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the
+app instance based on its GUID in the following format:
 <pre class="terminal">
 323f211e-fea3-4161-9bd1-615392327913
 </pre>
 
-* On subsequent requests, the client must provide both the sticky session and `VCAP_ID` cookies.
+On subsequent requests, the client must provide both the sticky session and `VCAP_ID` cookies.
 
 The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The sticky session cookie is forwarded to the app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
 
