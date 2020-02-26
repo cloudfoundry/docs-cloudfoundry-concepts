@@ -76,7 +76,8 @@ For API commands related to isolation segments, see [Isolation Segments](http://
 
 [User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for <%= vars.product_short %> and its various components.
 
-UAA acts as an [OAuth2](https://oauth.io/) Authorization Server and issues access tokens for applications that request platform resources. The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by UAA.
+UAA acts as an [OAuth2](https://oauth.net/2/) Authorization Server and issues access tokens for apps that request platform resources.
+The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by UAA.
 
 Operators can configure the identity store in UAA. If users register an account with the <%= vars.product_short %> platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the <%= vars.product_short %> platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the <%= vars.product_short %> platform.
 
