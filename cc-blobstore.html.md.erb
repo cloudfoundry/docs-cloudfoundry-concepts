@@ -43,9 +43,9 @@ The process in which the staging process uses the blobstore is as follows:
     <li>In response to the resource match request, Cloud Controller lists the files the cf CLI needs to upload.</li>
     </ol>
 
-1. **Upload unmatched files:**The cf CLI compresses and uploads the unmatched files to Cloud Controller.
+1. **Upload unmatched files:** The cf CLI compresses and uploads the unmatched files to Cloud Controller.
 
-1. **Download cached files**Cloud Controller downloads the matched files from the blobstore to its local disk.
+1. **Download cached files:** Cloud Controller downloads matched files that are cached in the blobstore to its local disk.
 
 1. **Upload complete package** includes the following:
 	<ol type="a">
