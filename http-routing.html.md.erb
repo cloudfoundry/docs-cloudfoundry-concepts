@@ -62,11 +62,15 @@ To make an HTTP request to a specific app instance:
 1. Make a request to the app route using the HTTP header `X-CF-APP-INSTANCE` set to the concatenated values of the app GUID and the instance index:
 	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
 
-If the instance header cannot be found or the format is wrong, a 400 status code is returned. In addition, Gorouter will return a `X-Cf-Routererror` header. 
-If the instance guid provided is incorrectly formatted, the value of the header will be `invalid_cf_app_instance_header`.
-If the instance guid provided is correctly formatted, but the guid does not exist, the value of this header will be `unknown_route`, and 
-the request body will contain `400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route ('dora.superman.routing.cf-app.com')`.
-Usage of the `X-Cf-App-Instance` header is only available for users on the Diego architecture.
+    If the instance header cannot be found or the format is wrong, a 400 status code is returned.
+
+    In addition, Gorouter returns a `X-Cf-Routererror` header. 
+    If the instance guid provided is incorrectly formatted, the value of the header is `invalid_cf_app_instance_header`.
+    
+    If the instance guid provided is correctly formatted, but the guid does not exist, 
+    the value of this header is `unknown_route`, and 
+    the request body contains `400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route ('dora.superman.routing.cf-app.com')`.
+    Usage of the `X-Cf-App-Instance` header is only available for users on the Diego architecture.
 
 ### <a id="forward-client-cert"></a> Forward Client Certificate to Apps
 
