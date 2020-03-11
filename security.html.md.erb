@@ -22,7 +22,7 @@ This topic provides an overview of <%= vars.app_runtime_full %> (<%= vars.app_ru
 
 As the image below shows, in a typical deployment of <%= vars.app_runtime_abbr %>, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more <%= vars.app_runtime_abbr %> routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
 
-<p class="note"><strong>Note:</strong> <%= vars.recommended_by %> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
+<p class="note"><strong>Note:</strong> <%= vars.company_name %> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
   <%= image_tag("images/security/sysbound1.png") %>
 
@@ -34,7 +34,7 @@ All traffic from the public internet to the Cloud Controller and UAA happens ove
 
 Operators deploy <%= vars.app_runtime_abbr %> with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
 
-<p class="note"><strong>Note:</strong> <%= vars.recommended_by %> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
+<p class="note"><strong>Note:</strong> <%= vars.company_name %> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
 
 BOSH includes the following functionality for security:
 
@@ -123,12 +123,12 @@ A third-party broker might offer a dashboard client in its catalog. Dashboard cl
 
 For operators, <%= vars.app_runtime_abbr %> provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform. Additionally, operators can redirect <%= vars.app_runtime_abbr %> component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
 
-For users, <%= vars.app_runtime_abbr %> records an audit trail of all relevant API invocations of an app. The <%= vars.app_runtime_abbr %> Command Line Interface (cf CLI) command `cf events` returns this information.
+For users, <%= vars.app_runtime_abbr %> records an audit trail of all relevant API invocations of an app. The Cloud Foundry Command Line Interface (cf CLI) command `cf events` returns this information.
 
 
 ## <a id='recommendations'></a> Recommendations for Running a Secure Deployment
 
-To help run a secure deployment, <%= vars.recommended_by %> recommends:
+To help run a secure deployment, <%= vars.company_name %> recommends:
 
 * Configure UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.
 
