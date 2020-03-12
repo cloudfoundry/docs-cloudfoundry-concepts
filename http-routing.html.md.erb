@@ -5,7 +5,7 @@ owner: Routing
 
 This topic describes how the Gorouter, the main component in the <%= vars.product_name %> routing tier, routes HTTP traffic within <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
 
-For more information, see the [Routing](./architecture/index.html#routing) section of the _<%= vars.product_short %> Components_ topic.
+For more information, see the [Routing](./architecture/index.html#routing) section of the _<%= vars.app_runtime_abbr %> Components_ topic.
 
 
 ## <a id="http-headers"></a> HTTP Headers
@@ -41,7 +41,7 @@ Zipkin is a tracing system that enables app developers to troubleshoot failures 
 * If the `X-B3-TraceId` and `X-B3-SpanId` HTTP headers are not present in the request, the Gorouter generates values for these and inserts the headers into the request forwarded to an app. These values are also found in the Gorouter access log message for the request: `x_b3_traceid` and `x_b3_spanid`.
 * If the `X-B3-TraceId` and `X-B3-SpanId` HTTP headers are present in the request, the Gorouter forwards them unmodified. In addition to these trace and span IDs, the Gorouter access log message for the request includes `x_b3_parentspanid`.
 
-Developers can then add Zipkin trace IDs to their app logging in order to trace app requests and responses in <%= vars.product_short %>.
+Developers can then add Zipkin trace IDs to their app logging in order to trace app requests and responses in <%= vars.app_runtime_abbr %>.
 
 After adding Zipkin HTTP headers to app logs, developers can use `cf logs myapp` to correlate the trace and span IDs logged by the Gorouter with the trace ids logged by their app. To correlate trace IDs for a request through multiple apps, each app must forward appropriate values for the headers with requests to other apps.
 
@@ -63,14 +63,14 @@ To make an HTTP request to a specific app instance:
 	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
 
     If the instance header cannot be found or the format is wrong, a 400 status code is returned.
-    In addition, Gorouter returns a `X-Cf-Routererror` header. 
+    In addition, Gorouter returns a `X-Cf-Routererror` header.
     </br>
     </br>
     If the instance guid provided is incorrectly formatted, the value of the header is `invalid_cf_app_instance_header`.
     </br>
     </br>
-    If the instance guid provided is correctly formatted, but the guid does not exist, 
-    the value of this header is `unknown_route`, and 
+    If the instance guid provided is correctly formatted, but the guid does not exist,
+    the value of this header is `unknown_route`, and
     the request body contains the following: `400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route ('dora.superman.routing.cf-app.com')`
     </br>
     </br>
@@ -78,7 +78,7 @@ To make an HTTP request to a specific app instance:
 
 ### <a id="forward-client-cert"></a> Forward Client Certificate to Apps
 
-Apps that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. <%= vars.product_short %> supports this use case without bypassing layer-7 load balancers and the Gorouter.
+Apps that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. <%= vars.app_runtime_abbr %> supports this use case without bypassing layer-7 load balancers and the Gorouter.
 
 The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the application. Each component in the data path must trust that the back end component has not allowed the header to be tampered with.
 
@@ -141,9 +141,9 @@ To enable this feature, see [Configure Validation of App Instance Identity with 
 
 ## <a id="consistency"></a> Preventing Misrouting
 
-As <%= vars.product_short %> manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route-Emitter on each Diego cell sends a periodic update to all Gorouters through NATS to remind them of the location of all app instances. The default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back end mapping. This TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
+As <%= vars.app_runtime_abbr %> manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables current, a Route-Emitter on each Diego cell sends a periodic update to all Gorouters through NATS to remind them of the location of all app instances. The default frequency of these updates is 20 seconds. The Gorouter tracks a time-to-live (TTL) for each route to back end mapping. This TTL defaults to 120 seconds and is reset when the Gorouter receives an updated registration message.
 
-Network partitions or NATS failures can cause the Gorouter's routing table to fall out of sync, as <%= vars.product_short %> continues to re-create containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
+Network partitions or NATS failures can cause the Gorouter's routing table to fall out of sync, as <%= vars.app_runtime_abbr %> continues to re-create containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
 
 You can configure the Gorouter to handle this problem in two ways:
 
