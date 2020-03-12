@@ -63,13 +63,13 @@ To flexibly serve and scale apps online, <%= vars.platform_name %> has subsystem
 
 This section describes how <%= vars.platform_name %> handles load balancing.
 
-Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. A <%= vars.platform_name %> installation accomplishes this using the following components:
+Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. An <%= vars.platform_name %> installation accomplishes this using the following components:
 
-- **BOSH**: creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs <%= vars.platform_name %> on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information, see the [BOSH documentation](http://bosh.io).
+- **BOSH** creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs <%= vars.platform_name %> on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information, see the [BOSH documentation](http://bosh.io).
 
-- **Cloud Controller**: runs the apps and other processes on the cloud's VMs, balancing demand and managing app lifecycles. For more information, see [Cloud Controller](./architecture/cloud-controller.html).
+- **Cloud Controller** runs the apps and other processes on the cloud's VMs, balancing demand and managing app lifecycles. For more information, see [Cloud Controller](./architecture/cloud-controller.html).
 
-- **Gorouter**: routes incoming traffic from the world to the VMs that are running the apps that the traffic demands, usually working with a customer-provided load balancer. For more information, see [Gorouter](./architecture/router.html).
+- The **Gorouter** routes incoming traffic from the world to the VMs that are running the apps that the traffic demands, usually working with a customer-provided load balancer. For more information, see [Gorouter](./architecture/router.html).
 
 ### <a id='apps-anywhere'></a> Running Apps
 
@@ -79,8 +79,8 @@ This section describes the VMs that run your apps in <%= vars.platform_name %> a
 
 <%= vars.platform_name %> designates the following types of VMs:
 
-- **Component VMs**: make up the platform's infrastructure.
-- **Host VMs**: host your apps for the outside world.
+- **Component VMs** make up the platform's infrastructure.
+- **Host VMs** host your apps for the outside world.
 
 Within <%= vars.platform_name %>, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
 
