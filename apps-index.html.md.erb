@@ -4,10 +4,10 @@ owner: Docs
 ---
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = "How " + vars.product_short + " Manages Apps" if vars.product_name != 'CF'  %>
+<% current_page.data.title = "How " + vars.app_runtime_abbr + " Manages Apps" if vars.product_name != 'CF'  %>
 
 
-The following topics provide information about how <%= vars.app_runtime_full %> manages apps:
+The following topics provide information about how <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) manages apps:
 
 * [How Apps are Staged](how-applications-are-staged.html)
 * [App Container Lifecycle](../devguide/deploy-apps/app-lifecycle.html)
