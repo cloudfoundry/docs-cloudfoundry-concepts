@@ -5,7 +5,7 @@ owner: Routing
 
 
 
-Gorouter routes traffic coming into Cloud Foundry to the appropriate component, whether
+Gorouter routes traffic coming into <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) to the appropriate component, whether
 the request comes from an operator addressing the [Cloud Controller](./cloud-controller.html)
 or from an application user accessing an app running on a Diego Cell. Handling both platform
 and app requests with the same process centralizes routing logic and simplifies support for
@@ -134,7 +134,7 @@ The log level is set to `debug` and is not configurable.
   <tr>
     <td><code>fatal</code></td>
     <td>Gorouter is unable to handle any requests due to a fatal error.</td>
-    <td> Gorouter cannot bind to its TCP port, a CF component has
+    <td>Gorouter cannot bind to its TCP port, a <%= vars.app_runtime_abbr %> component has
   published invalid data to Gorouter.</td>
   </tr>
   <tr>
@@ -195,7 +195,7 @@ Access logs provide information for the following fields when receiving a reques
 
 `<Request Host> - [<Start Date>] "<Request Method> <Request URL> <Request Protocol>" <Status Code> <Bytes Received> <Bytes Sent> "<Referer>" "<User-Agent>" <Remote Address> <Backend Address> x_forwarded_for:"<X-Forwarded-For>" x_forwarded_proto:"<X-Forwarded-Proto>" vcap_request_id:<X-Vcap-Request-ID> response_time:<Response Time> gorouter_time:<GoRouter Time> app_id:<Application ID> app_index:<Application Index> <Extra Headers>`
 
-* The following are optional fields: <code>Status Code</code>,  <code>Response Time</code>, <code>Application ID</code>, <code>Application Index</code>, and <code>Extra Headers</code>.
+* The following are optional fields: <code>Status Code</code>, <code>Response Time</code>, <code>Application ID</code>, <code>Application Index</code>, and <code>Extra Headers</code>.
 
 * If the access log lacks a <code>Status Code</code>,  <code>Response Time</code>, <code>Application ID</code>, or <code>Application Index</code>, the corresponding field shows `-`.
 
