@@ -3,55 +3,56 @@ title: Garden
 owner: Diego
 ---
 
+This topic describes Garden, the component that <%= vars.product_runtime %> (<%= vars.product_short %>) uses to create and manage isolated environments called containers. Each instance of an app deployed to <%= vars.product_short %> runs within a container. For more information about how containers work, see [Container Mechanics](../container-security.html#mechanics) in _Container Security_.
 
 
-This topic describes Garden, the component that Cloud Foundry uses to create and manage isolated environments called containers. Each instance of an application deployed to Cloud Foundry runs within a container. For more information about how containers work, see the [Container Mechanics](../container-security.html#mechanics) section of the <em>Container Security</em> topic.
+## <a id='backends'></a> Back Ends
 
-##<a id='backends'></a>Backends
+Garden has pluggable back ends for different platforms and runtimes, and specifies a set of interfaces that each platform-specific back end must implement. These interfaces contain methods to perform the following actions:
 
-Garden has pluggable backends for different platforms and runtimes, and specifies a set of interfaces that each platform-specific backend must implement. These interfaces contain methods to perform the following actions:
+* Create and delete containers
+* Apply resource limits to containers
+* Open and attach network ports to containers
+* Copy files into and out of containers
+* Run processes within containers
+* Stream `STDOUT` and `STDERR` data out of containers
+* Annotate containers with arbitrary metadata
+* Snapshot containers for redeploys without downtime
 
-- Create and delete containers
-- Apply resource limits to containers
-- Open and attach network ports to containers
-- Copy files into and out of containers
-- Run processes within containers
-- Stream `STDOUT` and `STDERR` data out of containers
-- Annotate containers with arbitrary metadata
-- Snapshot containers for redeploys without downtime
+For more information, see the [Garden](https://github.com/cloudfoundry/garden) repository on GitHub.
 
-For more information, see the [Garden repository](https://github.com/cloudfoundry/garden) on GitHub.
 
-##<a id='garden-runc'></a>Garden-runC
+## <a id='garden-runc'></a> Garden-runC
 
-Cloud Foundry currently uses the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of Cloud Foundry used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend.
+<%= vars.product_short %> currently uses the Garden-runC back end, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of <%= vars.product_short %> used the Garden-Linux back end. For more information, see the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) repository on GitHub.
 
 <%= vars.garden_runc %>
 
 Garden-runC has the following features:
 
-* Uses the same OCI low-level container execution code as Docker and Kubernetes, so container images run identically across all three platforms 
-* [AppArmor](https://wiki.ubuntu.com/AppArmor) is configured and enforced
-by default for all unprivileged containers
+* Uses the same OCI low-level container execution code as Docker and Kubernetes, so container images run identically across all three platforms
+
+* [AppArmor](https://wiki.ubuntu.com/AppArmor) is configured and enforced by default for all unprivileged containers
+
 * Seccomp whitelisting restricts the set of system calls a container can access, reducing the risk of container breakout
+
 * Allows pluggable networking and rootfs management
 
-For more information, see the [Garden-runC repository](https://github.com/cloudfoundry/garden-runc-release) on GitHub.
+For more information, see the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) repository on GitHub.
 
-##<a id='garden-rootfs'></a>Garden RootFS (GrootFS)
 
-Garden manages container filesystems through a plugin interface.
-Cloud Foundry uses the [GrootFS](https://github.com/cloudfoundry/Grootfs) plugin for this task.
-GrootFS is a Linux-specific implementation of the Garden volume plugin interface.
+## <a id='garden-rootfs'></a> Garden RootFS (GrootFS)
+
+Garden manages container filesystems through a plugin interface. <%= vars.product_short %> uses the GrootFS plugin for this task. GrootFS is a Linux-specific implementation of the Garden volume plugin interface.
 
 GrootFS performs the following actions:
 
-- Creates container filesystems based on buildpacks and droplets
-- Creates container filesystems based on remote docker images
-- Authenticates with remote registries when using remote images
-- Properly maps UID/GID for all files inside an image
-- Executes garbage collection to remove unused volumes
-- Applies per container disk quotas
-- Provides per container disk usage stats
+* Creates container filesystems based on buildpacks and droplets
+* Creates container filesystems based on remote docker images
+* Authenticates with remote registries when using remote images
+* Properly maps UID/GID for all files inside an image
+* Executes garbage collection to remove unused volumes
+* Applies per container disk quotas
+* Provides per container disk usage stats
 
 For more information, see [GrootFS Disk Usage](../grootfs-disk.html) and the [GrootFS repository](https://github.com/cloudfoundry/grootfs) on GitHub.
