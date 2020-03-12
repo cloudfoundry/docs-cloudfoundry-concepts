@@ -28,7 +28,7 @@ In environments with both platform-wide and space-specific ASGs, the ASGs for a 
 
 ASGs can be complicated to configure correctly, especially when the specific IP addresses listed in a group change.
 
-To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.product_short %> deployment, then create ASGs for the apps that allow those service subnets, while denying access to any VM hosting other apps.
+To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.app_runtime_abbr %> deployment, then create ASGs for the apps that allow those service subnets, while denying access to any VM hosting other apps.
 
 For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
@@ -48,7 +48,7 @@ For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
 ASGs are applied by configuring ASG sets differentiated by _scope_, platform-wide or space specific, and _lifecycle_, staging or running.
 
-Currently, four ASG sets exist in <%= vars.product_short %>:
+Currently, four ASG sets exist in <%= vars.app_runtime_abbr %>:
 
 * Platform-wide staging ASG set, also called "default-staging"
 * Platform-wide running ASG set, also called "default-running"
@@ -291,7 +291,7 @@ Below are examples of typical ASGs. Configure your ASGs in accordance with your 
 |`dns`                 |DNS, either public or private
 |`public-networks`     |Public networks, excluding IaaS metadata endpoints
 |`private-networks`    |Private networks in accordance with [RFC-1918](https://tools.ietf.org/html/rfc1918#section-3)
-|`load-balancers`      |The internal <%= vars.product_short %> load balancer and others
+|`load-balancers`      |The internal <%= vars.app_runtime_abbr %> load balancer and others
 |`internal-proxies`    |Internal proxies
 |`internal-databases`  |Internal databases
 
@@ -388,7 +388,7 @@ The ASG Creator is a command line tool that you can use to create JSON rules fil
 
 In turn, the JSON file is the input for the `cf create-security-group` command that creates an ASG.
 
-To download the latest release of the ASG Creator, see the <%= vars.product_short %> [incubator](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) repository on GitHub.
+To download the latest release of the ASG Creator, see the <%= vars.app_runtime_abbr %> [incubator](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) repository on GitHub.
 
 
 ## <a id='logging'></a> ASG Logging
