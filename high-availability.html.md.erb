@@ -5,40 +5,40 @@ owner: Release Integration
 
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = "High Availability in " + vars.product_short if vars.product_name != 'CF'  %>
+<% current_page.data.title = "High Availability in " + vars.app_runtime_abbr if vars.product_name != 'CF'  %>
 
 
-This topic describes the components used to ensure high availability in <%= vars.app_runtime_full %>, vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
+This topic describes the components used to ensure high availability in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>), vertical and horizontal scaling, and the infrastructure required to support scaling component VMs for high availability.
 
 
 ## <a id='overview'></a> Overview
 
-A system with high availability provides higher than typical uptime through redundancy of apps and component VMs. You can create the redundancy required for high availability in several ways, such as running VMs in multiple availability zones and using external blob storage solutions. 
+A system with high availability provides higher than typical uptime through redundancy of apps and component VMs. You can create the redundancy required for high availability in several ways, such as running VMs in multiple availability zones and using external blob storage solutions.
 
-The sections in this topic provide guidance on configuring your <%= vars.product_short %> deployment for high availability. 
+The sections in this topic provide guidance on configuring your <%= vars.app_runtime_abbr %> deployment for high availability.
 
 ## <a id='high-availability'></a> Components of High Availability Deployments
 
-This section describes how you can use availability zones, external load balancers, and external blob storage to ensure high availability for your deployment. 
+This section describes how you can use availability zones, external load balancers, and external blob storage to ensure high availability for your deployment.
 
 
 ### <a id='azs'></a> Availability Zones
 
-Availability Zones (AZs) are locations where public cloud services offer data centers. 
+Availability Zones (AZs) are locations where public cloud services offer data centers.
 
-You can assign and scale components in multiple AZs to help maintain high availability through redundancy. To configure sufficient redundancy, deploy <%= vars.product_short %> across three or more AZs and assign multiple component instances to different AZs. 
+You can assign and scale components in multiple AZs to help maintain high availability through redundancy. To configure sufficient redundancy, deploy <%= vars.app_runtime_abbr %> across three or more AZs and assign multiple component instances to different AZs.
 
-Always use an odd number of AZs. This ensures that your deployment remains available as long as greater than half of the AZs are available. 
+Always use an odd number of AZs. This ensures that your deployment remains available as long as greater than half of the AZs are available.
 
 For example, a deployment with three AZs stays available when one AZ is unavailable. A deployment with five AZs stays available when two AZs are unavailable.
 
 ### <a id='external-lbs'></a> External Load Balancers
 
-External load balancers distribute traffic coming from the internet to your internal network. 
+External load balancers distribute traffic coming from the internet to your internal network.
 
 To ensure high availability for production environments, use a highly-available customer-provided external load balancing solution that does the following:
 
-* Provides load balancing to each of the <%= vars.product_short %> Router IP addresses
+* Provides load balancing to each of the <%= vars.app_runtime_abbr %> Router IP addresses
 * Supports SSL termination with wildcard DNS location
 * Adds appropriate x-forwarded-for and x-forwarded-proto HTTP headers to incoming requests
 * (Optional) Supports WebSockets
@@ -49,7 +49,7 @@ For lab and test environments, the `use-haproxy.yml` ops file enables HAProxy fo
 
 ### <a id='blobstore'></a> External Blob Storage
 
-Blobs are large binary files, such as PDFs or images. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible service. 
+Blobs are large binary files, such as PDFs or images. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible service.
 
 You can also store blobs internally using WebDAV or NFS. These components run as single instances and you cannot scale them. For these deployments, use the high availability features of your IaaS to immediately recover your WebDAV or NFS server VM if it fails. <%= vars.contact_support %>
 
@@ -61,9 +61,9 @@ You can scale platform capacity in the following ways:
 
 * **Vertical scaling**: Add memory and disk to each VM.
 
-* **Horizontal scaling**: Add more VMs that run instances of <%= vars.product_short %> components. 
+* **Horizontal scaling**: Add more VMs that run instances of <%= vars.app_runtime_abbr %> components.
 
-The type of apps you host on <%= vars.product_short %> determines whether you scale vertically or horizontally.
+The type of apps you host on <%= vars.app_runtime_abbr %> determines whether you scale vertically or horizontally.
 
 For more information about scaling applications and maintaining app uptime, see the following topics:
 
@@ -85,7 +85,7 @@ To scale vertically, allocate and maintain the following:
 
 Scaling horizontally means increasing the number of instances of VMs that run a functional component of a system.
 
-You can horizontally scale most <%= vars.product_short %> component VMs to multiple instances for high availability. 
+You can horizontally scale most <%= vars.app_runtime_abbr %> component VMs to multiple instances for high availability.
 
 You should also distribute the instances of components across different AZs to minimize downtime during ongoing operation, product updates, and platform upgrades. For more information about using AZs, see [Availability Zones](#azs).
 
@@ -119,7 +119,7 @@ For more information about configuring your resource pools according to the requ
 
 ### <a id='databases'></a> Databases
 
-For database services deployed outside <%= vars.product_short %>, use the high availability features included with your infrastructure. Also, configure backup and restore where possible. <%= vars.scaling_ert_db %>
+For database services deployed outside <%= vars.app_runtime_abbr %>, use the high availability features included with your infrastructure. Also, configure backup and restore where possible. <%= vars.scaling_ert_db %>
 
 <p class="note"><strong>Note:</strong> Data services may have single points of failure depending on their configuration.</p>
 
