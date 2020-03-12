@@ -5,7 +5,7 @@ owner: Diego
 
 
 
-This topic describes Garden, the component that <%= vars.app_runtime_full %> uses to create and manage isolated environments called containers. Each instance of an application deployed to <%= vars.product_short %> runs within a container. For more information about how containers work, see the [Container Mechanics](../container-security.html#mechanics) section of the <em>Container Security</em> topic.
+This topic describes Garden, the component that <%= vars.app_runtime_full %> uses to create and manage isolated environments called containers. Each instance of an application deployed to <%= vars.app_runtime_abbr %> runs within a container. For more information about how containers work, see the [Container Mechanics](../container-security.html#mechanics) section of the <em>Container Security</em> topic.
 
 ##<a id='backends'></a>Backends
 
@@ -24,13 +24,13 @@ For more information, see the [Garden repository](https://github.com/cloudfoundr
 
 ##<a id='garden-runc'></a>Garden-runC
 
-<%= vars.product_short %> currently uses the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of <%= vars.product_short %> used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend.
+<%= vars.app_runtime_abbr %> currently uses the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) backend, a Linux-specific implementation of the Garden interface using the [Open Container Interface](https://github.com/opencontainers/runtime-spec) (OCI) standard. Previous versions of <%= vars.app_runtime_abbr %> used the [Garden-Linux](https://github.com/cloudfoundry-attic/garden-linux) backend.
 
 <%= vars.garden_runc %>
 
 Garden-runC has the following features:
 
-* Uses the same OCI low-level container execution code as Docker and Kubernetes, so container images run identically across all three platforms 
+* Uses the same OCI low-level container execution code as Docker and Kubernetes, so container images run identically across all three platforms
 * [AppArmor](https://wiki.ubuntu.com/AppArmor) is configured and enforced
 by default for all unprivileged containers
 * Seccomp whitelisting restricts the set of system calls a container can access, reducing the risk of container breakout
@@ -41,7 +41,7 @@ For more information, see the [Garden-runC repository](https://github.com/cloudf
 ##<a id='garden-rootfs'></a>Garden RootFS (GrootFS)
 
 Garden manages container filesystems through a plugin interface.
-<%= vars.product_short %> uses the [GrootFS](https://github.com/cloudfoundry/Grootfs) plugin for this task.
+<%= vars.app_runtime_abbr %> uses the [GrootFS](https://github.com/cloudfoundry/Grootfs) plugin for this task.
 GrootFS is a Linux-specific implementation of the Garden volume plugin interface.
 
 GrootFS performs the following actions:
