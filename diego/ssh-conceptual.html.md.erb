@@ -3,28 +3,23 @@ title: App SSH Components and Processes
 owner: Diego
 ---
 
+This topic describes the <%= vars.product_runtime %> (<%= vars.product_short %>) SSH components for access to deployed app instances. <%= vars.product_short %> supports native SSH access to apps and load balancing of SSH sessions with the load balancer for your <%= vars.product_short %> deployment.
 
-This document describes details about the <%= vars.product_full %> SSH components for access to deployed application instances. <%= vars.product_full %> supports native SSH access to applications and load balancing of SSH sessions with the load balancer for your <%= vars.product_short %> deployment.
+For procedural and configuration information about app SSH access, see [SSH Overview](../../devguide/deploy-apps/app-ssh-overview.html).
 
-The [SSH Overview](../../devguide/deploy-apps/app-ssh-overview.html) document describes procedural and configuration information about application SSH access.
 
-## <a id="ssh-components"></a>SSH Components
+## <a id="ssh-components"></a> SSH Components
 
-The <%= vars.product_short %> SSH includes the following central components, which are described in more detail below:
+The <%= vars.product_short %> SSH includes two central components: an implementation of an SSH proxy server and a lightweight SSH daemon. If these components are deployed and configured correctly, they provide a simple and scalable way to access containers apps and other long-running processes (LRPs).
 
-- An implementation of an SSH [proxy server](#diego-ssh-proxy).
-- A lightweight SSH [daemon](#daemon).
-
-If these components are deployed and configured correctly, they provide a simple and scalable way to access containers apps and other long running processes (LRPs).
-
-## <a id='daemon'></a> SSH Daemon ##
+### <a id='daemon'></a> SSH Daemon
 
 The SSH daemon is a lightweight implementation that is built around the Go SSH library. It supports command execution, interactive shells, local port forwarding, and secure copy. The daemon is self-contained and has no dependencies on the container root file system.
 
-The daemon is focused on delivering basic access to application instances in <%= vars.product_short %>. It is intended to run as an unprivileged process, and interactive shells and commands will run as the daemon user. The daemon only supports one authorized key, and it is not intended to support multiple users.
+The daemon is focused on delivering basic access to app instances in <%= vars.product_short %>. It is intended to run as an unprivileged process, and interactive shells and commands will run as the daemon user. The daemon only supports one authorized key, and it is not intended to support multiple users.
 
-The daemon can be made available on a file server and Diego LRPs that want to use it can include a download action to acquire the binary and a run action to start it. <%= vars.product_short %> applications will download the daemon as part of the lifecycle bundle.
+The daemon can be made available on a file server and Diego LRPs that want to use it can include a download action to acquire the binary and a run action to start it. <%= vars.product_short %> apps download the daemon as part of the lifecycle bundle.
 
-## <a id="diego-ssh-proxy"></a>SSH Proxy Authentication
+### <a id="diego-ssh-proxy"></a> SSH Proxy Authentication
 
-The SSH proxy hosts the user-accessible SSH endpoint and is responsible for authentication, policy enforcement, and access controls in the context of <%= vars.product_short %>. After a user has successfully authenticated with the proxy, the proxy will attempt to locate the target container and create an SSH session to a daemon running inside the container. After both sessions have been established, the proxy will manage the communication between the user's SSH client and the container's SSH Daemon.
+The SSH proxy hosts the user-accessible SSH endpoint and is responsible for authentication, policy enforcement, and access controls in the context of <%= vars.product_short %>. After a user has successfully authenticated with the proxy, the proxy attempts to locate the target container and create an SSH session to a daemon running inside the container. After both sessions have been established, the proxy manages the communication between the user's SSH client and the container's SSH Daemon.
