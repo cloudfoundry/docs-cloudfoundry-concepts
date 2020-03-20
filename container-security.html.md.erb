@@ -51,7 +51,7 @@ For example, consider two cgroups, one holding two shares and one holding four. 
 The calculation of the CPU usage based on the percentage of the total CPU power available is quite sophisticated and is performed regularly as the CPU demands of the various containers fluctuates. Specifically, the percentage of CPU cycles a cgroup gets can be calculated by dividing the `cpu.shares` it holds by the sum of the `cpu.shares` of all the cgroups that are currently doing CPU activity, as shown in the following calculation:
 
 ```
-process\_cpu\_share\_percent = cpu.shares / sum\_cpu\_shares * 100
+process_cpu_share_percent = cpu.shares / sum_cpu_shares * 100
 ```
 
 In <%= vars.product_short %>, cgroup shares range from 10 to 1024, with 1024 being the default. The actual amount of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`.
