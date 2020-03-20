@@ -12,7 +12,7 @@ The sections in this topic provide the following information:
 
 * [Container Mechanics](#mechanics) provides an overview of container isolation.
 
-* [Inbound and Outbound Traffic from <%= vars.product_short %>](#networking) provides an [overview](#net-overview) of container networking and describes how <%= vars.product_short %> admins [customize](#config-traffic) container network traffic rules for their deployment.
+* [Inbound and Outbound Traffic from <%= vars.product_short %>](#networking) provides an overview of container networking and describes how <%= vars.product_short %> admins customize container network traffic rules for their deployment.
 
 * [Container Security](#security) describes how <%= vars.product_short %> secures containers by running app instances in unprivileged containers and by hardening them.
 
@@ -21,14 +21,13 @@ The sections in this topic provide the following information:
 
 Each instance of an app deployed to <%= vars.product_short %> runs within its own self-contained environment, a Garden container. This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where <%= vars.product_short %> is deployed. For more information about Garden containers, see [Garden](./architecture/garden.html).
 
-<%= vars.product_name_full %> (<%= vars.product_name %>) achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
+<%= vars.product_short %> achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
 
 <%= vars.product_short %> creates container filesystems using the Garden Rootfs (GrootFS) tool. It stacks the following using OverlayFS:
 
-* A **read-only base filesystem**: This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers.
-Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.
-* A **container-specific read-write layer**: This layer is unique to each container and its size is limited by XFS project quotas.
-The quotas prevent the read-write layer from overflowing into unallocated space.
+* A **read-only base filesystem:** This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.
+
+* A **container-specific read-write layer:** This layer is unique to each container and its size is limited by XFS project quotas. The quotas prevent the read-write layer from overflowing into unallocated space.
 
 For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture/garden.html#garden-rootfs) in _Garden_.
 
@@ -60,7 +59,7 @@ In <%= vars.product_short %>, cgroup shares range from 10 to 1024, with 1024 bei
 The amount of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest. <%= vars.product_short %> scales the number of allocated shares linearly with the amount of memory, with an app instance requesting 8&nbsp;GB of memory getting the upper limit of 1024 shares, as shown in the following calculation:
 
 ```
-process\_cpu.shares = min( 1024*(application\_memory / 8 GB), 1024)
+process_cpu.shares = min( 1024*(application_memory / 8 GB), 1024)
 ```
 
 The next example helps to illustrate this better. Consider three processes: P1, P2 and P3, which are assigned `cpu.shares` of 5, 20 and 30, respectively.
@@ -90,6 +89,8 @@ In summary, the cgroup shares are the minimum guaranteed CPU share that the proc
 
 ## <a id='networking'></a> Inbound and Outbound Traffic from <%= vars.product_short %>
 
+This section provides an overview of container networking and describes how <%= vars.product_short %> admins customize container network traffic rules for their deployment.
+
 ### <a id='net-overview'></a> Networking Overview
 
 A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.recommended_by %> recommends, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
@@ -113,11 +114,11 @@ Admins configure these rules at two levels:
 
 ## <a id='security'></a> Container Security
 
-<%= vars.product_name %> secures containers through the following measures:
+<%= vars.product_short %> secures containers through the following measures:
 
 * Running app instances in unprivileged containers by default. For more information, see [Types](#types).
 
-* [Hardening](#hardening) containers by limiting functionality and access rights. For more information, see [Hardening](#hardening).
+* Hardening containers by limiting functionality and access rights. For more information, see [Hardening](#hardening).
 
 * <%= vars.app_sec_groups_default %> <%= vars.app_sec_groups_link %>
 
@@ -131,11 +132,11 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 ### <a id='hardening'></a> Hardening
 
-<%= vars.product_name %> mitigates against container breakout and denial of service attacks in the following ways:
+<%= vars.product_short %> mitigates against container breakout and denial of service attacks in the following ways:
 
 * <%= vars.product_short %> uses the full set of Linux namespaces - IPC, Network, Mount, PID, User, UTS - to provide isolation between containers running on the same host. The User namespace is not used for privileged containers. For more information, see [namespaces - overview of Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) in the Ubuntu documentation.
 
-* In unprivileged containers, <%= vars.product_name %> maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an app from inheriting UID/GID 0 on the host if it breaks out of the container.
+* In unprivileged containers, <%= vars.product_short %> maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an app from inheriting UID/GID 0 on the host if it breaks out of the container.
   * <%= vars.product_short %> uses the same UID/GID for all containers.
   * <%= vars.product_short %> maps all UIDs except UID 0 to themselves. <%= vars.product_short %> maps UID 0 inside the container namespace to `MAX_UID-1` outside of the container namespace.
   * Container Root does not grant Host Root permissions.
@@ -152,7 +153,7 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 * <%= vars.product_short %> avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
 
-* <%= vars.product_short %> establishes a virtual Ethernet pair for each container for network traffic. For more information, see [Container Network Traffic](#config-traffic). The virtual Ethernet pair has the following features:
+* <%= vars.product_short %> establishes a virtual ethernet pair for each container for network traffic. For more information, see [Container Network Traffic](#config-traffic). The virtual ethernet pair has the following features:
   * One interface in the pair is inside the container's network namespace, and is the only non-loopback interface accessible inside the container.
   * The other interface remains in the host network namespace and is bridged to the container-side interface.
   * Egress allow list rules are applied to these interfaces according to ASGs configured by the admin.
@@ -167,7 +168,7 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 * <%= vars.product_short %> allows admins to rate limit the maximum bandwidth consumed by single-app containers, configuring `rate` and `burst` properties on the `silk-cni` job.
 
-* <%= vars.product_short %> limits access to devices using cgroups but explicitly whitelists the following safe device nodes:
+* <%= vars.product_short %> limits access to devices using cgroups but explicitly allows the following safe device nodes:
 	* `/dev/full`
 	* `/dev/fuse`
 	* `/dev/null`
@@ -205,7 +206,7 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 	* `CAP_SYSLOG`
 	* `CAP_WAKE_ALARM`
 	* `CAP_BLOCK_SUSPEND`
-	* `CAP_SYS_ADMIN` (for unprivileged containers)
+	* `CAP_SYS_ADMIN` for unprivileged containers
   <br>
   <br>
   For more information about Linux capabilities, see [capabilities - overview of Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) in the Ubuntu documentation.
