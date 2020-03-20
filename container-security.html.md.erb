@@ -12,7 +12,7 @@ The sections in this topic provide the following information:
 
 * [Container Mechanics](#mechanics) provides an overview of container isolation.
 
-* [Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>](#networking) provides an [overview](#net-overview) of container networking and describes how <%= vars.app_runtime_abbr %> admins [customize](#config-traffic) container network traffic rules for their deployment.
+* [Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>](#networking) provides an overview of container networking and describes how <%= vars.app_runtime_abbr %> admins customize container network traffic rules for their deployment.
 
 * [Container Security](#security) describes how <%= vars.app_runtime_abbr %> secures containers by running app instances in unprivileged containers and by hardening them.
 
@@ -25,10 +25,9 @@ Each instance of an app deployed to <%= vars.app_runtime_abbr %> runs within its
 
 <%= vars.app_runtime_abbr %> creates container filesystems using the Garden Rootfs (GrootFS) tool. It stacks the following using OverlayFS:
 
-* A **read-only base filesystem**: This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers.
-Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.
-* A **container-specific read-write layer**: This layer is unique to each container and its size is limited by XFS project quotas.
-The quotas prevent the read-write layer from overflowing into unallocated space.
+* A **read-only base filesystem**: This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers. Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.
+
+* A **container-specific read-write layer**: This layer is unique to each container and its size is limited by XFS project quotas. The quotas prevent the read-write layer from overflowing into unallocated space.
 
 For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture/garden.html#garden-rootfs) in _Garden_.
 
@@ -52,7 +51,7 @@ For example, consider two cgroups, one holding two shares and one holding four. 
 The calculation of the CPU usage based on the percentage of the total CPU power available is quite sophisticated and is performed regularly as the CPU demands of the various containers fluctuates. Specifically, the percentage of CPU cycles a cgroup gets can be calculated by dividing the `cpu.shares` it holds by the sum of the `cpu.shares` of all the cgroups that are currently doing CPU activity, as shown in the following calculation:
 
 ```
-process\_cpu\_share\_percent = cpu.shares / sum\_cpu\_shares * 100
+process_cpu_share_percent = cpu.shares / sum_cpu_shares * 100
 ```
 
 In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024, with 1024 being the default. The actual amount of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`.
@@ -60,7 +59,7 @@ In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024, with 1024 
 The amount of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest. <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory, with an app instance requesting 8&nbsp;GB of memory getting the upper limit of 1024 shares, as shown in the following calculation:
 
 ```
-process\_cpu.shares = min( 1024*(application\_memory / 8 GB), 1024)
+process_cpu.shares = min( 1024*(application_memory / 8 GB), 1024)
 ```
 
 The next example helps to illustrate this better. Consider three processes: P1, P2 and P3, which are assigned `cpu.shares` of 5, 20 and 30, respectively.
@@ -90,6 +89,8 @@ In summary, the cgroup shares are the minimum guaranteed CPU share that the proc
 
 ## <a id='networking'></a> Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>
 
+This section provides an overview of container networking and describes how <%= vars.app_runtime_abbr %> admins customize container network traffic rules for their deployment.
+
 ### <a id='net-overview'></a> Networking Overview
 
 A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.recommended_by %> recommends, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
@@ -117,7 +118,7 @@ Admins configure these rules at two levels:
 
 * Running app instances in unprivileged containers by default. For more information, see [Types](#types).
 
-* [Hardening](#hardening) containers by limiting functionality and access rights. For more information, see [Hardening](#hardening).
+* Hardening containers by limiting functionality and access rights. For more information, see [Hardening](#hardening).
 
 * <%= vars.app_sec_groups_default %> <%= vars.app_sec_groups_link %>
 
@@ -152,7 +153,7 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 * <%= vars.app_runtime_abbr %> avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
 
-* <%= vars.app_runtime_abbr %> establishes a virtual Ethernet pair for each container for network traffic. For more information, see [Container Network Traffic](#config-traffic). The virtual Ethernet pair has the following features:
+* <%= vars.app_runtime_abbr %> establishes a virtual ethernet pair for each container for network traffic. For more information, see [Container Network Traffic](#config-traffic). The virtual ethernet pair has the following features:
   * One interface in the pair is inside the container's network namespace, and is the only non-loopback interface accessible inside the container.
   * The other interface remains in the host network namespace and is bridged to the container-side interface.
   * Egress allow list rules are applied to these interfaces according to ASGs configured by the admin.
@@ -167,7 +168,7 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 * <%= vars.app_runtime_abbr %> allows admins to rate limit the maximum bandwidth consumed by single-app containers, configuring `rate` and `burst` properties on the `silk-cni` job.
 
-* <%= vars.app_runtime_abbr %> limits access to devices using cgroups but explicitly whitelists the following safe device nodes:
+* <%= vars.app_runtime_abbr %> limits access to devices using cgroups but explicitly allows the following safe device nodes:
 	* `/dev/full`
 	* `/dev/fuse`
 	* `/dev/null`
@@ -205,7 +206,7 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 	* `CAP_SYSLOG`
 	* `CAP_WAKE_ALARM`
 	* `CAP_BLOCK_SUSPEND`
-	* `CAP_SYS_ADMIN` (for unprivileged containers)
+	* `CAP_SYS_ADMIN` for unprivileged containers
   <br>
   <br>
   For more information about Linux capabilities, see [capabilities - overview of Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) in the Ubuntu documentation.
