@@ -134,7 +134,7 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 <%= vars.app_runtime_abbr %> mitigates against container breakout and denial of service attacks in the following ways:
 
-* <%= vars.app_runtime_abbr %> uses the full set of Linux namespaces - IPC, Network, Mount, PID, User, UTS - to provide isolation between containers running on the same host. The User namespace is not used for privileged containers. For more information, see [namespaces - overview of Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) in the Ubuntu documentation.
+* <%= vars.app_runtime_abbr %> uses the full set of Linux namespaces - IPC, Network, Mount, PID, User, UTS - to provide isolation between containers running on the same host. The User namespace is not used for privileged containers. For more information about Linux namespaces, see [namespaces - overview of Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) in the Ubuntu documentation.
 
 * In unprivileged containers, <%= vars.platform_name %> maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an app from inheriting UID/GID 0 on the host if it breaks out of the container.
   * <%= vars.app_runtime_abbr %> uses the same UID/GID for all containers.
