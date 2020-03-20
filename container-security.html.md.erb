@@ -3,142 +3,127 @@ title: Container Security
 owner: Security
 ---
 
+This topic describes how <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) secures the containers that host app instances on Linux. For an overview of other <%= vars.app_runtime_abbr %> security features, see [<%= vars.app_runtime_abbr %> Security](security.html).
 
 
-This topic describes how <%= vars.app_runtime_full %> secures the containers that host application instances on Linux. For an overview of other <%= vars.app_runtime_abbr %> security features, see the [<%= vars.app_runtime_abbr %> Security](security.html) topic.
+## <a id='overview'></a> Overview
+
+The sections in this topic provide the following information:
 
 * [Container Mechanics](#mechanics) provides an overview of container isolation.
-* [Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>](#networking) provides an [overview](#net-overview) of container networking and describes how <%= vars.app_runtime_abbr %> administrators [customize](#config-traffic) container network traffic rules for their deployment.
-* [Container Security](#security) describes how <%= vars.app_runtime_abbr %> secures containers by running application instances in [unprivileged](#types) containers and by [hardening](#hardening) them.
 
-## <a id='mechanics'></a>Container Mechanics###
+* [Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>](#networking) provides an [overview](#net-overview) of container networking and describes how <%= vars.app_runtime_abbr %> admins [customize](#config-traffic) container network traffic rules for their deployment.
 
-Each instance of an app deployed to <%= vars.app_runtime_abbr %> runs within its own self-contained environment, a [Garden container](./architecture/garden.html). This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where <%= vars.app_runtime_abbr %> is deployed.
+* [Container Security](#security) describes how <%= vars.app_runtime_abbr %> secures containers by running app instances in unprivileged containers and by hardening them.
+
+
+## <a id='mechanics'></a> Container Mechanics
+
+Each instance of an app deployed to <%= vars.app_runtime_abbr %> runs within its own self-contained environment, a Garden container. This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where <%= vars.app_runtime_abbr %> is deployed. For more information about Garden containers, see [Garden](./architecture/garden.html).
 
 <%= vars.app_runtime_abbr %> achieves container isolation by namespacing kernel resources that would otherwise be shared. The intended level of isolation is set to prevent multiple containers that are present on the same host from detecting each other. Every container includes a private root filesystem, which includes a Process ID (PID), namespace, network namespace, and mount namespace.
 
-<%= vars.app_runtime_abbr %> creates container filesystems using the [Garden Rootfs](./architecture/garden.html#garden-rootfs) (GrootFS) tool. It stacks the following using OverlayFS:
+<%= vars.app_runtime_abbr %> creates container filesystems using the Garden Rootfs (GrootFS) tool. It stacks the following using OverlayFS:
 
 * A **read-only base filesystem**: This filesystem has the minimal set of operating system packages and Garden-specific modifications common to all containers.
 Containers can share the same read-only base filesystem because all writes are applied to the read-write layer.
 * A **container-specific read-write layer**: This layer is unique to each container and its size is limited by XFS project quotas.
 The quotas prevent the read-write layer from overflowing into unallocated space.
 
+For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture/garden.html#garden-rootfs) in _Garden_.
+
 Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers.
 
-<p class="note">
-    <strong>Note</strong>: <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.
-</p>
+<p class="note"><strong>Note:</strong> <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
 
-### <a id='cpu'></a>CPU ###
+### <a id='cpu'></a> CPU
 
-Each container is placed in its own cgroup. Cgroups make each container use a
-fair share of CPU relative to the other containers. This prevents
-oversubscription on the host VM where one or more containers hog the CPU and
-leave no computing resources to the others.
+Each container is placed in its own cgroup. Cgroups make each container use a fair share of CPU relative to the other containers. This prevents oversubscription on the host VM where one or more containers hog the CPU and leave no computing resources to the others.
 
-The way cgroups allocate CPU time is based on shares. CPU shares do not work
-as direct percentages of total CPU usage. Instead, a share is relative in
-a given time window to the shares held by the other containers. The total
-amount of CPU that can be overall divided among the cgroups is what is left
-by other processes that may run in the host VM.
+The way cgroups allocate CPU time is based on shares. CPU shares do not work as direct percentages of total CPU usage. Instead, a share is relative in a given time window to the shares held by the other containers. The total amount of CPU that can be overall divided among the cgroups is what is left by other processes that may run in the host VM.
 
-Generally, cgroups offers two possibilities for limiting the CPU usage:
-<em>CPU affinity</em> and <em>CPU bandwidth</em>, the latter of which is used
-in <%= vars.app_runtime_abbr %>.
+Generally, cgroups offers two possibilities for limiting the CPU usage: _CPU affinity_ and _CPU bandwidth_, the latter of which is used in <%= vars.app_runtime_abbr %>.
 
-* CPU affinity: It consists of binding a cgroup to certain CPU cores. The actual amount of CPU cycles that can be consumed by the cgroup is thus limited to what is available on the bound CPU cores.
+* CPU affinity consists of binding a cgroup to certain CPU cores. The actual amount of CPU cycles that can be consumed by the cgroup is thus limited to what is available on the bound CPU cores.
 
-* CPU bandwidth: Sets the weight of a cgroup with the process scheduler. The process scheduler divides the available CPU cycles among cgroups depending on the shares held by each cgroup, relative to the shares held by the others.
+* CPU bandwidth sets the weight of a cgroup with the process scheduler. The process scheduler divides the available CPU cycles among cgroups depending on the shares held by each cgroup, relative to the shares held by the others.
 For example, consider two cgroups, one holding two shares and one holding four. Assuming the process scheduler gets to administer 60 CPU cycles, the first cgroup with two shares will get one third of those available CPU cycles, as it holds one third of the overall shares. Similarly, the second cgroup will get 40 cycles, as it holds two thirds of the collective shares.
 
-The calculation of the CPU usage based on the percentage of the total CPU power
-available is quite sophisticated and is performed regularly as the CPU demands
-of the various containers fluctuates. Specifically, the percentage of CPU cycles
-a cgroup gets can be calculated by dividing the <code>cpu.shares</code> it holds by the sum
-of the <code>cpu.shares</code> of all the cgroups that are currently doing CPU activity:
+The calculation of the CPU usage based on the percentage of the total CPU power available is quite sophisticated and is performed regularly as the CPU demands of the various containers fluctuates. Specifically, the percentage of CPU cycles a cgroup gets can be calculated by dividing the `cpu.shares` it holds by the sum of the `cpu.shares` of all the cgroups that are currently doing CPU activity, as shown in the following calculation:
 
-<code>process\_cpu\_share\_percent = cpu.shares / sum\_cpu\_shares * 100</code>
+```
+process\_cpu\_share\_percent = cpu.shares / sum\_cpu\_shares * 100
+```
 
-In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024, with 1024 being the default.
-The actual amount of shares a cgroup gets can be read from the
-<code>cpu.shares</code> file of the cgroup configurations pseudo-file-system
-available in the container at <code>/sys/fs/cgroup/cpu</code>.
+In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024, with 1024 being the default. The actual amount of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`.
 
-The amount of shares given to an applications cgroup depends on the amount of
-memory the application declares to need in the manifest. <%= vars.app_runtime_abbr %> scales
-the number of allocated shares linearly with the amount of memory, with an app
-instance requesting 8G of memory getting the upper limit of 1024 shares.
+The amount of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest. <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory, with an app instance requesting 8&nbsp;GB of memory getting the upper limit of 1024 shares, as shown in the following calculation:
 
-<code>process\_cpu.shares = min( 1024*(application\_memory / 8 GB), 1024)</code>
+```
+process\_cpu.shares = min( 1024*(application\_memory / 8 GB), 1024)
+```
 
-The next example helps to illustrate this better. Consider three processes. P1, P2 and P3, which are assigned <code>cpu.shares</code> of 5, 20 and 30, respectively.
+The next example helps to illustrate this better. Consider three processes: P1, P2 and P3, which are assigned `cpu.shares` of 5, 20 and 30, respectively.
 
-P1 is active, while P2 and P3 require no CPU. Hence, P1 may use the whole CPU.
-When P2 joins in and is doing some actual work (e.g. a request comes in),
-the CPU share between P1 and P2 will be calculated as follows:
+P1 is active, while P2 and P3 require no CPU. Hence, P1 may use the whole CPU. When P2 joins in and is doing some actual work, such as when a request comes in, the CPU share between P1 and P2 is calculated as follows:
 
 * P1 -> 5 / (5+20) = 0.2 = 20%
 * P2 -> 20 / (5+20) = 0.8 = 80%
 * P3 (idle)
 
-At some point process P3 joins in as well. Then the distribution will
-be recalculated again:
+At some point, process P3 joins in. Then the distribution is recalculated again:
 
 * P1 -> 5 / (5+20+30) = 0.0909 = ~9%
 * P2 -> 20 / (5+20+30) = 0.363 = ~36%
 * P3 -> 30 / (5+20+30) = 0.545 = ~55%
 
-Should P1 become idle, the following recalculation between P2 and P3
-takes place:
+Should P1 become idle, the following recalculation between P2 and P3 takes place:
 
 * P1 (idle)
 * P2 -> 20 / (20+30) = 0.4 = 40%
 * P3 -> 30 / (20+30) = 0.6 = 60%
 
-If P3 finishes or becomes idle then P2 can consume all the CPU as another
-recalculation will be performed.
+If P3 finishes or becomes idle, then P2 can consume all the CPU, as another recalculation is performed.
 
-<p class="note"><strong>Summary:</strong> The cgroup shares are the minimum guaranteed CPU share that the process can get. This limitation becomes effective only when processes on the same host compete for resources.</p>
+In summary, the cgroup shares are the minimum guaranteed CPU share that the process can get. This limitation becomes effective only when processes on the same host compete for resources.
 
-## <a id='networking'></a>Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>
 
-### <a id='net-overview'></a>Networking Overview ###
+## <a id='networking'></a> Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>
 
-A host VM has a single IP address.
-If you configure the deployment with the cluster on a VLAN, as recommended,
-then all traffic goes through the following levels of network address translation, as shown in the diagram below.
+### <a id='net-overview'></a> Networking Overview
 
-* <strong>Inbound</strong> requests flow from the load balancer through the router to the host cell, then into the application container. The router determines which application instance receives each request.
+A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.company_name %> recommends, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
 
-* <strong>Outbound</strong> traffic flows from the application container to the cell, then to the gateway on the cell's virtual network interface. Depending on your IaaS, this gateway may be a NAT to external networks.
+* **Inbound** requests flow from the load balancer through the router to the host Diego Cell, then into the app container. The router determines which app instance receives each request.
+
+* **Outbound** traffic flows from the app container to the Diego Cell, then to the gateway on the Diego Cell's virtual network interface. Depending on your IaaS, this gateway may be a NAT to external networks.
 
   <%= image_tag("images/security/sysbound2.png") %>
 
-### <a id='config-traffic'></a>Network Traffic Rules ###
+### <a id='config-traffic'></a> Network Traffic Rules
 
-Administrators configure rules to govern container network traffic.
-This is how containers send traffic outside of <%= vars.app_runtime_abbr %> and receive traffic from outside, the Internet.
-These rules can prevent system access from external networks and between internal components
-and determine if apps can establish connections over the virtual network interface.
+Admins configure rules to govern container network traffic. This is how containers send traffic outside of <%= vars.app_runtime_abbr %> and receive traffic from outside, the Internet. These rules can prevent system access from external networks and between internal components and determine if apps can establish connections over the virtual network interface.
 
-Administrators configure these rules at two levels:
+Admins configure these rules at two levels:
 
-* Application Security Groups (ASGs) apply network traffic rules at the container level. <%=vars.app_sec_groups_link%>
-* Container-to-Container networking policies determine app-to-app communication.
-  Within <%= vars.app_runtime_abbr %>, apps can communicate directly with each other, but the containers are isolated from outside <%= vars.app_runtime_abbr %>. <%=vars.container_network_link %>
+* Application Security Groups (ASGs) apply network traffic rules at the container level. <%= vars.app_sec_groups_link %>
 
-## <a id='security'></a>Container Security###
+* Container-to-container networking policies determine app-to-app communication. Within <%= vars.app_runtime_abbr %>, apps can communicate directly with each other, but the containers are isolated from outside <%= vars.app_runtime_abbr %>. <%= vars.container_network_link %>
+
+
+## <a id='security'></a> Container Security
 
 <%= vars.app_runtime_abbr %> secures containers through the following measures:
 
-* Running application instances in [unprivileged](#types) containers by default
-* [Hardening](#hardening) containers by limiting functionality and access rights
-* <%=vars.app_sec_groups_default%> <%=vars.app_sec_groups_link%>
+* Running app instances in unprivileged containers by default. For more information, see [Types](#types).
+
+* [Hardening](#hardening) containers by limiting functionality and access rights. For more information, see [Hardening](#hardening).
+
+* <%= vars.app_sec_groups_default %> <%= vars.app_sec_groups_link %>
 
 ### <a id="types"></a> Types
 
-Garden has two container types: unprivileged and privileged. Currently, <%= vars.app_runtime_abbr %> runs all application instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
+Garden has two container types: unprivileged and privileged. Currently, <%= vars.app_runtime_abbr %> runs all app instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'config_manifest' %>
@@ -148,27 +133,40 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 <%= vars.app_runtime_abbr %> mitigates against container breakout and denial of service attacks in the following ways:
 
-* <%= vars.app_runtime_abbr %> uses the full set of [Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) (IPC, Network, Mount, PID, User, UTS) to provide isolation between containers running on the same host. The User namespace is not used for privileged containers.
-* In unprivileged containers, CF maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an app from inheriting UID/GID 0 on the host if it breaks out of the container.
-	* <%= vars.app_runtime_abbr %> uses the same UID/GID for all containers.
-    * <%= vars.app_runtime_abbr %> maps all UIDs except UID 0 to themselves. <%= vars.app_runtime_abbr %> maps UID 0 inside the container namespace to `MAX_UID-1` outside of the container namespace.
-    * Container Root does not grant Host Root permissions.
+* <%= vars.app_runtime_abbr %> uses the full set of Linux namespaces - IPC, Network, Mount, PID, User, UTS - to provide isolation between containers running on the same host. The User namespace is not used for privileged containers. For more information, see [namespaces - overview of Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) in the Ubuntu documentation.
+
+* In unprivileged containers, <%= vars.platform_name %> maps UID/GID 0 (root) inside the container user namespace to a different UID/GID on the host to prevent an app from inheriting UID/GID 0 on the host if it breaks out of the container.
+  * <%= vars.app_runtime_abbr %> uses the same UID/GID for all containers.
+  * <%= vars.app_runtime_abbr %> maps all UIDs except UID 0 to themselves. <%= vars.app_runtime_abbr %> maps UID 0 inside the container namespace to `MAX_UID-1` outside of the container namespace.
+  * Container Root does not grant Host Root permissions.
+
 * <%= vars.app_runtime_abbr %> mounts `/proc` and `/sys` as read-only inside containers.
+
 * <%= vars.app_runtime_abbr %> disallows `dmesg` access for unprivileged users and all users in unprivileged containers.
+
 * <%= vars.app_runtime_abbr %> uses `chroot` when importing docker images from docker registries.
-* <%= vars.app_runtime_abbr %> establishes a container-specific overlay filesystem mount. <%= vars.app_runtime_abbr %> uses [`pivot_root`](http://manpages.ubuntu.com/manpages/trusty/man2/pivot_root.2.html) to move the root filesystem into this overlay, in order to isolate the container from the host system’s filesystem.
+
+* <%= vars.app_runtime_abbr %> establishes a container-specific overlay filesystem mount. <%= vars.app_runtime_abbr %> uses `pivot_root` to move the root filesystem into this overlay, in order to isolate the container from the host system's filesystem. For more information about `pivot_root`, see [pivot_root - change the root filesystem](http://manpages.ubuntu.com/manpages/trusty/man2/pivot_root.2.html) in the Ubuntu documentation.
+
 * <%= vars.app_runtime_abbr %> does not call any binary or script inside the container filesystem, in order to eliminate any dependencies on scripts and binaries inside the root filesystem.
+
 * <%= vars.app_runtime_abbr %> avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
-* <%= vars.app_runtime_abbr %> establishes a virtual Ethernet pair for each container for network traffic. See the [Container Network Traffic](#config-traffic) section above for more information. The virtual Ethernet pair has the following features:
-    * One interface in the pair is inside the container’s network namespace, and is the only non-loopback interface accessible inside the container.
-    * The other interface remains in the host network namespace and is bridged to the container-side interface.
-    * Egress whitelist rules are applied to these interfaces according to Application Security Groups (ASGs) configured by the administrator.
-    * First-packet logging rules may also be enabled on TCP whitelist rules.
-    * DNAT rules are established on the host to enable traffic ingress from the host interface to whitelisted ports on the container-side interface.
+
+* <%= vars.app_runtime_abbr %> establishes a virtual Ethernet pair for each container for network traffic. For more information, see [Container Network Traffic](#config-traffic). The virtual Ethernet pair has the following features:
+  * One interface in the pair is inside the container's network namespace, and is the only non-loopback interface accessible inside the container.
+  * The other interface remains in the host network namespace and is bridged to the container-side interface.
+  * Egress allow list rules are applied to these interfaces according to ASGs configured by the admin.
+  * First-packet logging rules may also be enabled on TCP allow list rules.
+  * DNAT rules are established on the host to enable traffic ingress from the host interface to allowed ports on the container-side interface.
+
 * <%= vars.app_runtime_abbr %> applies disk quotas using container-specific XFS quotas with the specified disk-quota capacity.
+
 * <%= vars.app_runtime_abbr %> applies a total memory usage quota through the memory cgroup and destroys the container if the memory usage exceeds the quota.
+
 * <%= vars.app_runtime_abbr %> applies a fair-use limit to CPU usage for processes inside the container through the `cpu.shares` control group.
-* <%= vars.app_runtime_abbr %> allows administrators to rate limit the maximum bandwidth consumed by single application containers, configuring `rate` and `burst` properties on the `silk-cni` job.
+
+* <%= vars.app_runtime_abbr %> allows admins to rate limit the maximum bandwidth consumed by single-app containers, configuring `rate` and `burst` properties on the `silk-cni` job.
+
 * <%= vars.app_runtime_abbr %> limits access to devices using cgroups but explicitly whitelists the following safe device nodes:
 	* `/dev/full`
 	* `/dev/fuse`
@@ -183,7 +181,8 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 	* `/dev/zero`
 	* `/dev/tap`
 	* `/dev/tun`
-* <%= vars.app_runtime_abbr %> drops the following [Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) for all container processes. Every dropped capability limits the actions the root user can perform.
+
+* <%= vars.app_runtime_abbr %> drops the following Linux capabilities for all container processes. Every dropped capability limits the actions the root user can perform.
 	* `CAP_DAC_READ_SEARCH`
 	* `CAP_LINUX_IMMUTABLE`
 	* `CAP_NET_BROADCAST`
@@ -207,3 +206,6 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 	* `CAP_WAKE_ALARM`
 	* `CAP_BLOCK_SUSPEND`
 	* `CAP_SYS_ADMIN` (for unprivileged containers)
+  <br>
+  <br>
+  For more information about Linux capabilities, see [capabilities - overview of Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) in the Ubuntu documentation.
