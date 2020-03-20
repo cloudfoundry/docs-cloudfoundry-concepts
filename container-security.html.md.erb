@@ -92,7 +92,7 @@ In summary, the cgroup shares are the minimum guaranteed CPU share that the proc
 
 ### <a id='net-overview'></a> Networking Overview
 
-A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.company_name %> recommends, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
+A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.recommended_by %> recommends, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
 
 * **Inbound** requests flow from the load balancer through the router to the host Diego Cell, then into the app container. The router determines which app instance receives each request.
 
