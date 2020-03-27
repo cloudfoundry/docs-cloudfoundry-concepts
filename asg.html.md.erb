@@ -233,10 +233,11 @@ To update an existing ASG:
     * `SECURITY-GROUP` is name of the existing ASG you want to change.
     * `PATH-TO-RULES-FILE` is the absolute or relative path to a rules file.
     <br>
+    <br>
     In the following example, `example-asg` is the name of a security group, and `~/workspace/example-asg-v2.json` is the path to a rules file:
 
     ```
-    cf update-security-group my-asg ~/workspace/my-asg-v2.json
+    cf update-security-group example-asg ~/workspace/example-asg-v2.json
     ```
 
 <p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
