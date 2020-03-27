@@ -3,24 +3,24 @@ title: App Security Groups
 owner: Security
 ---
 
-This topic provides an overview of App Security Groups (ASGs) in <%= vars.app_runtime_full %>, and describes how to manage and administer them. Many of the steps below require the [Cloud Foundry Command Line Interface](../cf-cli/install-go-cli.html) (cf CLI) tool.
+This topic provides an overview of App Security Groups (ASGs) in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>), and describes how to manage and administer them.
 
 
 ## <a id='introduction'></a> Overview
 
-App Security Groups (ASGs) are a collection of egress rules that specify the protocols, ports, and IP address ranges where app or task instances send traffic.
+ASGs are a collection of egress rules that specify the protocols, ports, and IP address ranges where app or task instances send traffic.
 
 ASGs define **allow** rules, and their order of evaluation is unimportant when multiple ASGs apply to the same space or deployment. The platform sets up rules to filter and log outbound network traffic from app and task instances. ASGs apply to both buildpack-based and Docker-based apps and tasks.
 
 ### <a id='staging-running'></a> Staging and Running ASGs
 
-Administrators can define a `staging` ASG for app and task staging, and a `running` ASG for app and task runtime.
+Admins can define a `staging` ASG for app and task staging, and a `running` ASG for app and task runtime.
 
-When apps or tasks begin staging, they require traffic rules permissive enough to allow them to pull resources from the network. A running app or task no longer needs to pull resources, so traffic rules can be more restrictive and secure. To distinguish between these two security requirements, administrators can define a `staging` ASG for app and task staging with more permissive rules, and a `running` ASG for app and task runtime with less permissive rules.
+When apps or tasks begin staging, they require traffic rules permissive enough to allow them to pull resources from the network. A running app or task no longer needs to pull resources, so traffic rules can be more restrictive and secure. To distinguish between these two security requirements, admins can define a `staging` ASG for app and task staging with more permissive rules, and a `running` ASG for app and task runtime with less permissive rules.
 
 ### <a id='types'></a> Platform-Wide and Space-Scoped ASGs
 
-To provide granular control when securing a deployment, administrators can assign platform-wide ASGs that apply to all app and task instances for the entire deployment, or space-scoped ASGs that apply only to apps and tasks in a particular space.
+To provide granular control when securing a deployment, admins can assign platform-wide ASGs that apply to all app and task instances for the entire deployment, or space-scoped ASGs that apply only to apps and tasks in a particular space.
 
 In environments with both platform-wide and space-specific ASGs, the ASGs for a particular space are combined with the platform ASGs to determine the effective rules for that space. Any of the permitted traffic in the set of applicable ASGs is then effectively permitted for that application.
 
@@ -59,28 +59,12 @@ In environments with both platform-wide and space-specific ASG sets, combine the
 
 The following table indicates the differences between the four sets.
 
-<table>
-  <tr>
-    <th>When an ASG is bound to the... </th>
-    <th>the ASG rules are applied to...</th>
-  </tr>
-  <tr>
-    <td>Platform-wide staging ASG set</td>
-    <td>the staging lifecycle for all apps and tasks.</td>
-  </tr>
-  <tr>
-    <td>Platform-wide running ASG set</td>
-    <td>the running lifecycle for all app and task instances.</td>
-  </tr>
-  <tr>
-    <td>Space-scoped staging ASG set</td>
-    <td>the staging lifecycle for apps and tasks in a particular space.</td>
-  </tr>
-  <tr>
-    <td>Space-scoped running ASG set</td>
-    <td>the running lifecycle for app and task instances in a particular space.</td>
-  </tr>
-</table>
+| When an ASG is bound to the... | the ASG rules are applied to... |
+| ------------------------------ | ------------------------------- |
+| Platform-wide staging ASG set | the staging lifecycle for all apps and tasks. |
+| Platform-wide running ASG set | the running lifecycle for all app and task instances. |
+| Space-scoped staging ASG set | the staging lifecycle for apps and tasks in a particular space. |
+| Space-scoped running ASG set | the running lifecycle for app and task instances in a particular space. |
 
 Typically, ASGs applied during the staging lifecycle are more permissive than the ASGs applied during the running lifecycle. This is because staging often requires access to different resources, such as dependencies.
 
@@ -93,15 +77,15 @@ You use different commands to apply an ASG to each of the four sets. For more in
 ASG rules are specified as a JSON array of ASG objects. An ASG object has the following attributes:
 
 
-|Attribute        |Description                                                                                                                                                                                                  |Notes
-|---              |---                                                                                                                                                                                                          |---
-|`protocol`       |`tcp`, `udp`, `icmp`, or `all`                                                                                                                                                                               |Required
-|`destination`    |A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block that can receive traffic
-|`ports`          |A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081`                                                             |Only possible if `protocol` is `tcp` or `udp`.
-|`code`           |ICMP code                                                                                                                                                                                                    |Required when `protocol` is `icmp`. A value of `-1` allows all codes.
-|`type`           |ICMP type                                                                                                                                                                                                    |Required when `protocol` is `icmp`. A value of `-1` allows all types.
-|`log`            |Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, <a href="../devguide/services/log-management.html">Using Log Management Services</a>.                                                                                                                                                                                                    |Logging is only supported with protocol type `tcp`
-| `description`   |An optional field for operators managing security group rules
+| Attribute | Description | Notes |
+| --------- | ----------- | ----- |
+| `protocol` | `tcp`, `udp`, `icmp`, or `all` | Required |
+| `destination` | A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block that can receive traffic |  |
+| `ports` | A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081` | Only possible if `protocol` is `tcp` or `udp`. |
+| `code` | ICMP code | Required when `protocol` is `icmp`. A value of `-1` allows all codes. |
+| `type` | ICMP | Required when `protocol` is `icmp`. A value of `-1` allows all types.
+| `log` | Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see [Using Log Management Services](../devguide/services/log-management.html). | Logging is only supported with protocol type `tcp`. |
+| `description` | An optional field for operators managing security group rules |  |
 
 
 <% if vars.platform_code.include? "CF" %>
@@ -109,59 +93,37 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 ## <a id="process"></a> Process for Administering ASGs
 
-The following table outlines the flow of tasks that the administrator carries out over the lifecycle of ASGs. For information about procedures for each of these tasks, see [Managing ASGs with the cf CLI](#procedures).
+The following table outlines the flow of tasks that the admin carries out over the lifecycle of ASGs. For information about procedures for each of these tasks, see [Managing ASGs with the cf CLI](#procedures).
 
 <%= vars.asg_first_time %>
 
-<table>
-  <tr>
-    <th></th>
-    <th>Task</th>
-    <th>For more information, see</th>
-  </tr>
-  <tr>
-    <td>1.</td>
-    <td>Review the existing ASGs. If this is a new deployment, these consist of only the <a href="#default-asg">Default ASGs</a>.</td>
-    <td><a href="#viewing">View ASGs</a></td>
-  </tr>
-  <tr>
-    <td>2. </td>
-    <td>Create new ASGs.</td>
-    <td><a href="#asg-individual">Create ASGs</a></td>
-  </tr>
-  <tr>
-    <td>3.</td>
-    <td>Update the existing ASGs.</td>
-    <td><a href="#updating-groups">Update ASGs</a></td>
-  </tr>
-  <tr>
-    <td>4.</td>
-    <td>Bind ASGs to an ASG set.</td>
-    <td><a href="#binding-groups">Bind ASGs</a></td>
-  </tr>
-  <tr>
-    <td>5.</td>
-    <td>If you need to delete an ASG, first unbind it, then delete it.</td>
-    <td><a href="#unbinding-asgs">Unbind ASGs</a><br>
-<a href="#deleting-groups">Delete ASGs</a></td>
-  </tr>
-</table>
+|   | Task | For more information, see: |
+| - | ---- | -------------------------- |
+| 1. | Review the existing ASGs. If this is a new deployment, these consist of only the default ASGs. | [View ASGs](#viewing) |
+| 2. | Create new ASGs. | [Create ASGs](#asg-individual) |
+| 3. | Update the existing ASGs. | [Update ASGs](#updating-groups) |
+| 4. | Bind ASGs to an ASG set. | [Bind ASGs](#binding-groups) |
+| 5. | If you need to delete an ASG, first unbind it, then delete it. | [Unbind ASGs](#unbinding-asgs) and [Delete ASGs](#deleting-groups) |
 
 
 ## <a id='procedures'></a> Managing ASGs with the cf CLI
 
 This section provides the commands you need to create and manage ASGs.
 
+### <a id='prerequisite'></a> Prerequisite
+
+Many of the procedures below require the Cloud Foundry Command Line Interface (cf CLI). To download the cf CLI, see [Installing the cf CLI](../cf-cli/install-go-cli.html).
+
 ### <a id='viewing'></a> View ASGs
 
-Run the following cf CLI commands to view information about existing ASGs:
+To view information about existing ASGs, run the following commands:
 
-|Command                             |Output
-|---                                 |---
-|`cf security-groups`                |All ASGs
-|`cf staging-security-groups`        |All ASGs applied to the platform-wide staging ASG set
-|`cf running-security-groups`        |All ASGs applied to the platform-wide running ASG set
-|`cf security-group SECURITY-GROUP`  |All rules in the ASG named `SECURITY-GROUP`, for example, `cf security-group dns`
+| Command | Output |
+| ------- | ------ |
+| `cf security-groups` | All ASGs |
+| `cf staging-security-groups` | All ASGs applied to the platform-wide staging ASG set |
+| `cf running-security-groups` | All ASGs applied to the platform-wide running ASG set |
+| `cf security-group SECURITY-GROUP` | All rules in the ASG named `SECURITY-GROUP`, for example, `cf security-group dns` |
 
 <%= vars.asg_note %>
 
@@ -169,10 +131,9 @@ Run the following cf CLI commands to view information about existing ASGs:
 
 To create an ASG:
 
-1. Create a rules file: a JSON-formatted single array containing objects that describe the rules.
-   See the following example, which allows ICMP traffic of code `1` and type `0` to all destinations, and TCP traffic to `10.0.11.0/24` on ports `80` and `443`. For more information, see [The Structure and Attributes of ASGs](#creating-groups).
+1. Create a rules file: a JSON-formatted single array containing objects that describe the rules. See the following example, which allows ICMP traffic of code `1` and type `0` to all destinations, and TCP traffic to `10.0.11.0/24` on ports `80` and `443`. For more information, see [The Structure and Attributes of ASGs](#creating-groups).
 
-    <pre>
+    ```
     [
       {
         "protocol": "icmp",
@@ -188,15 +149,23 @@ To create an ASG:
         "description": "Allow http and https traffic to ZoneA"
       }
     ]
-    </pre>
+    ```
 
-1. Run `cf create-security-group SECURITY-GROUP PATH-TO-RULES-FILE`. Replace `SECURITY-GROUP` with the name of your security group, and `PATH-TO-RULES-FILE` with the absolute or relative path to a rules file.
+1. Run:
 
-In the following example, `YOUR-ASG` is the name of a security group, and `~/workspace/your-asg.json` is the path to a rules file.
+    ```
+    cf create-security-group SECURITY-GROUP PATH-TO-RULES-FILE
+    ```
+    Where:
+    * `SECURITY-GROUP` is the name of your security group.
+    * `PATH-TO-RULES-FILE` is the absolute or relative path to a rules file.
+    <br>
+    <br>
+    In the following example, `EXAMPLE-ASG` is the name of a security group, and `~/workspace/example-asg.json` is the path to a rules file:
 
-<pre class="terminal">
-$ cf create-security-group YOUR-ASG ~/workspace/your-asg.json
-</pre>
+    ```
+    cf create-security-group EXAMPLE-ASG ~/workspace/example-asg.json
+    ```
 
 After the ASG is created, you must bind it to an ASG set before it takes effect. For more information, see [Bind ASGs](#binding-groups).
 
@@ -206,7 +175,9 @@ After the ASG is created, you must bind it to an ASG set before it takes effect.
 
 To apply an ASG, you must first bind it to an ASG set.
 
-To bind an ASG to the platform-wide staging ASG set, run `cf bind-staging-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
+To bind an ASG to the platform-wide staging ASG set:
+
+1. Run: `cf bind-staging-security-group SECURITY-GROUP`. Replace `SECURITY-GROUP` with the name of your security group.
 
 Example:
 <pre class="terminal">
@@ -286,18 +257,18 @@ $ cf delete-security-group my-asg
 
 Below are examples of typical ASGs. Configure your ASGs in accordance with your organization's network access policy for untrusted apps.
 
-|ASG                   |For access to
-|---                   |---
-|`dns`                 |DNS, either public or private
-|`public-networks`     |Public networks, excluding IaaS metadata endpoints
-|`private-networks`    |Private networks in accordance with [RFC-1918](https://tools.ietf.org/html/rfc1918#section-3)
-|`load-balancers`      |The internal <%= vars.app_runtime_abbr %> load balancer and others
-|`internal-proxies`    |Internal proxies
-|`internal-databases`  |Internal databases
+| ASG | For access to: |
+| --- | ---
+| `dns` | DNS, either public or private |
+| `public-networks` | Public networks, excluding IaaS metadata endpoints |
+| `private-networks` | Private networks in accordance with [RFC-1918](https://tools.ietf.org/html/rfc1918#section-3) |
+| `load-balancers` | The internal <%= vars.app_runtime_abbr %> load balancer and others |
+| `internal-proxies` | Internal proxies |
+| `internal-databases` | Internal databases |
 
 ### <a id='dns-example'></a> DNS
 
-To resolve hostnames to IP addresses, apps require DNS server connectivity, which typically use port 53. Administrators should create or update a `dns` ASG with appropriate rules. Administrators can further restrict the DNS servers to specific IP addresses or ranges of IP addresses.
+To resolve hostnames to IP addresses, apps require DNS server connectivity, which typically use port 53. Admins should create or update a `dns` ASG with appropriate rules. Admins can further restrict the DNS servers to specific IP addresses or ranges of IP addresses.
 
 Example `dns` ASG:
 
