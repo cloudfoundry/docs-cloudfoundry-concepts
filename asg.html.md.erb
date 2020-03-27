@@ -51,7 +51,7 @@ For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
 ASGs are applied by configuring ASG sets differentiated by _scope_, platform-wide or space specific, and _lifecycle_, staging or running.
 
-Currently, four ASG sets exist in <%= vars.product_name %>:
+Currently, four ASG sets exist in <%= vars.product_short %>:
 
 * Platform-wide staging ASG set, also called "default-staging"
 * Platform-wide running ASG set, also called "default-running"
@@ -87,7 +87,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 | `code` | ICMP code | Required when `protocol` is `icmp`. A value of `-1` allows all codes. |
 | `type` | ICMP | Required when `protocol` is `icmp`. A value of `-1` allows all types.
 | `log` | Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see [Using Log Management Services](../devguide/services/log-management.html). | Logging is only supported with protocol type `tcp`. |
-| `description` | An optional field for operators managing security group rules |  |
+| `description` | An optional field for operators managing ASG rules |  |
 
 
 <% if vars.product_name.include? "CF" %>
@@ -124,7 +124,7 @@ To view information about existing ASGs, run the following commands:
 | `cf security-groups` | All ASGs |
 | `cf staging-security-groups` | All ASGs applied to the platform-wide staging ASG set |
 | `cf running-security-groups` | All ASGs applied to the platform-wide running ASG set |
-| `cf security-group SECURITY-GROUP` | All rules in the ASG named `SECURITY-GROUP`, for example, `cf security-group dns` |
+| `cf security-group ASG` | All rules in the specified ASG, where `ASG` is the name of the ASG |
 
 <%= vars.asg_note %>
 
@@ -155,14 +155,14 @@ To create an ASG:
 1. Run:
 
     ```
-    cf create-security-group SECURITY-GROUP PATH-TO-RULES-FILE
+    cf create-security-group ASG PATH-TO-RULES-FILE
     ```
     Where:
-    * `SECURITY-GROUP` is the name of your security group.
+    * `ASG` is the name of your ASG.
     * `PATH-TO-RULES-FILE` is the absolute or relative path to a rules file.
     <br>
     <br>
-    In the following example, `EXAMPLE-ASG` is the name of a security group, and `~/workspace/example-asg.json` is the path to a rules file:
+    In the following example, `EXAMPLE-ASG` is the name of an ASG, and `~/workspace/example-asg.json` is the path to a rules file:
 
     ```
     cf create-security-group EXAMPLE-ASG ~/workspace/example-asg.json
@@ -181,28 +181,28 @@ To bind an ASG to the platform-wide staging ASG set:
 1. Run:
 
     ```
-    cf bind-staging-security-group SECURITY-GROUP
+    cf bind-staging-security-group ASG
     ```
-    Where `SECURITY-GROUP` is the name of your security group.
+    Where `ASG` is the name of your ASG.
 
 To bind an ASG to the platform-wide running ASG set:
 
 1. Run:
 
     ```
-    cf bind-running-security-group SECURITY-GROUP
+    cf bind-running-security-group ASG
     ```
-    Where `SECURITY-GROUP` is the name of your security group.
+    Where `ASG` is the name of your ASG.
 
 To bind an ASG to a space-scoped running ASG set:
 
 1. Run:
 
     ```
-    cf bind-security-group SECURITY-GROUP ORG SPACE
+    cf bind-security-group ASG ORG SPACE
     ```
     Where:
-    * `SECURITY-GROUP` is the name of your security group.
+    * `ASG` is the name of your ASG.
     * `ORG` is the name of the org where you want to bind the ASG set.
     * `SPACE` is the name of the space where you want to bind the ASG set.
 
@@ -211,10 +211,10 @@ To bind an ASG to a space-scoped staging ASG set:
 1. Run:
 
     ```
-    cf bind-security-group SECURITY-GROUP ORG SPACE --lifecycle staging
+    cf bind-security-group ASG ORG SPACE --lifecycle staging
     ```
     Where:
-    * `SECURITY-GROUP` is the name of your security group.
+    * `ASG` is the name of your ASG.
     * `ORG` is the name of the org where you want to bind the ASG set.
     * `SPACE` is the name of the space where you want to bind the ASG set.
 
@@ -222,19 +222,19 @@ To bind an ASG to a space-scoped staging ASG set:
 
 To update an existing ASG:
 
-1. Edit the ASG rules in the JSON file.
+1. Edit the ASG rules in the JSON file you created in [Create ASGs](#asg-individual).
 
 1. Run:
 
     ```
-    cf update-security-group SECURITY-GROUP PATH-TO-RULES-FILE
+    cf update-security-group ASG PATH-TO-RULES-FILE
     ```
     Where:
-    * `SECURITY-GROUP` is name of the existing ASG you want to change.
+    * `ASG` is name of the existing ASG you want to change.
     * `PATH-TO-RULES-FILE` is the absolute or relative path to a rules file.
     <br>
     <br>
-    In the following example, `example-asg` is the name of a security group, and `~/workspace/example-asg-v2.json` is the path to a rules file:
+    In the following example, `example-asg` is the name of an ASG, and `~/workspace/example-asg-v2.json` is the path to a rules file:
 
     ```
     cf update-security-group example-asg ~/workspace/example-asg-v2.json
@@ -251,30 +251,30 @@ To unbind an ASG from the platform-wide staging ASG set:
 1. Run:
 
     ```
-    cf unbind-staging-security-group SECURITY-GROUP
+    cf unbind-staging-security-group ASG
     ```
-    Where `SECURITY-GROUP` is the name of your security group.
+    Where `ASG` is the name of your ASG.
 
 To unbind an ASG from the platform-wide running ASG set:
 
 1. Run:
 
     ```
-    cf unbind-running-security-group SECURITY-GROUP
+    cf unbind-running-security-group ASG
     ```
-    Where `SECURITY-GROUP` is the name of your security group.
+    Where `ASG` is the name of your ASG.
 
 To unbind an ASG from a specific space:
 
 1. Run:
 
     ```
-    cf unbind-security-group SECURITY-GROUP ORG SPACE --lifecycle running
+    cf unbind-security-group ASG ORG SPACE --lifecycle running
     ```
     Where:
-    * `SECURITY-GROUP` is the name of your security group.
+    * `ASG` is the name of your ASG.
     * `ORG` is the org where you want to unbind the ASG set.
-    * `SPACE` is the org and space where you want to unbind the ASG set.
+    * `SPACE` is the space where you want to unbind the ASG set.
     * To unbind from the staging ASG set, replace `running` with `staging`.
 
 ### <a id='deleting-groups'></a> Delete ASGs
@@ -286,9 +286,9 @@ To delete an ASG:
 1. Run:
 
     ```
-    cf delete-security-group SECURITY-GROUP
+    cf delete-security-group ASG
     ```
-    Where `SECURITY-GROUP` is the name of your security group.
+    Where `ASG` is the name of your ASG.
 
 
 ## <a id='typical-groups'></a> Typical ASGs
