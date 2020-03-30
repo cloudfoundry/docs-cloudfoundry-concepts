@@ -155,11 +155,11 @@ To create an ASG:
 1. Run:
 
     ```
-    cf create-security-group ASG PATH-TO-RULES-FILE
+    cf create-security-group ASG PATH-TO-RULES-FILE.json
     ```
     Where:
     * `ASG` is the name of your ASG.
-    * `PATH-TO-RULES-FILE` is the absolute or relative path to a rules file.
+    * `PATH-TO-RULES-FILE.json` is the absolute or relative path to a rules file.
     <br>
     <br>
     In the following example, `EXAMPLE-ASG` is the name of an ASG, and `~/workspace/example-asg.json` is the path to a rules file:
@@ -227,11 +227,11 @@ To update an existing ASG:
 1. Run:
 
     ```
-    cf update-security-group ASG PATH-TO-RULES-FILE
+    cf update-security-group ASG PATH-TO-RULES-FILE.json
     ```
     Where:
     * `ASG` is name of the existing ASG you want to change.
-    * `PATH-TO-RULES-FILE` is the absolute or relative path to a rules file.
+    * `PATH-TO-RULES-FILE.json` is the absolute or relative path to a rules file.
     <br>
     <br>
     In the following example, `example-asg` is the name of an ASG, and `~/workspace/example-asg-v2.json` is the path to a rules file:
