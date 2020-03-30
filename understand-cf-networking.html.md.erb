@@ -172,3 +172,24 @@ Both app security groups (ASGs) and container-to-container networking policies a
    <td>Immediately</td>
   </tr>
 </table>
+
+## <a id="secure-traffic"></a> Securing Container-to-Container Traffic
+
+<p>
+Unlike how public traffic to apps can be <a href=
+'https://docs.cloudfoundry.org/concepts/http-routing.html#tls-to-back-end'>
+encrypted by the platform</a>, there is no automatic TLS encapsulation for
+container-to-container traffic.
+</p>
+<p>
+Applications are permitted to communicate through TLS as long as they implement
+their own TLS connection.
+</p>
+<p>
+One other way to secure container-to-container traffic is to install the IPsec
+bosh release add-on. This would secure all traffic on the platform. The add on
+can be found <a
+href='https://www.cloudfoundry.org/the-foundry/ipsec-add-on/'>here</a>. More
+information on IPsec and CloudFoundry can be found <a
+href='https://docs.pivotal.io/addon-ipsec/1-9/index.html'>here</a>.
+</p>
