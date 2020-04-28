@@ -49,7 +49,7 @@ After adding Zipkin HTTP headers to app logs, developers can use `cf logs myapp`
 
 ### <a id="app-instance-routing"></a> HTTP Headers for App Instance Routing
 
-Developers who want to obtain debug data for a specific instance of an app can use the HTTP header `X-CF-APP-INSTANCE` to make a request to an app instance.
+Developers who want to obtain debug data for a specific instance of an app can use the HTTP header `X-Cf-App-Instance` to make a request to an app instance.
 
 To make an HTTP request to a specific app instance:
 
@@ -59,10 +59,12 @@ To make an HTTP request to a specific app instance:
 1. List your app instances and retrieve the index number of the instance you want to debug:
 	<pre class="terminal">$ cf app YOUR-APP</pre>
 
-1. Make a request to the app route using the HTTP header `X-CF-APP-INSTANCE` set to the concatenated values of the app GUID and the instance index:
-	<pre class="terminal">$ curl app.example.com -H "X-CF-APP-INSTANCE":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
-<p class="note">Use of the `X-CF-APP-INSTANCE` header is only available for users on the Diego architecture.</p>
-If this header is set to an invalid value, Gorouter resturns a `400` status code and the response from Gorouter contains a `X-Cf-Routererror` header with more information about the error. The following table describes the possible error responses:
+1. Make a request to the app route using the HTTP header `X-Cf-App-Instance` set to the concatenated values of the app GUID and the instance index:
+	<pre class="terminal">$ curl app.example.com -H "X-Cf-App-Instance":"YOUR-APP-GUID:YOUR-INSTANCE-INDEX"</pre>
+<p class="note">Use of the `X-Cf-App-Instance` header is only available for users on the Diego architecture.</p>
+If this header is set to an invalid value, Gorouter resturns a `400` status code and the
+response from Gorouter contains a `X-Cf-Routererror` header with more information about the error.
+The following table describes the possible error responses:
 <table>
   <tr>
     <th width="30%">X-Cf-Routererror Value</th>
@@ -71,12 +73,12 @@ If this header is set to an invalid value, Gorouter resturns a `400` status code
   </tr> 
   <tr>
     <td><code>invalid_cf_app_instance_header</code></td>
-    <td>The value provided for <code>X-CF-APP-INSTANCE</code> was not a properly formatted GUID.</td>
+    <td>The value provided for <code>X-Cf-App-Instance</code> was not a properly formatted GUID.</td>
     <td>None</td>
   </tr>
   <tr>
     <td><code>unknown_route</code></td>
-    <td>The value provided for <code>X-CF-APP-INSTANCE</code> is a correctly formatted GUID, but there is no instance found with that guid for the route requested.</td>
+    <td>The value provided for <code>X-Cf-App-Instance</code> is a correctly formatted GUID, but there is no instance found with that guid for the route requested.</td>
     <td><code>400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route ('myroute.cf.com')</code></td>
   </tr>  
 </table> 
