@@ -191,11 +191,17 @@ This section section provides a sample Gorouter log entry and explanation of the
 
 #### <a id="about-access-logs"></a> About Access Logs
 
-Access logs provide information for the following fields when receiving a request:
+This section provides details about Gorouter access logs.
+
+Gorouter generates an access log in the following format when it receives a request:
 
 `<Request Host> - [<Start Date>] "<Request Method> <Request URL> <Request Protocol>" <Status Code> <Bytes Received> <Bytes Sent> "<Referer>" "<User-Agent>" <Remote Address> <Backend Address> x_forwarded_for:"<X-Forwarded-For>" x_forwarded_proto:"<X-Forwarded-Proto>" vcap_request_id:<X-Vcap-Request-ID> response_time:<Response Time> gorouter_time:<GoRouter Time> app_id:<Application ID> app_index:<Application Index> <Extra Headers>`
 
-* The following are optional fields: <code>Status Code</code>,  <code>Response Time</code>, <code>Application ID</code>, <code>Application Index</code>, and <code>Extra Headers</code>.
+Gorouter access logs are also redirected to syslog.
+
+See the list below for more information about the Gorouter access log fields:
+
+* The following are optional fields: <code>Status Code</code>, <code>Response Time</code>, <code>Application ID</code>, <code>Application Index</code>, and <code>Extra Headers</code>.
 
 * If the access log lacks a <code>Status Code</code>,  <code>Response Time</code>, <code>Application ID</code>, or <code>Application Index</code>, the corresponding field shows `-`.
 
@@ -208,6 +214,3 @@ Access logs provide information for the following fields when receiving a reques
    initially plus the time it takes for the response to travel back through the Gorouter.
    This does not include the time the request spends traversing the network to the app.
    This also does not include the time the app spends forming a response.
-
-
-<p class="note"><strong>Note</strong>: Access logs are also redirected to syslog.</p>
