@@ -245,7 +245,7 @@ WebSockets is a protocol providing bi-directional communication over a single, l
 
 The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
 
-With sticky sessions, when multiple instances of an app are running on <%= vars.app_runtime_abbr %> requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
+With sticky sessions, when multiple instances of an app are running on <%= vars.app_runtime_abbr %>, requests from a particular client always reach the same app instance. This allows apps to store session data specific to a user session.
 
 To support sticky sessions, configure your app to return a sticky session cookie in responses.
 The default value for this field is `JSESSIONID`.
