@@ -195,15 +195,15 @@ This section provides details about Gorouter access logs.
 
 Gorouter generates an access log in the following format when it receives a request:
 
-`<Request Host> - [<Start Date>] "<Request Method> <Request URL> <Request Protocol>" <Status Code> <Bytes Received> <Bytes Sent> "<Referer>" "<User-Agent>" <Remote Address> <Backend Address> x_forwarded_for:"<X-Forwarded-For>" x_forwarded_proto:"<X-Forwarded-Proto>" vcap_request_id:<X-Vcap-Request-ID> response_time:<Response Time> gorouter_time:<GoRouter Time> app_id:<Application ID> app_index:<Application Index> <Extra Headers>`
+`<Request Host> - [<Start Date>] "<Request Method> <Request URL> <Request Protocol>" <Status Code> <Bytes Received> <Bytes Sent> "<Referer>" "<User-Agent>" <Remote Address> <Backend Address> x_forwarded_for:"<X-Forwarded-For>" x_forwarded_proto:"<X-Forwarded-Proto>" vcap_request_id:<X-Vcap-Request-ID> response_time:<Response Time> gorouter_time:<GoRouter Time> app_id:<Application ID> app_index:<Application Index> x_cf_routererror:<X-Cf-RouterError> <Extra Headers>`
 
 Gorouter access logs are also redirected to syslog.
 
 See the list below for more information about the Gorouter access log fields:
 
-* The following are optional fields: <code>Status Code</code>, <code>Response Time</code>, <code>Application ID</code>, <code>Application Index</code>, and <code>Extra Headers</code>.
+* The following are optional fields: <code>Status Code</code>, <code>Response Time</code>, <code>Application ID</code>, <code>Application Index</code>, <code>X-Cf-RouterError</code>, and <code>Extra Headers</code>.
 
-* If the access log lacks a <code>Status Code</code>,  <code>Response Time</code>, <code>Application ID</code>, or <code>Application Index</code>, the corresponding field shows `-`.
+* If the access log lacks a <code>Status Code</code>,  <code>Response Time</code>, <code>Application ID</code>, <code>Application Index</code>, or <code>X-Cf-RouterError</code>, the corresponding field shows `-`.
 
 * `Response Time` is the total time it takes for the request to go through the Gorouter to the app
    and for the response to travel back through the Gorouter.
@@ -214,3 +214,47 @@ See the list below for more information about the Gorouter access log fields:
    initially plus the time it takes for the response to travel back through the Gorouter.
    This does not include the time the request spends traversing the network to the app.
    This also does not include the time the app spends forming a response.
+
+* `X-CF-RouterError` is populated if the Gorouter encounters an error. This can
+   help distinguish if a non-2xx response code is due to an error in the Gorouter
+   or the backend. For more information on the possible Router Error causes go to
+   the [#router-errors](#router-errors) section.
+
+##### <a id="router-errors"></a> Router Errors
+
+The value of the `X-Cf-Routererror` header can be one of the following:
+
+<table>
+  <tr>
+    <th>Value</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>invalid_cf_app_instance_header</code></td>
+    <td>The provided value for the "X-Cf-App-Instance" header does not match the required format of `APP_GUID:INSTANCE_ID`.</td>
+  </tr>
+  <tr>
+    <td><code>empty_host</code></td>
+    <td>The value for the "Host" header is empty, or the "Host" header is equivalent to the remote address. Some LB's optimistically set the "Host" header value with their IP address when there is no value present.</td>
+  </tr>
+  <tr>
+    <td><code>unknown_route</code></td>
+    <td>The desired route does not exist in the gorouter's route table.</td>
+  </tr>
+  <tr>
+    <td><code>no_endpoints</code></td>
+    <td>There is an entry in the route table for the desired route, but there are no healthy endpoints available.</td>
+  </tr>
+  <tr>
+    <td><code>Connection Limit Reached</code></td>
+    <td>The backends associated with the route have reached their max number of connections. The max connection number is set via the spec property `router.backends.max_conns`.</td>
+  </tr>
+  <tr>
+    <td><code>route_service_unsupported</code></td>
+    <td>Route services are not enabled. This can be configured via the spec property `router.route_services_secret`. If the property is empty, route services are disabled.</td>
+  </tr>
+  <tr>
+    <td><code>endpoint_failure</code></td>
+    <td>The registered endpoint for the desired route failed to handle the request.</td>
+  </tr>
+</table>
