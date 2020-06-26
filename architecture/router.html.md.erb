@@ -195,7 +195,7 @@ This section provides details about Gorouter access logs.
 
 Gorouter generates an access log in the following format when it receives a request:
 
-`<Request Host> - [<Start Date>] "<Request Method> <Request URL> <Request Protocol>" <Status Code> <Bytes Received> <Bytes Sent> "<Referer>" "<User-Agent>" <Remote Address> <Backend Address> x_forwarded_for:"<X-Forwarded-For>" x_forwarded_proto:"<X-Forwarded-Proto>" vcap_request_id:<X-Vcap-Request-ID> response_time:<Response Time> gorouter_time:<GoRouter Time> app_id:<Application ID> app_index:<Application Index> x_cf_routererror:<X-Cf-RouterError> <Extra Headers>`
+`<Request Host> - [<Start Date>] "<Request Method> <Request URL> <Request Protocol>" <Status Code> <Bytes Received> <Bytes Sent> "<Referrer>" "<User-Agent>" <Remote Address> <Backend Address> x_forwarded_for:"<X-Forwarded-For>" x_forwarded_proto:"<X-Forwarded-Proto>" vcap_request_id:<X-Vcap-Request-ID> response_time:<Response Time> gorouter_time:<Gorouter Time> app_id:<Application ID> app_index:<Application Index> x_cf_routererror:<X-Cf-RouterError> <Extra Headers>`
 
 Gorouter access logs are also redirected to syslog.
 
@@ -207,22 +207,22 @@ See the list below for more information about the Gorouter access log fields:
 
 * `Response Time` is the total time it takes for the request to go through the Gorouter to the app
    and for the response to travel back through the Gorouter.
-   This includes the time the request spends traversing the network to the app and back again to the Gorouter.
+   This includes the time that the request spends traversing the network to the app and back again to the Gorouter.
    It also includes the time the app spends forming a response.
 
-* `GoRouter Time` is the total time it takes for the request to go through the Gorouter
+* `Gorouter Time` is the total time it takes for the request to go through the Gorouter
    initially plus the time it takes for the response to travel back through the Gorouter.
    This does not include the time the request spends traversing the network to the app.
    This also does not include the time the app spends forming a response.
 
-* `X-CF-RouterError` is populated if the Gorouter encounters an error. This can
-   help distinguish if a non-2xx response code is due to an error in the Gorouter
-   or the backend. For more information on the possible Router Error causes go to
-   the [#router-errors](#router-errors) section.
+* `X-Cf-RouterError` is populated if the Gorouter encounters an error. The returned values can
+   help distinguish whether a non-2xx response code is due to an error in the Gorouter
+   or the backend. For more information on the possible errors, see
+   the [Router Errors](#router-errors) section.
 
 ##### <a id="router-errors"></a> Router Errors
 
-The value of the `X-Cf-Routererror` header can be one of the following:
+The following table lists possible values of the `X-Cf-RouterError` header:
 
 <table>
   <tr>
@@ -231,15 +231,15 @@ The value of the `X-Cf-Routererror` header can be one of the following:
   </tr>
   <tr>
     <td><code>invalid_cf_app_instance_header</code></td>
-    <td>The provided value for the "X-Cf-App-Instance" header does not match the required format of `APP_GUID:INSTANCE_ID`.</td>
+    <td>The provided value for the <code>X-Cf-App-Instance</code> header does not match the required format of <code>APP_GUID:INSTANCE_ID</code>.</td>
   </tr>
   <tr>
     <td><code>empty_host</code></td>
-    <td>The value for the "Host" header is empty, or the "Host" header is equivalent to the remote address. Some LB's optimistically set the "Host" header value with their IP address when there is no value present.</td>
+    <td>The value for the <code>Host</code> header is empty, or the <code>Host</code> header is equivalent to the remote address. Some load balancers optimistically set the <code>Host</code> header value to their IP address when there is no value present.</td>
   </tr>
   <tr>
     <td><code>unknown_route</code></td>
-    <td>The desired route does not exist in the gorouter's route table.</td>
+    <td>The desired route does not exist in the Gorouter's route table.</td>
   </tr>
   <tr>
     <td><code>no_endpoints</code></td>
@@ -247,11 +247,11 @@ The value of the `X-Cf-Routererror` header can be one of the following:
   </tr>
   <tr>
     <td><code>Connection Limit Reached</code></td>
-    <td>The backends associated with the route have reached their max number of connections. The max connection number is set via the spec property `router.backends.max_conns`.</td>
+    <td>The backends associated with the route have reached their maximum number of connections. The maximum  number of connection for backends is set via the property <code>router.backends.max_conns</code> in the <a href="https://github.com/cloudfoundry/routing-release/blob/master/jobs/gorouter/spec">Gorouter spec</a>.</td>
   </tr>
   <tr>
     <td><code>route_service_unsupported</code></td>
-    <td>Route services are not enabled. This can be configured via the spec property `router.route_services_secret`. If the property is empty, route services are disabled.</td>
+    <td>Route services are not enabled. You can enable route services with the property <code>router.route_services_secret</code> in the <a href="https://github.com/cloudfoundry/routing-release/blob/master/jobs/gorouter/spec">Gorouter spec</a>. If the property is empty, route services are disabled.</td>
   </tr>
   <tr>
     <td><code>endpoint_failure</code></td>
