@@ -217,7 +217,7 @@ See the list below for more information about the Gorouter access log fields:
 
 * `X-Cf-RouterError` is populated if the Gorouter encounters an error. The returned values can
    help distinguish whether a non-2xx response code is due to an error in the Gorouter
-   or the backend. For more information on the possible errors, see
+   or the back end. For more information on the possible errors, see
    the [Router Errors](#router-errors) section.
 
 ##### <a id="router-errors"></a> Router Errors
@@ -226,7 +226,7 @@ The following table lists possible values of the `X-Cf-RouterError` header:
 
 <table>
   <tr>
-    <th>Value</th>
+    <th>Value<sup>*</sup></th>
     <th>Description</th>
   </tr>
   <tr>
@@ -239,15 +239,15 @@ The following table lists possible values of the `X-Cf-RouterError` header:
   </tr>
   <tr>
     <td><code>unknown_route</code></td>
-    <td>The desired route does not exist in the Gorouter's route table.</td>
+    <td>The route does not exist in the Gorouter's route table.</td>
   </tr>
   <tr>
     <td><code>no_endpoints</code></td>
-    <td>There is an entry in the route table for the desired route, but there are no healthy endpoints available.</td>
+    <td>There is an entry in the route table for the route, but there are no healthy endpoints available.</td>
   </tr>
   <tr>
     <td><code>Connection Limit Reached</code></td>
-    <td>The backends associated with the route have reached their maximum number of connections. The maximum  number of connection for backends is set via the property <code>router.backends.max_conns</code> in the <a href="https://github.com/cloudfoundry/routing-release/blob/master/jobs/gorouter/spec">Gorouter spec</a>.</td>
+    <td>The back ends associated with the route have reached their maximum number of connections. The maximum number of connections for back ends is set via the property <code>router.backends.max_conns</code> in the <a href="https://github.com/cloudfoundry/routing-release/blob/master/jobs/gorouter/spec">Gorouter spec</a>.</td>
   </tr>
   <tr>
     <td><code>route_service_unsupported</code></td>
@@ -255,6 +255,8 @@ The following table lists possible values of the `X-Cf-RouterError` header:
   </tr>
   <tr>
     <td><code>endpoint_failure</code></td>
-    <td>The registered endpoint for the desired route failed to handle the request.</td>
+    <td>The registered endpoint for the route failed to handle the request.</td>
   </tr>
 </table>
+
+<sup>*</sup> The table represents error message values as they would appear in real header messages with preserved capitalization and punctuation.
