@@ -14,7 +14,7 @@ WebSocket and other types of traffic (for example, through HTTP CONNECT).
 See the following instructions for help getting started with Gorouter
 in a standalone environment.
 
-## <a id='setup'></a>Setup ##
+## <a id='setup'></a> Setup ##
 
 <pre class="terminal">
 $ git clone https://github.com/cloudfoundry/gorouter.git
@@ -24,7 +24,7 @@ $ ./bin/go install gorouter/gorouter
 $ gem install nats
 </pre>
 
-### <a id='start'></a>Start ###
+### <a id='start'></a> Start ###
 
 <pre class="terminal">
 # Start NATS server in daemon mode
@@ -112,11 +112,11 @@ $ curl -vvv "http://someuser:somepass@127.0.0.1:8080/routes"
 "03e316d6aa375d1dc1153700da5f1798.cloudfoundry.me":["127.0.0.1:34568"]}
 </pre>
 
-### <a id="logs"></a> Logs
+## <a id="logs"></a> Logs
 
 This section provides details about Gorouter logging.
 
-#### <a id="levels"></a> Levels
+### <a id="levels"></a> Levels
 
 The following table describes the log levels supported by Gorouter.
 <% if vars.platform_code == 'CF' %>
@@ -155,7 +155,7 @@ The log level is set to `debug` and is not configurable.
   </tr>
 </table>
 
-#### <a id="message-contents"></a> Message Contents
+### <a id="message-contents"></a> Message Contents
 
 This section section provides a sample Gorouter log entry and explanation of the contents.
 
@@ -189,7 +189,7 @@ This section section provides a sample Gorouter log entry and explanation of the
   </tr>
 </table>
 
-#### <a id="about-access-logs"></a> About Access Logs
+## <a id="about-access-logs"></a> About Access Logs
 
 This section provides details about Gorouter access logs.
 
@@ -220,7 +220,7 @@ See the list below for more information about the Gorouter access log fields:
    or the back end. For more information on the possible errors, see
    the [Router Errors](#router-errors) section.
 
-##### <a id="router-errors"></a> Router Errors
+### <a id="router-errors"></a> Router Errors
 
 The following table lists possible values of the `X-Cf-RouterError` header:
 
@@ -259,4 +259,4 @@ The following table lists possible values of the `X-Cf-RouterError` header:
   </tr>
 </table>
 
-<sup>*</sup> The table lists error message values with capitalization and punctuation as they appear in real header messages.
+<sup>*</sup> The table lists error message values with the capitalization and punctuation used in the real header messages.
