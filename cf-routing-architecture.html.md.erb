@@ -14,7 +14,7 @@ This topic explains routing flow and architecture in <%= vars.app_runtime_full %
 
 Because each app can have many instances, one app route can go to multiple containers. As Diego moves and scales app instances, the route emitter on each cell sends messages to NATS or the Routing API to register and de-register routes to the cell's app instances.
 
-The route emitter periodically emits the routes it discovers from Diego BBS to NATS and the Routing API as registration and unregistration messages every twenty seconds. The Gorouter uses TLS to verify app identity and confirm that its routes are up-to-date. For more information about how CF maintains route consistency, see the [Preventing Misrouting](./http-routing.html#consistency) section of the _HTTP Routing_ topic.
+The route emitter periodically emits the routes it discovers from Diego BBS to NATS and the Routing API as registration and unregistration messages every twenty seconds. The Gorouter uses TLS to verify app identity and confirm that its routes are up-to-date. For more information about how <%= vars.app_runtime_abbr %> maintains route consistency, see [Preventing Misrouting](http-routing.html#consistency) in _HTTP Routing_.
 
 The following process describes how a router obtains information about routes for an app running on <%= vars.app_runtime_abbr %>:
 
