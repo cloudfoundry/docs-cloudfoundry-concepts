@@ -162,8 +162,6 @@ This section describes how <%= vars.app_runtime_abbr %> components communicate w
 * By sending messages internally using HTTP and HTTPS protocols
 * By sending NATS messages to each other directly
 
-For more information, see [Messaging (NATS)](./architecture/messaging-nats.html).
-
 BOSH Director co-locates a BOSH DNS server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation. This enables service discovery between VMs.
 
 BOSH DNS allows deployments to continue communicating with VMs even when the VMs' IP addresses change. It also provides client-side load balancing by randomly selecting a healthy VM when multiple VMs are available.
