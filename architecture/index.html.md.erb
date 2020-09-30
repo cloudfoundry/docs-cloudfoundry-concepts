@@ -22,10 +22,11 @@ See the descriptions below for more information about <%= vars.product_short %> 
 
 ### <a id='router'></a> Router
 
-The [router](./router.html) routes incoming traffic to the appropriate component, either a Cloud Controller component or a hosted application running on a Diego Cell.
+The router routes incoming traffic to the appropriate component, either a Cloud Controller component or a hosted application running on a Diego Cell.
 
 The router periodically queries the Diego Bulletin Board System (BBS) to determine which cells and containers each application currently runs on. Using this information, the router recomputes new routing tables based on the IP addresses of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
 
+For more information on the routing tier, including the router, see [<%= vars.app_runtime_abbr %> Routing Architecture](../cf-routing-architecture.html).
 
 ## <a id='authentication'></a> Authentication
 

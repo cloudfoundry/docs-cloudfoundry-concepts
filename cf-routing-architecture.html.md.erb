@@ -7,8 +7,39 @@ owner: CF Routing
 <% current_page.data.title = vars.app_runtime_abbr + " Routing Architecture" if vars.product_name != 'CF'  %>
 
 
-This topic explains routing flow and architecture in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>). <%= vars.app_runtime_abbr %>'s routing tables must be updated before it can route external client requests to an app.
+This topic explains routing architecture and flow in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
 
+## <a id='routing-components'></a> Routing Architecture Components
+
+The following summarizes the roles and responsibilities of various components depicted in the <%= vars.app_runtime_abbr %> routing architecture diagrams above. These summaries are limited to the roles and responsibilities these components have pertaining to routing. For more complete descriptions of these components, see [<%= vars.app_runtime_abbr %> Concepts](https://docs.cloudfoundry.org/concepts/), [<%= vars.app_runtime_abbr %> Components](https://docs.cloudfoundry.org/concepts/architecture/), and [Diego Components and Architecture](https://docs.cloudfoundry.org/concepts/diego/diego-architecture.html).
+
+| Component Name | Summary |
+|----------------|---------|
+| BOSH manifest | Used to configure route registrar with route(s) for system components such as UAA and Loggregator. |
+| Cloud Controller | Contains route metadata, including whether they are HTTP or TCP. |
+| Diego BBS | Contains IP and port metadata as well as route metadata from Cloud Controller, which route emitter discovers. |
+| Diego cell | Manages app instances and tasks and long-running processes related to them. A route emitter runs on each cell. |
+| Gorouter | Routes HTTP traffic coming into <%= vars.app_runtime_abbr %> to the appropriate component. Receives route updates through NATS. Routes that have not been updated in two minutes are pruned from the Gorouter's database. |
+| NATS | Receives routing configuration from route emitter and provides same to Gorouter. |
+| Route registrar | Sends routing metadata described in BOSH manifest for system components such as UAA and Loggregator to NATS. This is because the Diego cell does not have information about system components, only about user spaces. |
+| Route emitter | Periodically emits route, IP, and port metadata to NATS or Routing API as registration and unregistration messages. Does not know about app instances on Diego cell, but knows what cell it belongs to and learns about what app instances are running on its cell by asking Diego BBS for information about app instances on the same cell. |
+| Routing API | Receives routing configuration from route emitter and other internal clients, and provides routing configuration for TCP router. |
+| Routing database | Saves some routing data from Routing API. If the Gorouter misses a message about an unmapped route from NATS, it will not get it again, so TCP router and Routing API can consult routing database for current state of routes. |
+| TCP router | Routes TCP traffic coming into <%= vars.app_runtime_abbr %> to the appropriate component. Receives route updates through the routing API. |
+
+## <a id='ext-client'></a> External Client Request Flow
+
+The following process describes how an external client makes a request to an app running on <%= vars.app_runtime_abbr %>:
+
+1. The external client sends its request.
+
+1. Your DNS service sends the request to the HTTP or TCP load balancer based on the prefix of the DNS name in the client request, such as `http` in `http.example.com`.
+
+1. The load balancer sends the request to the load balancer's corresponding router.
+
+1. The router sends the request to the app.
+
+<img src="images/external-client-call-app.png" alt="Diagram of external client request flow, with arrows pointing to each component. The top rounded box is labeled 'External Client' and has two arrows pointing away from it: one labeled 'http.cf-apps.com' that points to a rounded box labeled 'HTTP Load Balancer'; and one labeled 'tcp.cf-apps.com' that points to a rounded box labeled 'TCP Load Balancer'. 'HTTP Load Balancer' has an arrow pointing to a rounded box labeled 'Gorouter', which has an arrow pointing to a rounded box labeled 'HTTP Application'. 'TCP Load Balancer' has an arrow pointing to a rounded box labeled 'TCP Router', which has an arrow pointing to a rounded box labeled 'TCP Application'. 'Gorouter', 'TCP Router', 'HTTP Application', and 'TCP Application' are located within another rounded box labeled '<%= vars.app_runtime_abbr %>'." width="500">
 
 ## <a id='routing-tables'></a> How <%= vars.app_runtime_abbr %> Maintains Updated Routing Tables
 
@@ -35,35 +66,5 @@ Cloud Controller and Diego BBS have their own databases, while NATS and the Goro
 If Cloud Controller is restarted, you must retrieve its data from a backup.
 
 
-## <a id='ext-client'></a> External Client Request Flow
-
-When <%= vars.app_runtime_abbr %>'s routing tables are updated, <%= vars.app_runtime_abbr %> can process requests from external clients to an app. The following process describes how an external client makes a request to an app running on <%= vars.app_runtime_abbr %>:
-
-1. The external client sends its request.
-
-1. Your DNS service sends the request to the HTTP or TCP load balancer based on the prefix of the DNS name in the client request, such as `http` in `http.example.com`.
-
-1. The load balancer sends the request to the load balancer's corresponding router.
-
-1. The router sends the request to the app.
-
-<img src="images/external-client-call-app.png" alt="Diagram of external client request flow, with arrows pointing to each component. The top rounded box is labeled 'External Client' and has two arrows pointing away from it: one labeled 'http.cf-apps.com' that points to a rounded box labeled 'HTTP Load Balancer'; and one labeled 'tcp.cf-apps.com' that points to a rounded box labeled 'TCP Load Balancer'. 'HTTP Load Balancer' has an arrow pointing to a rounded box labeled 'Gorouter', which has an arrow pointing to a rounded box labeled 'HTTP Application'. 'TCP Load Balancer' has an arrow pointing to a rounded box labeled 'TCP Router', which has an arrow pointing to a rounded box labeled 'TCP Application'. 'Gorouter', 'TCP Router', 'HTTP Application', and 'TCP Application' are located within another rounded box labeled '<%= vars.app_runtime_abbr %>'." width="500">
 
 
-## <a id='routing-components'></a> Routing Architecture Components
-
-The following summarizes the roles and responsibilities of various components depicted in the <%= vars.app_runtime_abbr %> routing architecture diagrams above. These summaries are limited to the roles and responsibilities these components have pertaining to routing. For more complete descriptions of these components, see [<%= vars.app_runtime_abbr %> Concepts](https://docs.cloudfoundry.org/concepts/), [<%= vars.app_runtime_abbr %> Components](https://docs.cloudfoundry.org/concepts/architecture/), and [Diego Components and Architecture](https://docs.cloudfoundry.org/concepts/diego/diego-architecture.html).
-
-| Component Name | Summary |
-|----------------|---------|
-| BOSH manifest | Used to configure route registrar with route(s) for system components such as UAA and Loggregator. |
-| Cloud Controller | Contains route metadata, including whether they are HTTP or TCP. |
-| Diego BBS | Contains IP and port metadata as well as route metadata from Cloud Controller, which route emitter discovers. |
-| Diego cell | Manages app instances and tasks and long-running processes related to them. A route emitter runs on each cell. |
-| Gorouter | Routes HTTP traffic coming into <%= vars.app_runtime_abbr %> to the appropriate component. Receives route updates through NATS. Routes that have not been updated in two minutes are pruned from the Gorouter's database. |
-| NATS | Receives routing configuration from route emitter and provides same to Gorouter. |
-| Route registrar | Sends routing metadata described in BOSH manifest for system components such as UAA and Loggregator to NATS. This is because the Diego cell does not have information about system components, only about user spaces. |
-| Route emitter | Periodically emits route, IP, and port metadata to NATS or Routing API as registration and unregistration messages. Does not know about app instances on Diego cell, but knows what cell it belongs to and learns about what app instances are running on its cell by asking Diego BBS for information about app instances on the same cell. |
-| Routing API | Receives routing configuration from route emitter and other internal clients, and provides routing configuration for TCP router. |
-| Routing database | Saves some routing data from Routing API. If the Gorouter misses a message about an unmapped route from NATS, it will not get it again, so TCP router and Routing API can consult routing database for current state of routes. |
-| TCP router | Routes TCP traffic coming into <%= vars.app_runtime_abbr %> to the appropriate component. Receives route updates through the routing API. |
