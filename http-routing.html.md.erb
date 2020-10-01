@@ -207,6 +207,7 @@ The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the 
 
 <p class="note"><strong>Note:</strong> Cloud Foundry does not persist or replicate HTTP session data across app instances. If an app instance crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared by all instances of an app, store session data in a CF marketplace service that offers data persistence.</p>
 
+For information, see [Session Affinity](https://github.com/cloudfoundry/routing-release/blob/develop/docs/session-affinity.md) in GitHub.
 
 ## <a id="keepalive"></a> Keep-Alive Connections
 
