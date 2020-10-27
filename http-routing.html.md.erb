@@ -196,7 +196,8 @@ With sticky sessions, when multiple instances of an app are running on Cloud Fou
 1A530637289A03B07199A44E8D531427
 </pre>
 
-* If an app returns a `JSESSIONID` cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the app instance based on its GUID in the following format:
+If an app returns a sticky session cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the
+app instance based on its GUID with expiry same as that of `JSESSIONID` in the following format:
 <pre class="terminal">
 323f211e-fea3-4161-9bd1-615392327913
 </pre>
