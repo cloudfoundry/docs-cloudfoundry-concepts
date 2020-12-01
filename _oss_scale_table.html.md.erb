@@ -34,7 +34,7 @@ The following table provides recommended instance counts for a high-availability
         <tr>
                 <td>NATS Server</td>
                 <td>&ge; 2</td>
-                <td>You might run a single NATS instance if you lack the resources to deploy two stable NATS servers. Components using NATS are resilient to message failures and the BOSH resurrector recovers the NATS VM quickly if it becomes non-responsive. NATS can include metrics as well as route registration and deregistration messages. <%= vars.recommended_by %> recommends scaling NATS VMs to 2 or more CPU for better performance.</td>
+                <td>You might run a single NATS instance if you lack the resources to deploy two stable NATS servers. Components using NATS are resilient to message failures and the BOSH resurrector recovers the NATS VM quickly if it becomes non-responsive. NATS includes metrics as well as route registration and deregistration messages. <%= vars.recommended_by %> recommends scaling NATS VMs to 2 or more CPU.</td>
         </tr>
         <tr>
                 <td>Cloud Controller API</td>
