@@ -53,8 +53,8 @@ The nsync, BBS, and Cell Rep components work together along a chain to keep apps
 
 Here is how the components work together:
 
-* **nsync** receives a message from the Cloud Controller when the user scales an app. It writes the number of instances into a `DesiredLRP` structure in the Diego BBS database. 
-* **BBS** uses its convergence process to monitor the `DesiredLRP` and `ActualLRP` values. It launches or kills application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
+* **nsync** receives a message from the Cloud Controller when the user scales an app. It writes the number of instances into a `DesiredLRP` structure in the Diego BBS database.
+* **BBS** uses its convergence process to monitor the `DesiredLRP` and `ActualLRP` values. It launches or stops application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
 * **Cell Rep** monitors the containers and provides the `ActualLRP` value.
 
 
@@ -106,5 +106,3 @@ For more information, see <%= vars.loggregator_arch_link %>.
 <% if vars.platform_code == 'CF' %>
 <%= partial 'old_collector' %>
 <% end %>
-
-
