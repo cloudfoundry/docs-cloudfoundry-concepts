@@ -20,11 +20,60 @@ This topic provides an overview of <%= vars.app_runtime_full %> (<%= vars.app_ru
 
 ## <a id='system-boundaries'></a> System Boundaries and Access
 
-As the image below shows, in a typical deployment of <%= vars.app_runtime_abbr %>, the components run on virtual machines (VMs) that exist within a VLAN. In this configuration, the only access points visible on a public network are a load balancer that maps to one or more <%= vars.app_runtime_abbr %> routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
+In a typical deployment of <%= vars.app_runtime_abbr %>, the components run on virtual machines (VMs) that exist within a VLAN.
+
+In this configuration, the only access points visible on a public network are a load balancer that maps to one or more <%= vars.app_runtime_abbr %> routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
+
+As the diagram below shows the architecture of a typical deployment of <%= vars.app_runtime_abbr %>:
 
 <p class="note"><strong>Note:</strong> <%= vars.recommended_by %> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
-  <%= image_tag("images/security/sysbound1.png") %>
+  <%= image_tag("security/sysbound1.png", :alt => "System Boundaries and Access diagram. Long description below.") %>
+
+The above diagram shows the following components:
+
+- DMZ
+	- Customer Load Balancers with SSL Termination
+	- Outbound NAT
+	- Jumpbox
+- Private vLANs
+	- Cloud Foundry vLAN
+		- Three Go Routers
+		- OAuth2 Server (UAA)
+		- Login Server
+		- Cloud Controller
+		- nsync
+		- Diego Brain
+		- Cell Reps
+		- Blob Store
+		- App Execution (Diego Cells) with Garden Containers
+		- Service Brokers
+		- BBS (HTTP/S)
+		- Consul
+		- NATS Message Bus
+		- Metrics Collector
+		- App Log Aggregator
+	- Services vLAN
+		- BOSH Director
+		- Resurrector
+		- Workers
+		-Message Bus (NATS)
+	- BOSH vLAN
+		- Brokers
+		- Services Nodes
+- IaaS
+	- Hypervisor
+
+The diagram above shows the following communications:
+
+- Customer Load Balancers send communication to the three Go Routers
+
+- Outbound NAT communicates with Hypervisor
+
+- BOSH Director communicates with the App Execution (Diego Cells)
+
+- Service Brokers in Cloud Foundry vLAN communicates with Brokers in Services vLAN
+
 
 ### <a id='protocols'></a> Protocols
 
@@ -65,7 +114,7 @@ In <%= vars.app_runtime_abbr %>, the Cloud Controller database (CCDB) identifies
 
 This diagram shows how isolation segments keep apps running on different pools of Diego Cells, and how the Diego Cells communicate with each other and with the management components:
 
-  <%= image_tag("images/security/isolation-segments.png") %>
+  <%= image_tag("images/security/isolation-segments.png", :alt => "Isolation segment diagram. For more information about Isolation Segments, see below.") %>
 
 <%= vars.manage_iso_seg_link %>
 
