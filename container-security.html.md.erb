@@ -105,12 +105,15 @@ A host VM has a single IP address. If you configure the deployment with the clus
 
  - DMZ on left side
 
-	- Inbound requests go to Load Balancer
-	- Outbound traffic come from NAT
+    - Inbound requests go to Load Balancer
+    
+    - Outbound traffic come from NAT
 
 - Cloud Foundry on right side
-	- Load balancer goes to router and to the app container inside the Diego Cell
-	- App container response goes to NAT
+
+    - Load balancer goes to router and to the app container inside the Diego Cell
+    
+    - App container response goes to NAT
 
 ### <a id='config-traffic'></a> Network Traffic Rules
 
@@ -180,44 +183,44 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 * <%= vars.app_runtime_abbr %> allows admins to rate limit the maximum bandwidth consumed by single-app containers, configuring `rate` and `burst` properties on the `silk-cni` job.
 
 * <%= vars.app_runtime_abbr %> limits access to devices using cgroups but explicitly allows the following safe device nodes:
-	* `/dev/full`
-	* `/dev/fuse`
-	* `/dev/null`
-	* `/dev/ptmx`
-	* `/dev/pts/*`
-	* `/dev/random`
-	* `/dev/tty`
-	* `/dev/tty0`
-	* `/dev/tty1`
-	* `/dev/urandom`
-	* `/dev/zero`
-	* `/dev/tap`
-	* `/dev/tun`
+    * `/dev/full`
+    * `/dev/fuse`
+    * `/dev/null`
+    * `/dev/ptmx`
+    * `/dev/pts/*`
+    * `/dev/random`
+    * `/dev/tty`
+    * `/dev/tty0`
+    * `/dev/tty1`
+    * `/dev/urandom`
+    * `/dev/zero`
+    * `/dev/tap`
+    * `/dev/tun`
 
 * <%= vars.app_runtime_abbr %> drops the following Linux capabilities for all container processes. Every dropped capability limits the actions the root user can perform.
-	* `CAP_DAC_READ_SEARCH`
-	* `CAP_LINUX_IMMUTABLE`
-	* `CAP_NET_BROADCAST`
-	* `CAP_NET_ADMIN`
-	* `CAP_IPC_LOCK`
-	* `CAP_IPC_OWNER`
-	* `CAP_SYS_MODULE`
-	* `CAP_SYS_RAWIO`
-	* `CAP_SYS_PTRACE`
-	* `CAP_SYS_PACCT`
-	* `CAP_SYS_BOOT`
-	* `CAP_SYS_NICE`
-	* `CAP_SYS_RESOURCE`
-	* `CAP_SYS_TIME`
-	* `CAP_SYS_TTY_CONFIG`
-	* `CAP_LEASE`
-	* `CAP_AUDIT_CONTROL`
-	* `CAP_MAC_OVERRIDE`
-	* `CAP_MAC_ADMIN`
-	* `CAP_SYSLOG`
-	* `CAP_WAKE_ALARM`
-	* `CAP_BLOCK_SUSPEND`
-	* `CAP_SYS_ADMIN` for unprivileged containers
+    * `CAP_DAC_READ_SEARCH`
+    * `CAP_LINUX_IMMUTABLE`
+    * `CAP_NET_BROADCAST`
+    * `CAP_NET_ADMIN`
+    * `CAP_IPC_LOCK`
+    * `CAP_IPC_OWNER`
+    * `CAP_SYS_MODULE`
+    * `CAP_SYS_RAWIO`
+    * `CAP_SYS_PTRACE`
+    * `CAP_SYS_PACCT`
+    * `CAP_SYS_BOOT`
+    * `CAP_SYS_NICE`
+    * `CAP_SYS_RESOURCE`
+    * `CAP_SYS_TIME`
+    * `CAP_SYS_TTY_CONFIG`
+    * `CAP_LEASE`
+    * `CAP_AUDIT_CONTROL`
+    * `CAP_MAC_OVERRIDE`
+    * `CAP_MAC_ADMIN`
+    * `CAP_SYSLOG`
+    * `CAP_WAKE_ALARM`
+    * `CAP_BLOCK_SUSPEND`
+    * `CAP_SYS_ADMIN` for unprivileged containers
   <br>
   <br>
   For more information about Linux capabilities, see [capabilities - overview of Linux capabilities](http://manpages.ubuntu.com/manpages/xenial/en/man7/capabilities.7.html) in the Ubuntu documentation.
