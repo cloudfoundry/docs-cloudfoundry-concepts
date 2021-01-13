@@ -103,17 +103,18 @@ A host VM has a single IP address. If you configure the deployment with the clus
 
  The networking diagram shows the following:
 
- - DMZ on left side
+- DMZ on left side
 
-    - Inbound requests go to Load Balancer
-    
-    - Outbound traffic come from NAT
+  - Inbound requests go to Load Balancer
+
+  - Outbound traffic come from NAT
 
 - Cloud Foundry on right side
 
-    - Load balancer goes to router and to the app container inside the Diego Cell
-    
-    - App container response goes to NAT
+  - Load balancer goes to router and to the app container inside the Diego Cell
+
+  - App container response goes to NAT
+
 
 ### <a id='config-traffic'></a> Network Traffic Rules
 
