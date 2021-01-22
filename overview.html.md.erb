@@ -88,12 +88,12 @@ For more information, see [Diego Components and Architecture](./diego/diego-arch
 
 #### <a id='cf-apps'></a> Distributing Apps
 
-To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. <%= vars.app_runtime_abbr %> distributes app source code to VMs with everything the VMs need to compile and run the apps locally.
+To avail load balancing, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. <%= vars.app_runtime_abbr %> distributes app source code to VMs with everything the VMs need to compile and run the apps locally.
 
 <%= vars.app_runtime_abbr %> includes the following with your app's source code:
 
 - **Stack**: the operating system the app runs on.
-- **Buildpack**: contains all languages, libraries, and services that the app uses.
+- **Buildpack**: contains all languages, libraries, and services that the app depends on.
 
 Before sending an app to a VM, the Cloud Controller stages it for delivery by combining the stack, buildpack, and source code into a droplet that the VM can unpack, compile, and run. For simple, standalone apps with no dynamic pointers, the droplet can contain a pre-compiled executable instead of source code, language, and libraries.
 
