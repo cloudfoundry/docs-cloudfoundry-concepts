@@ -220,7 +220,7 @@ You can configure the cookie names that the routing tier uses for sticky session
 <% else %> <%= vars.tas_networking %> <% end %>
 
 If an app returns a sticky session cookie to a client request, the CF routing tier generates a unique `VCAP_ID` for the
-app instance based on its GUID with expiry same as that of `JSESSIONID` in the following format:
+app instance based on its GUID with the same expiry, sameSite, and secure attributes as `JSESSIONID`. The `VCAP_ID` is in the following format:
 <pre class="terminal">
 323f211e-fea3-4161-9bd1-615392327913
 </pre>
