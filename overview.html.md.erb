@@ -11,7 +11,7 @@ This topic describes Cloud Foundry and how it works.
 
 <% else %>
 
-This topic describes <%= vars.app_runtime_first %> and how it works with <%= vars.platform_name %>.
+This topic describes <%= vars.app_runtime_first %> and how it works with <%= vars.ops_manager %>.
 
 <% end %>
 
@@ -28,44 +28,44 @@ The following diagram shows the layers of a typical technology stack, and compar
 See the following sections in this topic:
 
 <ul>
-  <li><a href="#about">About <%= vars.platform_name %></a></li>
-  <li><a href="#how-it-works">How <%= vars.platform_name %> Works</a></li>
+  <li><a href="#about">About <%= vars.app_runtime_abbr %></a></li>
+  <li><a href="#how-it-works">How <%= vars.app_runtime_abbr %> Works</a></li>
   <%= vars.concepts_product_model_link %>
 </ul>
 
 
-## <a id='about'></a> About <%= vars.platform_name %>
+## <a id='about'></a> About <%= vars.app_runtime_abbr %>
 
-This section describes why <%= vars.platform_name %> is an industry-standard cloud platform.
+This section describes why <%= vars.app_runtime_abbr %> is an industry-standard cloud platform.
 
 Not all cloud platforms are created equal. Some have limited language and framework support, lack key app services, or restrict deployment to a single cloud.
 
-As an industry-standard cloud platform, <%= vars.platform_name %> offers the following:
+As an industry-standard cloud platform, <%= vars.app_runtime_abbr %> offers the following:
 
 * **Open source code**: The platform's openness and extensibility prevent its users from being locked into a single framework, set of app services, or cloud. For more information, see the [Cloud Foundry](https://github.com/cloudfoundry) project on GitHub.
 
-* **Deployment automation**: Developers can deploy their apps to <%= vars.platform_name %> using their existing tools and with zero modification to their code.
+* **Deployment automation**: Developers can deploy their apps to <%= vars.app_runtime_abbr %> using their existing tools and with zero modification to their code.
 
-* **Flexible infrastructure**: You can deploy <%= vars.platform_name %> to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack.
+* **Flexible infrastructure**: You can deploy <%= vars.app_runtime_abbr %> to run your apps on your own computing infrastructure, or deploy on an IaaS like vSphere, AWS, Azure, GCP, or OpenStack.
 
-* **Commercial options**: You can also use a PaaS deployed by a commercial <%= vars.platform_name %> cloud provider. For more information, see [Cloud Foundry Certified Platforms](https://www.cloudfoundry.org/certified-platforms/).
+* **Commercial options**: You can also use a PaaS deployed by a commercial <%= vars.app_runtime_abbr %> cloud provider. For more information, see [Cloud Foundry Certified Platforms](https://www.cloudfoundry.org/certified-platforms/).
 
-* **Community support**: A broad community contributes to and supports <%= vars.platform_name %>. See [Welcome to the Cloud Foundry Community](https://www.cloudfoundry.org/community/).
+* **Community support**: A broad community contributes to and supports <%= vars.app_runtime_abbr %>. See [Welcome to the Cloud Foundry Community](https://www.cloudfoundry.org/community/).
 
-<%= vars.platform_name %> is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps.
+<%= vars.app_runtime_abbr %> is ideal for anyone interested in removing the cost and complexity of configuring infrastructure for their apps.
 
 
-## <a id='how-it-works'></a> How <%= vars.platform_name %> Works
+## <a id='how-it-works'></a> How <%= vars.app_runtime_abbr %> Works
 
-To flexibly serve and scale apps online, <%= vars.platform_name %> has subsystems that perform specialized functions. The sections below describe how some of these main subsystems work.
+To flexibly serve and scale apps online, <%= vars.app_runtime_abbr %> has subsystems that perform specialized functions. The sections below describe how some of these main subsystems work.
 
 ### <a id='balances'></a> Load Balancing
 
-This section describes how <%= vars.platform_name %> handles load balancing.
+This section describes how <%= vars.app_runtime_abbr %> handles load balancing.
 
-Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. An <%= vars.platform_name %> installation accomplishes this using the following components:
+Clouds balance their processing loads over multiple machines, optimizing for efficiency and resilience against point failure. A <%= vars.app_runtime_abbr %> installation accomplishes this using the following components:
 
-- **BOSH** creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs <%= vars.platform_name %> on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information, see the [BOSH documentation](http://bosh.io).
+- **BOSH** creates and deploys VMs on top of a physical computing infrastructure, and deploys and runs <%= vars.app_runtime_abbr %> on top of this cloud. To configure the deployment, BOSH follows a manifest document. For more information, see the [BOSH documentation](http://bosh.io).
 
 - **Cloud Controller** runs the apps and other processes on the cloud's VMs, balancing demand and managing app lifecycles. For more information, see [Cloud Controller](./architecture/cloud-controller.html).
 
@@ -73,16 +73,16 @@ Clouds balance their processing loads over multiple machines, optimizing for eff
 
 ### <a id='apps-anywhere'></a> Running Apps
 
-This section describes the VMs that run your apps in <%= vars.platform_name %> and how the platform packages your apps to run on these VMs.
+This section describes the VMs that run your apps in <%= vars.app_runtime_abbr %> and how the platform packages your apps to run on these VMs.
 
-#### <a id='cf-vms'></a> VMs in <%= vars.platform_name %>
+#### <a id='cf-vms'></a> VMs in <%= vars.app_runtime_abbr %>
 
-<%= vars.platform_name %> designates the following types of VMs:
+<%= vars.app_runtime_abbr %> designates the following types of VMs:
 
 - **Component VMs** make up the platform's infrastructure.
 - **Host VMs** host your apps for the outside world.
 
-Within <%= vars.platform_name %>, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
+Within <%= vars.app_runtime_abbr %>, the Diego system distributes the hosted app load over all of the host VMs, and keeps it running and balanced through demand surges, outages, or other changes. Diego accomplishes this through an auction algorithm.
 
 For more information, see [Diego Components and Architecture](./diego/diego-architecture.html).
 
@@ -120,11 +120,11 @@ The following table describes what the two UAA servers do:
   </tr>
   <tr>
     <td>First UAA server</td>
-    <td><ul><li>Grants access to BOSH</li><li>Holds accounts for <%= vars.platform_name %> operators who deploy runtimes, services, and other software onto the BOSH layer directly</li></ul></td>
+    <td><ul><li>Grants access to BOSH</li><li>Holds accounts for <%= vars.ops_manager %> operators who deploy runtimes, services, and other software onto the BOSH layer directly</li></ul></td>
   </tr>
   <tr>
     <td>Second UAA server</td>
-    <td><ul><li>Controls access to the Cloud Controller</li><li>Defines user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run <%= vars.platform_name %> commands</li><li>Scopes the roles to separate, compartmentalized orgs and spaces within an installation to manage and track use</li></ul></td>
+    <td><ul><li>Controls access to the Cloud Controller</li><li>Defines user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run <%= vars.app_runtime_abbr %> commands</li><li>Scopes the roles to separate, compartmentalized orgs and spaces within an installation to manage and track use</li></ul></td>
   </tr>
 </table>
 
