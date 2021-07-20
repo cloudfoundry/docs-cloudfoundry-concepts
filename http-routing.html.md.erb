@@ -3,7 +3,7 @@ title: HTTP Routing
 owner: Routing
 ---
 
-This topic describes how the Gorouter, the main component in the <%= vars.platform_name %> routing tier, routes HTTP traffic within <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
+This topic describes how the Gorouter, the main component in the <%= vars.app_runtime_first %> routing tier, routes HTTP traffic within <%= vars.app_runtime_abbr %>.
 
 For more information, see the [Routing](./architecture/index.html#routing) section of the _<%= vars.app_runtime_abbr %> Components_ topic.
 
@@ -13,6 +13,9 @@ For more information, see the [Routing](./architecture/index.html#routing) secti
 #### <a id="header-size-limit"></a> Header Size Limit
 
 The Gorouter has a limit of 1&nbsp;MB for HTTP Headers.
+
+The specific language, framework, and configuration of the back end app container determine the effective header size limit.
+For example, the default header size for the Tomcat container is 8&nbsp;kB.
 
 #### <a id="X-Forwarded-Proto"></a> X-Forwarded-Proto
 
@@ -244,7 +247,7 @@ The Gorouter supports keep-alive connections from clients and does not close the
 
 If keep-alive connections are disabled, the Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response.
 
-If keep-alive connections are enabled, the Gorouter maintains established TCP connections to back ends. The Gorouter supports up to 10 idle connections to each back end:
+If keep-alive connections are enabled, the Gorouter maintains established TCP connections to back ends. The Gorouter supports up to 100 idle connections to each back end:
 
 * If an idle connection exists for a given back end, the Gorouter reuses it to route subsequent requests.
 * If no idle connection exists for this back end, the Gorouter creates a new connection.
