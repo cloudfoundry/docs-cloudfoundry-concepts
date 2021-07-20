@@ -247,7 +247,7 @@ The Gorouter supports keep-alive connections from clients and does not close the
 
 If keep-alive connections are disabled, the Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response.
 
-If keep-alive connections are enabled, the Gorouter maintains established TCP connections to back ends. The Gorouter supports up to 10 idle connections to each back end:
+If keep-alive connections are enabled, the Gorouter maintains established TCP connections to back ends. The Gorouter supports up to 100 idle connections to each back end:
 
 * If an idle connection exists for a given back end, the Gorouter reuses it to route subsequent requests.
 * If no idle connection exists for this back end, the Gorouter creates a new connection.
