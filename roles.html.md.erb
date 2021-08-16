@@ -67,6 +67,10 @@ information.
 
 * **Space Auditors**: Read-only access to a space.
 
+* **Space Supporters**: Troubleshoot and debug apps and service bindings in a space.
+
+<p class="note"><strong>Note:</strong> Space supporter role is only available for the v3 Cloud Controller API. Users assigned this role will get a 403 returned by any v2 endpoint they access.</p>
+
 For non-admin users, the `cloud_controller.read` scope is required to view resources, and the `cloud_controller.write` scope is required to create, update, and delete resources.
 
 Before you assign a space role to a user, you must assign an org role to the user. The error message `Server error, error code: 1002, message: cannot set space role because user is not part of the org` occurs when you try to set a space role before setting an org role for the user.
