@@ -59,7 +59,7 @@ information.
 <%= vars.billing_manager_role %>
 <%= vars.billing_manager_role_note %>
 
-* **Org Users**: Read-only access to the list of other org users and their roles. In the v2 Cloud Controller API, when an Org Manager gives a person an Org or Space role, that person automatically receives Org User status in that org. This is no longer the case in the v3 Cloud Controller API.
+* **Org Users**: Read-only access to the list of other org users and their roles. In the v2 Cloud Controller API, when an Org Manager gives a person an Org or Space role, that person automatically receives Org User status in that org. This is no longer the case in the V3 Cloud Controller API.
 
 * **Space Managers**: Administer a space within an org.
 
@@ -67,8 +67,8 @@ information.
 
 * **Space Auditors**: Read-only access to a space.
 
-* **Space Supporters**: Read access to a space. Manage app lifecycle (stop, restart) and service bindings.
-<p class="note"><strong>Note:</strong> Users with only the space supporter role will not be able to access the V2 API.</p>
+* **Space Supporters**: Read access to a space. Manage app lifecycle, including stop and restart, and service bindings.
+<p class="note"><strong>Note:</strong> Users with only the space supporter role cannot access the V2 API.</p>
 
 For non-admin users, the `cloud_controller.read` scope is required to view resources, and the `cloud_controller.write` scope is required to create, update, and delete resources.
 
