@@ -197,7 +197,7 @@ To bind an ASG to a space-scoped running ASG set:
 1. Run:
 
     ```
-    cf bind-security-group ASG ORG SPACE
+    cf bind-security-group ASG ORG --space SPACE
     ```
     Where:
     * `ASG` is the name of your ASG.
@@ -209,7 +209,7 @@ To bind an ASG to a space-scoped staging ASG set:
 1. Run:
 
     ```
-    cf bind-security-group ASG ORG SPACE --lifecycle staging
+    cf bind-security-group ASG ORG --space SPACE --lifecycle staging
     ```
     Where:
     * `ASG` is the name of your ASG.
