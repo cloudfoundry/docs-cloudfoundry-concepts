@@ -188,7 +188,7 @@ To secure communication between the source and destination containers on the ove
 
 You should select the appropriate option depending on your use-case:
 - The automatic option is appropriate when you only care that traffic between the containers cannot be sniffed on the overlay network.
-- The manual option is appropriate when your application also needs to use TLS attributes for its operation. 
+- The manual option is appropriate when your application also needs to use TLS capabilities for its operation. 
   - For example, the destination application can examine the client certificate and reject service for those that are not permitted. 
     (Note that the source application can make use of its own platform-provisioned certificate when it opens a TLS connection to the destination container.)
 
