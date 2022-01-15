@@ -177,15 +177,22 @@ Both app security groups (ASGs) and container-to-container networking policies a
 
 TLS encapsulation for container-to-container traffic is not enabled by default.
 
-The platform allows apps to communicate through TLS if they implement their own TLS connection.
+To secure communication between the source and destination containers on the overlay network there are two options:
 
-You can also use the IPsec Add-on to secure container-to-container traffic. The IPsec add-on enables
-authentication and encryption at the IP layer to secure network communications between VMs and to
-secure all traffic on the platform.
+- (automatic) Connect to port 61443 on the destination container. 
+  - The platform provisions certificates for each application.
+  - The platform ensures that TLS terminates within the destination container, and passes cleartext traffic to the application.
+  - The destination application does not need special configuration.
+- (manual) Implement your own TLS termination in the application for the PORT provided.
+  - The destination application must be configured to implement its own TLS termination.
 
-For more information about the add-on, see [IPsec](https://docs.pivotal.io/addon-ipsec/index.html).
+You should select the appropriate option depending on your use-case:
+- The automatic option is appropriate when you only care that traffic between the containers cannot be sniffed on the overlay network.
+- The manual option is appropriate when your application also needs to use TLS attributes for its operation. 
+  - For example, the destination application can examine the client certificate and reject service for those that are not permitted. 
+    (Note that the source application can make use of its own platform-provisioned certificate when it opens a TLS connection to the destination container.)
 
-To download the add-on, see [IPsec Add-on](https://www.cloudfoundry.org/the-foundry/ipsec-add-on/).
+Specific Cloud Foundry vendors may provide additional methods for securing container-to-container traffic.
 
 <p class="note">For information about how the platform can encrypt public traffic to apps, see
 <a href="http-routing.html#tls-to-back-end">TLS to Apps and Other Back End Services</a> in
