@@ -174,17 +174,44 @@ Both app security groups (ASGs) and container-to-container networking policies a
 
 ## <a id="securing-traffic"></a> Securing Container-to-Container Traffic
 
-TLS encapsulation for container-to-container traffic is not enabled by default.
+TLS encapsulation for container-to-container traffic is disabled by default.
+To secure communication between the source and destination containers on the overlay network, you can enable TLS encapsulation using either of the following options:
 
-The platform allows apps to communicate through TLS if they implement their own TLS connection.
+- **automatic**: The automatic option is appropriate when you only care that traffic between the containers cannot be sniffed on the overlay network.
+- **manual**: The manual option is appropriate when your application also needs to use TLS capabilities for its operation. For example, the destination application can examine the client certificate and reject service for those that are not permitted.
+  <p class="note"><strong>Note:</strong> The source application can make use of its own platform-provisioned certificate when it opens a TLS connection to the destination container.</p>
 
-You can also use the IPsec Add-on to secure container-to-container traffic. The IPsec add-on enables
-authentication and encryption at the IP layer to secure network communications between VMs and to
-secure all traffic on the platform.
+For more information, see the following table:
 
-For more information about the add-on, see [IPsec](https://docs.pivotal.io/addon-ipsec/index.html).
+<table>
+  <tr>
+    <th>Option</th>
+    <th>Configuration</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>automatic</td>
+    <td>Connect to port 61443 on the destination container.</td>
+    <td>
+      <ul>
+        <li>The platform provisions certificates for each application.</li>
+        <li>The platform ensures that TLS terminates within the destination container and passes cleartext traffic to the application.</li>
+        <li>The destination application does not need special configuration.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>manual</td>
+    <td>Implement your own TLS termination in the application for the PORT provided.</td>
+    <td>
+      <ul>
+        <li>The destination application must be configured to implement its own TLS termination.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-To download the add-on, see [IPsec Add-on](https://www.cloudfoundry.org/the-foundry/ipsec-add-on/).
+Specific Cloud Foundry vendors might provide additional methods for securing container-to-container traffic.
 
 <p class="note">For information about how the platform can encrypt public traffic to apps, see
 <a href="http-routing.html#tls-to-back-end">TLS to Apps and Other Back End Services</a> in
