@@ -66,4 +66,9 @@ The following table provides recommended instance counts for a high-availability
                 <td>&ge; 2</td>
                 <td>Deploying additional Loggregator Traffic Controllers allows you to direct traffic to them in a round-robin manner. For high availability, use at least two per Availability Zone.</td>
         </tr>
+        <tr>
+                <td>Log Cache</td>
+                <td>&ge; 1</td>
+                <td>Deploying additional Log Cache instances increases the total storage, sharding data by app id. Application logs and metrics which are sharded to an unavailable instance will be unavailable while the designated instance is unavailable regardless of the number of instances or AZs.</td>
+        </tr>
 </table>
