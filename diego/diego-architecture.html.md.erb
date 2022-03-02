@@ -135,6 +135,17 @@ The following resources provide more information about Diego components:
 * [App SSH](./ssh-conceptual.html), [App SSH Overview](../../devguide/deploy-apps/app-ssh-overview.html), and the [Diego SSH](https://github.com/cloudfoundry-incubator/diego-ssh) repository on GitHub.
 
 
+## <a id='maximum-diego-cells'></a> Maximum Recommended Diego Cells
+
+The maximum recommended diego cells is 250 cells for each TAS tile. There is a hard limit of 256 addresses by default for vSphere deployments using silk for networking. This hard limit is described in the [silk release documentation](https://github.com/cloudfoundry/cf-networking-release/blob/develop/docs/large_deployments.md)
+The default CIDR address block for the overlay network is 10.255.0.0/16 Each diego cell needs a subnet, and subnets (0-255) for each diego cell are allocated out of this network.
+
+TAS Deployments that do not use silk for networking do not have a hard limit. However, operating a foundation with more than 250 diego cells is not recommended because:
+* Changes to the foundation will take a long time, potentially days or weeks depending on the [max-in-flight](https://docs.pivotal.io/application-service/operating/configuring.html#best-practices). For example, if a certificate is found to be expiring in a week, there may not be enough time to rotate the certificates before expiry.
+* A single foundation still has single points of failure such as the certificates on the platform. 250 diego cells is enough RAM to host many business critical applications
+
+
+
 ## <a id='components-ther'></a> Components from Other Releases
 
 The following table describes jobs that interact closely with Diego but are not part of the Diego <%= vars.app_runtime_abbr %> BOSH release.
