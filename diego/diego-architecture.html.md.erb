@@ -143,7 +143,7 @@ The default CIDR address block for the overlay network is 10.255.0.0/16. Each Di
 
 <%= vars.app_runtime_abbr %> deployments that do not use Silk for networking do not have a hard limit. However, operating a foundation with more than 250 Diego Cells is not recommended for the following reasons:
 
-* Changes to the foundation can take a long time, potentially days or weeks depending on the `max-in-flight` value. For example, if there is a certificate expiring in a week, there might not be enough time to rotate the certificates before expiry. For more information, see [Basic Advice](../../operating/configuring.html#best-practices) in _Configuring <%= vars.app_runtime_abbr %> for Upgrades_.
+* Changes to the foundation can take a long time, potentially days or weeks depending on the `max-in-flight` value. For example, if there is a certificate expiring in a week, there might not be enough time to rotate the certificates before expiry. <%= vars.best_practices_link %>
 * A single foundation still has single points of failure, such as the certificates on the platform. The RAM that 250 Diego Cells provides is enough to host many business-critical apps.
 
 
