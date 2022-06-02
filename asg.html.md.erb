@@ -27,7 +27,7 @@ In environments with both platform-wide and space-specific ASGs, the ASGs for a 
 ### <a id='dynamic-asgs'></a> Dynamic ASGs
 
 Dynamic ASGs allow ASGs to be applied to apps without the need for an application restart. Only containers using <a href="https://github.com/cloudfoundry/silk-release">the silk-cni</a> will have their ASGs updated dynamically, with Windows apps and apps using other CNI's (e.g., NSX-T) not supporting Dynamic ASGs at this time.
-Dynamic ASGs are enabled with cf-deployment XXX and above via <a href="https://github.com/cloudfoundry/cf-networking-release/releases/tag/3.0.0">cf-networking-release 3.0.0</a>. It is recommended to use Dynamic ASGs in conjunction with capi-release v1.126.0 or later for improved performance on the /v3/security_groups APIs.
+Dynamic ASGs are enabled with cf-deployment v20.0.0 and above via <a href="https://github.com/cloudfoundry/cf-networking-release/releases/tag/3.0.0">cf-networking-release 3.0.0</a>. It is recommended to use Dynamic ASGs in conjunction with capi-release v1.126.0 or later for improved performance on the /v3/security_groups APIs.
 
 To disable Dynamic ASGs: use the ops file `operations/disable-dynamic-asgs.yml` from <a href="https://github.com/cloudfoundry/cf-deployment/releases/tag/XXX">cf-deployment XXX</a> or higher.
 
