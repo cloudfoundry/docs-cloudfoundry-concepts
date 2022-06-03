@@ -175,39 +175,15 @@ Both app security groups (ASGs) and container-to-container networking policies a
 
 ## <a id="securing-traffic"></a> Securing Container-to-Container Traffic
 
-TLS encapsulation for container-to-container traffic is disabled by default.
+The platform provides a TLS encapsulation for container-to-container network traffic.
 
-To secure communication between the source and destination containers on the overlay network, you can enable TLS encapsulation using either of the following options:
+To utilize TLS capabilities the client application can connect to port 61443 on the destination application over HTTPS. Traffic to application container port 61443 will be proxied to application port 8080 inside of container. In this case:
 
-- **Automatic**: Use the automatic option when you only care that traffic between the containers cannot be sniffed on the overlay network.
-- **Manual**: Use the manual option when your app also needs to use TLS capabilities for its operation. For example, the destination app can examine the client certificate and reject service for those that are not permitted.
-  <p class="note"><strong>Note:</strong> The source app can make use of its own platform-provisioned certificate when it opens a TLS connection to the destination container.</p>
+- The platform provides certificates for each app.
+- The platform ensures that TLS terminates within the destination container and passes cleartext traffic to the app.
+- The destination app does not need special configuration.
 
-For more information about the TLS encapsulation options, see the following table:
-
-<table>
-  <tr>
-    <th>Option</th>
-    <th>Configuration</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><strong>Automatic</strong></td>
-    <td>Connect to port 61443 on the destination container.</td>
-    <td>
-      <ul>
-        <li>The platform provisions certificates for each app.</li>
-        <li>The platform ensures that TLS terminates within the destination container and passes cleartext traffic to the app.</li>
-        <li>The destination app does not need special configuration.</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Manual</strong></td>
-    <td>Implement your own TLS termination in the app for the port provided.</td>
-    <td>Configure the destination app to implement its own TLS termination.</td>
-  </tr>
-</table>
+Additionally, applications can implement TLS termination in their destination application. Use this option if your application needs to use more TLS capabilities like verifying client certificates and rejecting service for those that are not permitted or if your application needs TLS termination on a different port than default port 8080.
 
 Specific Cloud Foundry vendors might provide additional methods for securing container-to-container traffic.
 
