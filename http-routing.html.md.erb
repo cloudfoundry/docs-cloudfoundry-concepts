@@ -252,7 +252,13 @@ If keep-alive connections are enabled, the Gorouter maintains established TCP co
 * If an idle connection exists for a given back end, the Gorouter reuses it to route subsequent requests.
 * If no idle connection exists for this back end, the Gorouter creates a new connection.
 
-<% if vars.platform_code == 'CF' %> <%= vars.keepalive %> <% else %> <% end %>
+<% if vars.platform_code == 'CF' %>
+
+<%= vars.keepalive %>
+
+<% else %>
+
+<% end %>
 
 
 ## <a id="retry"></a> Transparent Retries
