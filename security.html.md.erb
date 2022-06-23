@@ -28,7 +28,7 @@ As the diagram below shows the architecture of a typical deployment of <%= vars.
 
 <p class="note"><strong>Note:</strong> <%= vars.company_name %> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
-  <%= image_tag("security/sysbound1.png", :alt => "System Boundaries and Access diagram. Long description below.") %>
+  <%= image_tag("./images/security/sysbound1.png", :alt => "System Boundaries and Access diagram. Long description below.") %>
 
 The above diagram shows the following components:
 
@@ -114,7 +114,7 @@ In <%= vars.app_runtime_abbr %>, the Cloud Controller database (CCDB) identifies
 
 This diagram shows how isolation segments keep apps running on different pools of Diego Cells, and how the Diego Cells communicate with each other and with the management components:
 
-  <%= image_tag("images/security/isolation-segments.png", :alt => "Isolation segment diagram. For more information about Isolation Segments, see below.") %>
+  <%= image_tag("./images/security/isolation-segments.png", :alt => "Isolation segment diagram. For more information about Isolation Segments, see below.") %>
 
 <%= vars.manage_iso_seg_link %>
 
