@@ -177,13 +177,13 @@ Both app security groups (ASGs) and container-to-container networking policies a
 
 The platform provides a TLS encapsulation for container-to-container network traffic.
 
-To utilize TLS capabilities the client application can connect to port 61443 on the destination application over HTTPS. Traffic to application container port 61443 will be proxied to application port 8080 inside of container. In this case:
+To utilize TLS capabilities, the client application can connect to port 61443 on the destination application over HTTPS. Traffic to application container port 61443 will be proxied to application port 8080 inside of the container. In this case:
 
 - The platform provides certificates for each app.
 - The platform ensures that TLS terminates within the destination container and passes cleartext traffic to the app.
 - The destination app does not need special configuration.
 
-Additionally, applications can implement TLS termination in their destination application. Use this option if your application needs to use more TLS capabilities like verifying client certificates and rejecting service for those that are not permitted or if your application needs TLS termination on a different port than default port 8080.
+Additionally, applications can implement TLS termination in their destination applications. Use this option if your application needs to use more TLS capabilities, like verifying client certificates and rejecting service for those that are not permitted, or if your application needs TLS termination on a different port than the default port, 8080.
 
 Specific Cloud Foundry vendors might provide additional methods for securing container-to-container traffic.
 
