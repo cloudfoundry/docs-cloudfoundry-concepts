@@ -353,7 +353,7 @@ breaks. The following table describes how the Gorouter behaves if it cannot esta
   </tr><tr>
     <td>cannot establish a TCP connection to a back end</td>
     <td>N/A</td>
-    <td>retries another back end no more than three times</td>
+    <td>retries another back end no more than three times (3 times is the default. operators can configure a different maximum)</td>
   </tr><tr>
     <td>establishes a TCP connection to a back end and forwards the request</td>
     <td>does not respond</td>
