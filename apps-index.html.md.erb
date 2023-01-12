@@ -4,7 +4,7 @@ owner: Docs
 ---
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = "How " + vars.app_runtime_abbr + " Manages Apps" if vars.product_name != 'CF'  %>
+<% set_title(product_name_long, product_version, "Documentation") %>
 
 
 The following topics provide information about how <%= vars.app_runtime_first %> manages apps:
