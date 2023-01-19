@@ -4,8 +4,11 @@ owner: CF for VMs Networking
 ---
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = vars.app_runtime_abbr + " Routing Architecture" if vars.product_name != 'CF'  %>
+<% if vars.platform_code != 'CF' %>
 
+<% set_title(vars.app_runtime_abbr + " Routing Architecture") %>
+
+<% end %>
 
 This topic explains routing architecture and flow in <%= vars.app_runtime_first %>.
 
@@ -64,7 +67,3 @@ The following process describes how a router obtains information about routes fo
 Cloud Controller and Diego BBS have their own databases, while NATS and the Gorouter only store their data in memory. If NATS or the Gorouter are restarted, they lose all of their data and must wait for the route emitter to send data to them again. If Diego BBS is restarted, it can retrieve its data from Cloud Controller.
 
 If Cloud Controller is restarted, you must retrieve its data from a backup.
-
-
-
-
