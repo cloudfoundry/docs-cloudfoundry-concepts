@@ -3,9 +3,12 @@ title: How Cloud Foundry Manages Apps
 owner: Docs
 ---
 
-<%# Reset page title based on product title %>
-<% current_page.data.title = "How " + vars.app_runtime_abbr + " Manages Apps" if vars.product_name != 'CF'  %>
+<%# Reset page title based on platform type %>
+<% if vars.platform_code != 'CF' %>
 
+set_title("How " + vars.app_runtime_abbr + " Manages Apps")
+
+<% end %>
 
 The following topics provide information about how <%= vars.app_runtime_first %> manages apps:
 
