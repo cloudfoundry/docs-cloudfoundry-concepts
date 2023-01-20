@@ -80,7 +80,7 @@ Each user role includes different permissions in a <%= vars.app_runtime_abbr %> 
 
 The following table describes the default permissions for various <%= vars.app_runtime_abbr %> roles in active orgs.
 
-<% if vars.platform_code.include?("CF") %>
+<% if vars.platform_code == 'CF' %>
 <p class="note"><strong>Note:</strong> You can use feature flags to edit some of the default permissions in the following table. For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.
 <% end %>
 
