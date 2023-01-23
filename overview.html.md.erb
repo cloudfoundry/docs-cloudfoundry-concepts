@@ -224,5 +224,12 @@ For more information, see [Services](../services/index.html).
 [//]: # ( For private/commercial books, the partial and image files come from a     )
 [//]: # ( private repository rather than cloudfoundry.org/docs-cloudfoundry-concepts.     )
 <%= vars.concepts_product_model_header %>
-<%= partial vars.concepts_product_model_text %>
+
+<%# partials for vars.concepts_product_model_text %>
+<% if vars.platform_code == 'CF' %>
+<%= partial 'overview_model' %>
+<% else %>
+<%= partial '/pcf/core/4-0/pcf_overview_model' %>
+<% end %>
+
 <%= vars.concepts_product_model_image %>
