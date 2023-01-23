@@ -87,10 +87,18 @@ The following table describes the default permissions for various <%= vars.app_r
 <p class="note"><strong>Note:</strong> You can use feature flags to edit some of the default permissions in the following table. For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.
 <% end %>
 
+<% if vars.platform_code == "CF" %>
+<%= partial 'oss_roles_table' %>
+<% else %>
 <%= partial 'pcf_roles_table' %>
+<% end %>
 
 ### <a id='suspendedroles'></a> Roles and Permissions for Suspended Orgs
 
 The following table describes roles and permissions applied after an operator sets the status of an org to _suspended_.
 
+<% if vars.platform_code == "CF" %>
+<%= partial 'suspended_org_roles_table' %>
+<% else %>
 <%= partial 'pcf_suspended_roles_table' %>
+<% end %>
