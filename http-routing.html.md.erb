@@ -99,18 +99,18 @@ The following sections describe supported deployment configurations.
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_loadbalancer' %>
 <% else %>
-<%= partial '../console/xfcc_loadbalancer' %>
+<%= partial '/pcf/core/2-12/xfcc_loadbalancer' %>
 <% end %>
 
 <% if vars.platform_code == 'CF' %>
 <% else %>
-<%= partial '../console/xfcc_haproxy' %>
+<%= partial '/pcf/core/2-12/xfcc_haproxy' %>
 <% end %>
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_router' %>
 <% else %>
-<%= partial '../console/xfcc_router' %>
+<%= partial '/pcf/core/2-12/xfcc_router' %>
 <% end %>
 
 
