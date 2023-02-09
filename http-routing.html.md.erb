@@ -364,5 +364,5 @@ breaks. The following table describes how the Gorouter behaves if it cannot esta
     <td>returns an error to the client, marks the back end ineligible, and does not retry another back end</td>
 </table>
 
-In all cases, if the app still does not respond to the request, the Gorouter returns a `502` error. <% if not vars.platform_code == "OFFLINE" %>For more
+In all cases, if the app still does not respond to the request, the Gorouter returns a `502` error. <% if vars.platform_code != "OFFLINE" %>For more
 information, see [Troubleshooting Router Error Responses](../adminguide/troubleshooting-router-error-responses.html).<% end %>
