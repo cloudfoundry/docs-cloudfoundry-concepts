@@ -28,36 +28,43 @@ The diagrams below do not include all of the components Diego. For information a
 The Cloud Controller passes requests to run apps to the Diego BBS, which stores information about the request in its database.
 
 ![Several boxes represent the VMs involved in running an app with Diego. They have additional boxes within them to represent the components running on each VM. The boxes are as follows: the api VM includes the cloud_controller_ng process, the scheduler VM includes the auctioneer process, the diego-api VM includes the bbs process, the pxc-mysql VM includes the bbs db, the diego-cell VM includes the rep, loggregator-agent, garden, and route-emitter processes, the singleton-blobstore VM includes the droplets store, the doppler VM includes the doppler process, the log-api VM includes the traffic-controller process, and the gorouter VM includes the gorouter process. An arrow points from cloud_controller_ng to bbs to indicate that the cloud_controller_ng process is sending a request to run an app to the bbs process. Another arrow points from bbs to bbs db to indicate that the request gets stored in a database.](../images/oss-diego-architecture-1.png)
+[//]: https://docs.google.com/drawings/d/1p2ShJ8yJ3gVzKBh1sw1b_O8qMASXMzC37r2MU3L4xmI/edit?usp=sharing
 
 ### <a id='step-2'></a> Step 2: Passes Request to the Auctioneer Process
 
 The BBS contacts the Auctioneer to create an auction based on the desired resources for the app. It references the information stored in its database.
 
 ![An arrow points from a box labeled "bbs" to a cylinder labeled "bbs db" to indicate the bbs process is receiving information from its database. Another arrow points from bbs to a box labeled "auctioneer" to indicate the bbs process is contacting the auctioneer process to create an auction.](../images/oss-diego-architecture-2.png)
+[//]: https://docs.google.com/drawings/d/1P_aSBm6fyHeqJyZ-8epM_CePS3u8O_GLTSzW-g1-32U/edit?usp=sharing
 
 ### <a id='step-3'></a> Step 3: Performs Auction
 
 Through an auction, the Auctioneer finds a Diego Cell to run the app on. The Rep job on the Diego Cell accepts the auction request.
 
 ![An arrow points from a box labeled "auctioneer" to a box labeled "rep" to indicate that the auctioneer finds a Diego Cell VM to satisfy the request to run the app.](../images/oss-diego-architecture-3.png)
+[//]: https://docs.google.com/drawings/d/1ug2RVCiW_fW4U6vH6dvG-sn6-Om9gXHTymnPBiZI8Hk/edit?usp=sharing
 
 ### <a id='step-4'></a> Step 4: Creates Container and Runs App
 
 The in-process Executor creates a Garden container in the Diego Cell. Garden downloads the droplet that resulted from the staging process and runs the app in the container.
 
 ![An arrow points from a box labeled "executor" to an unlabeled box inside of a box labeled "garden". This indicates that the executor sub-process of the rep process on the diego-cell VM communicates to the garden process on the diego-cell VM to create a new container. Another arrow points from garden to a cylinder labeled "droplets" to indicate that the garden process also communicates with the droplets bucket on the singleton-blobstore VM to download the droplet.](../images/oss-diego-architecture-4.png)
+[//]: https://docs.google.com/drawings/d/1IPLl2bKmR9iYOhjXvlRZJSvCeCnoaX_zqARdt04Yjv4/edit?usp=sharing
 
 ### <a id='step-5'></a> Step 5: Emits Route for App
 
 The `route-emitter` process emits a route registration message to Gorouter for the new app running on the Diego Cell.
 
 ![An arrow points from a box labeled "route-emitter" to a box labeled "gorouter" to indicate that the route-emitter process sends a route registration message to Gorouter.](../images/oss-diego-architecture-5.png)
+[//]: https://docs.google.com/drawings/d/17ZilpDcvpwh1Ne0SZvQjsCylftuQZSguAHHVJB88Ijs/edit?usp=sharing
 
 ### <a id='step-6'></a> Step 6: Sends Logs to Loggregator
 
 The Loggregator agent forwards app logs, errors, and metrics to the <%= vars.app_runtime_abbr %> Loggregator. For more information, see [App Logging in <%= vars.app_runtime_abbr %>](../../devguide/deploy-apps/streaming-logs.html).
 
 ![An arrow from an unlabeled box inside a box labeled "garden" points to a box labeled "loggregator-agent". This indicates that the container running the app inside the garden process of the diego-cell VM emits logs to the loggregator-agent process of the diego-cell VM. An arrow from loggregator-agent points to a box labeled "doppler", and from doppler to a box labeled "traffic-controller" to indicate the where logs are sent.](../images/oss-diego-architecture-6.png)
+[//]: https://docs.google.com/drawings/d/1ChpsoNXR-zHC2n9bPz2H5qdRvkDfg_M4I8sVr-Vy3So/edit?usp=sharing
+
 
 ## <a id='components'></a> Diego Components
 
