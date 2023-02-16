@@ -119,8 +119,7 @@ The policies you create specify a source app, destination app, protocol, and por
 
 Additionally, policies use and and track the GUIDs of the apps. The policies continue to work when apps redeploy, or if they crash and Diego places them in a new container. Pushing a brand new app requires a new policy, but not updates to an existing app because an app always retains its GUID.
 
-<% if vars.platform_code == "CF" %>
-
+<% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
 
 ## <a id='service-discovery'></a> App Service Discovery
 
