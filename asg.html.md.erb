@@ -39,14 +39,14 @@ To simplify securing a deployment while still allowing apps reach external servi
 
 For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
-<% if vars.platform_code.include == "CF" %>
+<% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
 
 ### <a id='default-asg'></a> Default ASGs
 
-<% if vars.platform_code.include == "CF" %>
+<% if vars.platform_code == "CF" %>
 <%= partial 'default_asg_oss' %>
 <% else %>
-<%= partial '/pcf/core/2-7/default_asg' %>
+<%= partial "/pcf/core/#{vars.current_major_version}/default_asg" %>
 <% end %>
 
 <% end %>
@@ -95,7 +95,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 | `description` | An optional field for operators managing ASG rules |  |
 
 
-<% if vars.platform_code.include == "CF" %>
+<% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
 
 ## <a id="process"></a> Process for Administering ASGs
 

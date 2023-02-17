@@ -5,7 +5,11 @@ owner: CAPI
 
 
 <%# Reset page title based on product title %>
-<% current_page.data.title = "Planning " + vars.app_runtime_abbr + " Orgs and Spaces" if vars.product_name != 'CF'  %>
+<% if vars.platform_code != 'CF' %>
+
+<% set_title("Planning", vars.app_runtime_abbr, "Orgs and Spaces") %>
+
+<% end %>
 
 
 This topic describes considerations for effectively planning foundations, orgs, and spaces. You can plan your orgs and spaces to make the best use of the authorization features in <%= vars.app_runtime_first %>.
@@ -64,14 +68,14 @@ For an overview of each of the structural <%= vars.app_runtime_abbr %> layers, s
 
 Foundations roughly map to a company and environments. For an illustration, see the diagram below:
 
-![The diagram shows a box on the left labeled 'Your Company' and a box on the right labeled '<%= vars.app_runtime_abbr %>'. In the 'Your Company' box, there are two smaller boxes labeled 'Company' and 'Environment', which are linked to a section in the 'PCF Organizational Model' labeled 'Foundation'.](mapping_foundations.png)
+![The diagram shows a box on the left labeled 'Your Company' and a box on the right labeled '<%= vars.app_runtime_abbr %>'. In the 'Your Company' box, there are two smaller boxes labeled 'Company' and 'Environment', which are linked to a section in the 'PCF Organizational Model' labeled 'Foundation'.](./images/mapping_foundations.png)
 
 
 ### <a id="mappingorgs"></a> Orgs
 
 Orgs most often map to a business unit in a particular foundation. To understand how you can map your company structure to a <%= vars.app_runtime_abbr %> org, see the diagram below:
 
-![orgs can encompass Business Units, environments, teams, or products](mapping_organizations.png)
+![Orgs can encompass Business Units, environments, teams, or products](./images/mapping_organizations.png)
 
 
 
@@ -80,7 +84,7 @@ Orgs most often map to a business unit in a particular foundation. To understand
 
 Spaces can encompass teams, products and specific deployables. To understand how you can map your company structure to a <%= vars.app_runtime_abbr %> space, see the diagram below:
 
-![Spaces can encompass Teams, Products and specific deployables](mapping_spaces.png)
+![Spaces can encompass Teams, Products and specific deployables](./images/mapping_spaces.png)
 
 
 
