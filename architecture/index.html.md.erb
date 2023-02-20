@@ -102,8 +102,14 @@ The route-emitter component uses the NATS protocol to broadcast the latest routi
 
 The Loggregator (log aggregator) system streams application logs to developers.
 
-For more information, see <%= vars.loggregator_arch_link %>.
+<% if vars.platform_code == "CF" %>
 
-<% if vars.platform_code == 'CF' %>
+For more information, see <a href="https://docs.cloudfoundry.org/loggregator/architecture.html">Loggregator Architecture</a>.
+
 <%= partial 'old_collector' %>
+
+<% else %>
+
+For more information, see <a href="../../loggregator/architecture.html">Loggregator Architecture</a>.
+
 <% end %>
