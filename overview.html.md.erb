@@ -203,7 +203,15 @@ Component logs stream from rsyslog agents, and the cloud operator can configure 
 
 The Loggregator system aggregates the component metrics and app logs into a structured, usable form, the Firehose. You can use all of the output of the Firehose, or direct the output to specific uses, such as monitoring system internals, triggering alerts, or analyzing user behavior, by applying nozzles.
 
-For more information, see <%= vars.loggregator_arch_link %>.
+<% if vars.platform_code == "CF" %>
+
+For more information, see <a href="https://docs.cloudfoundry.org/loggregator/architecture.html">Loggregator Architecture</a>.
+
+<% else %>
+
+For more information, see <a href="../loggregator/architecture.html">Loggregator Architecture</a>.
+
+<% end %>
 
 ### <a id='services'></a> Using Services
 
