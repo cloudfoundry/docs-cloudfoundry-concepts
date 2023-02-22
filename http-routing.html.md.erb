@@ -92,9 +92,12 @@ To make an HTTP request to a specific app instance:
 		curl APP-FQDN -H "X-Cf-App-Instance":"APP-GUID:INSTANCE-INDEX-NUMBER"
 
 	Where:
-	* `APP-FQDN` is the fully-qualified domain name (FQDN) of your app. For example, `app.example.com`.
-	* `APP-GUID` is the app GUID that you recorded in a previous step.
-	* `INSTANCE-INDEX-NUMBER` is the instance index number that you recorded in the previous step.
+	<ul>
+	<li>`APP-FQDN` is the fully-qualified domain name (FQDN) of your app. For example, `app.example.com`.</li>
+	<li>`APP-GUID` is the app GUID that you recorded in a previous step.</li>
+	<li>`INSTANCE-INDEX-NUMBER` is the instance index number that you recorded in the previous step.</li>
+	</ul>
+
 	<p class='note'><strong>Note:</strong> You can only use <code>X-Cf-App-Instance</code> header on the Diego architecture.</p>
 	If either of the values you provide in the above command are invalid, Gorouter returns a `400` error, and the response from Gorouter contains a
 	`X-Cf-Routererror` header with more information about the error. The following table describes the possible error responses:
