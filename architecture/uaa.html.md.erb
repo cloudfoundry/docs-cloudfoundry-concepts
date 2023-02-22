@@ -23,7 +23,7 @@ You can deploy UAA locally or to <%= vars.app_runtime_abbr %>.
 
 To deploy and run UAA locally:
 
-1. In a terminal window, clone the UAA GitHub repository by running: 
+1. In a terminal window, clone the UAA GitHub repository by running:
 
     ```
     git clone git://github.com/cloudfoundry/uaa.git
@@ -43,7 +43,7 @@ To deploy and run UAA locally:
 
 To access and use a locally-deployed UAA server:
 
-1. Run the UAA server as described in [Deploy Locally](#local). 
+1. Run the UAA server as described in [Deploy Locally](#local).
 
 1. Open another terminal window. From the project base directory, run `curl localhost:8080/uaa/info -H "Accept: application/json"` to confirm the UAA is running. You should see basic information about the system. For example:
 
@@ -95,7 +95,7 @@ To access and use a locally-deployed UAA server:
     uaac token client get admin -s adminsecret
     ```
     If you run the command without `-s CLIENT_SECRET`, UAAC shows an interactive prompt where you must create the client secret value. The `uaac token client get` command requests an access token from the server using the OAuth2 client credentials grant type. For more information about the OAuth2 client credentials, see [Client Credentials](https://tools.ietf.org/html/rfc6749#section-1.3.4) in the OAuth 2.0 Authorization Framework.
-    
+
 1. View your UAAC token context. When UAAC obtains a token, the token and other metadata is stored in the `~/.uaac.yml` file on your local machine. To view the token you have obtained, run `uaac context`. For example:
 
     <pre class="terminal">
@@ -139,7 +139,7 @@ To access and use a locally-deployed UAA server:
 
 To build the UAA as an app and push it to <%= vars.app_runtime_abbr %> using the Cloud Foundry Command Line Interface (cf CLI):
 
-1. Clone the UAA GitHub repository by running: 
+1. Clone the UAA GitHub repository by running:
 
     ```
     git clone git://github.com/cloudfoundry/uaa.git
@@ -147,7 +147,7 @@ To build the UAA as an app and push it to <%= vars.app_runtime_abbr %> using the
 
 1. Navigate to the directory where you cloned the UAA GitHub repository.
 
-1. Build the UAA as a WAR file by running: 
+1. Build the UAA as a WAR file by running:
 
     ```
     ./gradlew :cloudfoundry-identity-uaa:war
@@ -177,7 +177,7 @@ You use a UAA server that you pushed as an app to <%= vars.app_runtime_abbr %> i
 
 To access and use a UAA server that you pushed as an app to <%= vars.app_runtime_abbr %>:
 
-1. Follow the procedure in [Deploy UAA to <%= vars.app_runtime_abbr %>](#cf). 
+1. Follow the procedure in [Deploy UAA to <%= vars.app_runtime_abbr %>](#cf).
 
 1. From the project base directory, run `curl -H "Accept: application/json" APP-FQDN/login` to query the external login endpoint about the system. Replace `APP-FQDN` with the fully qualified domain name (FQDN) of your app. For example:
 
@@ -200,7 +200,7 @@ To access and use a UAA server that you pushed as an app to <%= vars.app_runtime
     ```
 
 1. Target the remote UAA Server endpoint by running:
-    
+
     ```
     uaac target APP-FQDN
     ```
@@ -211,12 +211,15 @@ To access and use a UAA server that you pushed as an app to <%= vars.app_runtime
     ```
     uaac token get USERNAME PASSWORD
     ```
+    
     Where:
-    * `USERNAME` is your username.
-    * `PASSWORD` is your password.
-    If you do not specify a username and password, the UAAC prompts you to supply them.
-    <br><br>
-    The `uaac token client get` command authenticates and obtains an access token from the server using the OAuth2 implicit grant, similar to the approach intended for a standalone client like the cf CLI. 
+    <ul>
+      <li><code>USERNAME</code> is your username.</li>
+      <li><code>PASSWORD</code> is your password. If you do not specify a username and password, the UAAC prompts you to supply them.</li>
+    </ul>
+
+
+    The `uaac token client get` command authenticates and obtains an access token from the server using the OAuth2 implicit grant, similar to the approach intended for a standalone client like the cf CLI.
 
 
 ## <a id='integration'></a> Integration Tests
@@ -249,11 +252,15 @@ To create a custom YAML configuration:
         password: PASSWORD
         email: EMAIL-ADDRESS
     ```
+
     Where:
-    * `UAA-HOSTNAME` is the FQDN of UAA app. For example, `uaa.example.org`.
-    * `USERNAME` is a valid username. For example, `dev@example.org`.
-    * `PASSWORD` is the password for the above username.
-    * `EMAIL-ADDRESS` is the email address for the above user. Example: `dev@example.org`.
+    <ul>
+      <li><code>UAA-HOSTNAME</code> is the FQDN of UAA app. For example, <code>uaa.example.org</code>.</li>
+      <li><code>USERNAME</code> is a valid username. For example, <code>dev@example.org</code>.</li>
+      <li><code>PASSWORD</code> is the password for the above username.</li>
+      <li><code>EMAIL-ADDRESS</code> is the email address for the above user. Example: <code>dev@example.org</code>.</li>
+    </ul>
+
 
 1. From the `uaa/uaa` directory, run:
 
@@ -272,7 +279,7 @@ The web app looks for a YAML file in the following locations when it starts, wit
 
 ### <a id='gradle-test'></a> Test with PostgreSQL or MySQL
 
-The default UAA unit tests, `./gradlew test`, use a HyperSQL database. 
+The default UAA unit tests, `./gradlew test`, use a HyperSQL database.
 
 To use a different database management system:
 
@@ -329,7 +336,7 @@ By default, `uaa` launches with a context root `/uaa`.
 
 A `uaa.yml` file exists in the app. This file provides defaults to the placeholders in the Spring XML.
 
-You can override any occurrences of `${placeholder.name}` in the XML by adding it to your `uaa.yml` file, or by providing a System property with the same name, `-D`, to your Java virtual machine. 
+You can override any occurrences of `${placeholder.name}` in the XML by adding it to your `uaa.yml` file, or by providing a System property with the same name, `-D`, to your Java virtual machine.
 
 All passwords and client secrets in the configuration files are in plain text, but are inserted into the UAA database encrypted with BCrypt.
 
@@ -384,7 +391,7 @@ The app can operate in multiple different profiles according to the location and
 
 The app source code, `samples/app/src/main/resources`, contains multiple properties files pre-configured with different likely locations for those servers. The names of these properties files follow the format `app-UAA_PROFILE.properties`.
 
-The naming convention for the `UAA_PROFILE` is: 
+The naming convention for the `UAA_PROFILE` is:
 
 * `local`: a localhost deployment
 
@@ -454,7 +461,7 @@ To obtain the access token, run:
 ```
 POST /oauth/token
 ```
-    
+
 This is the standard OAuth2 authorization endpoint passed through to UAA.
 
 
