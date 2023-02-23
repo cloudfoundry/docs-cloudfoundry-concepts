@@ -236,6 +236,8 @@ To bind an ASG to a space-scoped staging ASG set:
 
 To update an existing ASG:
 
+<p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+
 1. Edit the ASG rules in the JSON file you created in [Create ASGs](#asg-individual).
 
 1. Run:
@@ -256,11 +258,9 @@ To update an existing ASG:
     cf update-security-group example-asg ~/workspace/example-asg-v2.json
     ```
 
-<p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
-
 ### <a id='unbinding-groups'></a> Unbind ASGs
 
-<p class='note'><strong>Note:</strong> Unbinding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+<p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
 
 To unbind an ASG from the platform-wide staging ASG set:
 
@@ -271,6 +271,8 @@ To unbind an ASG from the platform-wide staging ASG set:
     ```
     Where `ASG` is the name of your ASG.
 
+#### Platform-wide Running ASG Set
+
 To unbind an ASG from the platform-wide running ASG set:
 
 1. Run:
@@ -279,6 +281,8 @@ To unbind an ASG from the platform-wide running ASG set:
     cf unbind-running-security-group ASG
     ```
     Where `ASG` is the name of your ASG.
+
+#### Space-scoped ASG Set
 
 To unbind an ASG from a specific space:
 
