@@ -114,6 +114,11 @@ The following table describes the jobs that are part of the <%= vars.app_runtime
 		<li>Periodically emits the entire routing table to the <%= vars.app_runtime_abbr %> Gorouter.</li></ul></td>
 	</tr>
 	<tr>
+		<td><strong>Job:</strong><br> diego-healthchecker<br>
+		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
+		<td><ul><li>An executable designed to perform TCP/HTTP based health checks of processes managed by monit in BOSH releases.</li><li>Since the version of monit included in BOSH does not support specific tcp/http health checks, we designed this utility to perform health checking and restart processes if they become unreachable.</li></ul></td>
+	</tr>
+	<tr>
 		<td><strong>Job:</strong><br> ssh_proxy<br>
 		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> scheduler<% else %> <%= vars.diego_vm_1 %> <% end %></td>
 		<td><ul><li>Brokers connections between SSH clients and SSH servers</li><li>Runs inside instance containers and authorizes access to app instances based on Cloud Controller roles</li></ul></td>
