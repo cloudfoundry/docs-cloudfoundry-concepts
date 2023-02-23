@@ -176,6 +176,8 @@ After the ASG is created, you must bind it to an ASG set before it takes effect.
 
 To apply an ASG, you must first bind it to an ASG set.
 
+#### Platform-wide Staging ASG Set
+
 To bind an ASG to the platform-wide staging ASG set:
 
 1. Run:
@@ -185,6 +187,8 @@ To bind an ASG to the platform-wide staging ASG set:
     ```
     Where `ASG` is the name of your ASG.
 
+#### Platform-wide Running ASG Set
+
 To bind an ASG to the platform-wide running ASG set:
 
 1. Run:
@@ -193,6 +197,8 @@ To bind an ASG to the platform-wide running ASG set:
     cf bind-running-security-group ASG
     ```
     Where `ASG` is the name of your ASG.
+
+#### Space-scoped Running ASG Set
 
 To bind an ASG to a space-scoped running ASG set:
 
@@ -208,6 +214,8 @@ To bind an ASG to a space-scoped running ASG set:
       <li><code>ORG</code> is the name of the org where you want to bind the ASG set.</li>
       <li><code>SPACE</code> is the name of the space where you want to bind the ASG set.</li>
     </ul>
+
+#### Space-scoped Staging ASG Set
 
 To bind an ASG to a space-scoped staging ASG set:
 
