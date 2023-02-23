@@ -160,16 +160,18 @@ To create an ASG:
     ```
     cf create-security-group ASG PATH-TO-RULES-FILE.json
     ```
+
     Where:
-    * `ASG` is the name of your ASG.
-    * `PATH-TO-RULES-FILE.json` is the absolute or relative path to a rules file.
-    <br>
-    <br>
+    <ul>
+      <li><code>ASG</code> is the name of your ASG.</li>
+      <li><code>PATH-TO-RULES-FILE.json</code> is the absolute or relative path to a rules file.</li>
+    </ul>
+
     In the following example, `EXAMPLE-ASG` is the name of an ASG, and `~/workspace/example-asg.json` is the path to a rules file:
 
-    ```
+    <pre class="terminal">
     cf create-security-group EXAMPLE-ASG ~/workspace/example-asg.json
-    ```
+    </pre>
 
 After the ASG is created, you must bind it to an ASG set before it takes effect. For more information, see [Bind ASGs](#binding-groups).
 
@@ -204,10 +206,13 @@ To bind an ASG to a space-scoped running ASG set:
     ```
     cf bind-security-group ASG ORG SPACE
     ```
+
     Where:
-    * `ASG` is the name of your ASG.
-    * `ORG` is the name of the org where you want to bind the ASG set.
-    * `SPACE` is the name of the space where you want to bind the ASG set.
+    <ul>
+      <li><code>ASG</code> is the name of your ASG.</li>
+      <li><code>ORG</code> is the name of the org where you want to bind the ASG set.</li>
+      <li><code>SPACE</code> is the name of the space where you want to bind the ASG set.</li>
+    </ul>
 
 To bind an ASG to a space-scoped staging ASG set:
 
@@ -217,9 +222,12 @@ To bind an ASG to a space-scoped staging ASG set:
     cf bind-security-group ASG ORG SPACE --lifecycle staging
     ```
     Where:
-    * `ASG` is the name of your ASG.
-    * `ORG` is the name of the org where you want to bind the ASG set.
-    * `SPACE` is the name of the space where you want to bind the ASG set.
+    <ul>
+      <li><code>ASG</code> is the name of your ASG.</li>
+      <li><code>ORG</code> is the name of the org where you want to bind the ASG set.</li>
+      <li><code>SPACE</code> is the name of the space where you want to bind the ASG set.</li>
+    </ul>
+
 
 ### <a id='updating-groups'></a> Update ASGs
 
@@ -234,11 +242,13 @@ To update an existing ASG:
     ```
     cf update-security-group ASG PATH-TO-RULES-FILE.json
     ```
+
     Where:
-    * `ASG` is name of the existing ASG you want to change.
-    * `PATH-TO-RULES-FILE.json` is the absolute or relative path to a rules file.
-    <br>
-    <br>
+    <ul>
+      <li><code>ASG</code> is name of the existing ASG you want to change.</li>
+      <li><code>PATH-TO-RULES-FILE.json</code> is the absolute or relative path to a rules file.</li>
+    </ul>
+
     In the following example, `example-asg` is the name of an ASG, and `~/workspace/example-asg-v2.json` is the path to a rules file:
 
     ```
@@ -274,11 +284,14 @@ To unbind an ASG from a specific space:
     ```
     cf unbind-security-group ASG ORG SPACE --lifecycle running
     ```
+
     Where:
-    * `ASG` is the name of your ASG.
-    * `ORG` is the org where you want to unbind the ASG set.
-    * `SPACE` is the space where you want to unbind the ASG set.
-    * To unbind from the staging ASG set, replace `running` with `staging`.
+    <ul>
+      <li><code>ASG</code> is the name of your ASG.</li>
+      <li><code>ORG</code> is the org where you want to unbind the ASG set.</li>
+      <li><code>SPACE</code> is the space where you want to unbind the ASG set.</li>
+      <li>To unbind from the staging ASG set, replace <code>running</code> with <code>staging</code>.</li>
+    </ul>
 
 ### <a id='deleting-groups'></a> Delete ASGs
 
