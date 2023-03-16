@@ -90,7 +90,7 @@ The following table describes the default permissions for various <%= vars.app_r
 <% if vars.platform_code == "CF" %>
 <%= partial 'oss_roles_table' %>
 <% else %>
-<%= partial "/pcf/core/#{vars.current_major_version}/pcf_roles_table" %>
+<%= partial "/pcf/core/pcf_roles_table" %>
 <% end %>
 
 ### <a id='suspendedroles'></a> Roles and Permissions for Suspended Orgs
@@ -100,5 +100,5 @@ The following table describes roles and permissions applied after an operator se
 <% if vars.platform_code == "CF" %>
 <%= partial 'suspended_org_roles_table' %>
 <% else %>
-<%= partial "/pcf/core/#{vars.current_major_version}/pcf_suspended_roles_table" %>
+<%= partial "/pcf/core/pcf_suspended_roles_table" %>
 <% end %>
