@@ -104,7 +104,7 @@ The following sections describe supported deployment configurations.
 
 <% if vars.platform_code == 'CF' %>
 <% else %>
-<%= partial "/pcf/core/#{vars.current_major_version}/xfcc_haproxy" %>
+<%= partial "/pcf/core/xfcc_haproxy" %>
 <% end %>
 
 <% if vars.platform_code == 'CF' %>
