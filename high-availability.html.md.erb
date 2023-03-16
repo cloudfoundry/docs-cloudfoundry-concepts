@@ -105,7 +105,7 @@ upgrades. For more information about using AZs, see [Availability Zones](#azs) a
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_scale_table' %>
 <% else %>
-<%= partial "/pcf/core/#{vars.current_major_version}/pcf_scale_table" %>
+<%= partial "/pcf/core/pcf_scale_table" %>
 <% end %>
 
 ## <a id='supporting-scaling'></a> Infrastructure to Support Component Scaling
