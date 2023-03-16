@@ -39,7 +39,7 @@ For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 <% if vars.platform_code == 'CF' %>
 <%= partial 'default_asg_oss' %>
 <% else %>
-<%= partial "/pcf/core/#{vars.current_major_version}/default_asg" %>
+<%= partial "/pcf/core/default_asg" %>
 <% end %>
 
 <% end %>
