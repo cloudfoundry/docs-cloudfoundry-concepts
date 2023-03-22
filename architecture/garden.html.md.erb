@@ -8,7 +8,7 @@ This topic describes Garden, the component that <%= vars.app_runtime_first %> us
 
 ## <a id='backends'></a> Back Ends
 
-Garden has pluggable back ends for different platforms and runtimes, and specifies a set of interfaces that each platform-specific back end must implement. These interfaces contain methods to perform the following actions:
+Garden has plug-in back ends for different platforms and runtimes, and specifies a set of interfaces that each platform-specific back end must implement. These interfaces contain methods to perform the following actions:
 
 * Create and delete containers
 * Apply resource limits to containers
@@ -36,7 +36,7 @@ Garden-runC has the following features:
 
 * Seccomp allowlisting restricts the set of system calls a container can access, reducing the risk of container breakout
 
-* Allows pluggable networking and rootfs management
+* Allows plug-in networking and rootfs management
 
 For more information, see the [Garden-runC](https://github.com/cloudfoundry/garden-runc-release) repository on GitHub.
 
@@ -44,7 +44,7 @@ For more information, see the [Garden-runC](https://github.com/cloudfoundry/gard
 
 ## <a id='garden-rootfs'></a> Garden RootFS (GrootFS)
 
-Garden manages container filesystems through a plugin interface. <%= vars.app_runtime_abbr %> uses the GrootFS plugin for this task. GrootFS is a Linux-specific implementation of the Garden volume plugin interface.
+Garden manages container filesystems through a plug-in interface. <%= vars.app_runtime_abbr %> uses the GrootFS plug-in for this task. GrootFS is a Linux-specific implementation of the Garden volume plug-in interface.
 
 GrootFS performs the following actions:
 
@@ -52,7 +52,7 @@ GrootFS performs the following actions:
 * Creates container filesystems based on remote docker images
 * Authenticates with remote registries when using remote images
 * Properly maps UID/GID for all files inside an image
-* Executes garbage collection to remove unused volumes
+* Runs garbage collection to remove unused volumes
 * Applies per container disk quotas
 * Provides per container disk usage stats
 

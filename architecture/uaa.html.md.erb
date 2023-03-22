@@ -45,7 +45,7 @@ To access and use a locally-deployed UAA server:
 
 1. Run the UAA server as described in [Deploy Locally](#local).
 
-1. Open another terminal window. From the project base directory, run `curl localhost:8080/uaa/info -H "Accept: application/json"` to confirm the UAA is running. You should see basic information about the system. For example:
+1. Open another terminal window. From the project base directory, run `curl localhost:8080/uaa/info -H "Accept: application/json"` to confirm the UAA is running. You can see basic information about the system. For example:
 
     <pre class="terminal">
     $ curl localhost:8080/uaa/info -H "Accept: application/json"
@@ -89,7 +89,7 @@ To access and use a locally-deployed UAA server:
     uaac target http://localhost:8080/uaa
     ```
 
-1. Run `uaac token client get CLIENT_NAME -s CLIENT_SECRET` to obtain an access token. Replace `CLIENT_NAME` and `CLIENT_SECRET` with actual values. For example, when starting up the UAA locally for development, there should be a predefined admin client you can use:
+1. Run `uaac token client get CLIENT_NAME -s CLIENT_SECRET` to obtain an access token. Replace `CLIENT_NAME` and `CLIENT_SECRET` with actual values. For example, when starting up the UAA locally for development, you must have a predefined admin client to use:
 
     ```
     uaac token client get admin -s adminsecret
@@ -112,7 +112,7 @@ To access and use a locally-deployed UAA server:
     </pre>
     Copy the access token from this output for the next step.
 
-1. Run `uaac token decode ACCESS-TOKEN-VALUE` to view information in the token, which is encoded using the JSON Web Token (JWT) format. Replace `ACCESS-TOKEN-VALUE` with your access token, copied from the `uaac context` output. The UAAC should display all the claims inside the token body. For example:
+1. Run `uaac token decode ACCESS-TOKEN-VALUE` to view information in the token, which is encoded using the JSON Web Token (JWT) format. Replace `ACCESS-TOKEN-VALUE` with your access token, copied from the `uaac context` output. The UAAC displays all the claims inside the token body. For example:
 
     <pre class="terminal">
     $ uaac token decode eyJhbGciOiJIUzI1NiIsImtpZCI6ImxlZ2FjeS10b2tlbi1rZXkiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiIxOWYyNWU2Y2E5Y2M0ZWIyYTdmNTAxNmU0NDFjZThkNCIsInN1YiI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiY2xpZW50cy5yZWFkIiwiY2xpZW50cy5zZWNyZXQiLCJjbGllbnRzLndyaXRlIiwidWFhLmFkbWluIiwiY2xpZW50cy5hZG1pbiIsInNjaW0ud3JpdGUiLCJzY2ltLnJlYWQiXSwic2NvcGUiOlsiY2xpZW50cy5yZWFkIiwiY2xpZW50cy5zZWNyZXQiLCJjbGllbnRzLndyaXRlIiwidWFhLmFkbWluIiwiY2xpZW50cy5hZG1pbiIsInNjaW0ud3JpdGUiLCJzY2ltLnJlYWQiXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJjaWQiOiJhZG1pbiIsImF6cCI6ImFkbWluIiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsInJldl9zaWciOiIyNjcxOTlkMSIsImlhdCI6MTUyODIzMjAxNywiZXhwIjoxNTI4Mjc1MjE3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdWFhL29hdXRoL3Rva2VuIiwiemlkIjoidWFhIiwiYXVkIjpbInNjaW0iLCJjbGllbnRzIiwidWFhIiwiYWRtaW4iXX0.L2cn6HqLQAEyqTrYYkL9Al_8JyfwB330er7DshUb9wg
@@ -211,7 +211,7 @@ To access and use a UAA server that you pushed as an app to <%= vars.app_runtime
     ```
     uaac token get USERNAME PASSWORD
     ```
-    
+
     Where:
     <ul>
       <li><code>USERNAME</code> is your username.</li>
@@ -224,9 +224,9 @@ To access and use a UAA server that you pushed as an app to <%= vars.app_runtime
 
 ## <a id='integration'></a> Integration Tests
 
-Running integration tests ensures that the UAA instance is running properly.
+Running integration tests makes sure that the UAA instance is running properly.
 
-To run integrations tests, run:
+To run integrations tests:
 
 ```
 ./gradlew integrationTest
@@ -300,7 +300,7 @@ You can find the database configuration for the common and scim modules at `comm
 
 The following UAA projects exist:
 
-* `common`: A module containing a JAR with all the business logic. `common` is used in the web apps listed below.
+* `common`: A module containing a JAR with all the business logic. `common` is used in the web apps.
 
 * `uaa`: The UAA server. `uaa` provides an authentication service and authorized delegation for back-end services and apps by issuing OAuth2 access tokens.
 
@@ -312,7 +312,7 @@ The following UAA projects exist:
 
 ### <a id='uaa-server'></a> UAA Server
 
-The authentication service, `uaa`, is a Spring MVC web app. You can deploy it in Tomcat or your container of choice, or execute `./gradlew run` to run it directly from the `uaa` directory in the source tree. When run with Gradle, `uaa` listens on port 8080 and has the URL `http://localhost:8080/uaa`.
+The authentication service, `uaa`, is a Spring MVC web app. You can deploy it in Tomcat or your container of choice, or run `./gradlew run` to run it directly from the `uaa` directory in the source tree. When run with Gradle, `uaa` listens on port 8080 and has the URL `http://localhost:8080/uaa`.
 
 The UAA server supports the APIs defined in the UAA-APIs document which include:
 
@@ -330,7 +330,7 @@ Command-line clients can perform authentication by submitting credentials direct
 
 An `ImplicitAccessTokenProvider` exists in Spring Security OAuth to use if your client is Java.
 
-By default, `uaa` launches with a context root `/uaa`.
+By default, `uaa` runs with a context root `/uaa`.
 
 #### <a id='configuration'></a> Configuration
 
@@ -357,7 +357,7 @@ echo "spring_profiles: postgresql,default" > src/main/resources/uaa.yml
 
 To bootstrap a microcloud-type environment, you need an admin client. During the bootstrapping process, the database creates a database initializer component that inserts an admin client.
 
-If the default profile is active, the bootstrapping process creates a cf CLI client so that the Gem login works with no additional configuration required. You can override the default settings and add additional clients in the `uaa.yml` file, as in the example below:
+If the default profile is active, the bootstrapping process creates a cf CLI client so that the Gem login works with no additional configuration required. You can override the default settings and add additional clients in the `uaa.yml` file, as in the following example:
 
 ```
 oauth:
@@ -419,7 +419,7 @@ GET /app
 
 The `login` app is a user interface for authentication. UAA can also authenticate user accounts, but only if it manages them itself and it only provides a basic UI. You can brand and customize the login app for non-native authentication and for more complicated UI flows, like user registration and password reset.
 
-The login app is itself an OAuth2 endpoint provider, but delegates those features to the UAA server. Therefore, configuration for the login app consists of locating the UAA through its OAuth2 endpoint URLs and registering the login app itself as a client of the UAA. The UAA locations have a `login.yml`, such as the example below for a local `vcap` instance:
+The log-in app is itself an OAuth2 endpoint provider, but delegates those features to the UAA server. Therefore, configuration for the log-in app consists of locating the UAA through its OAuth2 endpoint URLs and registering the log-in app itself as a client of the UAA. The UAA locations have a `login.yml`file. For example, a local `vcap` instance:
 
 ```
 uaa:
@@ -430,7 +430,7 @@ uaa:
     url: http://uaa.vcap.example.net/login.do
 ```
 
-You can define the environment variable or Java System property `login_secret` to use a client secret that the app uses when it authenticates itself with UAA. The `login` app is registered by default in UAA only if there are no active Spring profiles. In UAA, the registration is located in the `oauth-clients.xml` config file, as in the example below:
+You can define the environment variable or Java System property `login_secret` to use a client secret that the app uses when it authenticates itself with UAA. The `login` app is registered by default in UAA only if there are no active Spring profiles. In UAA, the registration is located in the `oauth-clients.xml` config file, as in the following example:
 
 ```
 id: login
@@ -446,7 +446,7 @@ To authenticate with the `login` app, run:
 GET /login
 ```
 
-The sample app presents a form login interface for the back end UAA, and an OpenID widget where a user can authenticate using Google or other credentials.
+The sample app presents a form log-in interface for the back end UAA, and an OpenID widget where a user can authenticate using Google or other credentials.
 
 To approve an OAuth2 token grant, run:
 
@@ -467,7 +467,7 @@ This is the standard OAuth2 authorization endpoint passed through to UAA.
 
 ## <a id='scopes'></a> Scopes
 
-UAA covers multiple scopes of privilege, including access to UAA, access to Cloud Controller, and access to the router. For more information, see [OAuth Scopes](https://oauth.net/2/scope/).
+UAA covers multiple scopes of privilege, and has access to UAA, Cloud Controller, and to the router. For more information about UAA, see [OAuth Scopes](https://oauth.net/2/scope/).
 
 ### <a id="uaa-scopes"></a> UAA Scopes
 
@@ -492,8 +492,8 @@ The following table describes the scopes of privilege in UAA.
 | `clients.write` | This scope is required to create and modify clients. The scopes are prefixed with the scope holder's client ID. For example, `id:testclient authorities:client.write` gives the ability to create a client that has scopes with the `testclient.` prefix. Authorities are limited to `uaa.resource`. |
 | `clients.read` | This scope gives the ability to read information about clients. |
 | `clients.secret` | This admin scope is required to change the password of a client. |
-| `zones.read` | This scope is required to invoke the `/identity-zones` endpoint to read identity zones. |
-| `zones.write` | This scope is required to invoke the `/identity-zones` endpoint to create and update identity zones. |
+| `zones.read` | This scope is required to run the `/identity-zones` endpoint to read identity zones. |
+| `zones.write` | This scope is required to run the `/identity-zones` endpoint to create and update identity zones. |
 | `scim.zones` | This is a limited scope that only allows adding a user to, or removing a user from, zone management groups under the path `/Groups/zones`. |
 | `oauth.approval` | `/approvals endpoint`. This scope is required to approve or reject clients to act on a user's behalf. This is a default scope defined in the `uaa.yml` file. |
 | `oauth.login` | This scope is used to indicate a login app, such as external login servers, can perform trusted operations, such as creating users not authenticated in the UAA. |

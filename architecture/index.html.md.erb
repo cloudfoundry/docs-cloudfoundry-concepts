@@ -14,10 +14,9 @@ This topic describes <%= vars.app_runtime_first %> runtime components.
 <%= vars.app_runtime_abbr %> components include a self-service application execution engine, an automation engine for application deployment and lifecycle management, and a scriptable command line interface (CLI), as well as integration with development tools to ease deployment processes.
 <%= vars.app_runtime_abbr %> has an open architecture that includes a buildpack mechanism for adding frameworks, an application services interface, and a cloud provider interface.
 
-See the descriptions below for more information about <%= vars.app_runtime_abbr %> components. Some descriptions include links to more detailed documentation.
+See the following descriptions for more information about <%= vars.app_runtime_abbr %> components. Some descriptions include links to more detailed documentation.
 
-![<%= vars.app_runtime_abbr %> Architecture](../images/cf_architecture_block.png)
-
+![alt-text="Architecture components"](./images/cf_architecture_block.png)
 
 ## <a id='routing'></a> Routing
 
@@ -27,7 +26,7 @@ The router routes incoming traffic to the appropriate component, either a Cloud 
 
 The router periodically queries the Diego Bulletin Board System (BBS) to determine which cells and containers each application currently runs on. Using this information, the router recomputes new routing tables based on the IP addresses of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
 
-For more information on the routing tier, including the router, see [<%= vars.app_runtime_abbr %> Routing Architecture](../cf-routing-architecture.html).
+For more information about the routing tier, including the router, see [<%= vars.app_runtime_abbr %> Routing Architecture](../cf-routing-architecture.html).
 
 ## <a id='authentication'></a> Authentication
 
@@ -50,12 +49,12 @@ To keep applications available, cloud deployments must constantly monitor their 
 
 ![<%= vars.app_runtime_abbr %> Architecture](../images/diego/app-monitor-sync-diego.png)
 
-The nsync, BBS, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which may crash or become unavailable.
+The nsync, BBS, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which might crash or become unavailable.
 
 Here is how the components work together:
 
 * **nsync** receives a message from the Cloud Controller when the user scales an app. It writes the number of instances into a `DesiredLRP` structure in the Diego BBS database.
-* **BBS** uses its convergence process to monitor the `DesiredLRP` and `ActualLRP` values. It launches or stops application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
+* **BBS** uses its convergence process to monitor the `DesiredLRP` and `ActualLRP` values. It runs or stops application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
 * **Cell Rep** monitors the containers and provides the `ActualLRP` value.
 
 
@@ -93,7 +92,7 @@ Applications typically depend on <%= vars.services %> such as databases or third
 
 * Diego's [Bulletin Board System](../diego/diego-architecture.html#bbs) (BBS) stores more frequently updated and disposable data such as cell and app status, unallocated work, and heartbeat messages, as well as longer-lived distributed locks. The BBS stores data in MySQL, using the [Go MySQL Driver](https://github.com/go-sql-driver/mysql).
 
-The route-emitter component uses the NATS protocol to broadcast the latest routing tables to the routers.
+The route emitter component uses the NATS protocol to broadcast the latest routing tables to the routers.
 
 
 ## <a id='metrics-logging'></a> Metrics and Logging
@@ -104,12 +103,12 @@ The Loggregator (log aggregator) system streams application logs to developers.
 
 <% if vars.platform_code == "CF" %>
 
-For more information, see <a href="https://docs.cloudfoundry.org/loggregator/architecture.html">Loggregator Architecture</a>.
+For more information about the Loggregator, see <a href="https://docs.cloudfoundry.org/loggregator/architecture.html">Loggregator Architecture</a>.
 
 <%= partial 'old_collector' %>
 
 <% else %>
 
-For more information, see <a href="../../loggregator/architecture.html">Loggregator Architecture</a>.
+For more information about the Loggregator architecture, see <a href="../../loggregator/architecture.html">Loggregator Architecture</a>.
 
 <% end %>

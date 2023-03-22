@@ -19,7 +19,7 @@ You can submit, update, and retrieve the desired number of Tasks and LRPs using 
 
 The following sections describe how Diego handles a request to run an app. This is only one of the processes that happen in Diego. For example, running an app assumes the app has already been staged. For more information about the staging process, see [How Apps are Staged](../how-applications-are-staged.html).
 
-The diagrams below do not include all of the components Diego. For information about each Diego component, see [Diego Components](#components).
+The following diagrams do not include all of the components Diego. For information about each Diego component, see [Diego Components](#components).
 
 <%= vars.vm_note %>
 
@@ -116,7 +116,7 @@ The following table describes the jobs that are part of the <%= vars.app_runtime
 	<tr>
 		<td><strong>Job:</strong><br> diego-healthchecker<br>
 		<strong>VM:</strong><br> <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %></td>
-		<td><ul><li>An executable designed to perform TCP/HTTP based health checks of processes managed by monit in BOSH releases.</li><li>Since the version of monit included in BOSH does not support specific tcp/http health checks, we designed this utility to perform health checking and restart processes if they become unreachable.</li></ul></td>
+		<td><ul><li>An executable designed to perform TCP/HTTP based health checks of processes managed by monit in BOSH releases.</li><li>Because the version of monit included in BOSH does not support specific tcp/http health checks, we designed this utility to perform health checking and restart processes if they become unreachable.</li></ul></td>
 	</tr>
 	<tr>
 		<td><strong>Job:</strong><br> ssh_proxy<br>
@@ -200,7 +200,7 @@ The following three platform-specific binaries deploy apps and govern their life
 
 * The **Builder**, which stages a <%= vars.app_runtime_abbr %> app. The Builder runs as a Task on every staging request. It performs static analysis on the app code and does any necessary pre-processing before the app is first run.
 
-* The **Launcher**, which runs a <%= vars.app_runtime_abbr %> app. The Launcher is set as the Action on the `DesiredLRP` for the app. It executes the start command with the correct system context, including working directory and environment variables.
+* The **Launcher**, which runs a <%= vars.app_runtime_abbr %> app. The Launcher is set as the Action on the `DesiredLRP` for the app. It runs the start command with the correct system context, including working directory and environment variables.
 
 * The **Healthcheck**, which performs a status check on running <%= vars.app_runtime_abbr %> app from inside the container. The Healthcheck is set as the Monitor action on the `DesiredLRP` for the app.
 

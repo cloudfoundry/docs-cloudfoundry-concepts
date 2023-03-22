@@ -31,7 +31,7 @@ Each instance of an app deployed to <%= vars.app_runtime_abbr %> runs within its
 
 For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture/garden.html#garden-rootfs) in _Garden_.
 
-Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers.
+Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container might use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers.
 
 <p class="note"><strong>Note:</strong> <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
 
@@ -39,7 +39,7 @@ Resource control is managed using Linux control groups. Associating each contain
 
 Each container is placed in its own cgroup. Cgroups make each container use a fair share of CPU relative to the other containers. This prevents oversubscription on the host VM where one or more containers hog the CPU and leave no computing resources to the others.
 
-The way cgroups allocate CPU time is based on shares. CPU shares do not work as direct percentages of total CPU usage. Instead, a share is relative in a given time window to the shares held by the other containers. The total amount of CPU that can be overall divided among the cgroups is what is left by other processes that may run in the host VM.
+The way cgroups allocate CPU time is based on shares. CPU shares do not work as direct percentages of total CPU usage. Instead, a share is relative in a given time window to the shares held by the other containers. The total amount of CPU that can be overall divided among the cgroups is what is left by other processes that might run in the host VM.
 
 Generally, cgroups offers two possibilities for limiting the CPU usage: _CPU affinity_ and _CPU bandwidth_, the latter of which is used in <%= vars.app_runtime_abbr %>.
 
@@ -64,7 +64,7 @@ process_cpu.shares = min( 1024*(application_memory / 8 GB), 1024)
 
 The next example helps to illustrate this better. Consider three processes: P1, P2 and P3, which are assigned `cpu.shares` of 5, 20 and 30, respectively.
 
-P1 is active, while P2 and P3 require no CPU. Hence, P1 may use the whole CPU. When P2 joins in and is doing some actual work, such as when a request comes in, the CPU share between P1 and P2 is calculated as follows:
+P1 is active, while P2 and P3 require no CPU. Hence, P1 might use the whole CPU. When P2 joins in and is doing some actual work, such as when a request comes in, the CPU share between P1 and P2 is calculated as follows:
 
 * P1 -> 5 / (5+20) = 0.2 = 20%
 * P2 -> 20 / (5+20) = 0.8 = 80%
@@ -76,7 +76,7 @@ At some point, process P3 joins in. Then the distribution is recalculated again:
 * P2 -> 20 / (5+20+30) = 0.363 = ~36%
 * P3 -> 30 / (5+20+30) = 0.545 = ~55%
 
-Should P1 become idle, the following recalculation between P2 and P3 takes place:
+If P1 become idle, the following recalculation between P2 and P3 takes place:
 
 * P1 (idle)
 * P2 -> 20 / (20+30) = 0.4 = 40%
@@ -93,17 +93,15 @@ This section provides an overview of container networking and describes how <%= 
 
 ### <a id='net-overview'></a> Networking Overview
 
-A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.company_name %> recommends, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
+A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.company_name %> recommends, then all traffic goes through the following levels of network address translation, as shown in the following diagram:
 
 * **Inbound** requests flow from the load balancer through the router to the host Diego Cell, then into the app container. The router determines which app instance receives each request.
 
-* **Outbound** traffic flows from the app container to the Diego Cell, then to the gateway on the Diego Cell's virtual network interface. Depending on your IaaS, this gateway may be a NAT to external networks.
+* **Outbound** traffic flows from the app container to the Diego Cell, then to the gateway on the Diego Cell's virtual network interface. Depending on your IaaS, this gateway might be a NAT to external networks.
 
-  <%= image_tag("images/security/sysbound2.png", :alt => "Networking Architecture diagram. Long description below.") %>
+![alt-text="Networking Architecture diagram("images/security/sysbound2.png")
 
  The networking diagram shows the following:
-
-- DMZ on left side
 
   - Inbound requests go to Load Balancer
 
@@ -131,15 +129,20 @@ Admins configure these rules at two levels:
 
 <%= vars.app_runtime_abbr %> secures containers through the following measures:
 
-* Running app instances in unprivileged containers by default. For more information, see [Types](#types).
+* Running app instances in unprivileged containers by default. For more information about app instances, see [Types](#types).
 
-* Hardening containers by limiting functionality and access rights. For more information, see [Hardening](#hardening).
+* Hardening containers by limiting function and access rights. For more information about hardening containers, see [Hardening](#hardening).
 
 * <%= vars.app_sec_groups_default %> <%= vars.app_sec_groups_link %>
 
 ### <a id="types"></a> Types
 
-Garden has two container types: unprivileged and privileged. Currently, <%= vars.app_runtime_abbr %> runs all app instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
+Garden has the following container types:
+
+* unprivileged
+* privileged.
+
+Currently, <%= vars.app_runtime_abbr %> runs all app instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'config_manifest' %>
@@ -166,13 +169,13 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 * <%= vars.app_runtime_abbr %> does not call any binary or script inside the container filesystem, in order to eliminate any dependencies on scripts and binaries inside the root filesystem.
 
-* <%= vars.app_runtime_abbr %> avoids side-loading binaries in the container through bind mounts or other methods. Instead, it re-executes the same binary by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
+* <%= vars.app_runtime_abbr %> avoids side-loading binaries in the container through bind mounts or other methods. Instead, it runs the same binary again by reading it from `/proc/self/exe` whenever it needs to run a binary in a container.
 
 * <%= vars.app_runtime_abbr %> establishes a virtual ethernet pair for each container for network traffic. For more information, see [Container Network Traffic](#config-traffic). The virtual ethernet pair has the following features:
   * One interface in the pair is inside the container's network namespace, and is the only non-loopback interface accessible inside the container.
   * The other interface remains in the host network namespace and is bridged to the container-side interface.
   * Egress allow list rules are applied to these interfaces according to ASGs configured by the admin.
-  * First-packet logging rules may also be enabled on TCP allow list rules.
+  * First-packet logging rules might also be activated on the TCP allow list rules.
   * DNAT rules are established on the host to enable traffic ingress from the host interface to allowed ports on the container-side interface.
 
 * <%= vars.app_runtime_abbr %> applies disk quotas using container-specific XFS quotas with the specified disk-quota capacity.

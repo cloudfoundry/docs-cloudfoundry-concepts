@@ -71,7 +71,7 @@ A single blobstore typically stores all five types of blobs, but you can configu
 
 ###<a id='automatic-clean'></a>Automatic Blob Cleanup
 
-After a blob deletion fails silently or something else goes wrong, the blobstore may contain blobs that the Cloud Controller no longer needs or lists in its database. These are called orphan blobs, and they waste blobstore capacity.
+After a blob deletion fails silently or something else goes wrong, the blobstore might contain blobs that the Cloud Controller no longer needs or lists in its database. These are called orphan blobs, and they waste blobstore capacity.
 
 The Cloud Controller detects and removes orphan blobs by scanning part of the blobstore daily and checking for any blobs that its database does not account for. The process scans through the entire blobstore every week, and only removes blobs that show as orphans for three consecutive days.
 

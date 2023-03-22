@@ -29,7 +29,7 @@ The following summarizes the roles and responsibilities of various components de
 | Routing API | Receives routing configuration from route emitter and other internal clients, and provides routing configuration for TCP router. |
 | Routing database | Saves some routing data from Routing API. If the Gorouter misses a message about an unmapped route from NATS, it will not get it again, so TCP router and Routing API can consult routing database for current state of routes. |
 | TCP router | Routes TCP traffic coming into <%= vars.app_runtime_abbr %> to the appropriate component. Receives route updates through the routing API. |
-| HealthChecker | An executable designed to perform TCP/HTTP based health checks of processes managed by monit in BOSH releases. Since the version of monit included in BOSH does not support specific tcp/http health checks, we designed this utility to perform health checking and restart processes if they become unreachable. |
+| HealthChecker | An executable designed to perform TCP/HTTP based health checks of processes managed by monit in BOSH releases. Because the version of monit included in BOSH does not support specific tcp/http health checks, we designed this utility to perform health checking and restart processes if they become unreachable. |
 
 ## <a id='ext-client'></a> External Client Request Flow
 

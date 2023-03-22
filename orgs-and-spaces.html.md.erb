@@ -66,41 +66,37 @@ For an overview of each of the structural <%= vars.app_runtime_abbr %> layers, s
 
 ### <a id="mappingfoundations"></a> Foundations
 
-Foundations roughly map to a company and environments. For an illustration, see the diagram below:
+Foundations roughly map to a company and environments. For an illustration, see the following diagram:
 
-![The diagram shows a box on the left labeled 'Your Company' and a box on the right labeled '<%= vars.app_runtime_abbr %>'. In the 'Your Company' box, there are two smaller boxes labeled 'Company' and 'Environment', which are linked to a section in the 'PCF Organizational Model' labeled 'Foundation'.](./images/mapping_foundations.png)
-
+![alt-text="Foundations roughly map to a company and to an environment"](./images/mapping_foundations.png)
 
 ### <a id="mappingorgs"></a> Orgs
 
-Orgs most often map to a business unit in a particular foundation. To understand how you can map your company structure to a <%= vars.app_runtime_abbr %> org, see the diagram below:
+Orgs often map to a business unit in a particular foundation. To understand how you can map your company structure to a <%= vars.app_runtime_abbr %> org, see the following diagram:
 
-![Orgs can encompass Business Units, environments, teams, or products](./images/mapping_organizations.png)
-
+![alt-text="Orgs can encompass Business Units, environments, teams, or products"](./images/mapping_organizations.png)
 
 
 ### <a id="mappingspaces"></a> Spaces
 
 
-Spaces can encompass teams, products and specific deployables. To understand how you can map your company structure to a <%= vars.app_runtime_abbr %> space, see the diagram below:
+Spaces can encompass teams, products, and specific deployables. To understand how you can map your company structure to a <%= vars.app_runtime_abbr %> space, see the following diagram:
 
-![Spaces can encompass Teams, Products and specific deployables](./images/mapping_spaces.png)
-
-
+![alt-text="Spaces can encompass Teams, Products and specific deployables"](./images/mapping_spaces.png)
 
 
 ## <a id="mappingconsiderations"></a> Mapping Considerations
 
-The sections below describe considerations you can make when mapping foundations, orgs, and spaces.
+The following sections describe considerations you can make when mapping foundations, orgs, and spaces.
 
 
 ### <a id="environments"></a> Environment Planning
 
-To plan your environments effectively, you must decide at what <%= vars.app_runtime_abbr %> layer they belong.
+To effectively plan your environments, you must decide at what <%= vars.app_runtime_abbr %> layer they belong.
 
 Broad environments, such as production environments, are commonly mapped to a foundation. More specific environments are mapped to an org or space.
 
-Because of the large human cost to maintaining a foundation, you may see foundations mapped to production and staging environments separately.
+Because of the large human cost to maintaining a foundation, you might see foundations mapped to production and staging environments separately.
 
 For examples of environments and how they map to <%= vars.app_runtime_abbr %> layers, see the following table:
 
@@ -151,7 +147,7 @@ For guiding questions to help you make decisions about planning your <%= vars.ap
 			<ul>
 				<li>Are teams building single apps or constellations of microservices?</li>
 				<li>Are teams building a portfolio of apps or standalone apps?</li>
-				<li>When should a new space be created or destroyed?</li>
+				<li>When a new space can be created or destroyed?</li>
 				<li>What developer processes require the sandboxed isolation?</li>
 				<li>Do all apps need public routes?</li>
 				<li>What apps need to share the same service instance?</li>

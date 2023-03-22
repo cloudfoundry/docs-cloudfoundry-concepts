@@ -17,13 +17,13 @@ The container-to-container networking feature enables app instances to communica
 
 Container-to-container networking integrates with [Garden-runC] in a Diego deployment. The CF Networking Release includes several core components, as well as swappable components. For more information about Garden-runC, see [Garden-runC](./architecture/garden.html#garden-runc) in _Garden_. For more information about Diego, see [Diego Components and Architecture](./diego/diego-architecture.html). For more information about the CF Networking release, see [CF Networking Release](https://github.com/cloudfoundry-incubator/cf-networking-release) on GitHub.
 
-To understand the components and how they work, see the diagram and tables below. The diagram highlights <%= vars.app_runtime_abbr %> components in blue and green. The diagram also highlights swappable components in red.
+To understand the components and how they work, see the following diagram and tables. The diagram highlights <%= vars.app_runtime_abbr %> components in blue and green. The diagram also highlights swappable components in red.
 
-![c2c architecture diagram](./images/c2c-arch.png)
+![alt-text="The c2c architecture diagram"](./images/c2c-arch.png)
 
 ### <a id='core'></a> Core Components
 
-The container-to-container networking BOSH release includes the following core components:
+The container-to-container networking BOSH release has the following core components:
 
 <table>
   <tr>
@@ -44,7 +44,7 @@ The container-to-container networking BOSH release includes the following core c
     <td>
       A Garden-runC add-on deployed to every Diego Cell that:
       <ul>
-        <li>Invokes the CNI plugin component to set up the network for each app.</li>
+        <li>Runs the CNI plug-in component to set up the network for each app.</li>
         <li>Forwards ports to support incoming connections from the Gorouter, TCP Router, and Diego SSH Proxy. This keeps apps externally reachable.</li>
         <li>Installs outbound allow list rules to support Application Security Groups (ASGs).</li>
       </ul>
@@ -60,8 +60,8 @@ The container-to-container networking BOSH release includes the following core c
     <th>Function</th>
   </tr>
   <tr>
-    <td>Silk CNI plugin<br></td>
-    <td>A plugin that provides IP address management and network connectivity to app instances as follows:
+    <td>Silk CNI plu-gin<br></td>
+    <td>A plug-in that provides IP address management and network connectivity to app instances as follows:
       <ul>
         <li>Uses a shared VXLAN overlay network to assign each container a unique IP address.</li>
         <li>Installs network interface in container using the Silk VXLAN back end. This is a shared, flat L3 network.</li>
@@ -72,7 +72,7 @@ The container-to-container networking BOSH release includes the following core c
     <td>VXLAN Policy Agent<br></td>
     <td>Enforces network policy for traffic between apps as follows:
       <ul>
-        <li>Discovers desired network policies from the Policy Server Internal API.</li>
+        <li>Discovers network policies from the Policy Server Internal API.</li>
         <li>Updates iptables rules on the Diego Cell to allow approved inbound traffic.</li>
         <li>Tags outbound traffic with the unique identifier of the source app using the VXLAN Group-Based Policy (GBP) header.</li>
       </ul>
@@ -83,14 +83,15 @@ The container-to-container networking BOSH release includes the following core c
 
 ## <a id='app-comm'></a> App Instance Communication
 
-The diagram below illustrates how app instances communicate in a deployment with container-to-container networking enabled. In this example, the operator creates two policies to regulate the flow of traffic between **App A**, **App B**, and **App C**.
+The following diagram illustrates how app instances communicate in a deployment with container-to-container networking enabled. In this example, the operator creates two policies to regulate the flow of traffic between **App A**, **App B**, and **App C**.
 
 * Allow traffic from **App A** to **App B**
 * Allow traffic from **App A** to **App C**
 
 If traffic and its direction is not explicitly allowed, it is denied. For example, **App B** cannot send traffic to **App C**.
 
-![Post Container-to-Container Networking](./images/post-c2c.png)
+![alt-text="Post Container-to-Container Networking"](./images/post-c2c.png)
+
 
 ### <a id='overlay-network'></a> Overlay Network
 
@@ -132,7 +133,7 @@ Container-to-container app service discovery does not provide client-side load b
 
 ## <a id="alt-stack"></a> Alternative Network Stacks
 
-The BOSH release that contains the container-to-container networking feature is composed of a pluggable network stack. Advanced users or third-party vendors can integrate a different network stack. For more information about third-party plugins, see [3rd Party Plugin Development for Container Networking](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) in the CF Networking Release repository on GitHub.
+The BOSH release that contains the container-to-container networking feature that is composed of a plug-in network stack. Advanced users or third party vendors can integrate a different network stack. For more information about third party plug-ins, see [3rd Party Plug-in Development for Container Networking](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) in the CF Networking Release repository on GitHub.
 
 
 ## <a id="c2cvsasg"></a> Container-to-Container Networking versus ASGs
@@ -179,7 +180,7 @@ The platform provides a TLS encapsulation for container-to-container network tra
 To utilize TLS capabilities, the client application can connect to port 61443 on the destination application over HTTPS. Traffic to application container port 61443 will be proxied to application port 8080 inside of the container. In this case:
 
 - The platform provides certificates for each app.
-- The platform ensures that TLS terminates within the destination container and passes cleartext traffic to the app.
+- The platform makes sure that TLS ends within the destination container and passes cleartext traffic to the app.
 - The destination app does not need special configuration.
 
 Additionally, applications can implement TLS termination in their destination applications. Use this option if your application needs to use more TLS capabilities, like verifying client certificates and rejecting service for those that are not permitted, or if your application needs TLS termination on a different port than the default port, 8080.

@@ -15,7 +15,7 @@ For more information, see [Routing](architecture/index.html#routing) in _<%= var
 
 The Gorouter has a limit of 1&nbsp;MB for HTTP Headers.
 
-The specific language, framework, and configuration of the back-end app container determine the effective header size limit. For example, the default header
+The specific language, framework, and configuration of the back end app container determine the effective header size limit. For example, the default header
 size for the Tomcat container is 8&nbsp;kB.
 
 #### <a id='X-Forwarded-Proto'></a> X-Forwarded-Proto
@@ -30,7 +30,7 @@ If an incoming request includes the `X-Forwarded-Proto` header, the Gorouter:
 
 * Sets the scheme to HTTPS if the client made a secure request, meaning a request on port `443`
 
-Developers can configure their apps to reject insecure requests by inspecting the `X-Forwarded-Proto` HTTP header on incoming traffic. The header may have
+Developers can configure their apps to reject insecure requests by inspecting the `X-Forwarded-Proto` HTTP header on incoming traffic. The header might have
 multiple values represented as a comma-separated list, so developers must ensure the app rejects traffic that includes any `X-Forwarded-Proto` values that are
 not HTTPS.
 
@@ -126,13 +126,13 @@ To make an HTTP request to a specific app instance:
 Apps that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. <%= vars.app_runtime_abbr %> supports this use case without
 bypassing layer-7 load balancers and the Gorouter.
 
-The HTTP header `X-Forwarded-Client-Cert` (XFCC) may be used to pass the originating client certificate along the data path to the app. Each component in the
+The HTTP header `X-Forwarded-Client-Cert` (XFCC) might be used to pass the originating client certificate along the data path to the app. Each component in the
 data path must trust that the back-end component has not allowed the header to be tampered with.
 
 If you configure the load balancer to terminate TLS and set the XFCC header from the received client certificate, you must also configure the load balancer to
 strip this header if it is present in client requests. This configuration is required to prevent spoofing of the client certificate.
 
-The sections below describe supported deployment configurations.
+The following sections describe supported deployment configurations.
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_loadbalancer' %>
@@ -175,15 +175,15 @@ This feature is allowed by default in `cf-deployment`, which configures the foll
 The Gorouter does not automatically initiate TLS handshakes with back-end destinations. To register that the Gorouter must initiate a TLS handshake before
 forwarding HTTP requests to a component, the component must include the following optional fields in its `route.register` message to NATS:
 
-* `"tls_port"`: The port to which the Gorouter should open a connection and initiate a TLS handshake.
+* `"tls_port"`: The port to which the Gorouter opens a connection and initiates a TLS handshake.
 
 * `"server_cert_domain_san"`: An identifier for the back end which the Gorouter expects to find in the Domain Subject Alternative Name of the certificate
-presented by the back end. This is used to prevent misrouting for back ends whose IPs or ports are expected to change. For more information, see
-[Consistency](#consistency) below.
+presented by the back end. This is used to prevent misrouting for back ends whose IPs or ports are expected to change. See
+[Consistency](#consistency).
 
 Additional configuration included on the `rep` job on the Diego Cell in `cf-deployment` allows TLS from the Gorouter to app instances.
 
-Authors of routable components can configure Route Registrar to send the necessary NATS message automatically. For more information, see the
+Authors of routable components can configure Route Registrar to send the necessary NATS message automatically. See the
 [route-registrar](https://github.com/cloudfoundry/route-registrar) repository on GitHub.
 
 To allow mutual authentication between the Gorouter and back ends, operators configure the Gorouter with a certificate and private key using the following
@@ -253,9 +253,9 @@ updated list of app instances for each route. Depending on which algorithm is se
 
 To configure the behavior, you can change the value of `router.balancing_algorithm` manifest property to either of the following options:
 
-* `round-robin`. For more information, see [Round-Robin Load Balancing](#round-robin) below.
+* `round-robin`. For more information, see [Round-Robin Load Balancing](#round-robin).
 
-* `least-connection`. For more information, see [Least-Connection Load Balancing](#least-connection) below.
+* `least-connection`. For more information, see [Least-Connection Load Balancing](#least-connection).
 
 By default, the Gorouter uses the round-robin algorithm.
 
@@ -345,7 +345,7 @@ If the Gorouter cannot establish a TCP connection with a selected app instance, 
 transparently attempts to connect to another app instance. Once the Gorouter has established a TCP connection with an app instance, the Gorouter forwards the
 HTTP request.
 
-When you deploy an app that requires Diego Cells to restart or recreate, the app may not respond to a Gorouter request before the keep-alive connection
+When you deploy an app that requires Diego Cells to restart or recreate, the app might not respond to a Gorouter request before the keep-alive connection
 breaks. The following table describes how the Gorouter behaves if it cannot establish a TCP connection to an app:
 
 <table>

@@ -62,11 +62,11 @@ information.
 
 * **Org Users**: Read-only access to the list of other org users and their roles. In the v2 Cloud Controller API, when an Org Manager gives a person an Org or Space role, that person automatically receives Org User status in that org. This is no longer the case in the V3 Cloud Controller API.
 
-* **Space Managers**: Administer a space within an org.
+* **Space Managers**: Manage a space within an org.
 
 * **Space Developers**: Manage apps, services, and space-scoped service brokers in a space.
 
-* **Space Auditors**: Read-only access to a space.
+* **Space Auditors**: Read only access to a space.
 
 * **Space Supporters**: Troubleshoot and debug apps and service bindings in a space.
 <p class="note"><strong>Note:</strong> The Space Supporter role is only available for the Cloud Controller V3 API. If a user with this role tries to access a V2 endpoint, the API returns a 403.</p>
@@ -82,7 +82,7 @@ Each user role includes different permissions in a <%= vars.app_runtime_abbr %> 
 
 ### <a id='activeroles'></a> Roles and Permissions for Active Orgs
 
-The following table describes the default permissions for various <%= vars.app_runtime_abbr %> roles in active orgs.
+The following table describes the default permissions for various <%= vars.app_runtime_abbr %> roles in active orgs:
 
 <% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
 <p class="note"><strong>Note:</strong> You can use feature flags to edit some of the default permissions in the following table. For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.

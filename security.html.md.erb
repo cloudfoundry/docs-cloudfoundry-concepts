@@ -28,7 +28,7 @@ In a typical deployment of <%= vars.app_runtime_abbr %>, the components run on v
 
 In this configuration, the only access points visible on a public network are a load balancer that maps to one or more <%= vars.app_runtime_abbr %> routers and, optionally, a NAT VM and a jumpbox. Because of the limited number of contact points with the public internet, the surface area for possible security vulnerabilities is minimized.
 
-As the diagram below shows the architecture of a typical deployment of <%= vars.app_runtime_abbr %>:
+As the following diagram shows the architecture of a typical deployment of <%= vars.app_runtime_abbr %>:
 
 <p class="note"><strong>Note:</strong> <%= vars.company_name %> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
 
@@ -89,9 +89,9 @@ Operators deploy <%= vars.app_runtime_abbr %> with BOSH. The BOSH Director is th
 
 <p class="note"><strong>Note:</strong> <%= vars.company_name %> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
 
-BOSH includes the following functionality for security:
+BOSH includes the following capability for security:
 
-* Communicates with the VMs it launches over NATS. Because NATS cannot be accessed from outside <%= vars.app_runtime_abbr %>, this ensures that published messages can only originate from a component within your deployment.
+* Communicates with the VMs it runs through NATS. Because NATS cannot be accessed from outside <%= vars.app_runtime_abbr %>, this ensures that published messages can only originate from a component within your deployment.
 
 * Provides an audit trail through the `bosh tasks --all` and `bosh tasks --recent=VALUE` commands. `bosh tasks --all` returns a table that shows all BOSH actions taken by an operator or other running processes. `bosh tasks --recent=VALUE` returns a table of recent tasks, with `VALUE` being the number of recent tasks you want to view.
 
@@ -161,7 +161,7 @@ A third-party broker might offer a dashboard client in its catalog. Dashboard cl
 
 ## <a id='app-artifacts'></a> Ensuring Security for App Artifacts
 
-<%= vars.app_runtime_abbr %> secures both the code and the configuration of an app using the following functionality:
+<%= vars.app_runtime_abbr %> secures both the code and the configuration of an app using the following functions:
 
 * App developers push their code using the <%= vars.app_runtime_abbr %> API. <%= vars.app_runtime_abbr %> secures each call to the <%= vars.app_runtime_abbr %> API using the [UAA](#auth) and SSL.
 
@@ -197,7 +197,7 @@ To help run a secure deployment, <%= vars.company_name %> recommends:
 
 * Prohibit promiscuous network interfaces on the trusted network.
 
-* Review and monitor data sharing and security practices with third-party services that you use to provide additional functionality to your app.
+* Review and monitor data sharing and security practices with third party services that you use to provide additional function to your app.
 
 * Store SSH keys securely to prevent disclosure, and promptly replace lost or compromised keys.
 
@@ -220,8 +220,8 @@ This section links to topics that describe how <%= vars.app_runtime_abbr %> and 
 
 * [Trusted System Certificates](../devguide/deploy-apps/trusted-system-certificates.html): Explains where apps can find trusted system certificates.
 
-* [Managing Access to Service Plans](../services/access-control.html): Describes how to enable or disable access to service plans for a subset of users.
+* [Managing Access to Service Plans](../services/access-control.html): Describes how to activate or deactivate access to service plans for a subset of users.
 
 * [Delivering Service Credentials to an App](../devguide/services/application-binding.html): Describes how to bind apps to service instances, which generate the credentials that enable the apps to use the service.
 
-* [Managing Service Keys](../devguide/services/service-keys.html): Explains how to create and manage service keys that enable apps to use service instances.
+* [Managing Service Keys](../devguide/services/service-keys.html): Explains how to create and manage service keys that allow apps to use service instances.

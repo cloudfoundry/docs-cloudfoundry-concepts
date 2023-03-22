@@ -94,7 +94,7 @@ Scaling horizontally means increasing the number of instances of VMs that run a 
 
 You can horizontally scale most <%= vars.app_runtime_abbr %> component VMs to multiple instances for high availability.
 
-You should also distribute the instances of components across different AZs to minimize downtime during ongoing operation, product updates, and platform
+You must also distribute the instances of components across different AZs to minimize downtime during ongoing operation, product updates, and platform
 upgrades. For more information about using AZs, see [Availability Zones](#azs) above.
 
 
@@ -110,7 +110,7 @@ upgrades. For more information about using AZs, see [Availability Zones](#azs) a
 
 ## <a id='supporting-scaling'></a> Infrastructure to Support Component Scaling
 
-The ability to scale component VMs is important for high availability. To scale component VMs, you must ensure that the surrounding infrastructure of your
+The ability to scale component VMs is important for high availability. To scale component VMs, you must make sure that the surrounding infrastructure of your
 deployment supports VM scaling.
 
 This section describes the infrastructure required to support scaling component VMs for high availability.
@@ -138,6 +138,6 @@ For more information about configuring your resource pools according to the requ
 For database services deployed outside <%= vars.app_runtime_abbr %>, use the high availability features included with your infrastructure. Also, configure
 backup and restore where possible. <%= vars.scaling_ert_db %>
 
-<p class='note'><strong>Note:</strong> Data services may have single points of failure depending on their configuration.</p>
+<p class='note'><strong>Note:</strong> Data services might have single points of failure depending on their configuration.</p>
 
 <%= vars.contact_support %>

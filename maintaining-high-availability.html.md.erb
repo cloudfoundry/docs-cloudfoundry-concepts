@@ -10,7 +10,7 @@ owner: Release Integration
 
 <% end %>
 
-This topic explains how <%= vars.app_runtime_first %> deployments include several layers of high availability to keep apps running during system failure. These layers include AZs, app health management, process monitoring, and VM resurrection.
+This topic explains how <%= vars.app_runtime_first %> deployments make up several layers of high availability to keep apps running during system failure. These layers include AZs, app health management, process monitoring, and VM resurrection.
 
 
 ## <a id='azs-2'></a> Availability Zones
@@ -29,7 +29,7 @@ For more information about the nsync, BBS, and Cell Rep components, see the [nsy
 
 ## <a id='monitored-processes'></a> Process Monitoring
 
-<%= vars.platform_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your apps running, such as nsync, BBS, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which triggers responders through plugins such as email notifications or paging.
+<%= vars.platform_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your apps running, such as nsync, BBS, and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which starts the responders through plug-ins. For example, email notifications or paging.
 
 
 ## <a id='health-monitoring'></a> Resurrection for VMs
