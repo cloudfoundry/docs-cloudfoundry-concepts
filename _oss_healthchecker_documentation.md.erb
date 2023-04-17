@@ -1,10 +1,7 @@
 #### <a id="healthchecker_documentation"></a> HealthChecker usage by monit
 
-This componnent utilizes the <a href="https://github.com/cloudfoundry/healthchecker-release">Healthchecker-release</a> to perform it's monit health checks. It adds TCP and HTTP health checks to extend standard monit service checks.  Because the version of monit included in BOSH does not support specific TCP or HTTP health checks, this utility performs health checking and restart processing when they become unreachable.
+This component uses the <a href="https://github.com/cloudfoundry/healthchecker-release">Healthchecker-release</a> to perform its monit health checks. It adds TCP and HTTP health checks to extend standard monit service checks. Because the version of monit included in BOSH does not support specific TCP or HTTP health checks, this utility performs health checking and restart processing when they become unreachable.
 
-##### How it Works
-Healthchecker is added to a bosh release as a monit process under the Job that is to be monitored. It is configured to perform a health check against the main process in the Job. If healthchecker detects a failure, it will panic and exit. The healthchecker supplementary script restarts the main monit process, allowing up to ten failures in a row. After 10 consecutive failures, it gives up, because restarting the process is either in a poor state, or the health checker is misconfigured and is causing process downtime.
+Healthchecker is added to a BOSH release as a monit process under the Job to be monitored. It is configured to perform a health check against the main process in the Job. If Healthchecker detects a failure, it exits. The Healthchecker supplementary script restarts the main monit process, allowing up to ten failures in a row. After ten consecutive failures, it stops restarting the Job because the process is either in a poor state, or the health checker is misconfigured and is causing process downtime.
 
-This component typically requires no additional configuration from platform operators.
-
-
+This component typically requires no additional configuration by platform operators.
