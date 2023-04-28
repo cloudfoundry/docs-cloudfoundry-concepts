@@ -1,0 +1,9 @@
+#### <a id='forward-mtls'></a> Terminating TLS for the First Time at the Load Balancer
+
+By default, <%= vars.platform_name %> forwards arbitrary headers that are not otherwise mentioned in the documentation. You can configure a load balancer to put the certificate of the originating client, received during the mutual TLS handshake, into an HTTP header that the load balancer forwards upstream. <%= vars.company_name %> recommends the header XFCC for this use case, since this header is used in other configuration modes described below. The value of the header should be the base64-encoded bytes of the certificate, which is equivalent to a PEM file with newlines, headers, and footers removed.
+
+This mode is enabled when `router.forwarded\_client\_cert` is set to `always_forward`.
+
+Alternatively, the operator can configure the Gorouter to forward the XFCC header set by the load balancer only when the connection with the load balancer is mutual TLS. The client certificate received by the Gorouter in the mutual TLS handshake is not forwarded in the header.
+
+This mode is enabled when `router.forwarded\_client\_cert` is set to `forward`.

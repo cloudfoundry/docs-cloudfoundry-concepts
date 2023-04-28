@@ -1,0 +1,21 @@
+#### <a id="xfcc_router_tls"></a> Terminating TLS for the First Time at the Gorouter
+
+If the Gorouter is the first component to terminate TLS, such that it receives the certificate of the originating client in the mutual TLS handshake, the operator should configure the Gorouter to strip any instances of the XFCC header from client requests, set the value of the header to the base64-encoded bytes of the client certificate received in the mutual handshake, and forward the header upstream to the application.
+
+This mode is enabled when <code>router.forwarded\_client\_cert: sanitize\_set</code>.
+
+If TLS is terminated for the first time at Gorouter, the Gorouter must be configured to trust the root certificate authority used to sign the Diego intermediate certificate authority, which in turn is used to sign certificates generated for each Diego container. This trust enables mutual authentication between applications that are running on Cloud Foundry. Operators should configure the <code>router.ca_certs</code> property for the Gorouter job with the root certificate authority in their BOSH deployment manifest.
+
+<pre>
+	jobs:
+	  properties:
+	    router:
+	      ca_certs:
+	        -----BEGIN CERTIFICATE-----
+	        (contents of certificate)
+	        -----END CERTIFICATE-----
+</pre>
+
+The <code>router.ca_certs</code> property is a string of concatenated certificate authorities in PEM format.
+
+
