@@ -1,12 +1,9 @@
 ---
-title: Orgs, Spaces, Roles, and Permissions
+title: Orgs, spaces, roles, and permissions in Cloud Foundry
 owners: CAPI, Identity
 ---
 
-This topic describes orgs and spaces in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) foundations. It also describes the default permissions for user roles in <%= vars.app_runtime_abbr %>.
-
-
-## <a id="overview"></a> Overview
+This topic tells you about orgs and spaces in <%= vars.app_runtime_first %> foundations. It also describes the default permissions for user roles in <%= vars.app_runtime_abbr %>.
 
 <%= vars.app_runtime_abbr %> uses a role-based access control (RBAC) system to grant appropriate permissions to <%= vars.app_runtime_abbr %> users.
 
@@ -39,7 +36,7 @@ Org managers can set quotas on the following for a space:
 * Memory used by a single app instances
 
 
-## <a id='roles'></a> User Roles
+## <a id='roles'></a> User roles
 
 A user account represents an individual person within the context of a <%= vars.app_runtime_abbr %> foundation. A user can have one or more roles. These roles define the user's permissions in orgs and spaces.
 
@@ -72,11 +69,11 @@ For non-admin users, the `cloud_controller.read` scope is required to view resou
 Before you assign a space role to a user, you must assign an org role to the user. The error message `Server error, error code: 1002, message: cannot set space role because user is not part of the org` occurs when you try to set a space role before setting an org role for the user.
 
 
-## <a id='permissions'></a> User Role Permissions
+## <a id='permissions'></a> User role permissions
 
 Each user role includes different permissions in a <%= vars.app_runtime_abbr %> foundation. The following sections describe the permissions associated with each user role in both active and suspended orgs in <%= vars.app_runtime_abbr %>.
 
-### <a id='activeroles'></a> Roles and Permissions for Active Orgs
+### <a id='activeroles'></a> Roles and permissions for active orgs
 
 The following table describes the default permissions for various <%= vars.app_runtime_abbr %> roles in active orgs.
 
@@ -90,7 +87,7 @@ The following table describes the default permissions for various <%= vars.app_r
 <%= partial "/pcf/core/pcf_roles_table" %>
 <% end %>
 
-### <a id='suspendedroles'></a> Roles and Permissions for Suspended Orgs
+### <a id='suspendedroles'></a> Roles and permissions for suspended orgs
 
 The following table describes roles and permissions applied after an operator sets the status of an org to _suspended_.
 

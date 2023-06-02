@@ -1,5 +1,5 @@
 ---
-title: Cloud Foundry Security
+title: Cloud Foundry security
 owner: Security
 ---
 
@@ -10,7 +10,8 @@ owner: Security
 
 <% end %>
 
-This topic provides an overview of <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) security. For an overview of container security, see [Container Security](container-security.html).
+This topic provides you with an overview of <%= vars.app_runtime_first %> security.
+For an overview of container security, see [Container Security](container-security.html).
 
 <%= vars.app_runtime_abbr %> implements the following measures to mitigate against security threats:
 
@@ -22,7 +23,7 @@ This topic provides an overview of <%= vars.app_runtime_full %> (<%= vars.app_ru
 * Prevents possible denial of service attacks through resource starvation
 
 
-## <a id='system-boundaries'></a> System Boundaries and Access
+## <a id='system-boundaries'></a> System boundaries and access
 
 In a typical deployment of <%= vars.app_runtime_abbr %>, the components run on virtual machines (VMs) that exist within a VLAN.
 
@@ -100,7 +101,7 @@ BOSH includes the following functionality for security:
 <p class="note"><strong>Note:</strong> BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
 
 
-## <a id='isolation-segments'></a> Isolation Segments
+## <a id='isolation-segments'></a> Isolation segments
 
 Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. Using isolation segments separates app resources as completely as if they were in different <%= vars.app_runtime_abbr %> deployments but avoids redundant management components and unneeded network complexity.
 
@@ -125,7 +126,7 @@ This diagram shows how isolation segments keep apps running on different pools o
 For API commands related to isolation segments, see [Isolation Segments](http://v3-apidocs.cloudfoundry.org/version/3.0.0/index.html#isolation-segments) in the Cloud Controller API (CAPI) Reference.
 
 
-## <a id='auth'></a> Authentication and Authorization
+## <a id='auth'></a> Authentication and authorization
 
 [User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for <%= vars.app_runtime_abbr %> and its various components.
 
@@ -141,7 +142,7 @@ Apps that users deploy to <%= vars.app_runtime_abbr %> exist within a space. Spa
 <%= vars.console_links %>
 
 
-## <a id='service-broker'></a> Security for Service Broker Integration
+## <a id='service-broker'></a> Security for service broker integration
 
 The Cloud Controller authenticates every request with the Service Broker API using HTTP or HTTPS, depending on which protocol that you specify during broker registration. The Cloud Controller rejects any broker registration that does not contain a username and password.
 
@@ -152,12 +153,12 @@ Service instances bound to an app contain credential data. Users specify the bin
 A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. <%= vars.app_runtime_abbr %> does not store this secret in the CCDB. Instead, <%= vars.app_runtime_abbr %> passes the secret to the UAA component for verification using HTTP or HTTPS.
 
 
-## <a id='vuln-manage'></a> Software Vulnerability Management
+## <a id='vuln-manage'></a> Managing software vulnerabilities
 
 <%= vars.app_runtime_abbr %> manages software vulnerability using releases and BOSH stemcells. New <%= vars.app_runtime_abbr %> releases are created with updates to address code issues, while new stemcells are created with patches for the latest security fixes to address any underlying operating system issues.
 
 
-## <a id='app-artifacts'></a> Ensuring Security for App Artifacts
+## <a id='app-artifacts'></a> Ensuring security for app artifacts
 
 <%= vars.app_runtime_abbr %> secures both the code and the configuration of an app using the following functionality:
 
@@ -172,14 +173,14 @@ A third-party broker might offer a dashboard client in its catalog. Dashboard cl
 * <%= vars.app_runtime_abbr %> operators can configure network traffic rules to control inbound communication to and outbound communication from an app. For more information, see the [Network Traffic Rules](./container-security.html#config-traffic) section of the _Container Security_ topic.
 
 
-## <a id='logging'></a> Security Event Logging and Auditing
+## <a id='logging'></a> Security event logging and auditing
 
 For operators, <%= vars.app_runtime_abbr %> provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform. Additionally, operators can redirect <%= vars.app_runtime_abbr %> component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
 
 For users, <%= vars.app_runtime_abbr %> records an audit trail of all relevant API invocations of an app. The Cloud Foundry Command Line Interface (cf CLI) command `cf events` returns this information.
 
 
-## <a id='recommendations'></a> Recommendations for Running a Secure Deployment
+## <a id='recommendations'></a> Recommendations for running a secure deployment
 
 To help run a secure deployment, <%= vars.company_name %> recommends:
 
@@ -208,7 +209,7 @@ To help run a secure deployment, <%= vars.company_name %> recommends:
 <%= vars.compliance_links %>
 
 
-## <a id='apps-services'></a> Security for Apps and Services
+## <a id='apps-services'></a> Security for apps and services
 
 This section links to topics that describe how <%= vars.app_runtime_abbr %> and <%= vars.app_runtime_abbr %> users manage security for apps and service instances.
 

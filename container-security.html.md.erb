@@ -1,12 +1,12 @@
 ---
-title: Container Security
+title: Container security in Cloud Foundry
 owner: Security
 ---
 
-This topic describes how <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>) secures the containers that host app instances on Linux. For an overview of other <%= vars.app_runtime_abbr %> security features, see [<%= vars.app_runtime_abbr %> Security](security.html).
+This topic tells you about how <%= vars.app_runtime_first %> secures the containers
+that host app instances on Linux.
 
-
-## <a id='overview'></a> Overview
+For an overview of other <%= vars.app_runtime_abbr %> security features, see [<%= vars.app_runtime_abbr %> Security](security.html).
 
 The sections in this topic provide the following information:
 
@@ -16,8 +16,7 @@ The sections in this topic provide the following information:
 
 * [Container Security](#security) describes how <%= vars.app_runtime_abbr %> secures containers by running app instances in unprivileged containers and by hardening them.
 
-
-## <a id='mechanics'></a> Container Mechanics
+## <a id='mechanics'></a> Container mechanics
 
 Each instance of an app deployed to <%= vars.app_runtime_abbr %> runs within its own self-contained environment, a Garden container. This container isolates processes, memory, and the filesystem using operating system features and the characteristics of the virtual and physical infrastructure where <%= vars.app_runtime_abbr %> is deployed. For more information about Garden containers, see [Garden](./architecture/garden.html).
 
@@ -87,11 +86,12 @@ If P3 finishes or becomes idle, then P2 can consume all the CPU, as another reca
 In summary, the cgroup shares are the minimum guaranteed CPU share that the process can get. This limitation becomes effective only when processes on the same host compete for resources.
 
 
-## <a id='networking'></a> Inbound and Outbound Traffic from <%= vars.app_runtime_abbr %>
+## <a id='networking'></a> Inbound and outbound traffic from <%= vars.app_runtime_abbr %>
 
-This section provides an overview of container networking and describes how <%= vars.app_runtime_abbr %> admins customize container network traffic rules for their deployment.
+Learn about container networking and how <%= vars.app_runtime_abbr %> admins customize
+container network traffic rules for their deployment.
 
-### <a id='net-overview'></a> Networking Overview
+### <a id='net-overview'></a> Networking overview
 
 A host VM has a single IP address. If you configure the deployment with the cluster on a VLAN, as <%= vars.company_name %> recommends, then all traffic goes through the following levels of network address translation, as shown in the diagram below.
 
@@ -116,7 +116,7 @@ A host VM has a single IP address. If you configure the deployment with the clus
   - App container response goes to NAT
 
 
-### <a id='config-traffic'></a> Network Traffic Rules
+### <a id='config-traffic'></a> Network traffic rules
 
 Admins configure rules to govern container network traffic. This is how containers send traffic outside of <%= vars.app_runtime_abbr %> and receive traffic from outside, the Internet. These rules can prevent system access from external networks and between internal components and determine if apps can establish connections over the virtual network interface.
 
@@ -127,7 +127,7 @@ Admins configure these rules at two levels:
 * Container-to-container networking policies determine app-to-app communication. Within <%= vars.app_runtime_abbr %>, apps can communicate directly with each other, but the containers are isolated from outside <%= vars.app_runtime_abbr %>. <%= vars.container_network_link %>
 
 
-## <a id='security'></a> Container Security
+## <a id='security'></a> Container security
 
 <%= vars.app_runtime_abbr %> secures containers through the following measures:
 
@@ -139,7 +139,12 @@ Admins configure these rules at two levels:
 
 ### <a id="types"></a> Types
 
-Garden has two container types: unprivileged and privileged. Currently, <%= vars.app_runtime_abbr %> runs all app instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
+Garden has the following container types:
+
+* unprivileged
+* privileged
+
+Currently, <%= vars.app_runtime_abbr %> runs all app instances and staging tasks in unprivileged containers by default. This measure increases security by eliminating the threat of root escalation inside the container.
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'config_manifest' %>
@@ -147,7 +152,8 @@ Garden has two container types: unprivileged and privileged. Currently, <%= vars
 
 ### <a id='hardening'></a> Hardening
 
-<%= vars.app_runtime_abbr %> mitigates against container breakout and denial of service attacks in the following ways:
+<%= vars.app_runtime_abbr %> mitigates against container breakout and denial of service attacks in
+the following ways:
 
 * <%= vars.app_runtime_abbr %> uses the full set of Linux namespaces - IPC, Network, Mount, PID, User, UTS - to provide isolation between containers running on the same host. The User namespace is not used for privileged containers. For more information about Linux namespaces, see [namespaces - overview of Linux namespaces](http://manpages.ubuntu.com/manpages/xenial/en/man7/namespaces.7.html) in the Ubuntu documentation.
 

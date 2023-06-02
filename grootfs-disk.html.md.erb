@@ -1,15 +1,15 @@
 ---
-title: GrootFS Disk Usage
+title: GrootFS disk usage in Cloud Foundry
 owner: Garden
 ---
 
+This topic tells you about the concepts related to
+GrootFS disk space management in <%= vars.app_runtime_first %>.
 
+## <a id="store"></a> GrootFS stores
 
-This topic explains the concepts related to GrootFS disk space management in <%= vars.app_runtime_full %> (<%= vars.app_runtime_abbr %>).
-
-## <a id="store"></a> GrootFS Stores
-
-GrootFS is the container root filesystem management component for Garden. A container root filesystem or _rootfs_ is often referred to as an **image**.
+GrootFS is the container root filesystem management component for Garden.
+A container root filesystem or _rootfs_ is often referred to as an **image**.
 
 A **GrootFS store** is the directory in which rootfs layers and container images are cached.
 This directory is configured by GrootFS and mounted on an XFS-formatted volume by the Garden job during BOSH VM creation.
@@ -18,7 +18,7 @@ Individual container root filesystems are provided via OverlayFS mounts.
 
 Supplying GrootFS with an already formatted XFS volume for its store is not yet supported for BOSH-controlled deployments.
 
-### <a id="garbage_coll"></a> General Garbage Collection Behavior in GrootFS Stores
+### <a id="garbage_coll"></a> Garbage collection behavior in GrootFS stores
 
 GrootFS stores are initialized to use the entirety of `/var/vcap/data`. If the `reserved_space_for_other_jobs_in_mb` is not set high enough,
 or if there are many images with few shared volumes, the store can use up all available space.
@@ -40,7 +40,7 @@ The size of an individual volume is available in its corresponding metadata file
 GrootFS also stores the SHA of each underlying volume used by an image in the `meta` folder.
 
 For each container, GrootFS mounts the underlying `volumes` using overlay to a point in the `images` directory.
-This mount point is the rootfs for the container and is read-write.
+This mount point is the rootfs for the container and is read write.
 
 On disk, the read-write layer for each container can be found at `/var/vcap/data/grootfs/store/unprivileged/images/CONTAINER-ID/diff` (or `/var/vcap/data/grootfs/store/privileged/images/CONTAINER-ID/diff` for privileged containers.)
 
@@ -73,7 +73,7 @@ but not layer-1 because Image A still uses that layer.
 
 <%= vars.grootfs_disk_usage_link %>
 
-## <a id="additional_info"></a> Additional Information
+## <a id="additional_info"></a> Additional information
 
 For more information, see the following sections of `garden-runc-release`:
 
