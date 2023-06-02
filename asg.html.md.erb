@@ -1,30 +1,38 @@
 ---
-title: App Security Groups
+title: App security groups in Cloud Foundry
 owner: Security
 ---
 
-This topic provides an overview of App Security Groups (ASGs) in <%= vars.app_runtime_first %>, and describes how to manage and administer them.
-
-
-## <a id='introduction'></a> Overview
-
-ASGs are a collection of egress rules that specify the protocols, ports, and IP address ranges where app or task instances send traffic.
+App Security Groups (ASGs) are a collection of egress rules that enable you to specify the protocols,
+ports, and IP address ranges where app or task instances send traffic.
 
 ASGs define **allow** rules, and their order of evaluation is unimportant when multiple ASGs apply to the same space or deployment. The platform sets up rules to filter and log outbound network traffic from app and task instances. ASGs apply to both buildpack-based and Docker-based apps and tasks.
 
-### <a id='staging-running'></a> Staging and Running ASGs
+### <a id='staging-running'></a> Staging and running ASGs
 
 Admins can define a `staging` ASG for app and task staging, and a `running` ASG for app and task runtime.
 
-When apps or tasks begin staging, they require traffic rules permissive enough to allow them to pull resources from the network. A running app or task no longer needs to pull resources, so traffic rules can be more restrictive and secure. To distinguish between these two security requirements, admins can define a `staging` ASG for app and task staging with more permissive rules, and a `running` ASG for app and task runtime with less permissive rules.
+When apps or tasks begin staging, they require traffic rules permissive enough to allow
+them to pull resources from the network. A running app or task no longer needs to pull resources,
+so traffic rules can be more restrictive and secure.
+To distinguish between these two security requirements, you can define a `staging` ASG for app and task
+staging with more permissive rules, and a `running` ASG for app and task runtime with less permissive rules.
 
-### <a id='types'></a> Platform-Wide and Space-Scoped ASGs
+### <a id='types'></a> Platform wide and space scoped ASGs
 
-To provide granular control when securing a deployment, admins can assign platform-wide ASGs that apply to all app and task instances for the entire deployment, or space-scoped ASGs that apply only to apps and tasks in a particular space.
+To provide granular control when securing a deployment, you can assign platform-wide ASGs that apply
+to all app and task instances for the entire deployment, or space scoped ASGs that apply only to apps and tasks in a particular space.
 
 In environments with both platform-wide and space-specific ASGs, the ASGs for a particular space are combined with the platform ASGs to determine the effective rules for that space. Any of the permitted traffic in the set of applicable ASGs is then effectively permitted for that app.
 
-### <a id='simplifying'></a> Simplifying ASGs with a Services Subnet
+### <a id='dynamic-asgs'></a> Dynamic ASGs
+
+Dynamic ASGs allow ASGs to be applied to apps without the need for an application restart. Only containers using the <a href="https://github.com/cloudfoundry/silk-release">Silk CNI</a> will have their ASGs updated dynamically; Windows apps and apps using other CNIs (e.g., NSX-T) do not support Dynamic ASGs at this time.
+Dynamic ASGs are enabled with cf deployment v20.0.0 and higher through <a href="https://github.com/cloudfoundry/cf-networking-release/releases/tag/3.0.0">cf-networking-release 3.0.0</a>. It is recommended to use Dynamic ASGs with capi-release v1.126.0 or later for improved performance on the /v3/security_groups APIs.
+
+To deactivate Dynamic ASGs: use the ops file `operations/disable-dynamic-asgs.yml` from <a href="https://github.com/cloudfoundry/cf-deployment/releases/tag/v20.0.0">cf-deployment v20.0.0</a> or higher.
+
+### <a id='simplifying'></a> Simplifying ASGs with a services subnet
 
 ASGs can be complicated to configure correctly, especially when the specific IP addresses listed in a group change.
 
@@ -45,18 +53,19 @@ For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 <% end %>
 
 
-### <a id="asg-sets"></a> ASG Sets
+### <a id="asg-sets"></a> ASG sets
 
 ASGs are applied by configuring ASG sets differentiated by _scope_, platform-wide or space specific, and _lifecycle_, staging or running.
 
-Currently, four ASG sets exist in <%= vars.app_runtime_abbr %>:
+Currently, the following ASG sets exist in <%= vars.app_runtime_abbr %>:
 
 * Platform-wide staging ASG set, also called "default-staging"
 * Platform-wide running ASG set, also called "default-running"
 * Space-scoped staging ASG set
 * Space-scoped running ASG set
 
-In environments with both platform-wide and space-specific ASG sets, combine the ASG sets for a particular space with the platform ASG sets to determine the rules for that space.
+In environments with both platform-wide and space-specific ASG sets, combine the ASG sets for a
+particular space with the platform ASG sets to determine the rules for that space.
 
 The following table indicates the differences between the four sets:
 
@@ -69,11 +78,13 @@ The following table indicates the differences between the four sets:
 
 Typically, ASGs applied during the staging lifecycle are more permissive than the ASGs applied during the running lifecycle. This is because staging often requires access to different resources, such as dependencies.
 
-You use different commands to apply an ASG to each of the four sets. For more information, see [Managing ASGs with the cf CLI](#procedures).
+You use different commands to apply an ASG to each of the four sets.
+
+For more information, see [Managing ASGs with the cf CLI](#procedures).
 
 <p class="note"><strong>Note:</strong> To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
 
-### <a id='creating-groups'></a> The Structure and Attributes of ASGs
+### <a id='creating-groups'></a> Structure and attributes of ASGs
 
 ASG rules are specified as a JSON array of ASG objects. An ASG object has the following attributes:
 
@@ -90,9 +101,11 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 <% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
 
-## <a id="process"></a> Process for Administering ASGs
+## <a id="process"></a> Managing ASGs
 
-The following table outlines the flow of tasks that the admin carries out over the lifecycle of ASGs. For information about procedures for each of these tasks, see [Managing ASGs with the cf CLI](#procedures).
+The following table outlines the flow of tasks that you implement over the lifecycle of ASGs.
+
+For information about procedures for each of these tasks, see [Managing ASGs with cf CLI](#procedures).
 
 | &nbsp; | Task | For more information, see: |
 | ------ | ---- | -------------------------- |
@@ -103,15 +116,14 @@ The following table outlines the flow of tasks that the admin carries out over t
 | 5. | If you need to delete an ASG, first unbind it, then delete it. | [Unbind ASGs](#unbinding-asgs) and [Delete ASGs](#deleting-groups) |
 
 
-## <a id='procedures'></a> Managing ASGs with the cf CLI
+## <a id='procedures'></a> Managing ASGs with cf CLI
 
-This section provides the commands you need to create and manage ASGs.
+Learn about the commands you need to create and manage ASGs.
 
-### <a id='prerequisite'></a> Prerequisite
+Many of the following procedures require the Cloud Foundry Command Line Interface (cf CLI).
+To download the cf CLI, see [Installing the cf CLI](../cf-cli/install-go-cli.html).
 
-Many of the procedures below require the Cloud Foundry Command Line Interface (cf CLI). To download the cf CLI, see [Installing the cf CLI](../cf-cli/install-go-cli.html).
-
-### <a id='viewing'></a> View ASGs
+### <a id='viewing'></a> Viewing ASGs
 
 To view information about existing ASGs, run the following commands:
 
@@ -124,7 +136,7 @@ To view information about existing ASGs, run the following commands:
 
 <%= vars.asg_note %>
 
-### <a id='asg-individual'></a> Create ASGs
+### <a id='asg-individual'></a> Creating ASGs
 
 To create an ASG:
 

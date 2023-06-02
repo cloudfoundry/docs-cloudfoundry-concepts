@@ -3,11 +3,9 @@ title: Cloud Controller
 owner: CAPI
 ---
 
-
-
-The Cloud Controller in <%= vars.app_runtime_first %> provides REST API endpoints for clients to access the
+Cloud Controller in <%= vars.app_runtime_first %> provides you with REST API endpoints to access the
 system.
-The Cloud Controller maintains a database with tables for orgs, spaces,
+Cloud Controller maintains a database with tables for orgs, spaces,
 services, user roles, and more.
 
 <% if vars.platform_code == 'CF' %>
@@ -17,7 +15,8 @@ services, user roles, and more.
 
 ##<a id='auction'></a>Diego Auction
 
-The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to balance application processes over the [Diego Cells](index.html#diego-cell) in a <%= vars.app_runtime_abbr %> installation.
+The Cloud Controller uses the [Diego Auction](../diego/diego-auction.html) to balance application
+processes over the [Diego Cells](index.html#diego-cell) in a <%= vars.app_runtime_abbr %> installation.
 
 ##<a id='database'></a>Database (CC_DB)
 
@@ -29,7 +28,8 @@ The Cloud Controller database has been tested with MySQL.
 
 ##<a id='blob-store'></a>Blobstore
 
-To stage and run apps, <%= vars.app_runtime_abbr %> manages and stores the following types of binary large object (blob) files:
+To stage and run apps, <%= vars.app_runtime_abbr %> manages and stores the following types of
+binary large object (blob) files:
 
 <table id="blob-types" border="1" class="nice">
 <tr>
@@ -73,13 +73,13 @@ A single blobstore typically stores all five types of blobs, but you can configu
 
 After a blob deletion fails silently or something else goes wrong, the blobstore may contain blobs that the Cloud Controller no longer needs or lists in its database. These are called orphan blobs, and they waste blobstore capacity.
 
-The Cloud Controller detects and removes orphan blobs by scanning part of the blobstore daily and checking for any blobs that its database does not account for. The process scans through the entire blobstore every week, and only removes blobs that show as orphans for three consecutive days.
+Cloud Controller detects and removes orphan blobs by scanning part of the blobstore daily and checking for any blobs that its database does not account for. The process scans through the entire blobstore every week, and only removes blobs that show as orphans for three consecutive days.
 
-The Cloud Controller performs this automatic cleanup when the `cloud_controller_worker` job property `cc.perform_blob_cleanup` is set to `true`.
+Cloud Controller performs this automatic cleanup when the `cloud_controller_worker` job property `cc.perform_blob_cleanup` is set to `true`.
 
 ###<a id='manual-clean'></a>Manual Blob Cleanup
 
-The Cloud Controller does not track resource cache and buildpack cache [blob types](#blob-types) in its database, so it does not [clean them up automatically](#automatic-clean) as it does with app package, buildpack, and droplet type blobs.
+Cloud Controller does not track resource cache and buildpack cache [blob types](#blob-types) in its database, so it does not [clean them up automatically](#automatic-clean) as it does with app package, buildpack, and droplet type blobs.
 
 To clean up the buildpack cache, admin users can run `cf curl -X DELETE /v2/blobstores/buildpack_cache`. This empties the buildpack cache completely, which is a safe operation.
 
