@@ -1,25 +1,23 @@
 ---
-title: User Account and Authentication (UAA) Server
+title: User account and Authentication server
 owner: Identity
 ---
 
-This topic provides an overview of the User Account and Authentication (UAA) Server, the identity management service for <%= vars.app_runtime_first %>.
+This topic tells you about the User Account and Authentication (UAA) Server, the identity management service for <%= vars.app_runtime_first %>.
 
+The primary role of UAA is as an OAuth2 provider, that issues tokens for client apps to use
+when they act on behalf of <%= vars.app_runtime_abbr %> users.
+In collaboration with the login server, UAA can authenticate users with their <%= vars.app_runtime_abbr %> credentials, and can act as an SSO service using those, or other, credentials.
 
-## <a id="overview"></a> Overview
+UAA has endpoints for managing user accounts, registering OAuth2 clients, and various
+other management functions.
 
-The primary role of UAA is as an OAuth2 provider, issuing tokens for client apps to use when they act on behalf of <%= vars.app_runtime_abbr %> users. In collaboration with the login server, UAA can authenticate users with their <%= vars.app_runtime_abbr %> credentials, and can act as an SSO service using those, or other, credentials.
-
-UAA has endpoints for managing user accounts and for registering OAuth2 clients, as well as various other management functions.
-
-Different runtimes and services use separate UAA instances. <%= vars.app_runtime_abbr %> has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.app_runtime_abbr %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances <%= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA. You must log into each runtime or service separately.
-
-
-## <a id='quickstart'></a> Quick Start
+Different runtimes and services use separate UAA instances. <%= vars.app_runtime_abbr %> has two UAA instances by default: one for BOSH Director, used to bootstrap the rest of the <%= vars.app_runtime_abbr %> deployment; and one for the BOSH deployment, used as a shared resource by all apps that require user authentication. This is the minimum number of UAA instances <%= vars.app_runtime_abbr %> must have. Other runtimes and services also have UAA instances. These instances are separate from each other. If you log into one runtime or service, you are not also logged into other runtimes and services that authenticate using UAA.
+You must log in to each runtime or service separately.
 
 You can deploy UAA locally or to <%= vars.app_runtime_abbr %>.
 
-### <a id='local'></a> Deploy UAA Locally
+### <a id='local'></a> Deploying UAA Locally
 
 To deploy and run UAA locally:
 
@@ -29,7 +27,7 @@ To deploy and run UAA locally:
     git clone git://github.com/cloudfoundry/uaa.git
     ```
 
-1. Navigate to the directory where you cloned the UAA GitHub repository.
+1. Go to the directory where you cloned the UAA GitHub repository.
 
 1. To build and run all the components that comprise UAA and the example programs `uaa`, `samples/api`, and `samples/app`, run:
 
@@ -39,9 +37,9 @@ To deploy and run UAA locally:
 
 1. If successful, the three apps run together on a single instance of Tomcat listening on port 8080, with endpoints `/uaa`, `/app`, and `/api`. Tomcat is a library of Java code used by UAA to create its features. For more information, see the [Apache Tomcat](http://tomcat.apache.org/) website.
 
-### <a id='demo-local'></a> Use Local UAA
+### <a id='demo-local'></a> Using Local UAA
 
-To access and use a locally-deployed UAA server:
+To access and use a locally deployed UAA server:
 
 1. Run the UAA server as described in [Deploy Locally](#local).
 
@@ -135,7 +133,7 @@ To access and use a locally-deployed UAA server:
       aud: scim clients uaa admin
     </pre>
 
-### <a id='cf'></a> Deploy UAA to <%= vars.app_runtime_abbr %>
+### <a id='cf'></a> Deploying UAA to <%= vars.app_runtime_abbr %>
 
 To build the UAA as an app and push it to <%= vars.app_runtime_abbr %> using the Cloud Foundry Command Line Interface (cf CLI):
 
@@ -145,7 +143,7 @@ To build the UAA as an app and push it to <%= vars.app_runtime_abbr %> using the
     git clone git://github.com/cloudfoundry/uaa.git
     ```
 
-1. Navigate to the directory where you cloned the UAA GitHub repository.
+1. Go to the directory where you cloned the UAA GitHub repository.
 
 1. Build the UAA as a WAR file by running:
 
@@ -171,7 +169,7 @@ To build the UAA as an app and push it to <%= vars.app_runtime_abbr %> using the
     cf start MYUAA
     ```
 
-### <a id='demo-hosted'></a> Use Remote UAA
+### <a id='demo-hosted'></a> Using Remote UAA
 
 You use a UAA server that you pushed as an app to <%= vars.app_runtime_abbr %> in a similar way to one you run locally. You do not need app token encoding because you do not have the client secret.
 
@@ -222,9 +220,9 @@ To access and use a UAA server that you pushed as an app to <%= vars.app_runtime
     The `uaac token client get` command authenticates and obtains an access token from the server using the OAuth2 implicit grant, similar to the approach intended for a standalone client like the cf CLI.
 
 
-## <a id='integration'></a> Integration Tests
+## <a id='integration'></a> Running integration tests
 
-Running integration tests makes sure that the UAA instance is running properly.
+When you run integration tests, it makes sure that the UAA instance is running properly.
 
 To run integrations tests:
 
@@ -236,9 +234,10 @@ This command starts a UAA server running in a local Apache Tomcat instance. By d
 
 You can set the environment variable `CLOUD_FOUNDRY_CONFIG_PATH` to a directory containing a `uaa.yml` file where you change the URLs used in the tests, and where you can set the UAA server context root.
 
-### <a id='custom-configuration'></a> Custom YAML Configuration
+### <a id='custom-configuration'></a> Customizing your YAML configuration
 
-A custom YAML configuration gives integration tests access to your UAA instance by sharing credentials in YAML file.
+A custom YAML configuration gives integration tests access to your UAA instance by sharing
+credentials in YAML file.
 
 To create a custom YAML configuration:
 
@@ -277,7 +276,7 @@ The web app looks for a YAML file in the following locations when it starts, wit
   ${UAA_CONFIG_URL}
   ```
 
-### <a id='gradle-test'></a> Test with PostgreSQL or MySQL
+### <a id='gradle-test'></a> Testing with PostgreSQL or MySQL
 
 The default UAA unit tests, `./gradlew test`, use a HyperSQL database.
 
@@ -296,7 +295,7 @@ To use a different database management system:
 You can find the database configuration for the common and scim modules at `common/src/test/resources/(mysql|postgresql).properties` and `scim/src/test/resources/(mysql|postgresql).properties`.
 
 
-## <a id='projects'></a> UAA Projects
+## <a id='projects'></a> UAA projects
 
 The following UAA projects exist:
 
@@ -310,7 +309,7 @@ The following UAA projects exist:
 
 * `scim`: The System for Cross-domain Identity Management (SCIM) user management module used by UAA. For more information about SCIM, see [Managing Users & Groups with SCIM](https://docs.snowflake.com/user-guide/scim-intro).
 
-### <a id='uaa-server'></a> UAA Server
+### <a id='uaa-server'></a> UAA server
 
 The authentication service, `uaa`, is a Spring MVC web app. You can deploy it in Tomcat or your container of choice, or run `./gradlew run` to run it directly from the `uaa` directory in the source tree. When run with Gradle, `uaa` listens on port 8080 and has the URL `http://localhost:8080/uaa`.
 
@@ -340,7 +339,7 @@ You can override any occurrences of `${placeholder.name}` in the XML by adding i
 
 All passwords and client secrets in the configuration files are in plain text, but are inserted into the UAA database encrypted with BCrypt.
 
-#### <a id='user-account-data'></a> User Account Data
+#### <a id='user-account-data'></a> User account data
 
 The default uses an in-memory relational database management system (RDBMS) user store, pre-populated with a single test user `marissa` with the password `koala`.
 
@@ -373,17 +372,17 @@ oauth:
 
 You can use the admin client to create additional clients. You must have a client with read/write access to the `scim` resource to create user accounts. The integration tests handle this automatically by inserting client and user accounts as necessary for the tests.
 
-### <a id='samples'></a> Sample Apps
+### <a id='samples'></a> Sample apps
 
 Two sample apps are included with UAA: `/api` and `/app`.
 
 You can run `/api` and `/app` with `./gradlew run` from the `uaa` root directory. All three apps, `/uaa`, `/api`, and `/app`, are simultaneously deployed.
 
-#### <a id='api-application'></a> API Sample App
+#### <a id='api-application'></a> API sample app
 
 The `api` sample app is an example resource server. It hosts a service that returns a list of mock apps under `/apps`.
 
-#### <a id='app-application'></a> App Sample App
+#### <a id='app-application'></a> App sample app
 
 The `app` sample app is a user interface app, primarily aimed at browsers, that uses OpenID Connect for authentication and OAuth2 for access grants. `app` authenticates with the Auth service, then accesses resources in the API service. You can run `app` with `./gradlew run` from the `uaa` root directory.
 
@@ -415,11 +414,14 @@ To see the currently logged-in user details and a selection of attributes from t
 GET /app
 ```
 
-#### <a id='login-application'></a> Login App
+#### <a id='login-application'></a> Login app
 
 The `login` app is a user interface for authentication. UAA can also authenticate user accounts, but only if it manages them itself and it only provides a basic UI. You can brand and customize the login app for non-native authentication and for more complicated UI flows, like user registration and password reset.
 
-The log-in app is itself an OAuth2 endpoint provider, but delegates those features to the UAA server. Therefore, configuration for the log-in app consists of locating the UAA through its OAuth2 endpoint URLs and registering the log-in app itself as a client of the UAA. The UAA locations have a `login.yml`file. For example, a local `vcap` instance:
+The log in app is itself an OAuth2 endpoint provider, but delegates those features to
+the UAA server. Therefore, configuration for the log in app consists of locating the UAA
+through its OAuth2 endpoint URLs and registering the log in app itself as a client of the UAA.
+The UAA locations have a `login.yml`file. For example, a local `vcap` instance:
 
 ```
 uaa:
@@ -469,7 +471,7 @@ This is the standard OAuth2 authorization endpoint passed through to UAA.
 
 UAA covers multiple scopes of privilege, and has access to UAA, Cloud Controller, and to the router. For more information about UAA, see [OAuth Scopes](https://oauth.net/2/scope/).
 
-### <a id="uaa-scopes"></a> UAA Scopes
+### <a id="uaa-scopes"></a> UAA scopes
 
 The following table describes the scopes of privilege in UAA.
 
@@ -509,7 +511,7 @@ The following table describes the scopes of privilege in UAA.
 | `zones.ZONE-ID.clients.scim.write` | This scope translates into `scim.write` after zone switch completes. This scope is used with the `X-Identity-Zone-Id header`. |
 | `zones.ZONE-ID.idps.read` | This scope translates into `idps.read` after zone switch completes. This scope is used with the `X-Identity-Zone-Id header`. |
 
-### <a id="cc-scopes"></a> Cloud Controller Scopes
+### <a id="cc-scopes"></a> Cloud Controller scopes
 
 The following table describes the scopes of privilege in Cloud Controller.
 
@@ -521,7 +523,7 @@ The following table describes the scopes of privilege in Cloud Controller.
 | `cloud_controller.admin_read_only` | This admin scope gives read permissions to Cloud Controller. |
 | `cloud_controller.global_auditor` | This scope gives read-only access to all Cloud Controller API resources except for secrets such as environment variables. |
 
-### <a id="routing-scopes"></a> Routing Scopes
+### <a id="routing-scopes"></a> Routing scopes
 
 The following table describes the scopes of privilege in the router.
 
@@ -532,7 +534,7 @@ The following table describes the scopes of privilege in the router.
 | `routing.router_groups.read` | This scope gives the ability to read the full list of routing groups. |
 | `routing.router_groups.write` | This scopes gives the ability to write the full list of routing groups. |
 
-### <a id="other-scopes"></a> Other Scopes
+### <a id="other-scopes"></a> Scopes of privilege
 
 The following table describes the scopes of privilege in other <%= vars.app_runtime_abbr %> services.
 
