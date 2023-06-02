@@ -1,5 +1,5 @@
 ---
-title: Planning Orgs and Spaces
+title: Planning orgs and spaces in Cloud Foundry
 owner: CAPI
 ---
 
@@ -12,18 +12,18 @@ owner: CAPI
 <% end %>
 
 
-This topic describes considerations for effectively planning foundations, orgs, and spaces. You can plan your orgs and spaces to make the best use of the authorization features in <%= vars.app_runtime_first %>.
+This topic tells you about the considerations for effectively planning foundations, orgs, and spaces. You can plan your orgs and spaces to make the best use of the
+authorization features in <%= vars.app_runtime_first %>.
 
-## <a id="overview"></a> Overview
-
-An installation of <%= vars.app_runtime_abbr %> is referred to as a _foundation_. Each foundation has _orgs_ and _spaces_. For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
+An installation of <%= vars.app_runtime_abbr %> is referred to as a _foundation_.
+Each foundation has _orgs_ and _spaces_. For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
 The <%= vars.app_runtime_abbr %> roles described in _Orgs, Spaces, Roles, and Permissions_ use the principle of least privilege. Each role exists for a purpose and features in <%= vars.app_runtime_abbr %> enable these purposes.
 
 Consider these roles when planning your foundations, orgs, and spaces. This allows for full use of the features and assumptions of <%= vars.app_runtime_abbr %>.
 
 
-## <a id="conceptual"></a> How <%= vars.app_runtime_abbr %> Layers Relate to Your Company
+## <a id="conceptual"></a> How <%= vars.app_runtime_abbr %> How layers relate to your company
 
 The following sections describe what <%= vars.app_runtime_abbr %> layers are and how they relate to your company structure.
 
@@ -94,7 +94,7 @@ Spaces can encompass teams, products and specific deployables. To understand how
 The sections below describe considerations you can make when mapping foundations, orgs, and spaces.
 
 
-### <a id="environments"></a> Environment Planning
+### <a id="environments"></a> Planning for your environment
 
 To plan your environments effectively, you must decide at what <%= vars.app_runtime_abbr %> layer they belong.
 
@@ -160,7 +160,7 @@ For guiding questions to help you make decisions about planning your <%= vars.ap
 	</tr>
 </table>
 
-### <a id="impact"></a> Impact of Mapping Larger and Smaller Subsets
+### <a id="impact"></a> Mapping larger and smaller subsets
 
 _Subsets_ are the company divisions you decide to map to <%= vars.app_runtime_abbr %>. When creating your subsets, consider that the lower the <%= vars.app_runtime_abbr %> layer, the more specific you want to map your subsets. Conversely, the higher the <%= vars.app_runtime_abbr %> layer, the broader you want to make your subsets.
 

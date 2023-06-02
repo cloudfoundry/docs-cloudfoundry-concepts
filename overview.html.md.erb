@@ -1,5 +1,5 @@
 ---
-title: Cloud Foundry Overview
+title: Cloud Foundry overview
 ---
 
 <%# Reset page title based on product title %>
@@ -11,17 +11,13 @@ title: Cloud Foundry Overview
 
 <% if vars.platform_code == 'CF' %>
 
-This topic describes Cloud Foundry and how it works.
+This topic tells you about Cloud Foundry and how it works.
 
 <% else %>
 
-<p class='note warning'><strong>Caution: This release has been removed from General Support.</p>
-
-This topic describes <%= vars.app_runtime_first %> and how it works with <%= vars.ops_manager %>.
+This topic tells you about <%= vars.app_runtime_first %> and how it works with <%= vars.ops_manager %>.
 
 <% end %>
-
-## <a id='overview'></a> Overview
 
 Cloud platforms let anyone deploy network apps or services and make them available to the world in a few minutes. When an app becomes popular, the cloud scales it to handle more traffic, replacing build-out and migration efforts that once took months with a few keystrokes. Cloud platforms enable you to focus exclusively on your apps and data without worrying about underlying infrastructure.
 
@@ -63,7 +59,7 @@ As an industry-standard cloud platform, <%= vars.app_runtime_abbr %> offers the 
 
 To flexibly serve and scale apps online, <%= vars.app_runtime_abbr %> has subsystems that perform specialized functions. The sections below describe how some of these main subsystems work.
 
-### <a id='balances'></a> Load Balancing
+### <a id='balances'></a> Load balancing
 
 This section describes how <%= vars.app_runtime_abbr %> handles load balancing.
 
@@ -75,7 +71,7 @@ Clouds balance their processing loads over multiple machines, optimizing for eff
 
 - The **Gorouter** routes incoming traffic from the world to the VMs that are running the apps that the traffic demands, usually working with a customer-provided load balancer. For more information, see [<%= vars.app_runtime_abbr %> Routing Architecture](./cf-routing-architecture.html).
 
-### <a id='apps-anywhere'></a> Running Apps
+### <a id='apps-anywhere'></a> Running apps
 
 This section describes the VMs that run your apps in <%= vars.app_runtime_abbr %> and how the platform packages your apps to run on these VMs.
 
@@ -90,7 +86,7 @@ Within <%= vars.app_runtime_abbr %>, the Diego system distributes the hosted app
 
 For more information, see [Diego Components and Architecture](./diego/diego-architecture.html).
 
-#### <a id='cf-apps'></a> Distributing Apps
+#### <a id='cf-apps'></a> Distributing apps
 
 To meet demand, multiple host VMs run duplicate instances of the same app. This means that apps must be portable. <%= vars.app_runtime_abbr %> distributes app source code to VMs with everything the VMs need to compile and run the apps locally.
 
@@ -107,7 +103,7 @@ For more information, see:
 - [Buildpacks](../buildpacks/index.html)
 - [How Apps Are Staged](./how-applications-are-staged.html)
 
-### <a id='organize'></a> Organizing Users and Workspaces
+### <a id='organize'></a> Organizing users and workspaces
 
 This section describes how <%= vars.app_runtime_abbr %> organizes users and workspaces.
 
@@ -134,7 +130,7 @@ The following table describes what the two UAA servers do:
 
 For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
-### <a id='resources'></a> Storing Resources
+### <a id='resources'></a> Storing resources
 
 The following table describes where <%= vars.app_runtime_abbr %> stores resources:
 
@@ -157,7 +153,7 @@ The following table describes where <%= vars.app_runtime_abbr %> stores resource
   </tr>
 </table>
 
-### <a id='communicate'></a> Component Communication
+### <a id='communicate'></a> Communicating with components
 
 This section describes how <%= vars.app_runtime_abbr %> components communicate with one another.
 
@@ -213,7 +209,7 @@ For more information, see <a href="../loggregator/architecture.html">Loggregator
 
 <% end %>
 
-### <a id='services'></a> Using Services
+### <a id='services'></a> Using services
 
 This section describes how you can use services with your apps on <%= vars.app_runtime_abbr %>.
 
