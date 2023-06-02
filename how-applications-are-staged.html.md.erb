@@ -1,25 +1,25 @@
 ---
-title: How Apps Are Staged
+title: Staging your apps in Cloud Foundry
 owner:
   - Diego
   - CAPI
 ---
 
-This topic describes how Diego stages buildpack apps and Docker images in <%= vars.app_runtime_first %>.
-
-
-## <a id='overview'></a> Overview
+This topic tells you how Diego stages buildpack apps and Docker images
+in <%= vars.app_runtime_first %>.
 
 <%= vars.app_runtime_abbr %> uses Diego to manage app containers. It is a self-healing system that attempts to keep the correct number of instances running in Diego Cells to avoid network failures and crashes. For more information about Diego, see [Diego Components and Architecture](../concepts/diego/diego-architecture.html).
 
-This topic references tasks and long-running processes (LRPs). For more information about these, see the [Tasks and Long-Running Processes](diego/diego-auction.html#processes) section of the _How Diego Balances App Processes_ topic.
+Learn about tasks and long-running processes (LRPs).
+
+For more information about these, see the [Tasks and Long-Running Processes](diego/diego-auction.html#processes) section of the _How Diego Balances App Processes_ topic.
 
 To better understand the flow and caching of source bits during staging, see the [How Staging Uses the Blobstore](../concepts/cc-blobstore.html#stage-blobstore) section of the _Cloud Controller blobstore_ topic.
 
 
-## <a id='stage-buildpack'></a> How Diego Stages Buildpack Apps
+## <a id='stage-buildpack'></a> How Diego stages duildpack apps
 
-This section describes how Diego stages buildpack apps.
+Learn how Diego stages buildpack apps.
 
 The following diagram illustrates the steps and components involved in the process of staging a buildpack app.
 
@@ -27,13 +27,13 @@ The following diagram illustrates the steps and components involved in the proce
 
 [//]: https://docs.google.com/drawings/d/1F4vIuCLCtl4hwhMZbeDNcSGImSpaTXFnul4-xpgXOgs/edit?usp=sharing
 
-The following describe each step in the process of staging a buildpack app:
+The following steps describe the process of staging a buildpack app:
 
 1. A developer runs `cf push`.
 
-1. The Cloud Foundry Command Line Interface (cf CLI) tells the Cloud Controller to create a record for the app. For more information about the Cloud Controller, see [Cloud Controller](../concepts/architecture/cloud-controller.html).
+1. Cloud Foundry Command Line Interface (cf CLI) tells the Cloud Controller to create a record for the app. For more information about the Cloud Controller, see [Cloud Controller](../concepts/architecture/cloud-controller.html).
 
-1. The Cloud Controller stores the app metadata. App metadata can include the app name, number of instances, buildpack, and other information about the app.
+1. Cloud Controller stores the app metadata. App metadata can include the app name, number of instances, buildpack, and other information about the app.
 
 1. This step includes:
 	<ol type="a">
@@ -42,7 +42,7 @@ The following describe each step in the process of staging a buildpack app:
 	<li> The Cloud Controller combines the uploaded app files with files from the resource cache to create the app package.</li>
 	</ol>
 
-1. The Cloud Controller stores the app package in the blobstore. For more information, see the [Blobstore](../concepts/architecture/index.html#blob) section of the _<%= vars.app_runtime_abbr %> Components_ topic.
+1. Cloud Controller stores the app package in the blobstore. For more information, see the [Blobstore](../concepts/architecture/index.html#blob) section of the _<%= vars.app_runtime_abbr %> Components_ topic.
 
 1. The cf CLI issues a request to start the app.
 
@@ -54,7 +54,7 @@ The following describe each step in the process of staging a buildpack app:
 	<li>The task uses the buildpack to compile and stage the app.</li>
 	</ol>
 
-1. The Diego Cell streams the output of the staging process. You might need to view the output to troubleshoot staging problems.
+1. Diego Cell streams the output of the staging process. You might need to view the output to troubleshoot staging problems.
 
 1. This step includes:
 	<ol type="a">
@@ -63,14 +63,14 @@ The following describe each step in the process of staging a buildpack app:
 	<li>The task uploads the buildpack cache to the blobstore for use the next time the app is staged.</li>
 	</ol>
 
-1. The Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. If staging does not complete within 15 minutes, it fails.
+1. Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. If staging does not complete within 15 minutes, it fails.
 
 1. Diego schedules the app as a LRP on one or more Diego Cells.
 
-1. The Diego Cells report the status of the app to the Cloud Controller.
+1. Diego Cells report the status of the app to the Cloud Controller.
 
 
-## <a id='stage-docker'></a> How Diego Stages Docker Images
+## <a id='stage-docker'></a> How Diego stages Docker images
 
 This section describes how Diego stages Docker images.
 
@@ -92,17 +92,17 @@ The following describe each step in the process of staging a Docker image:
 	<li> Diego schedules a Diego Cell to run the task.</li>
 	</ol>
 
-1. The Diego Cell streams the output of the staging process. You might need to view the output to troubleshoot staging problems.
+1. Diego Cell streams the output of the staging process. You might need to view the output to troubleshoot staging problems.
 
 1. The task fetches the metadata associated with the Docker image and returns a portion of it to the Cloud Controller.
 
-1. The Cloud Controller stores the metadata in the Cloud Controller database (CCDB).
+1. Cloud Controller stores the metadata in the Cloud Controller database.
 
 1. This step includes:
 	<ol type="a">
-	<li> The Cloud Controller uses the Docker image metadata to construct a LRP that runs the start command specified in the Dockerfile.</li>
-	<li> The Cloud Controller submits the LRP to Diego.</li>
+	<li> Cloud Controller uses the Docker image metadata to construct a LRP that runs the start command specified in the Dockerfile.</li>
+	<li> Cloud Controller submits the LRP to Diego.</li>
 	<li> Diego schedules the LRP on one or more Diego Cells.</li>
-	<li> The Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.</li>
+	<li> Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.</li>
 	</ol>
-	<p class="note"><strong>Note:</strong> The Cloud Controller takes into account any user-specified overrides specified in the Dockerfile, such as environment variables.</p>
+	<p class="note"><strong>Note:</strong> Cloud Controller takes into account any user-specified overrides specified in the Dockerfile, such as environment variables.</p>

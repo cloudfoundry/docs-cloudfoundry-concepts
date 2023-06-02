@@ -1,24 +1,24 @@
 ---
-title: HTTP Routing
+title: HTTP routing
 owner: CF for VMs Networking
 ---
 
-This topic describes how the Gorouter, the main component in the <%= vars.app_runtime_first %> routing tier, routes HTTP traffic within
+This topic tells you how the Gorouter, the main component in the <%= vars.app_runtime_first %> routing tier, routes HTTP traffic within
 <%= vars.app_runtime_abbr %>.
 
-For more information, see [Routing](architecture/index.html#routing) in _<%= vars.app_runtime_abbr %> Components_.
+For more information about routing, see [Routing](architecture/index.html#routing) in _<%= vars.app_runtime_abbr %> Components_.
 
 
-## <a id='http-headers'></a> HTTP Headers
+## <a id='http-headers'></a> HTTP headers
 
-#### <a id='header-size-limit'></a> Header Size Limit
+#### <a id='header-size-limit'></a> Header size limit
 
 The Gorouter has a limit of 1&nbsp;MB for HTTP Headers.
 
 The specific language, framework, and configuration of the back end app container determine the effective header size limit. For example, the default header
 size for the Tomcat container is 8&nbsp;kB.
 
-#### <a id='X-Forwarded-Proto'></a> X-Forwarded-Proto
+#### <a id='X-Forwarded-Proto'></a> X-Forwarded Proto
 
 The `X-Forwarded-Proto` header gives the scheme of the HTTP request from the client.
 
@@ -43,10 +43,10 @@ client IP using the PROXY protocol, then the Gorouter uses the client IP address
 If your load balancer terminates TLS on the client side of the Gorouter, it must append these headers to requests forwarded to the Gorouter.
 <%= vars.http_routing %>
 
-### <a id='zipkin-headers'></a> HTTP Headers for Zipkin Tracing
+### <a id='zipkin-headers'></a> HTTP headers for Zipkin tracing
 
 Zipkin is a tracing system that allows app developers to troubleshoot failures or latency issues. Zipkin provides the ability to trace requests and responses
-across distributed systems. For more information, see [Zipkin.io](http://zipkin.io/).
+across distributed systems. For more information about Zipkin tracing, see [Zipkin.io](http://zipkin.io/).
 
 <%= vars.zipkin_enable_link %>
 
@@ -64,7 +64,7 @@ values for the headers with requests to other apps.
 
 <%= vars.zipkin_tracing_link %>
 
-### <a id='app-instance-routing'></a> HTTP Headers for App Instance Routing
+### <a id='app-instance-routing'></a> HTTP headers for app instance routing
 
 If you want to retrieve debug data for a specific instance of an app, you can use the HTTP header `X-Cf-App-Instance` to make a request to the app instance
 you want to debug.
@@ -121,7 +121,7 @@ To make an HTTP request to a specific app instance:
 	  </tr>
 	</table>
 
-### <a id='forward-client-cert'></a> Forward Client Certificate to Apps
+### <a id='forward-client-cert'></a> Forwarding client certificate to apps
 
 Apps that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. <%= vars.app_runtime_abbr %> supports this use case without
 bypassing layer-7 load balancers and the Gorouter.
@@ -153,7 +153,7 @@ Depending on your needs, you can configure your <%= vars.app_runtime_abbr %> dep
 balancer, or at the load balancer only. <%= vars.http_routing %>
 
 
-## <a id='tls-to-back-end'></a> TLS to Apps and Other Back-End Services
+## <a id='tls-to-back-end'></a> TLS to apps and other back end services
 
 The Gorouter supports TLS and mutual authentication to back-end destinations, including app instances, platform services, and any other routable endpoints.
 
@@ -197,7 +197,7 @@ The Gorouter presents the certificate if requested by the back end during the TL
 <% end %>
 
 
-## <a id='consistency'></a> Preventing Misrouting
+## <a id='consistency'></a> Preventing misroutes
 
 As <%= vars.app_runtime_abbr %> manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables
 current, a Route-Emitter on each Diego Cell sends periodic messages for each app instance running on that Diego Cell to all Gorouters through NATS. Each
@@ -216,7 +216,7 @@ the HTTP request over the TLS session, and the Envoy proxy then forwards it to t
 the app instance from its routing table and transparently retries another instance of the app.
 
 <% if vars.platform_code == 'CF' %>
-### <a id='without-tls'></a> Without TLS to Back Ends Enabled
+### <a id='without-tls'></a> Without TLS to back ends enabled
 
 While it is possible to disallow TLS app identity verification, <%= vars.recommended_by %> does not recommend using this consistency mode.
 
@@ -224,9 +224,9 @@ In this consistency mode, the Diego Route-Emitters on each Diego Cell send route
 unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned
 from the Gorouter's routing table. For more information, see [TLS to Apps and Other Back-End Services](#tls-to-back-end) above.
 
-### <a id='config-by-instance-group'></a> Consistency Mode Can Differ by Instance Group
+### <a id='config-by-instance-group'></a> Consistency mode can differ by instance group
 
-The Gorouter can validate app instance identity using TLS only when Diego Cells are configured appropriately. Because Diego Cells are configured for TLS
+Gorouter can validate app instance identity using TLS only when Diego Cells are configured appropriately. Because Diego Cells are configured for TLS
 through the instance group that they belong to, the Gorouter can run in different consistency modes with Diego Cells in different instance groups. For
 example, the Gorouter can communicate over TLS and validate the Diego Cells in one isolation segment, while communicating with Diego Cells in another
 isolation segment over plain text and without validating instance identity.
@@ -235,7 +235,7 @@ isolation segment over plain text and without validating instance identity.
 Currently, only Linux cells support the Gorouter validating app instance identities using TLS by default. With Windows cells, the Gorouter connects to back
 ends without TLS, forwarding requests to Windows apps over plain text and pruning based on route TTL.
 
-#### <a id='app-valid-tls-config'></a> Configure Validation of App Instance Identity with TLS
+#### <a id='app-valid-tls-config'></a> Configuring validation of app instance identity with TLS
 
 <% if vars.platform_code == 'CF' %>
 To enable this feature on Windows, use the
@@ -246,9 +246,9 @@ experimental opsfile on GitHub.
 <% end %>
 
 
-## <a id='balancing-algorithm'></a> Router Balancing Algorithm
+## <a id='balancing-algorithm'></a> Router balancing algorithm
 
-The Gorouter can be configured to use different load balancing algorithms for routing incoming requests to app instances. The Gorouter maintains a dynamically
+Gorouter can be configured to use different load balancing algorithms for routing incoming requests to app instances. The Gorouter maintains a dynamically
 updated list of app instances for each route. Depending on which algorithm is selected, it forwards to one of the app instances.
 
 To configure the behavior, you can change the value of `router.balancing_algorithm` manifest property to either of the following options:
@@ -259,12 +259,12 @@ To configure the behavior, you can change the value of `router.balancing_algorit
 
 By default, the Gorouter uses the round-robin algorithm.
 
-### <a id='round-robin'></a> Round-Robin Load Balancing
+### <a id='round-robin'></a> Round robin load balancing
 
 Incoming requests for a given route are forwarded to all app instances one after another, looping back to the first one after they have each received a
 request. This algorithm is suitable for most use cases and evenly distributes the load between app instances.
 
-### <a id='least-connection'></a> Least-Connection Load Balancing
+### <a id='least-connection'></a> Least connection load balancing
 
 Each request for a given route is forwarded to the app instance with the least number of open connections. This algorithm can be more suitable for some cases.
 For example, if app instances have long-lived connections and are scaled up, then new instances receive fewer connections, causing a disproportionate load. In
@@ -280,9 +280,9 @@ app instance.
 <%= vars.port_limitations_1 %>
 
 
-## <a id='sessions'></a> Session Affinity
+## <a id='sessions'></a> Session affinity
 
-The Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
+Gorouter supports session affinity, or _sticky sessions_, for incoming HTTP requests to compatible apps.
 
 With sticky sessions, when multiple instances of an app are running on <%= vars.app_runtime_abbr %>, requests from a particular client always reach the same
 app instance. This allows apps to store session data specific to a user session.
@@ -304,7 +304,7 @@ based on its GUID with the same expiry, sameSite, and secure attributes as `JSES
 
 On subsequent requests, the client must provide both the sticky session and `VCAP_ID` cookies.
 
-The CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The sticky session cookie is forwarded to the
+CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same app instance every time. The sticky session cookie is forwarded to the
 app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different
 instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
 
@@ -315,14 +315,14 @@ For more information, see [Session Affinity](https://github.com/cloudfoundry/rou
 	by all instances of an app, store session data in a <%= vars.app_runtime_abbr %> marketplace service that offers data persistence.</p>
 
 
-## <a id='keepalive'></a> Keep-Alive Connections
+## <a id='keepalive'></a> Keep alive connections
 
-### <a id='front-end'></a> From Front End Clients
+### <a id='front-end'></a> Front end clients
 
-The Gorouter supports keep-alive connections from clients and does not close the TCP connection with clients immediately after returning an HTTP response.
+Gorouter supports keep alive connections from clients and does not close the TCP connection with clients immediately after returning an HTTP response.
 Clients are responsible for closing these connections.
 
-### <a id='back-end'></a> To Back-End Servers
+### <a id='back-end'></a> Back end servers
 
 If keep-alive connections are disallowed, the Gorouter closes the TCP connection with an app instance or system component after receiving an HTTP response.
 
@@ -339,7 +339,7 @@ each back end:
 <% end %>
 
 
-## <a id='retry'></a> Transparent Retries
+## <a id='retry'></a> Transparent retries
 
 If the Gorouter cannot establish a TCP connection with a selected app instance, the Gorouter considers the instance ineligible for requests for 30 seconds and
 transparently attempts to connect to another app instance. Once the Gorouter has established a TCP connection with an app instance, the Gorouter forwards the
