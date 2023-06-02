@@ -10,23 +10,22 @@ owner: Release Integration
 
 <% end %>
 
-This topic describes the components used to ensure high availability in <%= vars.app_runtime_first %>, vertical and horizontal scaling, and the infrastructure
+This topic tells you about the components used to ensure high availability in <%= vars.app_runtime_first %>, vertical and horizontal scaling, and the infrastructure
 required to support scaling component VMs for high availability.
-
-
-## <a id='overview'></a> Overview
 
 A system with high availability provides higher than typical uptime through redundancy of apps and component VMs. You can create the redundancy required for
 high availability in several ways, such as running VMs in multiple availability zones and using external blob storage solutions.
 
-The sections in this topic provide guidance on configuring your <%= vars.app_runtime_abbr %> deployment for high availability.
+This topic provides guidance on configuring
+your <%= vars.app_runtime_abbr %> deployment for high availability.
 
 
-## <a id='high-availability'></a> Components of High Availability Deployments
+## <a id='high-availability'></a> Components of high availability deployments
 
-This section describes how you can use availability zones, external load balancers, and external blob storage to ensure high availability for your deployment.
+You can use availability zones, external load balancers, and
+external blob storage to ensure high availability for your deployment.
 
-### <a id='azs'></a> Availability Zones
+### <a id='azs'></a> Availability zones
 
 Availability Zones (AZs) are locations where public cloud services offer data centers.
 
@@ -37,7 +36,7 @@ Always use an odd number of AZs. This ensures that your deployment remains avail
 
 For example, a deployment with three AZs stays available when one AZ is unavailable. A deployment with five AZs stays available when two AZs are unavailable.
 
-### <a id='external-lbs'></a> External Load Balancers
+### <a id='external-lbs'></a> External load balancers
 
 External load balancers distribute traffic coming from the internet to your internal network.
 
@@ -53,7 +52,7 @@ To ensure high availability for production environments, use a highly-available 
 
 <%= vars.external_lb %>
 
-### <a id='blobstore'></a> External Blob Storage
+### <a id='blobstore'></a> External blob storage
 
 Blobs are large binary files, such as PDFs or images. To store blobs for high availability, use external storage such as Amazon S3 or an S3-compatible
 service.
@@ -63,7 +62,7 @@ high availability features of your IaaS to immediately recover your WebDAV or NF
 
 <%= vars.collector_singleton %>
 
-## <a id='vert-and-horiz'></a> Vertical and Horizontal Scaling
+## <a id='vert-and-horiz'></a> Scaling platform capacity
 
 You can scale platform capacity in the following ways:
 
@@ -76,7 +75,7 @@ The type of apps you host on <%= vars.app_runtime_abbr %> determines whether you
 For more information about scaling apps and maintaining app uptime, see [Scaling an App Using cf scale](../devguide/deploy-apps/cf-scale.html) and [Using
 Blue-Green Deployment to Reduce Downtime and Risk](../devguide/deploy-apps/blue-green.html)
 
-### <a id='vert-scaling'></a> Scale Vertically
+### <a id='vert-scaling'></a> Scaling vertically
 
 Scaling vertically means adding memory and disk to your component VMs.
 
@@ -88,7 +87,7 @@ To scale vertically, allocate and maintain the following:
 
 * Free space to handle one AZ going down if deploying in multiple AZs.
 
-### <a id='horiz-scaling'></a> Scale Horizontally
+### <a id='horiz-scaling'></a> Scaling horizontally
 
 Scaling horizontally means increasing the number of instances of VMs that run a functional component of a system.
 
@@ -98,7 +97,7 @@ You should also distribute the instances of components across different AZs to m
 upgrades. For more information about using AZs, see [Availability Zones](#azs) above.
 
 
-## <a id='instance-counts'></a> Recommended Instance Counts for High Availability
+## <a id='instance-counts'></a> Recommended instance counts for high availability
 
 <%= vars.scaling_ert %>
 
@@ -108,12 +107,12 @@ upgrades. For more information about using AZs, see [Availability Zones](#azs) a
 <%= partial "/pcf/core/pcf_scale_table" %>
 <% end %>
 
-## <a id='supporting-scaling'></a> Infrastructure to Support Component Scaling
+## <a id='supporting-scaling'></a> Infrastructure for component scaling
 
 The ability to scale component VMs is important for high availability. To scale component VMs, you must ensure that the surrounding infrastructure of your
 deployment supports VM scaling.
 
-This section describes the infrastructure required to support scaling component VMs for high availability.
+Learn about the infrastructure required to support scaling component VMs for high availability.
 
 <% if vars.platform_code == 'CF' %>
 <%= vars.max_in_flight_header %>
@@ -124,7 +123,7 @@ This section describes the infrastructure required to support scaling component 
 
 <%= vars.om_resurrector_text %>
 
-### <a id='resource-pools'></a> Resource Pools
+### <a id='resource-pools'></a> Resource pools
 
 Each IaaS has different ways of limiting resource consumption for scaling VMs. Consult with your IaaS administrator to ensure additional VMs and related
 resources, like IPs and storage, are available to scale.
