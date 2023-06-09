@@ -17,7 +17,7 @@ You must log in to each runtime or service separately.
 
 You can deploy UAA locally or to <%= vars.app_runtime_abbr %>.
 
-## <a id='local'></a> Deploying UAA Locally
+## <a id='local'></a> Deploying UAA locally
 
 To deploy and run UAA locally:
 
@@ -37,7 +37,7 @@ To deploy and run UAA locally:
 
 1. If successful, the three apps run together on a single instance of Tomcat listening on port 8080, with endpoints `/uaa`, `/app`, and `/api`. Tomcat is a library of Java code used by UAA to create its features. For more information, see the [Apache Tomcat](http://tomcat.apache.org/) website.
 
-### <a id='demo-local'></a> Using Local UAA
+### <a id='demo-local'></a> Using local UAA
 
 To access and use a locally deployed UAA server:
 
@@ -169,7 +169,7 @@ To build the UAA as an app and push it to <%= vars.app_runtime_abbr %> using the
     cf start MYUAA
     ```
 
-### <a id='demo-hosted'></a> Using Remote UAA
+### <a id='demo-hosted'></a> Using remote UAA
 
 You use a UAA server that you pushed as an app to <%= vars.app_runtime_abbr %> in a similar way to one you run locally. You do not need app token encoding because you do not have the client secret.
 
@@ -256,8 +256,8 @@ To create a custom YAML configuration:
     <ul>
       <li><code>UAA-HOSTNAME</code> is the FQDN of UAA app. For example, <code>uaa.example.org</code>.</li>
       <li><code>USERNAME</code> is a valid username. For example, <code>dev@example.org</code>.</li>
-      <li><code>PASSWORD</code> is the password for the above username.</li>
-      <li><code>EMAIL-ADDRESS</code> is the email address for the above user. Example: <code>dev@example.org</code>.</li>
+      <li><code>PASSWORD</code> is the password for the previous username.</li>
+      <li><code>EMAIL-ADDRESS</code> is the email address for the previous user. Example: <code>dev@example.org</code>.</li>
     </ul>
 
 
