@@ -137,7 +137,7 @@ Operators can configure the identity store in UAA. If users register an account 
 
 Standard <%= vars.app_runtime_abbr %> deployments based on [cf-deployment](https://github.com/cloudfoundry/cf-deployment) provide a UAA client `cf` that can be used to create OAuth 2 tokens using the Password Grant Flow for <%= vars.app_runtime_abbr %> users that are needed to access the CF API. This UAA client is also used by the CF CLI. The UAA client `cf` doesn't require a `client_secret`.
 
-### <a id='rbac'></a> Managing User Access with Role-Based Access Control
+### <a id='rbac'></a> Managing user access with Role-Based Access Control
 
 Apps that users deploy to <%= vars.app_runtime_abbr %> exist within a space. Spaces exist within orgs. To view and access an org or a space, a user must be a member of it. <%= vars.app_runtime_abbr %> uses role-based access control (RBAC), with each role granted permissions to either an org or a specified space. For more information about roles and permissions, see [Orgs, Spaces, Roles, and Permissions](roles.html).
 
