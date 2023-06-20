@@ -8,7 +8,7 @@ owner:
 This topic tells you how Diego stages buildpack apps and Docker images
 in <%= vars.app_runtime_first %>.
 
-<%= vars.app_runtime_abbr %> uses Diego to manage app containers. It is a self-healing system that attempts to keep the correct number of instances running in Diego Cells to avoid network failures and crashes. For more information about Diego, see [Diego Components and Architecture](../concepts/diego/diego-architecture.html).
+<%= vars.app_runtime_abbr %> uses Diego to manage app containers. It is a self-healing system that attempts to keep the correct number of instances running in Diego Cells to avoid network failures and crashes. For more information about Diego, see [Diego components and architecture](../concepts/diego/diego-architecture.html).
 
 Learn about tasks and long-running processes (LRPs).
 
@@ -22,8 +22,21 @@ To better understand the flow and caching of source bits during staging, see the
 Learn how Diego stages buildpack apps.
 
 The following diagram illustrates the steps and components involved in the process of staging a buildpack app.
+The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCNG Blobstore, CCDB, Diego Cell (Staging), and Diego Cell (Running).
+Step 1: cf push from Developer to CF Command Line.
+Step 2: Create App from CF Command Line to Cloud Controller (CCNG).
+Step 3: Stores App Metadata from CCNG to the CCDB.
+Step 4: Upload App Files from the CF Command Line to CCNG.
+Step 5: Store App Files from CCNG to CCNG Blobstore.
+Step 6: App Start from CF Command Line to CCNG.
+Step 7: Stage App from CCNG to Diego Cell (Staging).
+Step 8: Stream Staging Output from Diego Cell (Staging) to the Developer.
+Step 9: Store App Droplet from Diego Cell (Staging) to CCNG Blobstore.
+Step 10: Report Staging Complete from Diego Cell (Staging) to CCNG.
+Step 11: Start Staged App from CCNG to Diego Cell (Running).
+Step 12: Report App Status from Diego Cell (Running) to CCNG.
 
-![The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCNG Blobstore, CCDB, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Create App from CF Command Line to Cloud Controller (CCNG). Step 3 is Stores App Metadata from CCNG to the CCDB. Step 4 is Upload App Files from the CF Command Line to CCNG. Step 5 is Store App Files from CCNG to CCNG Blobstore. Step 6 is App Start from CF Command Line to CCNG. Step 7 is Stage App from CCNG to Diego Cell (Staging). Step 8 is Stream Staging Output from Diego Cell (Staging) to the Developer. Step 9 is Store App Droplet from Diego Cell (Staging) to CCNG Blobstore. Step 10 is Report Staging Complete from Diego Cell (Staging) to CCNG. Step 11 is Start Staged App from CCNG to Diego Cell (Running). Step 12 is Report App Status from Diego Cell (Running) to CCNG.](./images/app_push_flow_diagram_diego.png)
+![alt-text=""](./images/app_push_flow_diagram_diego.png)
 
 [//]: https://docs.google.com/drawings/d/1F4vIuCLCtl4hwhMZbeDNcSGImSpaTXFnul4-xpgXOgs/edit?usp=sharing
 
@@ -35,7 +48,7 @@ The following steps describe the process of staging a buildpack app:
 
 1. Cloud Controller stores the app metadata. App metadata can include the app name, number of instances, buildpack, and other information about the app.
 
-1. This step includes:
+4. This step includes:
 	<ol type="a">
 	<li> The cf CLI requests a resource match from the Cloud Controller.</li>
 	<li> The cf CLI uploads the app source files, omitting any app files that already exist in the resource cache. </li>
@@ -44,9 +57,9 @@ The following steps describe the process of staging a buildpack app:
 
 1. Cloud Controller stores the app package in the blobstore. For more information, see the [Blobstore](../concepts/architecture/index.html#blob) section of the _<%= vars.app_runtime_abbr %> Components_ topic.
 
-1. The cf CLI issues a request to start the app.
+6. The cf CLI issues a request to start the app.
 
-1. This step includes:
+7. This step includes:
 	<ol type="a">
 	<li>The Cloud Controller issues a staging request to Diego.</li>
 	<li>Diego schedules a Diego Cell to run the staging task.</li>
@@ -56,7 +69,7 @@ The following steps describe the process of staging a buildpack app:
 
 1. Diego Cell streams the output of the staging process. You might need to view the output to troubleshoot staging problems.
 
-1. This step includes:
+9. This step includes:
 	<ol type="a">
 	<li>The task creates a tarball, or droplet, with the compiled and staged app.</li>
 	<li>The Diego Cell stores the droplet in the blobstore.</li>
@@ -65,7 +78,7 @@ The following steps describe the process of staging a buildpack app:
 
 1. Diego Bulletin Board System (BBS) reports to the Cloud Controller that staging is complete. If staging does not complete within 15 minutes, it fails.
 
-1. Diego schedules the app as a LRP on one or more Diego Cells.
+11. Diego schedules the app as a LRP on one or more Diego Cells.
 
 1. Diego Cells report the status of the app to the Cloud Controller.
 
@@ -75,8 +88,17 @@ The following steps describe the process of staging a buildpack app:
 This section describes how Diego stages Docker images.
 
 The following diagram illustrates the steps and components involved in the process of staging a Docker image.
+The following diagram illustrates the steps and components involved in the process of staging a Docker image.
+The staging process for Docker images includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCDB, Diego Cell (Staging), and Diego Cell (Running).
+Step 1: CF Push from Developer to CF Command Line.
+Step 2: Create Record from CF Command Line to CCNG.
+Step 3: Stage Image from CCNG to CCDB.
+Step 4: Stream Staging Output from Diego Cell (Staging) to Developer.
+Step 5: Fetch Metadata from Diego Cell (Staging) to CCNG.
+Step 6: Store Metadata from CCNG to CCDB.
+Step 7: Submit LRP an Run Start Command from CCNG to Diego Cell (Running).
 
-![The staging process for Docker images includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), CCDB, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Create Record from CF Command Line to CCNG. Step 3 is Stage Image from CCNG to CCDB. Step 4 is Stream Staging Output from Diego Cell (Staging) to Developer. Step 5 is Fetch Metadata from Diego Cell (Staging) to CCNG. Step 6 is Store Metadata from CCNG to CCDB. Step 7 is Submit LRP an Run Start Command from CCNG to Diego Cell (Running)](./images/docker_push_flow_diagram_diego.png)
+![alt-text=""](./images/docker_push_flow_diagram_diego.png)
 
 [//]: https://docs.google.com/drawings/d/1ckWGbgTWhyc3LxP4QcVD1IgwnHu1w2XNvT28-r51Z3M/edit?usp=sharing
 
