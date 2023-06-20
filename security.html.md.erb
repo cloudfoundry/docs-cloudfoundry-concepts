@@ -134,7 +134,9 @@ The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally s
 
 Operators can configure the identity store in UAA. If users register an account with the <%= vars.app_runtime_abbr %> platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the <%= vars.app_runtime_abbr %> platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the <%= vars.app_runtime_abbr %> platform.
 
-### <a id='rbac'></a> Managing User Access with Role-Based Access Control
+Standard <%= vars.app_runtime_abbr %> deployments based on [cf-deployment](https://github.com/cloudfoundry/cf-deployment) provide a UAA client `cf` that can be used to create OAuth 2 tokens using the Password Grant Flow for <%= vars.app_runtime_abbr %> users that are needed to access the CF API. This UAA client is also used by the CF CLI. The UAA client `cf` doesn't require a `client_secret`.
+
+### <a id='rbac'></a> Managing user access with Role-Based Access Control
 
 Apps that users deploy to <%= vars.app_runtime_abbr %> exist within a space. Spaces exist within orgs. To view and access an org or a space, a user must be a member of it. <%= vars.app_runtime_abbr %> uses role-based access control (RBAC), with each role granted permissions to either an org or a specified space. For more information about roles and permissions, see [Orgs, Spaces, Roles, and Permissions](roles.html).
 

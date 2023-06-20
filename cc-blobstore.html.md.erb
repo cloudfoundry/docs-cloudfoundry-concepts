@@ -21,9 +21,21 @@ For more information about how specific third-party blobstores can be configured
 
 This section describes how staging buildpack apps uses the blobstore.
 
-The following diagram illustrates how the staging process uses the blobstore. To walk through the same diagram in an app staging context, see [How Diego Stages Buildpack Apps](./how-applications-are-staged.html).
+The following diagram illustrates how the staging process uses the blobstore.
+To walk through the same diagram in an app staging context, see [How Diego Stages Buildpack Apps](./how-applications-are-staged.html).
+The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), Blobstore, cc-uploader, Diego Cell (Staging), and Diego Cell (Running).
+Step 1: cf push from Developer to CF CLI.
+Step 2: Checksum source files from Developer to CF CLI.
+Step 3: Resource Match from CF CLI to the CCNG.
+Step 4: Check file existence from the CCNG to Blobstore.
+Step 5: Upload unmatched files from CF CLI to CCNG.
+Step 6: Download cached files from Blobstore to CCNG.
+Step 7: Upload complete package from CCNG to Blobstore.
+Step 8: Download package and buildpack from Blobstore to Diego Cell (Staging).
+Step 9: Upload droplet from Diego Cell (Staging) through cc-uploader, then CCNG, to the Blobstore.
+Step 10: Download droplet from Blobstore to CCNG.
 
-![The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), Blobstore, cc-uploader, Diego Cell (Staging), and Diego Cell (Running). Step 1 is CF Push from Developer to CF Command Line. Step 2 is Checksum source files from Developer to CF Command Line. Step 3 is Resource Match from CF Command Line to the CCNG. Step 4 is Check file existence from the CCNG to Blobstore. Step 5 is Upload unmatched files from CF Command Line to CCNG. Step 6 is Download cached files from Blobstore to CCNG. Step 7 is Upload complete package from CCNG to Blobstore. Step 8 is Download package and buildpack from Blobstore to Diego Cell (Staging). Step 9 is Upload droplet from Diego Cell (Staging) through cc-uploader, then CCNG, to the Blobstore. Step 10 is Download droplet from Blobstore to CCNG.](./images/cc-blobstore-staging.png)
+![alt-text=""](./images/cc-blobstore-staging.png)
 
 [//]: https://docs.google.com/drawings/d/1LbM5mRjJMOfQXVvJXmDb-csfV61kHaPJaCJy20WVqMI/edit?usp=sharing
 
