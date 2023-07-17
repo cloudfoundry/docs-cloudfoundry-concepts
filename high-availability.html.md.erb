@@ -16,7 +16,7 @@ required to support scaling component VMs for high availability.
 A system with high availability provides higher than typical uptime through redundancy of apps and component VMs. You can create the redundancy required for
 high availability in several ways, such as running VMs in multiple availability zones and using external blob storage solutions.
 
-This topic provides guidance on configuring
+This topic provides you guidance on configuring
 your <%= vars.app_runtime_abbr %> deployment for high availability.
 
 
@@ -40,15 +40,15 @@ For example, a deployment with three AZs stays available when one AZ is unavaila
 
 External load balancers distribute traffic coming from the internet to your internal network.
 
-To ensure high availability for production environments, use a highly-available customer-provided external load balancing solution that does the following:
+To ensure high availability for production environments, use a highly available customer provided external load balancing solution that does the following:
 
-* Provides load balancing to each of the <%= vars.app_runtime_abbr %> router IP addresses
+* Provides load balancing to each of the <%= vars.app_runtime_abbr %> router IP addresses.
 
-* Supports SSL termination with wildcard DNS location
+* Supports SSL termination with wildcard DNS location.
 
-* Adds appropriate `x-forwarded-for` and `x-forwarded-proto HTTP` headers to incoming requests
+* Adds appropriate `x-forwarded-for` and `x-forwarded-proto HTTP` headers to incoming requests.
 
-* (Optional) Supports WebSockets
+* (Optional) Supports WebSockets.
 
 <%= vars.external_lb %>
 
@@ -140,7 +140,7 @@ For more information about configuring your resource pools according to the requ
 For database services deployed outside <%= vars.app_runtime_abbr %>, use the high availability features included with your infrastructure. Also, configure
 backup and restore where possible. <%= vars.scaling_ert_db %>
 
-<p class='note'><strong>Note:</strong> Data services might have single points of failure depending on their configuration.</p>
+<p> Data services might have single points of failure depending on their configuration.</p>
 
 If you need assistance,
 contact <a href="https://tanzu.vmware.com/support">Support.</a>

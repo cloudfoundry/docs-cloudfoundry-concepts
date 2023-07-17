@@ -4,7 +4,7 @@ If the Gorouter is the first component to stop TLS, such that it receives the ce
 
 This mode is activated when <code>router.forwarded\_client\_cert: sanitize\_set</code>.
 
-If TLS is terminated for the first time at Gorouter, the Gorouter must be configured to trust the root certificate authority used to sign the Diego intermediate certificate authority, which in turn is used to sign certificates generated for each Diego container. This trust activates mutual authentication between applications that are running on Cloud Foundry. You must configure the <code>router.ca_certs</code> property for the Gorouter job with the root certificate authority in their BOSH deployment manifest.
+If TLS stops for the first time at Gorouter, the Gorouter must be configured to trust the root certificate authority used to sign the Diego intermediate certificate authority, which in turn is used to sign certificates generated for each Diego container. This trust activates mutual authentication between applications that are running on Cloud Foundry. You must configure the <code>router.ca_certs</code> property for the Gorouter job with the root certificate authority in their BOSH deployment manifest.
 
 <pre>
 	jobs:

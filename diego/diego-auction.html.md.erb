@@ -52,26 +52,29 @@ For example, if the process LRP-A has a desired instance count of 3 and a memory
 <tr>
   <td>LRP-A</td>
   <td>3</td>
-  <td><%= image_tag("../images/diego/diego-job-2.png", :alt => "Number '2' next to an empty box.") %></td>
-  <td><%= image_tag("../images/diego/diego-LRP-A-instances.png", :alt => "Three boxes which say LRP-A.1, LRP-A.2, and LRP-A.3.") %></td>
+  <td>![alt-text=""](../images/diego/diego-job-2.png)
+ </td>
+  <td>![alt-text=""](../images/diego/diego-LRP-A-instances.png)
+</td>
 </tr>
 <tr>
   <td>LRP-B</td>
   <td>2</td>
-  <td><%= image_tag("../images/diego/diego-job-5.png", :alt => "Number '5' next to an empty box.") %></td>
-  <td><%= image_tag("../images/diego/diego-LRP-B-instances.png", :alt => "Two boxes which say LRP-B.1 and LRP-B.2") %></td>
+  <td>![alt-text=""](../images/diego/diego-job-5.png)
+</td>
+  <td>![alt-text=""](../images/diego/diego-LRP-B-instances.png)
+</td>
 </tr>
 </table>
 
 The Auctioneer then builds an ordered sequence of LRP instances by cycling through the list of LRPs in decreasing order of load. With each cycle, it adds another instance of each LRP to the sequence, until all desired instances of the LRP have been added. With the example above, the Auctioneer would order the LRPs like this:
 
-![LRP Sequence: LRP-B.1 (wide box), LRP-A.1 (narrow box), LRP-B.2 (wide box), LRP-A.2 (narrow box), and LRP-A.3 (narrow box)](../images/diego/diego-LRP-stack.png)
+![alt-text=""](../images/diego/diego-LRP-stack.png)
 
 The Auctioneer then builds an ordered sequence for all jobs, both LRPs and Tasks. Reflecting the auction batch priority order, the first instances of LRPs are first priority. Tasks are next, in decreasing order of load. Duplicate LRP jobs come last.
 
 Adding one-time Task-C (load = 4) and Task-D (load = 3) to the above example, the priority order becomes:
-
-![Auction Sequence: long description](../images/diego/diego-auction-stack.png)
+![alt-text=""](../images/diego/diego-auction-stack.png)
 
 The previous diagram shows the following content:
 
@@ -118,7 +121,7 @@ This example auction sequence has seven jobs: five LRP instances and two Tasks.
 
 The following diagram shows how the Auctioneer might distribute this work across four Diego Cells running in two Availability Zones:
 
-![Auction Process. Long description.](../images/diego/diego-auction-process.png)
+![alt-text=""](../images/diego/diego-auction-process.png)
 
 If the Auctioneer reaches the end of its sequence of jobs, having distributed all jobs to the Diego Cells, it submits requests to the Diego Cells to run their allotted work. If the Diego Cells run out of capacity to handle all jobs in the sequence, the Auctioneer carries the unallocated jobs over and merges them into the next auction batch, to be allocated in the next auction.
 

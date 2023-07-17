@@ -2,8 +2,10 @@ For each component, the variable `max_in_flight` limits how many instances of th
 
 To ensure zero downtime during updates, set `max_in_flight` for each component to a number low enough to prevent overburdening the component instances left running. Here are some guidelines:
 
-- For host VMs, the closer their resource usage is to 100%, the lower you set `max_in_flight`, allows non-migrating cells to pick up the work of cells stopping and restarting for migration. If resource usage is already close to 100%, scale up your host VMs before any updates.
+- For host VMs, the closer their resource usage is to 100%, the lower you set `max_in_flight`, allows non migrating cells to pick up the work of cells stopping and restarting for migration. If resource usage is already close to 100%, scale up your host VMs before any updates.
 - For quorum-based components like etcd and Diego BBS, set `max_in_flight` to `1`.
-- For other components, set `max_in_flight` to the number of instances that you can afford to have down at any one time. This depends on your capacity planning. With higher redundancy, you can make the number high so that updates run faster. But if your components are at high utilization, you must keep the number low.
+- For other components, set `max_in_flight` to the number of instances that you can afford to have down at any one time. This depends on
+your capacity planning. With higher redundancy, you can make the number high so that updates run faster. But if your components are at
+high utilization, you must keep the number low.
 
 Never set `max_in_flight` to a value greater than or equal to the number of instances you have running for a component.

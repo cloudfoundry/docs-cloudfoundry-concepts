@@ -15,12 +15,13 @@ For an overview of container security, see [Container Security](container-securi
 
 <%= vars.app_runtime_abbr %> implements the following measures to mitigate against security threats:
 
-* Minimizes network surface area
-* Isolates customer apps and data in containers
-* Encrypts connections
-* Uses role-based access controls, applying and enforcing roles and permissions to ensure that users can only view and affect the spaces for which they have been granted access
-* Ensures security of app bits in a multi-tenant environment
-* Prevents possible denial of service attacks through resource starvation
+* Minimizes network surface area.
+* Isolates customer apps and data in containers.
+* Encrypts connections.
+* Uses role-based access controls, applying and enforcing roles and permissions to ensure that users can only
+view and affect the spaces for which they have been granted access.
+* Ensures security of app bits in a multi-tenant environment.
+* Prevents possible denial of service attacks through resource starvation.
 
 
 ## <a id='system-boundaries'></a> System boundaries and access
@@ -31,11 +32,15 @@ In this configuration, the only access points visible on a public network are a 
 
 As the following diagram shows the architecture of a typical deployment of <%= vars.app_runtime_abbr %>:
 
-<p class="note"><strong>Note:</strong> <%= vars.company_name %> recommends that you also install a NAT VM for outbound requests and a jumpbox to access the BOSH Director, though these access points are optional depending on your network configuration.</p>
+<p class="note important">
+<span class="note__title"> Important</span> <%= vars.company_name %> recommends that you also install a NAT VM for outbound requests and a
+jumpbox to access the BOSH Director, though these access points are optional depending on your network
+configuration.</p>
 
-  <%= image_tag("./images/security/sysbound1.png", :alt => "System Boundaries and Access diagram. Long description below.") %>
+![alt-text=""](./images/security/sysbound1.png)
 
-The above diagram shows the following components:
+
+The preceding diagram shows the following components:
 
 - DMZ
 	- Customer Load Balancers with SSL Termination
@@ -69,15 +74,15 @@ The above diagram shows the following components:
 - IaaS
 	- Hypervisor
 
-The diagram above shows the following communications:
+The preceding diagram shows the following communications:
 
-- Customer Load Balancers send communication to the three Go Routers
+- Customer Load Balancers send communication to the three Go Routers.
 
-- Outbound NAT communicates with Hypervisor
+- Outbound NAT communicates with Hypervisor.
 
-- BOSH Director communicates with the App Execution (Diego Cells)
+- BOSH Director communicates with the App Execution (Diego Cells).
 
-- Service Brokers in Cloud Foundry vLAN communicates with Brokers in Services vLAN
+- Service Brokers in Cloud Foundry vLAN communicates with Brokers in Services vLAN.
 
 
 ### <a id='protocols'></a> Protocols
@@ -88,7 +93,8 @@ All traffic from the public internet to the Cloud Controller and UAA happens ove
 
 Operators deploy <%= vars.app_runtime_abbr %> with BOSH. The BOSH Director is the core orchestrating component in BOSH: it controls VM creation and deployment, as well as other software and service lifecycle events. You use HTTPS to ensure secure communication to the BOSH Director.
 
-<p class="note"><strong>Note:</strong> <%= vars.company_name %> recommends that you deploy the BOSH Director on a subnet that is not publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
+<p> <%= vars.company_name %> recommends that you deploy the BOSH Director on a subnet that is not
+publicly accessible, and access the BOSH Director from a jumpbox on the subnet or through VPN.</p>
 
 BOSH includes the following capability for security:
 
@@ -98,7 +104,7 @@ BOSH includes the following capability for security:
 
 * Allows you to set up individual login accounts for each operator. BOSH operators have root access.
 
-<p class="note"><strong>Note:</strong> BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
+<p> BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
 
 
 ## <a id='isolation-segments'></a> Isolation segments
@@ -118,8 +124,7 @@ Customers can use isolation segments for different reasons, including:
 In <%= vars.app_runtime_abbr %>, the Cloud Controller database (CCDB) identifies isolation segments by name and GUID, for example `30dd879c-ee2f-11db-8314-0800200c9a66`. The isolation segment object has no internal structure beyond these two properties at the <%= vars.app_runtime_abbr %> level, but BOSH associates the name of the isolation segment with Diego Cells, through their `placement_tag` property.
 
 This diagram shows how isolation segments keep apps running on different pools of Diego Cells, and how the Diego Cells communicate with each other and with the management components:
-
-  <%= image_tag("images/security/isolation-segments.png", :alt => "Isolation segment diagram. For more information about Isolation Segments, see below.") %>
+![alt-text=""](./images/security/isolation-segments.png)
 
 <%= vars.manage_iso_seg_link %>
 
@@ -150,7 +155,7 @@ The Cloud Controller authenticates every request with the Service Broker API usi
 
 Service instances bound to an app contain credential data. Users specify the binding credentials for user-provided service instances, while third-party brokers specify the binding credentials for managed service instances. The VCAP_SERVICES environment variable contains credential information for any service bound to an app. <%= vars.app_runtime_abbr %> constructs this value from encrypted data that it stores in the CCDB. For more information about user-provided service instances, see [User-Provided Service Instances](../devguide/services/user-provided.html).
 
-<p class="note"><strong>Note:</strong> The selected third-party broker controls how securely to communicate managed service credentials.</p>
+<p> The selected third-party broker controls how securely to communicate managed service credentials.</p>
 
 A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. <%= vars.app_runtime_abbr %> does not store this secret in the CCDB. Instead, <%= vars.app_runtime_abbr %> passes the secret to the UAA component for verification using HTTP or HTTPS.
 

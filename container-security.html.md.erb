@@ -32,7 +32,8 @@ For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture
 
 Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container might use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers.
 
-<p class="note"><strong>Note:</strong> <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
+<p> <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an
+inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
 
 ### <a id='cpu'></a> CPU
 
@@ -85,7 +86,6 @@ If P3 finishes or becomes idle, then P2 can consume all the CPU, as another reca
 
 In summary, the cgroup shares are the minimum guaranteed CPU share that the process can get. This limitation becomes effective only when processes on the same host compete for resources.
 
-
 ## <a id='networking'></a> Inbound and outbound traffic from <%= vars.app_runtime_abbr %>
 
 Learn about container networking and how <%= vars.app_runtime_abbr %> admins customize
@@ -123,7 +123,6 @@ Admins configure these rules at two levels:
 * Application Security Groups (ASGs) apply network traffic rules at the container level. <%= vars.app_sec_groups_link %>
 
 * Container-to-container networking policies determine app-to-app communication. Within <%= vars.app_runtime_abbr %>, apps can communicate directly with each other, but the containers are isolated from outside <%= vars.app_runtime_abbr %>. <%= vars.container_network_link %>
-
 
 ## <a id='security'></a> Container security
 

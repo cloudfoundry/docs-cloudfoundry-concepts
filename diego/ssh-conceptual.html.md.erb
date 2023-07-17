@@ -11,13 +11,15 @@ For procedural and configuration information about app SSH access, see [SSH Over
 
 ## <a id="ssh-components"></a> SSH components
 
-<%= vars.app_runtime_abbr %> SSH includes two central components: an implementation of an SSH proxy server and a lightweight SSH daemon. If these components are deployed and configured correctly, they provide a simple and scalable way to access containers apps and other long-running processes (LRPs).
+<%= vars.app_runtime_abbr %> SSH includes two central components: an implementation of an SSH proxy server and a lightweight SSH daemon. If these components are deployed and configured correctly, they provide a
+simple and scalable way to access containers apps and other long-running processes (LRPs).
 
 ### <a id='daemon'></a> SSH daemon
 
 SSH daemon is a lightweight implementation that is built around the Go SSH library. It supports command execution, interactive shells, local port forwarding, and secure copy. The daemon is self-contained and has no dependencies on the container root file system.
 
-The daemon is focused on delivering basic access to app instances in <%= vars.app_runtime_abbr %>. It is intended to run as an unprivileged process, and interactive shells and commands will run as the daemon user. The daemon only supports one authorized key, and it is not intended to support multiple users.
+The daemon is focused on delivering basic access to app instances in <%= vars.app_runtime_abbr %>. It is intended to run as an unprivileged process, and interactive shells and commands run as the daemon user. The daemon
+only supports one authorized key, and it is not intended to support multiple users.
 
 The daemon is available on a file server and Diego LRPs that want to use it can include a
 download action to acquire the binary and a run action to start it.

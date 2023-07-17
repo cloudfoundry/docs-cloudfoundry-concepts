@@ -7,7 +7,8 @@ owner: Security
 App Security Groups (ASGs) are a collection of egress rules that enable you to specify the protocols,
 ports, and IP address ranges where app or task instances send traffic.
 
-ASGs define **allow** rules, and their order of evaluation is unimportant when multiple ASGs apply to the same space or deployment. The platform sets up rules to filter and log outbound network traffic from app and task instances. ASGs apply to both buildpack-based and Docker-based apps and tasks.
+ASGs define **allow** rules, and their order of evaluation is unimportant when multiple ASGs apply to the same space or deployment. The platform sets up rules to filter and log outbound network traffic
+from app and task instances. ASGs apply to both buildpack-based and Docker-based apps and tasks.
 
 ## <a id='staging-running'></a> Staging and running ASGs
 
@@ -24,12 +25,14 @@ staging with more permissive rules, and a `running` ASG for app and task runtime
 To provide granular control when securing a deployment, you can assign platform-wide ASGs that apply
 to all app and task instances for the entire deployment, or space-scoped ASGs that apply only to apps and tasks in a particular space.
 
-In environments with both platform-wide and space-specific ASGs, the ASGs for a particular space are combined with the platform ASGs to determine the effective rules for that space. Any of the permitted traffic in the set of applicable ASGs is then effectively permitted for that app.
+In environments with both platform-wide and space-specific ASGs, the ASGs for a particular space are combined with the platform ASGs to determine the effective rules for that space. Any of the
+permitted traffic in the set of applicable ASGs is then effectively permitted for that app.
 
 ### <a id='dynamic-asgs'></a> Dynamic ASGs
 
-Dynamic ASGs allow ASGs to be applied to apps without the need for an application restart. Only containers using the <a href="https://github.com/cloudfoundry/silk-release">Silk CNI</a> will have their ASGs updated dynamically; Windows apps and apps using other CNIs (e.g., NSX-T) do not support Dynamic ASGs at this time.
-Dynamic ASGs are enabled with cf deployment v20.0.0 and higher through <a href="https://github.com/cloudfoundry/cf-networking-release/releases/tag/3.0.0">cf-networking-release 3.0.0</a>. It is recommended to use Dynamic ASGs with capi-release v1.126.0 or later for improved performance on the /v3/security_groups APIs.
+Dynamic ASGs allow ASGs to be applied to apps without the need for an application restart. Only containers using the <a href="https://github.com/cloudfoundry/silk-release">Silk CNI</a> have their ASGs updated dynamically; Windows apps and apps using other CNIs (e.g., NSX-T) do not support Dynamic ASGs at this time.
+Dynamic ASGs are enabled with cf deployment v20.0.0 and higher through <a href="https://github.com/cloudfoundry/cf-networking-release/releases/tag/3.0.0">cf-networking-release 3.0.0</a>. It is recommended to use Dynamic ASGs with capi-release v1.126.0 or later for improved
+performance on the /v3/security_groups APIs.
 
 To deactivate Dynamic ASGs: use the ops file `operations/disable-dynamic-asgs.yml` from <a href="https://github.com/cloudfoundry/cf-deployment/releases/tag/v20.0.0">cf-deployment v20.0.0</a> or higher.
 
@@ -37,7 +40,8 @@ To deactivate Dynamic ASGs: use the ops file `operations/disable-dynamic-asgs.ym
 
 ASGs can be complicated to configure correctly, especially when the specific IP addresses listed in a group change.
 
-To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.app_runtime_abbr %> deployment, then create ASGs for the apps that allow those service subnets, while denying access to any VM hosting other apps.
+To simplify securing a deployment while still allowing apps reach external services, operators can deploy the services into a subnet that is separate from their <%= vars.app_runtime_abbr %> deployment, then create ASGs
+for the apps that allow those service subnets, while denying access to any VM hosting other apps.
 
 For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
@@ -81,9 +85,10 @@ Typically, ASGs applied during the staging lifecycle are more permissive than th
 
 You use different commands to apply an ASG to each of the four sets.
 
-For more information, see [Managing ASGs with the cf CLI](#procedures).
+To apply a staging ASG to apps within a space, you must use
+cf CLI v6.28.0 or later.
 
-<p class="note"><strong>Note:</strong> To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
+For more information, see [Managing ASGs with the cf CLI](#procedures).
 
 ### <a id='creating-groups'></a> Structure and attributes of ASGs
 
@@ -141,7 +146,8 @@ To view information about existing ASGs, run the following commands:
 
 To create an ASG:
 
-1. Create a rules file: a JSON-formatted single array containing objects that describe the rules. See the following example, which allows ICMP traffic of code `1` and type `0` to all destinations, and TCP traffic to `10.0.11.0/24` on ports `80` and `443`. For more information, see [The Structure and Attributes of ASGs](#creating-groups).
+1. Create a rules file: a JSON-formatted single array containing objects that describe the rules. See the
+following example, which allows ICMP traffic of code `1` and type `0` to all destinations, and TCP traffic to `10.0.11.0/24` on ports `80` and `443`. For more information, see [The Structure and Attributes of ASGs](#creating-groups).
 
     ```
     [
@@ -183,7 +189,9 @@ After the ASG is created, you must bind it to an ASG set before it takes effect.
 
 ### <a id='binding-groups'></a> Bind ASGs
 
-<p class='note'><strong>Note:</strong> Binding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
+<p> Binding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a>
+enabled. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space, use
+the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
 
 To apply an ASG, you must bind it to an ASG set.
 
@@ -245,10 +253,11 @@ To bind an ASG to a space scoped staging ASG set:
 
 ### <a id='updating-groups'></a> Update ASGs
 
+<p> Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a>
+activated. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space,
+use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
+
 To update an existing ASG:
-
-<p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> activated. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
-
 1. Edit the ASG rules in the JSON file you created in [Create ASGs](#asg-individual).
 
 1. Run:
@@ -271,7 +280,9 @@ To update an existing ASG:
 
 ### <a id='unbinding-groups'></a> Unbind ASGs
 
-<p class='note'><strong>Note:</strong> Unbinding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
+<p> Unbinding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a>
+enabled. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space,
+use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
 
 #### Platform-wide Staging ASG Set
 
@@ -315,7 +326,7 @@ To unbind an ASG from a specific space:
 
 ### <a id='deleting-groups'></a> Delete ASGs
 
-<p class='note'><strong>Note:</strong> You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a>.</p>
+<p> You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a>.</p>
 
 To delete an ASG:
 
@@ -365,7 +376,8 @@ The following is an example `dns` ASG:
 
 Apps often require public network connectivity to retrieve app dependencies, or to integrate with services available on public networks. Example app dependencies include public Maven repositories, NPM, RubyGems, and Docker registries.
 
-<p class='note'><strong>Note:</strong> You must exclude IaaS metadata endpoints. For example, <code>169.254.169.254</code>, because the metadata endpoint can expose sensitive environment information to untrusted apps. The following <code>public_networks</code> example accounts for this recommendation.</p>
+<p> You must exclude IaaS metadata endpoints. For example, <code>169.254.169.254</code>, because the
+metadata endpoint can expose sensitive environment information to untrusted apps. The following <code>public_networks</code> example accounts for this recommendation.</p>
 
 The following is an example `public_networks` ASG:
 
@@ -398,7 +410,7 @@ The following is an example `public_networks` ASG:
 
 Network connections that are commonly allowable in private networks include endpoints such as proxy servers, Docker registries, load balancers, databases, messaging servers, directory servers, and file servers. Configure appropriate private network ASGs as appropriate. You might find it helpful to use a naming convention with `private_networks` as part of the ASG name, such as `private_networks_databases`.
 
-<p class='note'><strong>Note:</strong> You must exclude any private networks and IP addresses that app and task instances must not have access to.</p>
+<p> You must exclude any private networks and IP addresses that app and task instances must not have access to.</p>
 
 The following is an example `private_networks` ASG:
 
@@ -424,7 +436,8 @@ The following is an example `private_networks` ASG:
 
 ### <a id='marketplace-services'></a> Marketplace Services
 
-Each installed Marketplace Service requires its own set of ASG rules to function properly. To determine which ASG rules it requires, see the installation instructions for each installed Marketplace Service. For more information about how to provision and integrate services, see [Services Overview](../devguide/services/index.html).
+Each installed Marketplace Service requires its own set of ASG rules to function properly. To determine which
+ASG rules it requires, see the installation instructions for each installed Marketplace Service. For more information about how to provision and integrate services, see [Services Overview](../devguide/services/index.html).
 
 
 ## <a id='asg-baseline'></a> About the ASG Creator Tool
