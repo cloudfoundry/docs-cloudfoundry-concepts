@@ -223,7 +223,7 @@ The following platform-specific binaries deploy apps and govern their lifecycle:
 
 * The **Launcher**, which runs a <%= vars.app_runtime_abbr %> app. The Launcher is set as the Action on the `DesiredLRP` for the app. It runs the start command with the correct system context, including working directory and environment variables.
 
-* The **Healthcheck**, which performs a status check on running <%= vars.app_runtime_abbr %> app from inside the container. The Healthcheck is set as the Monitor action on the `DesiredLRP` for the app.
+* The **Healthcheck**, which performs a status check on running <%= vars.app_runtime_abbr %> app from inside the container. The Healthcheck is set as the CheckDefinition on the `DesiredLRP` for the app.
 
 #### <a id='lifecycle-implementations'></a> Current implementations
 
