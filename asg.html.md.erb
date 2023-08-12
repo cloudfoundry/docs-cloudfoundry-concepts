@@ -45,18 +45,7 @@ for the apps that allow those service subnets, while denying access to any VM ho
 
 For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
-<% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
-
-### <a id='default-asg'></a> Default ASGs
-
-<% if vars.platform_code == "CF" %>
-<%= partial 'default_asg_oss' %>
-<% else %>
-<%= partial "/pcf/core/default_asg" %>
-<% end %>
-
-<% end %>
-
+<%= vars.default_asgs %>
 
 ### <a id="asg-sets"></a> ASG sets
 
