@@ -30,7 +30,8 @@ permitted traffic in the set of applicable ASGs is then effectively permitted fo
 
 ### <a id='dynamic-asgs'></a> Dynamic ASGs
 
-Dynamic ASGs allow ASGs to be applied to apps without the need for an application restart. Only containers using the <a href="https://github.com/cloudfoundry/silk-release">Silk CNI</a> have their ASGs updated dynamically; Windows apps and apps using other CNIs (e.g., NSX-T) do not support Dynamic ASGs at this time.
+Dynamic ASGs allow ASGs to be applied to apps without the need for an application restart. Containers using the [Silk CNI](https://github.com/cloudfoundry/silk-release) or NSX-T update their ASGs dynamically; Windows apps and apps using other CNIs do not support Dynamic ASGs at this time.
+
 Dynamic ASGs are enabled with cf deployment v20.0.0 and higher through <a href="https://github.com/cloudfoundry/cf-networking-release/releases/tag/3.0.0">cf-networking-release 3.0.0</a>. It is recommended to use Dynamic ASGs with capi-release v1.126.0 or later for improved
 performance on the /v3/security_groups APIs.
 
@@ -176,15 +177,15 @@ following example, which allows ICMP traffic of code `1` and type `0` to all des
 
 After the ASG is created, you must bind it to an ASG set before it takes effect. For more information, see [Bind ASGs](#binding-groups).
 
-### <a id='binding-groups'></a> Bind ASGs
+### <a id='binding-groups'></a> Binding ASGs
 
-<p> Binding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a>
+Binding an ASG does not affect started apps unless you have [Dynamic ASGs](#dynamic-asgs)
 enabled. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space, use
-the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
+the [app-restarter](https://github.com/cloudfoundry-incubator/app-restarter) cf CLI plug-in.
 
 To apply an ASG, you must bind it to an ASG set.
 
-#### Platform-wide Staging ASG Set
+#### Platform-wide staging ASG set
 
 To bind an ASG to the platform wide staging ASG set:
 
@@ -195,7 +196,7 @@ To bind an ASG to the platform wide staging ASG set:
     ```
     Where `ASG` is the name of your ASG.
 
-#### Platform-wide Running ASG Set
+#### Platform-wide running ASG set
 
 To bind an ASG to the platform-wide running ASG set:
 
@@ -206,7 +207,7 @@ To bind an ASG to the platform-wide running ASG set:
     ```
     Where `ASG` is the name of your ASG.
 
-#### Space-scoped Running ASG Set
+#### Space-scoped running ASG set
 
 To bind an ASG to a space-scoped running ASG set:
 
@@ -223,7 +224,7 @@ To bind an ASG to a space-scoped running ASG set:
       <li><code>SPACE</code> is the name of the space where you want to bind the ASG set.</li>
     </ul>
 
-#### Space-scoped Staging ASG Set
+#### Space-scoped staging ASG set
 
 To bind an ASG to a space scoped staging ASG set:
 
@@ -273,7 +274,7 @@ To update an existing ASG:
 enabled. If deactivated, you need to restart the apps. To restart all of the apps in an org or a space,
 use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
 
-#### Platform-wide Staging ASG Set
+#### Platform-wide staging ASG set
 
 To unbind an ASG from the platform-wide staging ASG set:
 
@@ -284,7 +285,7 @@ To unbind an ASG from the platform-wide staging ASG set:
     ```
     Where `ASG` is the name of your ASG.
 
-#### Platform-wide Running ASG Set
+#### Platform-wide running ASG set
 
 To unbind an ASG from the platform-wide running ASG set:
 
@@ -295,7 +296,7 @@ To unbind an ASG from the platform-wide running ASG set:
     ```
     Where `ASG` is the name of your ASG.
 
-#### Space-scoped ASG Set
+#### Space-scoped ASG set
 
 To unbind an ASG from a specific space:
 
@@ -361,7 +362,7 @@ The following is an example `dns` ASG:
 ]
 ```
 
-### <a id='public-networks-example'></a> Public Networks
+### <a id='public-networks-example'></a> Public networks
 
 Apps often require public network connectivity to retrieve app dependencies, or to integrate with services available on public networks. Example app dependencies include public Maven repositories, NPM, RubyGems, and Docker registries.
 
@@ -395,7 +396,7 @@ The following is an example `public_networks` ASG:
 ]
 ```
 
-### <a id='private-networks-example'></a> Private Networks
+### <a id='private-networks-example'></a> Private networks
 
 Network connections that are commonly allowable in private networks include endpoints such as proxy servers, Docker registries, load balancers, databases, messaging servers, directory servers, and file servers. Configure appropriate private network ASGs as appropriate. You might find it helpful to use a naming convention with `private_networks` as part of the ASG name, such as `private_networks_databases`.
 
@@ -429,7 +430,7 @@ Each installed Marketplace Service requires its own set of ASG rules to function
 ASG rules it requires, see the installation instructions for each installed Marketplace Service. For more information about how to provision and integrate services, see [Services Overview](../devguide/services/index.html).
 
 
-## <a id='asg-baseline'></a> About the ASG Creator Tool
+## <a id='asg-baseline'></a> About the ASG Creator tool
 
 The ASG Creator is a command line tool that you can use to create JSON rules files. The ASG Creator lets you specify IP addresses, CIDRs, and IP address ranges that you want to disallow traffic to, as well as the addresses that you want to allow traffic to. Based on these disallow/allow (exclude/include) lists that you provide as input, the ASG Creator formulates a JSON file of allow rules.
 
@@ -438,7 +439,7 @@ In turn, the JSON file is the input for the `cf create-security-group` command t
 To download the latest release of the ASG Creator, see the [Cloud Foundry Incubator](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) repository on GitHub.
 
 
-## <a id='logging'></a> ASG Logging
+## <a id='logging'></a> ASG logging
 
 For information about how you can use ASGs to correlate emitted logs back to an app, see [How to use Application Security Group (ASG) logging](https://community.pivotal.io/s/article/How-to-use-Application-Security-Group-ASG-Logging) in the Knowledge Base.
 
