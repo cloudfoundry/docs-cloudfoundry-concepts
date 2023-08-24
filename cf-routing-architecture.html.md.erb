@@ -48,7 +48,7 @@ app running on <%= vars.app_runtime_abbr %>:
 
 ![alt-text="External client request flow. The External Client sends out two data flows, one to the HTTP Load Balancer (http.cf-apps.com) and one to the TCP Load Balancer (tcp.cf-apps.com). HTTP Load Balancer sends data through Gorouter to the HTTP Application. TCP Load Balancer sends data through TCP Router to the TCP Application. Gorouter, TCP Router, HTTP Application, and TCP Application are co-located in in a box labelled Cloud Foundry."](./images/external-client-call-app.png)
 
-## <a id='routing-tables'></a> Maintaing updated routing tables
+## <a id='routing-tables'></a> Maintaining updated routing tables
 
 Because each app can have many instances, one app route can go to multiple containers.
 As Diego moves and scales app instances, the route emitter on each cell sends messages to NATS or
