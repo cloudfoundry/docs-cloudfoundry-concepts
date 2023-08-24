@@ -23,7 +23,7 @@ See the descriptions below for more information about <%= vars.app_runtime_abbr 
 
 The router routes incoming traffic to the appropriate component, either a Cloud Controller component or a hosted application running on a Diego Cell.
 
-The router periodically queries the Diego Bulletin Board System (BBS) to determine which cells and containers each application currently runs on. Using this information, the router recomputes new routing tables based on the IP addresses of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
+The router periodically queries the Diego Bulletin Board System (BBS) to determine which cells and containers each application currently runs on. Using this information, the router recomputes new routing tables based on the IP address of each cell virtual machine (VM) and the host-side port numbers for the cell's containers.
 
 For more information on the routing tier, including the router, see [<%= vars.app_runtime_abbr %> Routing Architecture](../cf-routing-architecture.html).
 
@@ -85,7 +85,7 @@ Applications typically depend on <%= vars.services %> such as databases or third
 
 ### <a id='bbs'></a> Internal HTTPS and BBS
 
-<%= vars.app_runtime_abbr %> component VMs communicate with each other internally through HTTP and HTTPS protocols, sharing temporary messages and data stored in Diego's [Bulletin Board System (BBS)](../diego/diego-architecture.html#bbs).
+The component VMs of <%= vars.app_runtime_abbr %> communicate with each other internally through HTTP and HTTPS protocols, sharing temporary messages and data stored in Diego's [Bulletin Board System (BBS)](../diego/diego-architecture.html#bbs).
 
 * BOSH Director colocates a [BOSH DNS](https://bosh.io/docs/dns/) server on every deployed VM. All VMs keep up-to-date DNS records for all the other VMs in the same foundation, enabling service discovery between VMs. BOSH DNS also provides client-side load-balancing by randomly selecting a healthy VM when multiple VMs are available.
 
