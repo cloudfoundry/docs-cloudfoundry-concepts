@@ -47,7 +47,7 @@ app running on <%= vars.app_runtime_abbr %>:
 
 <img src="images/external-client-call-app.png" alt="Diagram of external client request flow, with arrows pointing to each component. The top rounded box is labeled 'External Client' and has two arrows pointing away from it: one labeled 'http.cf-apps.com' that points to a rounded box labeled 'HTTP Load Balancer'; and one labeled 'tcp.cf-apps.com' that points to a rounded box labeled 'TCP Load Balancer'. 'HTTP Load Balancer' has an arrow pointing to a rounded box labeled 'Gorouter', which has an arrow pointing to a rounded box labeled 'HTTP Application'. 'TCP Load Balancer' has an arrow pointing to a rounded box labeled 'TCP Router', which has an arrow pointing to a rounded box labeled 'TCP Application'. 'Gorouter', 'TCP Router', 'HTTP Application', and 'TCP Application' are located within another rounded box labeled '<%= vars.app_runtime_abbr %>'." width="500">
 
-## <a id='routing-tables'></a> Maintaing updated routing tables
+## <a id='routing-tables'></a> Maintaining updated routing tables
 
 Because each app can have many instances, one app route can go to multiple containers.
 As Diego moves and scales app instances, the route emitter on each cell sends messages to NATS or
