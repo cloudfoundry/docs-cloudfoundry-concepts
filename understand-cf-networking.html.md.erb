@@ -5,10 +5,12 @@ owner: CF for VMs Networking
 
 This topic provides you with an overview of how container-to-container networking works in <%= vars.app_runtime_first %>.
 
-<p class="note"><strong>Note:</strong> Container-to-container networking is not available for apps hosted on Windows.</p>
-
 The container-to-container networking feature enables app instances to communicate with each other directly.
 <%= vars.cf_networking %>
+
+<p class="note important">
+<span class="note__title">Important</span>
+Container-to-container networking is not available for apps hosted on Windows.</p>
 
 
 ## <a id="architecture"></a> Architecture
@@ -105,9 +107,11 @@ All Diego Cells in your <%= vars.app_runtime_abbr %> deployment share this overl
 
 <%= vars.app_runtime_abbr %> container networking is currently supported only on Linux.
 
-<p class="note warning"><strong>Warning:</strong> The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego Cells cannot reach any endpoint that has a conflicting IP address.</p>
+<p class="note caution">
+<span class="note__title">Caution</span>
+The overlay network IP address range must not conflict with any other IP addresses in the network. If a conflict exists, Diego Cells cannot reach any endpoint that has a conflicting IP address.</p>
 
-<p class="note"><strong>Note:</strong> Traffic to app containers from the Gorouter or from app containers to external services uses Diego Cell IP addresses and NAT, not the overlay network.</p>
+Traffic to app containers from the Gorouter or from app containers to external services uses Diego Cell IP addresses and NAT, not the overlay network.
 
 ### <a id="policies"></a> Policies
 
