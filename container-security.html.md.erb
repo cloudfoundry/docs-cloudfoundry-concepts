@@ -32,7 +32,9 @@ For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture
 
 Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers.
 
-<p class="note"><strong>Note:</strong> <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
+<p cclass="note">
+<span class="note__title">Note</span>
+<%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
 
 ### <a id='cpu'></a> CPU
 

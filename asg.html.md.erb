@@ -73,7 +73,9 @@ You use different commands to apply an ASG to each of the four sets.
 
 For more information, see [Managing ASGs with the cf CLI](#procedures).
 
-<p class="note"><strong>Note:</strong> To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
+<p class="note important">
+<span class="note__title">Important</span>
+To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
 
 ### <a id='creating-groups'></a> Structure and attributes of ASGs
 
@@ -237,13 +239,13 @@ To bind an ASG to a space-scoped staging ASG set:
 
 ### <a id='updating-groups'></a> Update ASGs
 
-To update an existing ASG:
+Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If disabled, you will need to restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
 
-<p class='note'><strong>Note:</strong> Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If disabled, you will need to restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+To update an existing ASG:
 
 1. Edit the ASG rules in the JSON file you created in [Create ASGs](#asg-individual).
 
-1. Run:
+2. Run:
 
     ```
     cf update-security-group ASG PATH-TO-RULES-FILE.json
@@ -263,7 +265,7 @@ To update an existing ASG:
 
 ### <a id='unbinding-groups'></a> Unbind ASGs
 
-<p class='note'><strong>Note:</strong> Unbinding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If disabled, you will need restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+Unbinding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If disabled, you will need restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
 
 #### Platform-wide staging ASG set
 
@@ -307,7 +309,7 @@ To unbind an ASG from a specific space:
 
 ### <a id='deleting-groups'></a> Delete ASGs
 
-<p class='note'><strong>Note:</strong> You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a>.</p>
+You can only delete unbound ASGs. To unbind ASGs, see <a href="#unbinding-groups">Unbind ASGs</a>.
 
 To delete an ASG:
 
@@ -357,7 +359,7 @@ The following is an example `dns` ASG:
 
 Apps often require public network connectivity to retrieve app dependencies, or to integrate with services available on public networks. Example app dependencies include public Maven repositories, NPM, RubyGems, and Docker registries.
 
-<p class='note'><strong>Note:</strong> You should exclude IaaS metadata endpoints, such as <code>169.254.169.254</code>, because the metadata endpoint can expose sensitive environment information to untrusted apps. The <code>public_networks</code> example below accounts for this recommendation.</p>
+You should exclude IaaS metadata endpoints, such as `169.254.169.254`, because the metadata endpoint can expose sensitive environment information to untrusted apps. The `public_networks` example below accounts for this recommendation.
 
 The following is an example `public_networks` ASG:
 
@@ -390,7 +392,7 @@ The following is an example `public_networks` ASG:
 
 Network connections that are commonly allowable in private networks include endpoints such as proxy servers, Docker registries, load balancers, databases, messaging servers, directory servers, and file servers. Configure appropriate private network ASGs as appropriate. You might find it helpful to use a naming convention with `private_networks` as part of the ASG name, such as `private_networks_databases`.
 
-<p class='note'><strong>Note:</strong> You should exclude any private networks and IP addresses that app and task instances should not have access to.</p>
+You should exclude any private networks and IP addresses that app and task instances should not have access to.
 
 The following is an example `private_networks` ASG:
 

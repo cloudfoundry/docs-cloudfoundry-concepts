@@ -98,7 +98,10 @@ To make an HTTP request to a specific app instance:
 	<li><code>INSTANCE-INDEX-NUMBER</code> is the instance index number that you recorded in the previous step.</li>
 	</ul>
 
-	<p class='note'><strong>Note:</strong> You can only use <code>X-Cf-App-Instance</code> header on the Diego architecture.</p>
+	<p class="note important">
+	<span class="note__title">Important</span>
+	You can only use <code>X-Cf-App-Instance</code> header on the Diego architecture.</p>
+
 	If either of the values you provide in the above command are invalid, Gorouter returns a `400` error, and the response from Gorouter contains a
 	`X-Cf-Routererror` header with more information about the error. The following table describes the possible error responses:
 	<table>
@@ -310,9 +313,11 @@ instance of the app. If the Gorouter finds a healthy instance of the app, it ini
 
 For more information, see [Session Affinity](https://github.com/cloudfoundry/routing-release/blob/develop/docs/session-affinity.md) on GitHub.
 
-<p class='note'><strong>Note:</strong> <%= vars.app_runtime_abbr %> does not persist or replicate HTTP session data across app instances. If an app instance
-	crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared
-	by all instances of an app, store session data in a <%= vars.app_runtime_abbr %> marketplace service that offers data persistence.</p>
+<p class="note important">
+<span class="note__title">Important</span>
+<%= vars.app_runtime_abbr %> does not persist or replicate HTTP session data across app instances. If an app instance
+crashes or is stopped, session data for that instance is lost. If you require session data to persist across crashed or stopped instances, or to be shared
+by all instances of an app, store session data in a <%= vars.app_runtime_abbr %> marketplace service that offers data persistence.</p>
 
 
 ## <a id='keepalive'></a> Keep alive connections

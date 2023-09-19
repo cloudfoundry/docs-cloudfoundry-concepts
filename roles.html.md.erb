@@ -66,7 +66,10 @@ information.
 * **Space Auditors**: Read-only access to a space.
 
 * **Space Supporters**: Troubleshoot and debug apps and service bindings in a space.
-<p class="note"><strong>Note:</strong> The Space Supporter role is only available for the Cloud Controller V3 API. If a user with this role tries to access a V2 endpoint, the API returns a 403.</p>
+
+<p class="note important">
+<span class="note__title">Important</span>
+The Space Supporter role is only available for the Cloud Controller V3 API. If a user with this role tries to access a V2 endpoint, the API returns a 403.</p>
 
 For non-admin users, the `cloud_controller.read` scope is required to view resources, and the `cloud_controller.write` scope is required to create, update, and delete resources.
 
@@ -82,7 +85,8 @@ Each user role includes different permissions in a <%= vars.app_runtime_abbr %> 
 The following table describes the default permissions for various <%= vars.app_runtime_abbr %> roles in active orgs.
 
 <% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
-<p class="note"><strong>Note:</strong> You can use feature flags to edit some of the default permissions in the following table. For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.
+
+You can use feature flags to edit some of the default permissions in the following table. For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.
 <% end %>
 
 <% if vars.platform_code == "CF" %>
