@@ -99,26 +99,27 @@ The following table describes the jobs that are part of the <%= vars.app_runtime
 
 | Component | Function |
 |-----------|----------|
-| **Job:** auctioneer **VM:** <% if vars.platform_code == 'CF' %> scheduler <% else %> <%= vars.diego_vm_1 %> <% end %> | * Distributes work through auction to Cell Reps over SSL/TLS. For more information, see [How the Diego Auction Allocates Jobs](diego-auction.html.md.erb).
-
-* Maintains a lock in Locket to ensure only one auctioneer handles auctions at a time. |
-| **Job:** bbs **VM:** <% if vars.platform_code == 'CF' %> diego-api <% else %> <%= vars.diego_vm_2 %> <% end %> | * Maintains a real-time representation of the state of the Diego cluster, including desired LRPs, running LRPs, and in-flight Tasks.
-* Provides an RPC-style API over HTTP to Diego Core components for external clients as well as internal clients, including the SSH Proxy and Route Emitter.
-* Ensures consistency and fault tolerance for Tasks and LRPs by comparing desired state with actual state.
-* Keeps `DesiredLRP` and `ActualLRP` counts synchronized. If the `DesiredLRP` count exceeds the `ActualLR` count, requests a start auction from the Auctioneer. If the `ActualLRP` count exceeds the `DesiredLRP` count, sends a stop message to the Rep on the Diego Cell hosting an instance. |
-| **Job:** file_server **VM:** <% if vars.platform_code == 'CF' %> api <% else %> <%= vars.diego_vm_1 %> <% end %> | * Serves static assets that can include general-purpose App Lifecycle binaries. |
-| **Job:** locket **VM:** <% if vars.platform_code == 'CF' %> diego-api<% else %> <%= vars.diego_vm_2 %> <% end %> | * Provides a consistent key-value store for maintenance of distributed locks and component presence. |
-| **Job:** rep **VM:** <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %> | * Represents a Diego Cell in Diego Auctions for Tasks and LRPs.
-* Runs Tasks and LRPs by creating a container and then running actions in it.
-* Periodically ensures its set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Diego Cell. * Manages container allocations against resource constraints on the Diego Cell, such as memory and disk space. - Streams stdout and stderr from container processes to the metron-agent running on the Diego Cell, which in turn forwards to the Loggregator system.
-* Periodically collects container metrics and emits them to Loggregator. * Mediates all communication between the Diego Cell and the BBS.
-* Maintains a presence record for the Diego Cell in Locket. |
-| **Job:** route_emitter **VM:** <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %> | * Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to Gorouter when it detects changes.
-* Periodically emits the entire routing table to the <%= vars.app_runtime_abbr %> Gorouter. |
-| **Job:** diego-healthchecker **VM:** <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %> | * An executable designed to perform TCP/HTTP based health checks of processes managed by monit in BOSH releases.
-* Because the version of monit included in BOSH does not support specific tcp/http health checks, we designed this utility to perform health checking and restart processes if they become unreachable. |
-| **Job:** ssh_proxy **VM:** <% if vars.platform_code == 'CF' %> scheduler<% else %> <%= vars.diego_vm_1 %> <% end %> | * Brokers connections between SSH clients and SSH servers.
-* Runs inside instance containers and authorizes access to app instances based on Cloud Controller roles. |
+| **Job:** auctioneer **VM:** <% if vars.platform_code == 'CF' %> scheduler <% else %> <%= vars.diego_vm_1 %> <% end %> | <ul><li>Distributes work through auction to Cell Reps over SSL/TLS. For more information, see [How the Diego Auction Allocates Jobs](diego-auction.html.md.erb).</li><li>Maintains a lock in Locket to ensure only one auctioneer handles auctions at a time.</li></ul> |
+| **Job:** bbs **VM:** <% if vars.platform_code == 'CF' %> diego-api <% else %> <%= vars.diego_vm_2 %> <% end %> | <ul><li>Maintains a real-time representation of the state of the Diego cluster, including desired LRPs, running LRPs, and in-flight Tasks.</li>
+<li>Provides an RPC-style API over HTTP to Diego Core components for external clients as well as internal clients, including the SSH Proxy and Route Emitter.</li>
+<li>Ensures consistency and fault tolerance for Tasks and LRPs by comparing desired state with actual state.</li>
+<li>Keeps `DesiredLRP` and `ActualLRP` counts synchronized. If the `DesiredLRP` count exceeds the `ActualLR` count, requests a start auction from the Auctioneer. If the `ActualLRP` count exceeds the `DesiredLRP` count, sends a stop message to the Rep on the Diego Cell hosting an instance.</li> |
+| **Job:** file_server **VM:** <% if vars.platform_code == 'CF' %> api <% else %> <%= vars.diego_vm_1 %> <% end %> | <ul><li>Serves static assets that can include general-purpose App Lifecycle binaries.</li> |
+| **Job:** locket **VM:** <% if vars.platform_code == 'CF' %> diego-api<% else %> <%= vars.diego_vm_2 %> <% end %> | <ul><li>Provides a consistent key-value store for maintenance of distributed locks and component presence.</li></ul> |
+| **Job:** rep **VM:** <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %> | <ul><li>Represents a Diego Cell in Diego Auctions for Tasks and LRPs.</li>
+<li>Runs Tasks and LRPs by creating a container and then running actions in it.</li>
+<li>Periodically ensures its set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Diego Cell.</li>
+<li>Manages container allocations against resource constraints on the Diego Cell, such as memory and disk space.</li>
+<li>Streams stdout and stderr from container processes to the metron-agent running on the Diego Cell, which in turn forwards to the Loggregator system.</li>
+<li>Periodically collects container metrics and emits them to Loggregator.</li>
+<li>Mediates all communication between the Diego Cell and the BBS.</li>
+<li>Maintains a presence record for the Diego Cell in Locket.</li></ul> |
+| **Job:** route_emitter **VM:** <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %> | <ul><li>Monitors `DesiredLRP` and `ActualLRP` states, emitting route registration and unregistration messages to Gorouter when it detects changes.</li>
+<li>Periodically emits the entire routing table to the <%= vars.app_runtime_abbr %> Gorouter.</li></ul> |
+| **Job:** diego-healthchecker **VM:** <% if vars.platform_code == 'CF' %> diego-cell<% else %> <%= vars.diego_vm_3 %> <% end %> | <ul><li>An executable designed to perform TCP/HTTP based health checks of processes managed by monit in BOSH releases.</li>
+<li>Because the version of monit included in BOSH does not support specific tcp/http health checks, we designed this utility to perform health checking and restart processes if they become unreachable.</li></ul> |
+| **Job:** ssh_proxy **VM:** <% if vars.platform_code == 'CF' %> scheduler<% else %> <%= vars.diego_vm_1 %> <% end %> | <ul><li>Brokers connections between SSH clients and SSH servers.
+* Runs inside instance containers and authorizes access to app instances based on Cloud Controller roles.</li></ul> |
 
 ### <a id='additional-info-diego'></a> Additional information
 
