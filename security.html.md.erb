@@ -32,10 +32,12 @@ In this configuration, the only access points visible on a public network are a 
 
 As the following diagram shows the architecture of a typical deployment of <%= vars.app_runtime_abbr %>:
 
->**Important**
-><%= vars.company_name %> recommends that you also install a NAT VM for outbound requests and a
+<p class="note important">
+<span class="note__title">Important</span> 
+<%= vars.company_name %> recommends that you also install a NAT VM for outbound requests and a
 jumpbox to access the BOSH Director, though these access points are optional depending on your network
 configuration.
+</p>
 
 ![alt-text=""](./images/security/sysbound1.png)
 
@@ -103,9 +105,10 @@ BOSH includes the following capability for security:
 
 * Allows you to set up individual login accounts for each operator. BOSH operators have root access.
 
->**Important**
->BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.
-
+<p class="note important">
+<span class="note__title">Important</span> 
+BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.
+</p>
 
 ## <a id='isolation-segments'></a> Isolation segments
 
