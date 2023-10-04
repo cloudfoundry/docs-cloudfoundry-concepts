@@ -3,11 +3,13 @@ final_app
 .bundle
 Gemfile.lock
 final_app/*
-cached_shas.yml
+cached_shas.yml<!--฿ |YAML| is preferred. ฿--><!--฿ Per<!--฿ Only use |per| to mean |for each|, not to mean |in accordance with|. ฿--><!--฿ Only use |per<!--฿ |YAML| is preferred. ฿-->| to mean <!--฿ |YAML| is preferred. ฿-->|for each<!--฿ |YAML| is preferred. ฿-->|, not to mean <!--฿ |YAML| is preferred. ฿-->|in accordance with<!--฿ |YAML| is preferred. ฿-->|. ฿--> YAML.org, <!--฿ |YAML| is preferred. ฿-->|.yaml<!--฿ |YAML| is preferred. ฿-->| is the preferred extension. If the reader creates this YAML file, fix every instance of the filename in every topic as part of your commit. Files with the <!--฿ |YAML| is preferred. ฿-->|.yml<!--฿ Per<!--฿ Only use |per| to mean |for each|, not to mean |in accordance with|. ฿--> YAML.org, <!--฿ |YAML| is preferred. ฿-->|.yaml<!--฿ |YAML| is preferred. ฿-->| is the preferred extension. If the reader creates this YAML file, fix every instance of the filename in every topic as part of your commit. Files with the <!--฿ |YAML| is preferred. ฿-->|.yml<!--฿ |YAML| is preferred. ฿-->| extension downloaded from elsewhere are outside our control. ฿--><!--฿ |YAML| is preferred. ฿-->| extension downloaded from elsewhere are outside our control. ฿--><!--฿ |YAML| is preferred. ฿-->
 **/.sass-cache/*
 bin
 vendor
 [#]*[#]
 .DS_Store
 .ruby-version
-.vscode/
+.<!--฿ |v#| is the preferred style. ฿-->vscode/
+.gitignore
+/.vscode
