@@ -11,14 +11,14 @@ For more information about routing, see [Routing](architecture/index.html#routin
 
 ## <a id='http-headers'></a> HTTP headers
 
-#### <a id='header-size-limit'></a> Header size limit
+### <a id='header-size-limit'></a> Header size limit
 
 The Gorouter has a limit of 1&nbsp;MB for HTTP Headers.
 
 The specific language, framework, and configuration of the back end app container determine the effective header size limit. For example, the default header
 size for the Tomcat container is 8&nbsp;kB.
 
-#### <a id='X-Forwarded-Proto'></a> X-Forwarded Proto
+### <a id='X-Forwarded-Proto'></a> X-Forwarded Proto
 
 The `X-Forwarded-Proto` header gives the scheme of the HTTP request from the client.
 
@@ -34,7 +34,7 @@ Developers can configure their apps to reject insecure requests by inspecting th
 multiple values represented as a comma-separated list, so developers must ensure the app rejects traffic that includes any `X-Forwarded-Proto` values that are
 not HTTPS.
 
-#### <a id='X-Forwarded-For'></a> X-Forwarded-For
+### <a id='X-Forwarded-For'></a> X-Forwarded-For
 
 If `X-Forwarded-For` is present, the Gorouter appends the load balancer's IP address to it and forwards the list. If `X-Forwarded-For` is not present, the
 Gorouter sets it to the IP address of the load balancer in the forwarded request (some load balancers masquerade the client IP). If a load balancer sends the
@@ -235,7 +235,7 @@ isolation segment over plain text and without validating instance identity.
 Currently, only Linux cells support the Gorouter validating app instance identities using TLS by default. With Windows cells, the Gorouter connects to back
 ends without TLS, forwarding requests to Windows apps over plain text and pruning based on route TTL.
 
-#### <a id='app-valid-tls-config'></a> Configuring validation of app instance identity with TLS
+### <a id='app-valid-tls-config'></a> Configuring validation of app instance identity with TLS
 
 <% if vars.platform_code == 'CF' %>
 To enable this feature on Windows, use the
