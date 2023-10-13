@@ -146,11 +146,11 @@ The following table describes jobs that interact closely with Diego but are not 
 
 | Component | Function |
 | --------- | -------- |
-| **Job**:<br> bosh-dns-aliases<br> **VM**:<br> all | <ul><li>Provides service discovery through colocated DNS servers on all BOSH-deployed VMs</li><li>Provides client-side load-balancing by randomly selecting a healthy VM when multiple VMs are available</li> |
-| **Job**:<br> cc_uploader<br> **VM**:<br> <% if vars.platform_code == 'CF' %> api <% else %> <%= vars.diego_vm_1 %> <% end %> | <li>Mediates uploads from the Executor to the Cloud Controller</li><li>Translates simple HTTP POST requests from the Executor into complex multipart-form uploads for the Cloud Controller</li> |
-| **Job**:<br> database<br> **VM**:<br> <% if vars.platform_code == 'CF' %> pxc-mysql <% else %> <%= vars.mysql_vm %> <% end %> | <li>Provides a consistent key-value data store to Diego</li> | 
-| **Job**:<br> loggregator-agent<br>**VM**:<br> all | <li>Forwards app logs, errors, and app and Diego metrics to the Loggregator Doppler component</li> |
-| **Job**:<br> cloud_controller_clock<br> **VM**:<br> <% if vars.platform_code == 'CF' %> scheduler<% else %> <%= vars.clock_vm %> <% end %> | <li>Runs a Diego sync process to ensure desired app data in Diego is in sync with the Cloud Controller</li></ul> |
+| **Job**:<br> bosh-dns-aliases<br> **VM**:<br> all | <ul><li>Provides service discovery through colocated DNS servers on all BOSH-deployed VMs.</li><li>Provides client-side load-balancing by randomly selecting a healthy VM when multiple VMs are available.</li> |
+| **Job**:<br> cc_uploader<br> **VM**:<br> <% if vars.platform_code == 'CF' %> api <% else %> <%= vars.diego_vm_1 %> <% end %> | <li>Mediates uploads from the Executor to the Cloud Controller.</li><li>Translates simple HTTP POST requests from the Executor into complex multipart-form uploads for the Cloud Controller.</li> |
+| **Job**:<br> database<br> **VM**:<br> <% if vars.platform_code == 'CF' %> pxc-mysql <% else %> <%= vars.mysql_vm %> <% end %> | <li>Provides a consistent key-value data store to Diego.</li> | 
+| **Job**:<br> loggregator-agent<br>**VM**:<br> all | <li>Forwards app logs, errors, and app and Diego metrics to the Loggregator Doppler component.</li> |
+| **Job**:<br> cloud_controller_clock<br> **VM**:<br> <% if vars.platform_code == 'CF' %> scheduler<% else %> <%= vars.clock_vm %> <% end %> | <li>Runs a Diego sync process to ensure desired app data in Diego is in sync with the Cloud Controller.</li></ul> |
 
 ### <a id='app-lifecycles'></a> App lifecycle binaries
 
