@@ -344,8 +344,7 @@ breaks. The following table describes how the Gorouter behaves if it cannot esta
 |--------------------|---------------------|----------------------|
 | cannot establish a TCP connection to a back end | N/A | retries another back end no more than three times | 
 | establishes a TCP connection to a back end and forwards the request | does not respond | waits 15 minutes for a response, and if it receives an error, does not retry another back end |
-| establishes a TCP connection to a back end and forwards the request | 
-| returns a TCP connection error | returns an error to the client, marks the back end ineligible, and does not retry another back end |
+| establishes a TCP connection to a back end and forwards the request |  returns a TCP connection error | returns an error to the client, marks the back end ineligible, and does not retry another back end |
 
 
 In all cases, if the app still does not respond to the request, the Gorouter returns a `502` error. <% if vars.platform_code != "OFFLINE" %>For more
