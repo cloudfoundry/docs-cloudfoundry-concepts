@@ -104,25 +104,12 @@ To make an HTTP request to a specific app instance:
 
 	If either of the values you provide in the above command are invalid, Gorouter returns a `400` error, and the response from Gorouter contains a
 	`X-Cf-Routererror` header with more information about the error. The following table describes the possible error responses:
-	<table>
-	  <tr>
-	    <th width="30%">X-Cf-Routererror Value</th>
-	    <th width="30%">Reason for Error</th>
-	    <th width="40%">Response Body</th>
-	  </tr>
-	  <tr>
-	    <td><code>invalid_cf_app_instance_header</code></td>
-	    <td>The value provided for <code>X-Cf-App-Instance</code> includes an incorrectly formatted app GUID.</td>
-	    <td>None</td>
-	  </tr>
-	  <tr>
-	    <td><code>unknown_route</code></td>
-	    <td>The value provided for <code>X-Cf-App-Instance</code> includes a correctly formatted app GUID, but the app instance index number was not found for
-				the requested route.</td>
-	    <td><code>400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route
-				('example-route.cf.com')</code></td>
-	  </tr>
-	</table>
+	
+	| X-Cf-Routererror Value | Reason for Error | Response Body |
+	|------------------------|------------------|---------------|
+	| `invalid_cf_app_instance_header` | The value provided for `X-Cf-App-Instance`` includes an incorrectly formatted app GUID. | None |
+	| `unknown_route` | The value provided for `X-Cf-App-Instance` includes a correctly formatted app GUID, but the app instance index number was not found for the requested route. | `400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route ('example-route.cf.com')` |
+
 
 ### <a id='forward-client-cert'></a> Forwarding client certificate to apps
 
@@ -353,24 +340,13 @@ HTTP request.
 When you deploy an app that requires Diego Cells to restart or recreate, the app may not respond to a Gorouter request before the keep-alive connection
 breaks. The following table describes how the Gorouter behaves if it cannot establish a TCP connection to an app:
 
-<table>
-  <tr>
-    <th>If the Gorouter...</th>
-    <th>and the back end...</th>
-    <th>then the Gorouter...</th>
-  </tr><tr>
-    <td>cannot establish a TCP connection to a back end</td>
-    <td>N/A</td>
-    <td>retries another back end no more than three times</td>
-  </tr><tr>
-    <td>establishes a TCP connection to a back end and forwards the request</td>
-    <td>does not respond</td>
-    <td>waits 15 minutes for a response, and if it receives an error, does not retry another back end</td>
-  </tr><tr>
-    <td>establishes a TCP connection to a back end and forwards the request</td>
-    <td>returns a TCP connection error</td>
-    <td>returns an error to the client, marks the back end ineligible, and does not retry another back end</td>
-</table>
+| If the Gorouter... | and the back end... | then the Gorouter... |
+|--------------------|---------------------|----------------------|
+| cannot establish a TCP connection to a back end | N/A | retries another back end no more than three times | 
+| establishes a TCP connection to a back end and forwards the request | does not respond | waits 15 minutes for a response, and if it receives an error, does not retry another back end |
+| establishes a TCP connection to a back end and forwards the request | 
+| returns a TCP connection error | returns an error to the client, marks the back end ineligible, and does not retry another back end |
+
 
 In all cases, if the app still does not respond to the request, the Gorouter returns a `502` error. <% if vars.platform_code != "OFFLINE" %>For more
 information, see [Troubleshooting Router Error Responses](../adminguide/troubleshooting-router-error-responses.html).<% end %>
