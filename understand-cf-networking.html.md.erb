@@ -24,11 +24,13 @@ The diagram highlights <%= vars.app_runtime_abbr %> components in blue and green
 
 The container-to-container networking BOSH release has the following core components:
 
-<table>
+<table class="table">
+  <thead>
   <tr>
     <th>Part</th>
     <th>Function</th>
   </tr>
+  </thead>
   <tr>
     <td>Policy Server</td>
     <td>A central management node that:
@@ -53,11 +55,13 @@ The container-to-container networking BOSH release has the following core compon
 
 ### <a id='swap'></a> Swappable components
 
-<table>
+<table class="table">
+  <thead>
   <tr>
     <th>Part</th>
     <th>Function</th>
   </tr>
+  </thead>
   <tr>
     <td>Silk CNI plu-gin<br></td>
     <td>A plug-in that provides IP address management and network connectivity to app instances as follows:
@@ -144,12 +148,14 @@ The BOSH release that contains the container-to-container networking feature tha
 
 Both app security groups (ASGs) and container-to-container networking policies affect traffic from app instances. The following table highlights differences between ASGs and container-to-container networking policies.
 
-<table>
+<table class="table">
+  <thead>
   <tr>
    <th></th>
    <th>ASGs</th>
    <th>Container-to-Container Networking Policies</th>
-  <tr>
+  </tr>
+  </thead>
   <tr>
    <th>Policy granularity</th>
    <td>From a space to an IP address range</td>

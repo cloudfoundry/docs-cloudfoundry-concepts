@@ -348,12 +348,15 @@ HTTP request.
 When you deploy an app that requires Diego Cells to restart or recreate, the app might not respond to a Gorouter request before the keep-alive connection
 breaks. The following table describes how the Gorouter behaves if it cannot establish a TCP connection to an app:
 
-<table>
+<table class="table">
+  <thead>
   <tr>
     <th>If the Gorouter...</th>
     <th>and the back end...</th>
     <th>then the Gorouter...</th>
-  </tr><tr>
+  </tr>
+  </thead>
+  <tr>
     <td>cannot establish a TCP connection to a back end</td>
     <td>N/A</td>
     <td>retries another back end no more than three times (3 times is the default. Operators can configure a different maximum.)</td>
