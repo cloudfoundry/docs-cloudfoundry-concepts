@@ -92,7 +92,7 @@ You can use feature flags to edit some of the default permissions in the followi
 <% if vars.platform_code == "CF" %>
 <%= partial 'oss_roles_table' %>
 <% else %>
-<%= partial "/pcf/core/pcf_roles_table" %>
+<%= partial "/core/pcf_roles_table" %>
 <% end %>
 
 ### <a id='suspendedroles'></a> Roles and permissions for suspended orgs
@@ -102,5 +102,5 @@ The following table describes roles and permissions applied after an operator se
 <% if vars.platform_code == "CF" %>
 <%= partial 'suspended_org_roles_table' %>
 <% else %>
-<%= partial "/pcf/core/pcf_suspended_roles_table" %>
+<%= partial "/core/pcf_suspended_roles_table" %>
 <% end %>
