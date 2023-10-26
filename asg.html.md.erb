@@ -44,11 +44,11 @@ For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
 ### <a id='default-asg'></a> Default ASGs
 
-<% if vars.platform_code == "CF" %>
-    <%= partial "./default_asg_oss" %>
-<% else %>
-    <%= partial "/core/default_asg" %>
-<% end %>
+  <% if vars.platform_code == 'CF' %>
+    <%= partial 'default_asg_oss' %>
+  <% else %>
+    <%= partial "/pcf/core/default_asg" %>
+  <% end %>
 
 <% end %>
 
