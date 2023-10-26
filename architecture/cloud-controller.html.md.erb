@@ -31,12 +31,14 @@ The Cloud Controller database has been tested with MySQL.
 To stage and run apps, <%= vars.app_runtime_abbr %> manages and stores the following types of
 binary large object (blob) files:
 
-<table id="blob-types" border="1" class="nice">
+<table class="table">
+<thead>
 <tr>
 <th>Blob Type</th>
 <th>Description</th>
 <th>Location in Blobstore</th>
 </tr>
+</thead>
 <tr>
 <td>App Packages</td>
 <td>Full contents of app directories, including source code and resource files, zipped into single blob files.</td>
