@@ -186,7 +186,9 @@ After the ASG is created, you must bind it to an ASG set before it takes effect.
 
 ### <a id='binding-groups'></a> Bind ASGs
 
-<p class='note'><strong>Note:</strong> Binding an ASG does not affect started apps until you restart them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+Binding an ASG does not affect started apps unless you have [Dynamic ASGs](#dynamic-asgs)
+enabled. If deactivated, you need to run `cf restart` for each app. To restart all of the apps in an org or a space, use
+the [app-restarter](https://github.com/cloudfoundry-incubator/app-restarter) cf CLI plug-in.
 
 To apply an ASG, you must first bind it to an ASG set.
 
