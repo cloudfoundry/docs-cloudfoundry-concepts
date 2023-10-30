@@ -184,9 +184,11 @@ After the ASG is created, you must bind it to an ASG set before it takes effect.
 
 ### <a id='binding-groups'></a> Bind ASGs
 
-<p class='note'><strong>Note:</strong> If you enable dynamic ASGs, binding an ASG affects started apps automatically.
+<p class="note">
+<span class="note__title"><strong>Note</strong></span>
+If you enable dynamic ASGs, binding an ASG affects started apps automatically.
 If dynamic ASGs are not enabled, binding does not affect started apps until you run <code>cf restart</code> on them.
-To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.</p>
+To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
 
 To apply an ASG, you must first bind it to an ASG set.
 
@@ -249,7 +251,7 @@ To bind an ASG to a space-scoped staging ASG set:
 ### <a id='updating-groups'></a> Update ASGs
 
 Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. 
-If disabled, you will need to run <code>cf restart</code> the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
+If disabled, you will need to run <code>cf restart</code> the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.
 
 To update an existing ASG:
 
@@ -275,7 +277,7 @@ To update an existing ASG:
 
 ### <a id='unbinding-groups'></a> Unbind ASGs
 
-Unbinding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If disabled, you will need restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
+Unbinding an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If disabled, you will need restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.
 
 #### Platform-wide Staging ASG Set
 
