@@ -253,7 +253,8 @@ To bind an ASG to a space-scoped staging ASG set:
 
 ### <a id='updating-groups'></a> Update ASGs
 
-Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. If disabled, you will need to restart the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.
+Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. 
+If disabled, you will need to run <code>cf restart</code> on the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.
 
 To update an existing ASG:
 
