@@ -83,7 +83,7 @@ You use different commands to apply an ASG to each of the four sets.
 For more information, see [Managing ASGs with the cf CLI](#procedures).
 
 <p class="note important">
-<span class="note__title">Important</span>
+<span class="note__title"><strong>Important</strong></span>
 To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
 
 ### <a id='creating-groups'></a> Structure and attributes of ASGs
@@ -186,7 +186,9 @@ After the ASG is created, you must bind it to an ASG set before it takes effect.
 
 ### <a id='binding-groups'></a> Bind ASGs
 
-<p class='note'><strong>Note:</strong> Binding an ASG does not affect started apps until you run <code>cf restart</code> on  them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
+<p class="note">
+<span class="note__title"><strong>Note</strong></span>
+Binding an ASG does not affect started apps until you run <code>cf restart</code> on  them. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plug-in.</p>
 
 To apply an ASG, you must first bind it to an ASG set.
 
