@@ -139,13 +139,13 @@ The following sections describe supported deployment configurations.
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_loadbalancer' %>
 <% else %>
-<%= partial "/pcf/core/xfcc_loadbalancer" %>
+<%= partial "/core/xfcc_loadbalancer" %>
 <% end %>
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_router' %>
 <% else %>
-<%= partial "/pcf/core/xfcc_router" %>
+<%= partial "/core/xfcc_router" %>
 <% end %>
 
 
@@ -244,7 +244,7 @@ To enable this feature on Windows, use the
 [`enable-nginx-routing-integrity-windows2019.yml`](https://github.com/cloudfoundry/cf-deployment/blob/09456fce97dbeec8f374a789d0d3d0e1c166aa91/operations/experimental/enable-nginx-routing-integrity-windows2019.yml)
 experimental opsfile on GitHub.
 <% else %>
-<%= partial "/pcf/core/router_app_tls_pcf" %>
+<%= partial "/core/router_app_tls_pcf" %>
 <% end %>
 
 
