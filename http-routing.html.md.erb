@@ -101,23 +101,25 @@ To make an HTTP request to a specific app instance:
 	<p> You can only use <code>X-Cf-App-Instance</code> header on the Diego architecture.</p>
 	If either of the values you provide in the above command are invalid, Gorouter returns a `400` error, and the response from Gorouter contains a
 	`X-Cf-Routererror` header with more information about the error. The following table describes the possible error responses:
-	<table>
+	<table class="table">
+	  <thead>
 	  <tr>
-	    <th width="30%">X-Cf-Routererror Value</th>
-	    <th width="30%">Reason for Error</th>
-	    <th width="40%">Response Body</th>
+	  <th width="30%">X-Cf-Routererror Value</th>
+	  <th width="30%">Reason for Error</th>
+	  <th width="40%">Response Body</th>
 	  </tr>
+	  </thead>
 	  <tr>
-	    <td><code>invalid_cf_app_instance_header</code></td>
-	    <td>The value provided for <code>X-Cf-App-Instance</code> includes an incorrectly formatted app GUID.</td>
-	    <td>None</td>
-	  </tr>
+	<td><code>invalid_cf_app_instance_header</code></td>
+	<td>The value provided for <code>X-Cf-App-Instance</code> includes an incorrectly formatted app GUID.</td>
+	<td>None</td>
+	</tr>
 	  <tr>
-	    <td><code>unknown_route</code></td>
-	    <td>The value provided for <code>X-Cf-App-Instance</code> includes a correctly formatted app GUID, but the app instance index number was not found for
-				the requested route.</td>
-	    <td><code>400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route
-				('example-route.cf.com')</code></td>
+	<td><code>unknown_route</code></td>
+	<td>The value provided for <code>X-Cf-App-Instance</code> includes a correctly formatted app GUID, but the app instance index number was not found for
+			the requested route.</td>
+	<td><code>400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route
+			('example-route.cf.com')</code></td>
 	  </tr>
 	</table>
 
