@@ -164,13 +164,13 @@ The following sections describe supported deployment configurations.
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_loadbalancer' %>
 <% else %>
-<%= partial "/core/xfcc_loadbalancer" %>
+<%= partial "/pcf/core/xfcc_loadbalancer" %>
 <% end %>
 
 <% if vars.platform_code == 'CF' %>
 <%= partial 'oss_xfcc_router' %>
 <% else %>
-<%= partial "/core/xfcc_router" %>
+<%= partial "/pcf/core/xfcc_router" %>
 <% end %>
 
 
