@@ -42,15 +42,19 @@ To simplify securing a deployment while still allowing apps reach external servi
 
 For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
-<% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
+<% if vars.platform_code == "CF" %>
 
 ### <a id='default-asg'></a> Default ASGs
 
-  <% if vars.platform_code == "CF" %>
-    <%= partial "./default_asg_oss" %>
-  <% else %>
-    <%= partial "/core/default_asg" %>
-  <% end %>
+<%= partial "./default_asg_oss" %>
+
+<% end %>
+
+<% if vars.platform_code == "PCF" %>
+
+### <a id='default-asg'></a> Default ASGs
+
+<%= partial "/core/default_asg" %>
 
 <% end %>
 
