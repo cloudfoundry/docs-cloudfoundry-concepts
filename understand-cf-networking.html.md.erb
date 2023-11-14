@@ -126,9 +126,9 @@ Additionally, policies use and and track the GUIDs of the apps. The policies con
 
 <% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
 
-## <a id='service-discovery'></a> App Service Discovery
+## <a id='service-discovery'></a> App service discovery
 
-The <%= vars.app_runtime_abbr %> platform supports DNS-based service discovery that lets apps find each other's internal addresses. For example, a front end app instance can use the service discovery mechanism to establish communications with a back end app instance. To set up and use app service discovery, see [App Service Discovery](../devguide/deploy-apps/cf-networking.html#discovery) in _Configuring Container-to-Container Networking_.
+The <%= vars.app_runtime_abbr %> platform supports DNS-based service discovery that lets apps find each other's internal addresses. For example, a front end app instance can use the service discovery mechanism to establish communications with a back end app instance. To set up and use app service discovery, see [App service discovery](../devguide/deploy-apps/cf-networking.html#discovery) in _Configuring container-to-container networking_.
 
 Container-to-container app service discovery does not provide client-side load balancing or circuit-breaking, and it does not apply to `cf marketplace` services or require app binding. It just lets apps publish service endpoints to each other, unbrokered and unmediated.
 
@@ -140,7 +140,7 @@ Container-to-container app service discovery does not provide client-side load b
 The BOSH release that contains the container-to-container networking feature that is composed of a plug-in network stack. Advanced users or third party vendors can integrate a different network stack. For more information about third party plug-ins, see [3rd Party Plug-in Development for Container Networking](https://github.com/cloudfoundry-incubator/cf-networking-release/blob/develop/docs/3rd-party.md) in the CF Networking Release repository on GitHub.
 
 
-## <a id="c2cvsasg"></a> Container-to-Container networking versus ASGs
+## <a id="c2cvsasg"></a> Container-to-container networking versus ASGs
 
 Both app security groups (ASGs) and container-to-container networking policies affect traffic from app instances. The following table highlights differences between ASGs and container-to-container networking policies.
 
