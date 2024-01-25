@@ -163,9 +163,15 @@ This has the following benefits:
 
 * Improved availability for apps by keeping routes in the Gorouter's routing table when TTL expires
 
-* Increased guarantees against misrouting by validating the identity of back ends before forwarding requests
+* Increased guarantees against mis-routing by validating the identity of back ends before forwarding requests
 
 * Increased security by encrypting data in flight from the Gorouter to back ends
+
+The TLS (or MTLS) traffic from Gorouter to the app backend "just works." There is nothing that the app has to do.
+Gorouter does not talk directly to the backend app, but communicates with the Envoy sidecar. There is an Envoy sidecar in every app container. The Envoy sidecar has the correct certificates needed, so Gorouter and the Envoy communicate using TLS (or MTLS, depending on the configuration). Then the Envoy sidecar proxies the unencrypted traffic directly to the app process.
+For more information, see [Envoyproxy.io](https://www.envoyproxy.io/).
+
+![alt-text"Gorouter connects to app process via Envoy proxy"](./images/envoy-proxy.png)
 
 <% if vars.platform_code == 'CF' %>
 This feature is allowed by default in `cf-deployment`, which configures the following properties:
@@ -180,7 +186,7 @@ forwarding HTTP requests to a component, the component must include the followin
 * `"tls_port"`: The port to which the Gorouter opens a connection and initiates a TLS handshake.
 
 * `"server_cert_domain_san"`: An identifier for the back end which the Gorouter expects to find in the Domain Subject Alternative Name of the certificate
-presented by the back end. This is used to prevent misrouting for back ends whose IPs or ports are expected to change. See
+presented by the back end. This is used to prevent mis-routing for back ends whose IPs or ports are expected to change. See
 [Consistency](#consistency).
 
 Additional configuration included on the `rep` job on the Diego Cell in `cf-deployment` allows TLS from the Gorouter to app instances.
@@ -199,7 +205,7 @@ The Gorouter presents the certificate if requested by the back end during the TL
 <% end %>
 
 
-## <a id='consistency'></a> Preventing misroutes
+## <a id='consistency'></a> Preventing mis-routes
 
 As <%= vars.app_runtime_abbr %> manages and balances apps, the internal IP address and ports for app instances change. To keep the Gorouter's routing tables
 current, a Route-Emitter on each Diego Cell sends periodic messages for each app instance running on that Diego Cell to all Gorouters through NATS. Each
@@ -224,7 +230,7 @@ While it is possible to disallow TLS app identity verification, <%= vars.recomme
 
 In this consistency mode, the Diego Route-Emitters on each Diego Cell send route registration messages that include instructions for the Gorouter to send
 unencrypted requests to the app instance. If the Gorouter does not receive an update for the route within the time-to-live (TTL) interval, the route is pruned
-from the Gorouter's routing table. For more information, see [TLS to Apps and Other Back-End Services](#tls-to-back-end) above.
+from the Gorouter's routing table. For more information, see [TLS to apps and other back-end services](#tls-to-back-end) above.
 
 ### <a id='config-by-instance-group'></a> Consistency mode can differ by instance group
 
