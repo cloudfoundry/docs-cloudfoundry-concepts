@@ -286,6 +286,16 @@ To configure the behavior, you can change the value of `router.balancing_algorit
 
 By default, the Gorouter uses the round-robin algorithm.
 
+The balancing algorithm behavior can optionally be further fine-tuned by
+changing the value of `router.balancing_algorithm_az_preference` to either of
+the following options:
+
+* `none`
+
+* `locally-optimistic`
+
+By default, the Gorouter's balancing algorithm availability zone preference is None. We do not recommend changing this value. For more information about these values, see [Load Balancing AZ Preference](#balancing-algorithm-az-preference).
+
 ### <a id='round-robin'></a> Round robin load balancing
 
 Incoming requests for a given route are forwarded to all app instances one after another, looping back to the first one after they have each received a
@@ -297,6 +307,19 @@ Each request for a given route is forwarded to the app instance with the least n
 For example, if app instances have long-lived connections and are scaled up, then new instances receive fewer connections, causing a disproportionate load. In
 this case, choosing a least-connection algorithm sends new connections to new instances to equalize the load.
 
+### <a id='balancing-algorithm-az-preference'></a> Load balancing availability zone preference
+
+The Gorouter has the ability to try to pick from app instances that are present
+in the same availability zone as the Gorouter itself. By default, the Gorouter
+has no preference, and will use the configured balancing algorithm across all
+possible app instances in all existing availability zones.
+
+If the gorouter availability zone preference is set to `locally-optimistic`,
+then for each request, on the initial attempt to pick an app instance, the
+Gorouter will use the configured balancing algorithm across all instances in
+the same availability zone as the Gorouter itself. Subsequent retries, in the
+case of failure or unavailability, will use instances in all available
+availability zones.
 
 ## <a id='sockets'></a> WebSockets
 
