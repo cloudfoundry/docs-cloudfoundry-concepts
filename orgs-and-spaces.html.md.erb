@@ -32,6 +32,7 @@ The following sections describe what <%= vars.app_runtime_abbr %> layers are and
 For an overview of each of the structural <%= vars.app_runtime_abbr %> layers, see the following table:
 
 <table>
+<thead>
 	<tr>
 		<th><%= vars.app_runtime_abbr %> Layer</th>
 		<th>Challenge to Maintain</th>
@@ -39,6 +40,8 @@ For an overview of each of the structural <%= vars.app_runtime_abbr %> layers, s
 		<th>Description</th>
 		<th>Roles</th>
 	</tr>
+</thead>
+<tbody>
 	<tr>
 		<td>Foundations</td>
 		<td>Hardest</td>
@@ -60,6 +63,7 @@ For an overview of each of the structural <%= vars.app_runtime_abbr %> layers, s
 		<td>A shared location for app development, deployment, and maintenance</td>
 		<td>Space Manager, Space Developer, Space Auditor</td>
 	</tr>
+</tbody>
 </table>
 
 
@@ -102,15 +106,22 @@ Because of the large human cost to maintaining a foundation, you might see found
 For examples of environments and how they map to <%= vars.app_runtime_abbr %> layers, see the following table:
 
 <table>
+<thead>
 	<tr>
-		<th><%= vars.app_runtime_abbr %> Layer</th> <th>Examples of Environments</th>
+		<th><%= vars.app_runtime_abbr %> Layer</th>
+		<th>Examples of Environments</th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>Foundations</td>
+		<td>Production, Non-production, Sandbox</td>
 	</tr>
 	<tr>
-		<td>Foundations</td><td>Production, Non-production, Sandbox</td>
+		<td>Orgs and Spaces</td>
+		<td>Development, UAT, QA</td>
 	</tr>
-	<tr>
-		<td>Orgs and Spaces</td><td>Development, UAT, QA</td>
-	</tr>
+</tbody>
 </table>
 
 ### <a id="considerations"></a> Questions to Consider About Each <%= vars.app_runtime_abbr %> Layer
@@ -118,10 +129,13 @@ For examples of environments and how they map to <%= vars.app_runtime_abbr %> la
 For guiding questions to help you make decisions about planning your <%= vars.app_runtime_abbr %> structure, see the following table:
 
 <table>
+<thead>
 	<tr>
 		<th><%= vars.app_runtime_abbr %> Layer</th>
 		<th>Questions to Consider</th>
 	</tr>
+</thead>
+<tbody>
 	<tr>
 		<td>Foundation</td>
 		<td>
@@ -155,6 +169,7 @@ For guiding questions to help you make decisions about planning your <%= vars.ap
 			</ul>
 		</td>
 	</tr>
+</tbody>
 </table>
 
 ### <a id="impact"></a> Mapping larger and smaller subsets
@@ -203,10 +218,13 @@ For more information about mapping larger subsets for each <%= vars.app_runtime_
 For more information about mapping smaller subsets for each <%= vars.app_runtime_abbr %> layer, see the following table:
 
 <table>
+<thead>
 	<tr>
 		<th><%= vars.app_runtime_abbr %> Layer</th>
 		<th>The impact of mapping smaller subsets of your company</th>
 	</tr>
+</thead>
+<tbody>
 	<tr>
 		<td>Foundations</td>
 		<td>
@@ -236,4 +254,5 @@ For more information about mapping smaller subsets for each <%= vars.app_runtime
 			</ul>
 		</td>
 	</tr>
+</tbody>
 </table>

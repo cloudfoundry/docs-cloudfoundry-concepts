@@ -2,12 +2,15 @@ The following table provides recommended instance counts for a high-availability
 decrease the footprint of your deployment by specifying fewer instances and combining multiple components onto a
 single VM.
 
-<table border="1" class="nice">
+<table>
+<thead>
         <tr>
                 <th><strong>Component</strong></th>
                 <th><strong>Total Instances</strong></th>
                 <th><strong>Notes</strong></th>
         </tr>
+</thead>
+<tbody>
         <tr>
                 <td>Diego Cell</td>
                 <td>&ge; 2</td>
@@ -73,4 +76,5 @@ single VM.
                 <td>&ge; 1</td>
                 <td>Deploying additional Log Cache instances increases the total storage, sharding data by app ID. If app logs and metrics are sharded to an unavailable instance, they are unavailable when the designated instance is unavailable regardless of the number of instances or AZs.</td>
         </tr>
+</tbody>
 </table>

@@ -128,12 +128,16 @@ To make an HTTP request to a specific app instance:
 	<p> You can only use <code>X-Cf-App-Instance</code> header on the Diego architecture.</p>
 	If either of the values you provide in the above command are invalid, Gorouter returns a `400` error, and the response from Gorouter contains a
 	`X-Cf-Routererror` header with more information about the error. The following table describes the possible error responses:
+	
 	<table>
+	<thead>
 	  <tr>
 	    <th width="30%">X-Cf-Routererror Value</th>
 	    <th width="30%">Reason for Error</th>
 	    <th width="40%">Response Body</th>
 	  </tr>
+	</thead>
+	<tbody>
 	  <tr>
 	    <td><code>invalid_cf_app_instance_header</code></td>
 	    <td>The value provided for <code>X-Cf-App-Instance</code> includes an incorrectly formatted app GUID.</td>
@@ -146,6 +150,7 @@ To make an HTTP request to a specific app instance:
 	    <td><code>400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route
 				('example-route.cf.com')</code></td>
 	  </tr>
+	</tbody>
 	</table>
 
 ### <a id='forward-client-cert'></a> Forwarding client certificate to apps
@@ -405,10 +410,13 @@ When you deploy an app that requires Diego Cells to restart or recreate, the app
 breaks. The following table describes how the Gorouter behaves if it cannot establish a TCP connection to an app:
 
 <table>
+<thead>
   <tr>
     <th>If the Gorouter...</th>
     <th>and the back end...</th>
     <th>then the Gorouter...</th>
+</thead>
+<tbody>
   </tr><tr>
     <td>cannot establish a TCP connection to a back end</td>
     <td>N/A</td>
@@ -421,6 +429,8 @@ breaks. The following table describes how the Gorouter behaves if it cannot esta
     <td>establishes a TCP connection to a back end and forwards the request</td>
     <td>returns a TCP connection error</td>
     <td>returns an error to the client, marks the back end ineligible, and does not retry another back end</td>
+  </tr>
+</tbody>
 </table>
 
 In all cases, if the app still does not respond to the request, the Gorouter returns a `502` error. <% if vars.platform_code != "OFFLINE" %>For more
