@@ -115,19 +115,19 @@ For more information, see [User Account and Authentication (UAA) Server](./archi
 
 The following table describes what the two UAA servers do:
 
-<table>
+<table><thead>
   <tr>
     <th width="25%">Server</th>
     <th>Purpose</th>
-  </tr>
-  <tr>
+  </tr></thead>
+  <tbody><tr>
     <td>First UAA server</td>
     <td><ul><li>Grants access to BOSH</li><li>Holds accounts for <%= vars.ops_manager %> operators who deploy runtimes, services, and other software onto the BOSH layer directly</li></ul></td>
   </tr>
   <tr>
     <td>Second UAA server</td>
     <td><ul><li>Controls access to the Cloud Controller</li><li>Defines user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run <%= vars.app_runtime_abbr %> commands</li><li>Scopes the roles to separate, compartmentalized orgs and spaces within an installation to manage and track use</li></ul></td>
-  </tr>
+  </tr></tbody>
 </table>
 
 For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
@@ -136,12 +136,12 @@ For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
 The following table describes where <%= vars.app_runtime_abbr %> stores resources:
 
-<table>
+<table><thead>
   <tr>
     <th>Resource</th>
     <th>Storage Location</th>
-  </tr>
-  <tr>
+  </tr></thead>
+  <tbody><tr>
     <td><ul><li>Source code</li><li>Buildpacks</li><li>Documentation</li><li>Custom configurations</li><li>Other platform resources</li></ul></td>
     <td>GitHub</td>
   </tr>
@@ -152,7 +152,7 @@ The following table describes where <%= vars.app_runtime_abbr %> stores resource
   <tr>
     <td><ul><li>Internal component states</li><li>Other temporary information</li></ul></td>
     <td>MySQL</td>
-  </tr>
+  </tr></tbody>
 </table>
 
 ### <a id='communicate'></a> Communicating with components
@@ -178,12 +178,12 @@ This section describes logging in <%= vars.app_runtime_abbr %>.
 
 The following table describes where <%= vars.app_runtime_abbr %> sends logs:
 
-<table>
+<table><thead>
   <tr>
     <th>Log Type</th>
     <th>Destination</th>
-  </tr>
-  <tr>
+  </tr></thead>
+  <tbody><tr>
     <td><%= vars.app_runtime_abbr %> component logs</td>
     <td>Rsyslog agents</td>
   </tr>
@@ -194,7 +194,7 @@ The following table describes where <%= vars.app_runtime_abbr %> sends logs:
   <tr>
     <td>App logs</td>
     <td>Loggregator</td>
-  </tr>
+  </tr></tbody>
 </table>
 
 Component logs stream from rsyslog agents, and the cloud operator can configure them to stream out to a syslog drain.
