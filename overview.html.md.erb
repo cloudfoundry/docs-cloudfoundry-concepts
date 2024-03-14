@@ -217,6 +217,15 @@ Typical apps depend on free or metered services such as databases or third-party
 
 For more information, see [Services](../services/index.html).
 
+<%= vars.concepts_sf_vs_full_header %>
+
+<% if vars.platform_code == 'PCF' %>
+<%= partial "/pcf/core/small_footprint_overview" %>
+<% else %>
+<% end %>
+
+<%= vars.small_footprint_comparison %>
+
 [//]: # (Comment: Below calls vars concept_product_* in book repository template_vars.yml.)
 [//]: # ( The vars *_text and *_image hold locations of partial and image files.    )
 [//]: # ( For private/commercial books, the partial and image files come from a     )
