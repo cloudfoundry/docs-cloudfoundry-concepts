@@ -46,7 +46,7 @@ app running on <%= vars.app_runtime_abbr %>:
 
 1. The router sends the request to the app.
 
-![alt-text="External client request flow. The External Client sends out two data flows, one to the HTTP Load Balancer (http.cf-apps.com) and one to the TCP Load Balancer (tcp.cf-apps.com). HTTP Load Balancer sends data through Gorouter to the HTTP Application. TCP Load Balancer sends data through TCP Router to the TCP Application. Gorouter, TCP Router, HTTP Application, and TCP Application are co-located in in a box labelled Cloud Foundry."](./images/external-client-call-app.png)
+![External client request flow. The External Client sends out two data flows, one to the HTTP Load Balancer (http.cf-apps.com) and one to the TCP Load Balancer (tcp.cf-apps.com). HTTP Load Balancer sends data through Gorouter to the HTTP Application. TCP Load Balancer sends data through TCP Router to the TCP Application. Gorouter, TCP Router, HTTP Application, and TCP Application are co-located in in a box labelled Cloud Foundry.](./images/external-client-call-app.png)
 
 ## <a id='routing-tables'></a> Maintaining updated routing tables
 
@@ -66,7 +66,7 @@ The following process describes how a router obtains information about routes fo
 
 1. Gorouter and TCP router use the route, IP, and port information from the route emitter to map incoming app requests to back end app instance locations.
 
-![alt-text=""](./images/cf-routing-architecture.png)
+![Routing architecture](./images/cf-routing-architecture.png)
 
 ### <a id='component-fail'></a> Routing table recovery after component failure
 

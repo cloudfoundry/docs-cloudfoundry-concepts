@@ -43,7 +43,7 @@ The architecture discussed in the following steps includes the following high le
 Cloud Controller passes requests to run apps to the Diego BBS, which stores information about the request
 in its database.
 
-![alt-text=""](../images/oss-diego-architecture-1.png)
+![Block diagram](../images/oss-diego-architecture-1.png)
 
 [//]: https://docs.google.com/drawings/d/1p2ShJ8yJ3gVzKBh1sw1b_O8qMASXMzC37r2MU3L4xmI/edit?usp=sharing
 
@@ -52,7 +52,7 @@ in its database.
 The BBS contacts the Auctioneer to create an auction based on the desired resources for the app.
 It references the information stored in its database.
 
-![alt-text=""](../images/oss-diego-architecture-2.png)
+![Block diagram](../images/oss-diego-architecture-2.png)
 
 [//]: https://docs.google.com/drawings/d/1P_aSBm6fyHeqJyZ-8epM_CePS3u8O_GLTSzW-g1-32U/edit?usp=sharing
 
@@ -61,7 +61,7 @@ It references the information stored in its database.
 Through an auction, the Auctioneer finds a Diego Cell to run the app on.
 The Rep job on the Diego Cell accepts the auction request.
 
-![alt-text=""](../images/oss-diego-architecture-3.png)
+![Block diagram](../images/oss-diego-architecture-3.png)
 
 [//]: https://docs.google.com/drawings/d/1ug2RVCiW_fW4U6vH6dvG-sn6-Om9gXHTymnPBiZI8Hk/edit?usp=sharing
 
@@ -70,7 +70,7 @@ The Rep job on the Diego Cell accepts the auction request.
 The in process Executor creates a Garden container in the Diego Cell.
 Garden downloads the droplet that resulted from the staging process and runs the app in the container.
 
-![alt-text=""](../images/oss-diego-architecture-4.png)
+![Block diagram](../images/oss-diego-architecture-4.png)
 
 [//]: https://docs.google.com/drawings/d/1IPLl2bKmR9iYOhjXvlRZJSvCeCnoaX_zqARdt04Yjv4/edit?usp=sharing
 
@@ -78,7 +78,7 @@ Garden downloads the droplet that resulted from the staging process and runs the
 
 The `route-emitter` process emits a route registration message to Gorouter for the new app running on the Diego Cell.
 
-![alt-text=""](../images/oss-diego-architecture-5.png)
+![Block diagram](../images/oss-diego-architecture-5.png)
 
 [//]: https://docs.google.com/drawings/d/17ZilpDcvpwh1Ne0SZvQjsCylftuQZSguAHHVJB88Ijs/edit?usp=sharing
 
@@ -88,7 +88,7 @@ Loggregator agent forwards app logs, errors, and metrics to the <%= vars.app_run
 
 For more information, see [App Logging in <%= vars.app_runtime_abbr %>](../../devguide/deploy-apps/streaming-logs.html).
 
-![alt-text=""](../images/oss-diego-architecture-6.png)
+![Block diagram](../images/oss-diego-architecture-6.png)
 
 [//]: https://docs.google.com/drawings/d/1ChpsoNXR-zHC2n9bPz2H5qdRvkDfg_M4I8sVr-Vy3So/edit?usp=sharing
 
