@@ -65,7 +65,7 @@ For example, if the process LRP-A has a desired instance count of 3 and a memory
 
 The Auctioneer then builds an ordered sequence of LRP instances by cycling through the list of LRPs in decreasing order of load. With each cycle, it adds another instance of each LRP to the sequence, until all desired instances of the LRP have been added. With the example above, the Auctioneer would order the LRPs like this:
 
-![LRP Sequence: LRP-B.1 (wide box), LRP-A.1 (narrow box), LRP-B.2 (wide box), LRP-A.2 (narrow box), and LRP-A.3 (narrow box)](../images/diego/diego-LRP-stack.png)
+![LRP sequence](../images/diego/diego-LRP-stack.png)
 
 The Auctioneer then builds an ordered sequence for all jobs, both LRPs and Tasks. Reflecting the auction batch priority order, the first instances of LRPs are first priority. Tasks are next, in decreasing order of load. Duplicate LRP jobs come last.
 

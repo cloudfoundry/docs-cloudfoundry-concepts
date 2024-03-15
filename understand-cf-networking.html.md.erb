@@ -5,6 +5,8 @@ owner: CF for VMs Networking
 
 This topic provides you with an overview of how container-to-container networking works in <%= vars.app_runtime_first %>.
 
+Container-to-container networking is not available for apps hosted on Microsoft Windows.
+
 The container-to-container networking feature enables app instances to communicate with each other directly.
 <%= vars.cf_networking %>
 
@@ -19,7 +21,7 @@ Container-to-container networking integrates with [Garden-runC] in a Diego deplo
 
 To understand the components and how they work, see the diagram and tables below. The diagram highlights <%= vars.app_runtime_abbr %> components in blue and green. The diagram also highlights swappable components in red.
 
-![c2c architecture diagram](./images/c2c-arch.png)
+![The c2c architecture diagram](./images/c2c-arch.png)
 
 ### <a id='core'></a> Core components
 

@@ -38,7 +38,7 @@ jumpbox to access the BOSH Director, though these access points are optional dep
 configuration.
 </p>
 
-  ![alt-text=""](./images/security/sysbound1.png)
+![Full description of this diagram is in the text.](./images/security/sysbound1.png)
 
 The above diagram shows the following components:
 
@@ -127,8 +127,7 @@ Customers can use isolation segments for different reasons, including:
 In <%= vars.app_runtime_abbr %>, the Cloud Controller database (CCDB) identifies isolation segments by name and GUID, for example `30dd879c-ee2f-11db-8314-0800200c9a66`. The isolation segment object has no internal structure beyond these two properties at the <%= vars.app_runtime_abbr %> level, but BOSH associates the name of the isolation segment with Diego Cells, through their `placement_tag` property.
 
 This diagram shows how isolation segments keep apps running on different pools of Diego Cells, and how the Diego Cells communicate with each other and with the management components:
-
-  <%= image_tag("images/security/isolation-segments.png", :alt => "Isolation segment diagram. For more information about Isolation Segments, see below.") %>
+![Description is in the text.](./images/security/isolation-segments.png)
 
 <%= vars.manage_iso_seg_link %>
 

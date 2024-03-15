@@ -45,7 +45,7 @@ app running on <%= vars.app_runtime_abbr %>:
 
 1. The router sends the request to the app.
 
-<img src="images/external-client-call-app.png" alt="Diagram of external client request flow, with arrows pointing to each component. The top rounded box is labeled 'External Client' and has two arrows pointing away from it: one labeled 'http.cf-apps.com' that points to a rounded box labeled 'HTTP Load Balancer'; and one labeled 'tcp.cf-apps.com' that points to a rounded box labeled 'TCP Load Balancer'. 'HTTP Load Balancer' has an arrow pointing to a rounded box labeled 'Gorouter', which has an arrow pointing to a rounded box labeled 'HTTP Application'. 'TCP Load Balancer' has an arrow pointing to a rounded box labeled 'TCP Router', which has an arrow pointing to a rounded box labeled 'TCP Application'. 'Gorouter', 'TCP Router', 'HTTP Application', and 'TCP Application' are located within another rounded box labeled '<%= vars.app_runtime_abbr %>'." width="500">
+![External client request flow. The External Client sends out two data flows, one to the HTTP Load Balancer (http.cf-apps.com) and one to the TCP Load Balancer (tcp.cf-apps.com). HTTP Load Balancer sends data through Gorouter to the HTTP Application. TCP Load Balancer sends data through TCP Router to the TCP Application. Gorouter, TCP Router, HTTP Application, and TCP Application are co-located in in a box labelled Cloud Foundry.](./images/external-client-call-app.png)
 
 ## <a id='routing-tables'></a> Maintaining updated routing tables
 
@@ -65,7 +65,7 @@ The following process describes how a router obtains information about routes fo
 
 1. Gorouter and TCP router use the route, IP, and port information from the route emitter to map incoming app requests to back end app instance locations.
 
-![Diagram of <%= vars.app_runtime_abbr %> routing architecture that includes rounded boxes labeled with component names and arrows pointing between rounded boxes that are labeled with the kind of information that passes between components. On the left is a rounded box labeled 'Cloud Controller', with an arrow labeled 'Route information' pointing to a rounded box labeled 'Diego BBS'. A double-ended arrow labeled 'Route, IP, and port information (discovered from Diego BBS)' points between 'Diego BBS' and a rounded box labeled 'Route Emitter'. 'Route Emitter' and two more rounded boxes, each labeled 'App Instance', are within another rounded box labeled 'Diego Cell'. 'Route Emitter' has two arrows, both labeled 'App route, IP, and port information', pointing to two rounded boxes labeled 'NATS' and 'Routing API'. 'NATS' has an arrow labeled 'App route, IP, and port information', pointing to a rounded box labeled 'Gorouter'. 'Routing API' has an arrow labeled 'App route, IP, and port information', pointing to a rounded box labeled 'TCP Router'. 'Routing API' has a double-ended arrow pointing between it and a database icon labeled 'Routing Database'. On the left of 'NATS' and 'Gorouter' are two rounded boxes labeled 'BOSH Manifest' and 'Route Registrar'. 'BOSH Manifest' has an arrow labeled 'Route metadata for system components' pointing to 'Route Registrar'. 'Route Registrar' has an arrow labeled 'Route metadata for system components' pointing to 'NATS'.](./images/cf-routing-architecture.png)
+![Routing architecture](./images/cf-routing-architecture.png)
 
 ### <a id='component-fail'></a> Routing table recovery after component failure
 
