@@ -42,34 +42,7 @@ For more information, see the [Step 2: Passing a request to the auctioneer proce
 
 For example, if the process LRP-A has a desired instance count of 3 and a memory load of 2, and process LRP-B has 2 desired instances and a load of 5, the Auctioneer creates a list of jobs for each process as follows:
 
-<table>
-<thead>
-  <tr>
-    <th width=25%><strong>Process</strong></th>
-    <th width=25%><strong>Desired Instances</strong></th>
-    <th width=25%><strong>Load</strong></th>
-    <th width=25%><strong>Jobs</strong></th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>LRP-A</td>
-    <td>3</td>
-    <td><img src="../images/diego/diego-job-2.png" alt=" ">
-  </td>
-    <td><img src="../images/diego/diego-LRP-A-instances.png" alt="">
-  </td>
-  </tr>
-  <tr>
-    <td>LRP-B</td>
-    <td>2</td>
-    <td><img src="../images/diego/diego-job-5.png" alt="">
-  </td>
-    <td><img src="../images/diego/diego-LRP-B-instances.png" alt="">
-  </td>
-  </tr>
-</tbody>
-</table>
+![For process LRP-A, the Auctioneer lists jobs LRP-A.1, LRP-A.2, and LRP-A.3. For process LRP-B, the Auctioneer lists jobs LRP-B.1 and LRP-B.2.](../images/diego/auctioneer-job-list.png)
 
 The Auctioneer then builds an ordered sequence of LRP instances by cycling through the list of LRPs in decreasing order of load. With each cycle, it adds another instance of each LRP to the sequence, until all desired instances of the LRP have been added. With the example above, the Auctioneer would order the LRPs like this:
 
