@@ -428,9 +428,10 @@ The following is an example `private_networks` ASG:
 ```
 
 ### <a id='marketplace-services'></a> ASGs and Performance on Windows
+
 Each ASG bound to an app results in one or more network policy created on the
-Host depending on the number of destinations (ranges and CIDRs count as one
-desintation each). Windows apps with ASGs to many destinations will experience
+Host, depending on the number of destinations (ranges and CIDRs count as one
+destination each). Windows apps with ASGs to many destinations will experience
 increased latency when the app is starting. Windows apps with ASGs to more than
 1000 destinations may fail to start.
 
