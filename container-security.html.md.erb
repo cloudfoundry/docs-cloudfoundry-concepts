@@ -104,6 +104,8 @@ In this case, the following algorithm is used to determine the number of CPU sha
 process_cpu.shares = app_memory_in_mb + 32
 ```
 <% else %>
+The actual amount of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`.
+The amount of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest. 
 <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory.
 
 The following algorithm is used to determine the number of CPU shares for an app:
