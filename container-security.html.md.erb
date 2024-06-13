@@ -1,5 +1,5 @@
 ---
-title: Container security in Cloud Foundry
+title: Container security
 owner: Security
 ---
 
@@ -53,6 +53,7 @@ The calculation of the CPU usage based on the percentage of the total CPU power 
 ```
 process_cpu_share_percent = cpu.shares / sum_cpu_shares * 100
 ```
+
 <% if vars.platform_code == 'CF' %>
 In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024. The actual number of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`. The number of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest.
 
@@ -97,12 +98,15 @@ process_cpu.shares = int( (1024 * 1) / 100) = int(10.24) = 10
 ```
 
 #### CPU Shares Algorithm 2
-When the [Diego containers.set_cpu_weight bosh property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313) is set to true, then <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory.
+
+When the [Diego containers.set_cpu_weight BOSH property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313) is set to true, then <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory.
 
 In this case, the following algorithm is used to determine the number of CPU shares for an app:
+
 ```
 process_cpu.shares = app_memory_in_mb + 32
 ```
+
 <% else %>
 The actual number of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`.
 The number of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest. 
@@ -112,6 +116,7 @@ The following algorithm is used to determine the number of CPU shares for an app
 ```
 process_cpu.shares = app_memory_in_mb + 32
 ```
+
 <% end %>
 
 <% if vars.platform_code == 'CF' %>
@@ -161,9 +166,9 @@ A host VM has a single IP address. If you configure the deployment with the clus
 
   - Inbound requests go to Load Balancer
 
-  - Outbound traffic come from NAT
+  - Outbound traffic comes from NAT
 
-- Cloud Foundry on right side
+Cloud Foundry vLAN (on right side):
 
   - Load balancer goes to router and to the app container inside the Diego Cell
 
