@@ -62,7 +62,8 @@ In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024. The actual
 
 When the [Diego `containers.set_cpu_weight` bosh property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313) is set to false, then <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory, until the upper limit of 1024 shares (by default).
 
-In this case, there are a handful of variables that play into the CPU shares calculation.
+<p>In this case, there are a handful of variables that play into the CPU shares calculation.</p>
+
 | variable name | default value | configurable? | link to property |
 | ------------- | ------------- | ------------- | ---------------- |
 | cc.cpu_weight_min_memory | 128  |  yes | [bosh property](https://github.com/cloudfoundry/capi-release/blob/e68034308a57296ac12debf05de012c2a14d4c4c/jobs/cloud_controller_ng/spec#L782-L784)  |
