@@ -53,14 +53,67 @@ The calculation of the CPU usage based on the percentage of the total CPU power 
 ```
 process_cpu_share_percent = cpu.shares / sum_cpu_shares * 100
 ```
+<% if vars.platform_code == 'CF' %>
+In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024. The actual amount of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`. The amount of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest.
 
-In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024, with 1024 being the default. The actual amount of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`.
+#### CPU Shares Algorithm 1
 
-The amount of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest. <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory, with an app instance requesting 8&nbsp;GB of memory getting the upper limit of 1024 shares, as shown in the following calculation:
+When the [Diego `containers.set_cpu_weight` bosh property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313) is set to false, then <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory, until the upper limit of 1024 shares (by default).
 
+In this case, there are a handful of variables that play into the CPU shares calculation.
+| variable name | default value | configurable? | link to property |
+| -------- | ------- | ------- | ------- |
+| cc.cpu_weight_min_memory | 128  |  yes | [bosh property](https://github.com/cloudfoundry/capi-release/blob/e68034308a57296ac12debf05de012c2a14d4c4c/jobs/cloud_controller_ng/spec#L782-L784)  |
+| cc.cpu_weight_max_memory | 8192 |  yes | [bosh property](https://github.com/cloudfoundry/capi-release/blob/e68034308a57296ac12debf05de012c2a14d4c4c/jobs/cloud_controller_ng/spec#L785-L787) |
+| app_memory_in_mb | 1024 | yes  | this is set in the app manifest |
+| base_weight | 8192 | no  | n/a |
+| diego.executor.container_max_cpu_shares | 1024 | yes | [bosh property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L122-L124C14)|
+
+
+These variables are used in the following algorithm to determine the number of CPU shares for an app:
 ```
-process_cpu.shares = min( 1024*(application_memory / 8 GB), 1024)
+app_memory_for_calculation = min( max(cc.cpu_weight_min_memory, app_memory_in_mb), cc.cpu_weight_max_memory)
+app_cpu_weight = int( (100 * app_memory_for_calculation) / base_weight))
+process_cpu.shares = int( (diego.executor.container_max_cpu_shares * app_cpu_weight) / 100)
 ```
+
+Let's walk through an example...
+```
+cc.cpu_weight_min_memory = 128
+cc.cpu_weight_max_memory = 8192
+app_memory_in_mb = 32
+base_weight = 8192
+diego.executor.container_max_cpu_shares = 1024
+
+app_memory_for_calculation = min(max(cc.cpu_weight_min_memory, app_memory_in_mb)
+app_memory_for_calculation = min(max(128, 32), 8192) = min(128, 8192) = 128
+
+app_cpu_weight = int((100 * app_memory_for_calculation)/base_weight))
+app_cpu_weight = int((100 * 128) / 8192)) = int(12800 / 8192) = int(1.56) = 1
+
+process_cpu.shares = int( (diego.executor.container_max_cpu_shares * app_cpu_weight) / 100)
+process_cpu.shares = int( (1024 * 1) / 100) = int(10.24) = 10
+```
+
+#### CPU Shares Algorithm 2
+When the [Diego containers.set_cpu_weight bosh property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313) is set to true, then <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory.
+
+In this case, the following algorithm is used to determine the number of CPU shares for an app:
+```
+process_cpu.shares = app_memory_in_mb + 32
+```
+<% else %>
+<%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory.
+
+The following algorithm is used to determine the number of CPU shares for an app:
+```
+process_cpu.shares = app_memory_in_mb + 32
+```
+<% end %>
+
+<% if vars.platform_code == 'CF' %>
+#### CPU Share Interaction
+<% end %>
 
 The next example helps to illustrate this better. Consider three processes: P1, P2 and P3, which are assigned `cpu.shares` of 5, 20 and 30, respectively.
 
