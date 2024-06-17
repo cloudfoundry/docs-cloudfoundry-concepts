@@ -74,15 +74,15 @@ When the [Diego `containers.set_cpu_weight` bosh property](https://github.com/cl
 
 These variables are used in the following algorithm to determine the number of CPU shares for an app:
 
-```bash
+```
 app_memory_for_calculation = min( max(cc.cpu_weight_min_memory, app_memory_in_mb), cc.cpu_weight_max_memory)
-app_cpu_weight = int( (100 * app_memory_for_calculation) / base_weight))
+app_cpu_weight = int( (100 * app_memory_for_calculation) / base_weight)
 process_cpu.shares = int( (diego.executor.container_max_cpu_shares * app_cpu_weight) / 100)
 ```
 
 For example:
 
-```bash
+```
 cc.cpu_weight_min_memory = 128
 cc.cpu_weight_max_memory = 8192
 app_memory_in_mb = 32
@@ -93,7 +93,7 @@ app_memory_for_calculation = min(max(cc.cpu_weight_min_memory, app_memory_in_mb)
 app_memory_for_calculation = min(max(128, 32), 8192) = min(128, 8192) = 128
 
 app_cpu_weight = int((100 * app_memory_for_calculation)/base_weight))
-app_cpu_weight = int((100 * 128) / 8192)) = int(12800 / 8192) = int(1.56) = 1
+app_cpu_weight = int((100 * 128) / 8192) = int(12800 / 8192) = int(1.56) = 1
 
 process_cpu.shares = int( (diego.executor.container_max_cpu_shares * app_cpu_weight) / 100)
 process_cpu.shares = int( (1024 * 1) / 100) = int(10.24) = 10
