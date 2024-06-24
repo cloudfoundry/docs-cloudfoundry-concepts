@@ -101,12 +101,23 @@ process_cpu.shares = int( (1024 * 1) / 100) = int(10.24) = 10
 
 #### CPU Shares Algorithm 2
 
-When the [Diego containers.set_cpu_weight BOSH property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313) is set to true, then <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory.
+When the [Diego containers.set_cpu_weight BOSH
+property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313)
+is set to true, then <%= vars.app_runtime_abbr %> scales the number of
+allocated shares linearly with the amount of memory
+
+<p>In this case, there are two variables that play into the CPU shares calculation.</p>
+
+| variable name | default value | configurable? | link to property |
+| ------------- | ------------- | ------------- | ---------------- |
+| app_memory_in_mb         | 1024 |  yes | this is set in the app manifest |
+| containers.proxy.additional_memory_allocation_mb | 32 | yes  | [bosh property](https://github.com/cloudfoundry/diego-release/blob/3496e1be97844d9813a52665239e14ae89c5db3b/jobs/rep/spec#L250-L252)  |
+
 
 In this case, the following algorithm is used to determine the number of CPU shares for an app:
 
 ```
-process_cpu.shares = app_memory_in_mb + 32
+process_cpu.shares = app_memory_in_mb + containers.proxy.additional_memory_allocation_mb
 ```
 
 <% else %>
@@ -118,6 +129,8 @@ The following algorithm is used to determine the number of CPU shares for an app
 ```
 process_cpu.shares = app_memory_in_mb + 32
 ```
+
+The extra `32` in the algorithm is to account for the extra memory required for the envoy sidecar proxy.
 
 <% end %>
 
