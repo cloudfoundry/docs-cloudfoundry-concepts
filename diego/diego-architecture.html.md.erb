@@ -130,7 +130,7 @@ The following resources provide more information about Diego components:
 
 ## <a id='maximum-diego-cells'></a> Maximum recommended Diego Cells
 
-The maximum recommended Diego Cells is 250 Cells for each <%= vars.app_runtime_abbr %> deployment. By default, there is a hard limit of 256 addresses for vSphere deployments that use Silk for networking. This hard limit is described in the [Silk Release documentation](https://github.com/cloudfoundry/cf-networking-release/blob/develop/docs/large_deployments.md) on GitHub.
+The maximum recommended Diego Cells is 250 Cells for each <%= vars.app_runtime_abbr %> deployment. By default, there is a hard limit of 256 addresses for vSphere deployments that use Silk for networking. This hard limit is described in the [Silk Release documentation](https://github.com/cloudfoundry/cf-networking-release/blob/develop/docs/09-large-deployments.md) on GitHub.
 
 The default CIDR address block for the overlay network is 10.255.0.0/16. Each Diego Cell requires a subnet, and subnets (0-255) for each Diego Cell are allocated out of this network.
 
