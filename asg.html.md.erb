@@ -98,7 +98,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 | --------- | ----------- | ----- |
 | `protocol` | `tcp`, `udp`, `icmp`, or `all` | Required |
 <% if vars.platform_code == 'CF' %>
-| `destination` | A comma deliminated list of single IP addresses, IP address ranges like `192.0.2.0-192.0.2.50`, or CIDR blocks that can receive traffic | Destination lists became available in capi-release 1.180.0.  |
+| `destination` | A comma deliminated list of single IP addresses, IP address ranges like `192.0.2.0-192.0.2.50`, or CIDR blocks that can receive traffic | Destination lists became available in capi-release 1.180.0 and can be enabled by setting the `cc.security_groups.enable_comma_delimited_destinations` bosh property to true.  |
 <% end %>
 <% if vars.platform_code == 'PCF' %>
 | `destination` | A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block that can receive traffic |  |
