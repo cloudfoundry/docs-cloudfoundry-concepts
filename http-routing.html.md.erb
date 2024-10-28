@@ -153,6 +153,8 @@ To make an HTTP request to a specific app instance:
 	</tbody>
 	</table>
 
+Note: The `X-Cf-App-Instance` header is not effective for applications which have a route service configured.
+
 ### <a id='forward-client-cert'></a> Forwarding client certificate to apps
 
 Apps that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. <%= vars.app_runtime_abbr %> supports this use case without
