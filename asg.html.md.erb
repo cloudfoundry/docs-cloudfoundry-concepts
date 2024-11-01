@@ -88,7 +88,6 @@ You use different commands to apply an ASG to each of the four sets.
 For more information, see [Managing ASGs with the cf CLI](#procedures).
 
 <p class="note important">
-<span class="note__title">Important</span>
 To apply a staging ASG to apps within a space, you must use cf CLI v6.28.0 or later.</p>
 
 ### <a id='creating-groups'></a> Structure and attributes of ASGs
@@ -253,7 +252,7 @@ To bind an ASG to a space-scoped staging ASG set:
 
 ### <a id='updating-groups'></a> Update ASGs
 
-Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled. 
+Updating an ASG does not affect started apps unless you have <a href="#dynamic-asgs">Dynamic ASGs</a> enabled.
 If disabled, you will need to run <code>cf restart</code> on the apps. To restart all of the apps in an org or a space, use the <a href="https://github.com/cloudfoundry-incubator/app-restarter">app-restarter</a> cf CLI plugin.
 
 To update an existing ASG:
