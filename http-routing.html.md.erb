@@ -111,6 +111,8 @@ To make an HTTP request to a specific app instance:
 	| `unknown_route` | The value provided for `X-Cf-App-Instance` includes a correctly formatted app GUID, but the app instance index number was not found for the requested route. | `400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route ('example-route.cf.com')` |
 
 
+Note: The `X-Cf-App-Instance` header is not effective for applications which have a route service configured.
+
 ### <a id='forward-client-cert'></a> Forwarding client certificate to apps
 
 Apps that require mutual TLS (mTLS) need metadata from client certificates to authorize requests. <%= vars.app_runtime_abbr %> supports this use case without
