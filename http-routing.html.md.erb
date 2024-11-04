@@ -111,7 +111,9 @@ To make an HTTP request to a specific app instance:
 	| `unknown_route` | The value provided for `X-Cf-App-Instance` includes a correctly formatted app GUID, but the app instance index number was not found for the requested route. | `400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route ('example-route.cf.com')` |
 
 
-Note: The `X-Cf-App-Instance` header is not effective for applications which have a route service configured.
+<p class="note">
+<span class="note__title"><strong>Note</strong></span>
+The <code>X-Cf-App-Instance</code> header is not effective for applications which have a route service configured.</p>
 
 ### <a id='forward-client-cert'></a> Forwarding client certificate to apps
 
