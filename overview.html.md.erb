@@ -19,13 +19,21 @@ This topic tells you about <%= vars.app_runtime_first %> and how it works with <
 
 <% end %>
 
-Cloud platforms let anyone deploy network apps or services and make them available to the world in a few minutes. When an app becomes popular, the cloud scales it to handle more traffic, replacing build-out and migration efforts that once took months with a few keystrokes. Cloud platforms enable you to focus exclusively on your apps and data without worrying about underlying infrastructure.
+## Introduction to Cloud Platforms
 
-The following diagram shows the layers of a typical technology stack, and compares the traditional IT model to the cloud platform model:
+Cloud platforms enable rapid deployment of applications and services, making them globally accessible within minutes. As applications grow, cloud infrastructure can automatically scale to meet increased demand, eliminating traditional build-outs and migrations. This approach allows developers to focus on applications and data without the need to manage underlying infrastructure.
 
-![Column with the header 'Traditional IT', below which are nine black boxes labeled 'Applications', 'Data', 'Runtime', 'Middleware', 'O/S', 'Virtualization', 'Servers', 'Storage', and 'Networking'.](./images/power-of-platform.png)
+The following diagram illustrates the layers of a typical technology stack, comparing the traditional IT model with an IaaS stack and a PaaS stack, showing which layers are managed by users vs. providers.
 
-[View a larger version of this diagram](https://github.com/cloudfoundry/docs-cloudfoundry-concepts/blob/master/images/power-of-platform.png?raw=true).
+* **Traditional IT Stack:** All layers are managed in-house, including applications, data, runtime, middleware, OS, virtualization, servers, storage, and networking.
+
+* **IaaS Stack:** The provider manages the servers, storage, networking, and virtualization, while the user manages applications, data, runtime, middleware, and OS.
+
+* **PaaS Stack:** The provider manages all layers except for applications and data, which remain the user’s responsibility.
+
+![Diagram comparing three technology stacks: Traditional IT, IaaS, and PaaS, showing which layers are managed by users vs. providers.](./images/comparison.png)
+
+[View a larger version of this diagram](https://github.com/cloudfoundry/docs-cloudfoundry-concepts/blob/master/images/comparison.png?raw=true).
 
 See the following sections in this topic:
 
