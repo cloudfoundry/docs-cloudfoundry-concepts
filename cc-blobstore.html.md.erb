@@ -3,9 +3,46 @@ title: Cloud Controller blobstore
 owner: CAPI
 ---
 
-<%= vars.app_runtime_abbr %> uses a blobstore to store the source code that enables you to
-push, stage, and run.
+To stage and run apps, <%= vars.app_runtime_abbr %> manages and stores the following types of
+binary large object (blob) files:
 
+<table><thead>
+<tr>
+<th>Blob Type</th>
+<th>Description</th>
+<th>Location in Blobstore</th>
+</tr></thead>
+<tbody><tr>
+<td>App Packages</td>
+<td>Full contents of app directories, including source code and resource files, zipped into single blob files.</td>
+<td><code>/cc-packages</code></td>
+</tr>
+<tr>
+<td>Buildpacks</td>
+<td>Buildpack directories, which Diego cells download to compile and stage apps with.</td>
+<td><code>/cc-buildpacks</code></td>
+</tr>
+<tr>
+<td>Resource Cache</td>
+<td>Large files from app packages that the Cloud Controller stores with a SHA for later re-use. To save bandwidth, the <%= vars.app_runtime_abbr %> Command Line Interface (cf CLI) only uploads large application files that the Cloud Controller has not already stored in the resource cache.</td>
+<td><code>/cc-resources</code></td>
+</tr>
+<tr>
+<td>Buildpack Cache</td>
+<td>Large files that buildpacks generate during staging, stored for later re-use. This cache lets buildpacks run more quickly when staging apps that have been staged previously.</td>
+<td><code>cc-droplets/buildpack_cache</code></td>
+</tr>
+<tr>
+<td>Droplets</td>
+<td>Staged apps packaged with everything needed to run in a container.</td>
+<td><code>/cc-droplets</code></td>
+</tr></tbody>
+</table>
+
+<%= vars.app_runtime_abbr %> blobstores use the [Fog](http://fog.io/) Ruby gem to store blobs in
+services like Amazon S3, WebDAV, or the NFS filesystem. The file system location of an internal blobstore is `/var/vcap/store/shared`.
+
+A single blobstore typically stores all five types of blobs, but you can configure the Cloud Controller to use separate blobstores for each type.
 This topic references staging and treats all blobstores as generic object stores.
 
 For more information about staging, see [How Apps Are Staged](../concepts/how-applications-are-staged.html).
@@ -14,7 +51,6 @@ For more information about staging, see [How Apps Are Staged](../concepts/how-ap
 
 For more information about how specific third-party blobstores can be configured, see <%= vars.blobstore_link %>.
 <% end %>
-
 
 ## <a id='stage-blobstore'></a> Staging using the blobstore
 
@@ -81,6 +117,42 @@ The process in which the staging process uses the blobstore is as follows:
 	<li>A Diego Cell downloads the app droplet from the blobstore and runs it.</li>
 	</ol>
 
+## <a id='blobstore-cleanup'></a> Blobstore Cleanup
+
+### <a id='blobstore-expiry'></a> How Cloud Controller reaps expired packages, droplets, and buildpacks
+
+As new droplets and packages are created, the oldest ones associated with an app are marked as `EXPIRED` if they exceed the configured limits for packages and droplets stored per app.
+
+Each night, starting at midnight, Cloud Controller runs a series of jobs to delete the data associated with expired packages, droplets, and buildpacks.
+
+Enabling the native versioning feature on your blobstore increases the number of resources stored and costs. For more information, see [Using Versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) in the AWS documentation.
+
+### <a id='automatic-clean'></a> Automatic Orphaned Blob Cleanup
+
+Orphaned Blobs are blobs that are stored in the blobstore, but Cloud Controller does not list in its database. These are distinct from [Expired Blobs](#blobstore-expiry), which Cloud Controller can still link to a particular package, droplet, or buildpack.
+
+Orphaned Blobs are typically created after a blob deletion fails silently or something else goes wrong.
+
+Cloud Controller detects and removes Orphaned Blobs by scanning part of the blobstore daily and checking for any blobs that its database does not account for. The process scans through the entire blobstore every week, and only removes blobs that show as orphans for three consecutive days.
+
+Cloud Controller performs this automatic cleanup when the `cloud_controller_worker` job property `cc.perform_blob_cleanup` is set to `true`.
+
+<p class="note">
+<span class="note__title"><strong>Note</strong></span>
+Two instances of Cloud Foundry should <strong>not</strong> use the same blobstore buckets, as the uploaded blobs will be marked as 'orphaned' by the other Cloud Foundry instance and deleted.</p>
+
+### <a id='manual-clean'></a>Manual blob cleanup
+
+Cloud Controller does not track resource cache and buildpack cache blob-types in its database, so it does not [reap them automatically](#blobstore-expiry) as it does with app package, buildpack, and droplet type blobs.
+
+To clean up the buildpack cache, admin users can run `cf curl -X DELETE /v2/blobstores/buildpack_cache`. This empties the buildpack cache completely, which is a safe operation.
+
+To clean up the resource cache, delete it as follows:
+
+* **Internal blobstore**: Run `bosh ssh` to connect to the blobstore VM (NFS or WebDav) and `rm *` the contents of the `/var/vcap/store/shared/cc-resources` directory.
+* **External blobstore**: Use the file store's API to delete the contents of the `resources` bucket.
+
+Do not manually delete app package, buildpack, or droplet blobs from the blobstore. To free up resources from those locations, run `cf delete-buildpack` for buildpacks or `cf delete` for app packages and droplets.
 
 ## <a id='blobstore-expiry'></a> Blobstore load
 
@@ -91,16 +163,6 @@ Cloud Controller's heavy use of HEAD requests during resource matching.
 Pushing an app with large number of files causes Cloud Controller to check the blobstore for the existence of each file.
 
 Parallel BOSH deployments of Diego Cells can also generate significant read load on the Cloud Controller blobstore as the cells perform evacuation. For more information, see the [Evacuation](https://docs.cloudfoundry.org/devguide/deploy-apps/app-lifecycle.html#evacuation) section of the _App Container Lifecycle_ topic.
-
-
-## <a id='blobstore-expiry'></a> How Cloud Controller reaps expired packages, droplets, and buildpacks
-
-As new droplets and packages are created, the oldest ones associated with an app are marked as `EXPIRED` if they exceed the configured limits for packages and droplets stored per app.
-
-Each night, starting at midnight, Cloud Controller runs a series of jobs to delete the data associated with expired packages, droplets, and buildpacks.
-
-Enabling the native versioning feature on your blobstore increases the number of resources stored and costs. For more information, see [Using Versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) in the AWS documentation.
-
 
 ## <a id='blobstore-timeouts'></a> Blobstore interaction timeouts
 
