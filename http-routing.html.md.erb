@@ -66,17 +66,13 @@ values for the headers with requests to other apps.
 
 ### <a id='w3c-headers'></a> HTTP headers for W3C tracing
 
-Similar to Zipkin, W3C is a tracing specification that allows app developers to monitor and profile requests and responses. For more information about W3C
-tracing, see [w3c.org](https://www.w3.org/TR/trace-context/).
+Similar to Zipkin, W3C is a tracing specification that allows app developers to monitor and profile requests and responses.
 
-<%= vars.w3c_enable_link %>
+When W3C tracing is enabled in <%= vars.app_runtime_abbr %>, the Gorouter generates W3C HTTP headers unless they are provided
+by the client, as described in [Unique trace identification](../adminguide/distributed-tracing.html#unique-trace-id).
+For more information about W3C tracing, see the w3.org [Trace Context](https://www.w3.org/TR/trace-context/) standard.
 
-* If the `traceparent` and `tracestate` HTTP headers are not present in the request, the Gorouter generates values for these and inserts the headers into
-the request forwarded to an app. The Gorouter access log message for the request includes `traceparent` and `tracestate`.
-
-* If the `traceparent` and `tracestate` HTTP headers are present in the request, the Gorouter forwards them unmodified.
-
-You can then add W3C trace IDs to app logs to trace app requests and responses in <%= vars.app_runtime_abbr %>.
+You can add W3C trace IDs to app logs to trace app requests and responses in <%= vars.app_runtime_abbr %>.
 
 After adding W3C HTTP headers to app logs, you can correlate the W3C trace IDs that the Gorouter logs with the W3C trace IDs that the app logs by running:
 
