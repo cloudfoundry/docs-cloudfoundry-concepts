@@ -64,6 +64,29 @@ values for the headers with requests to other apps.
 
 <%= vars.zipkin_tracing_link %>
 
+### <a id='w3c-headers'></a> HTTP headers for W3C tracing
+
+Similar to Zipkin, W3C is a tracing specification that allows app developers to monitor and profile requests and responses.
+
+When W3C tracing is enabled in <%= vars.app_runtime_abbr %>, the Gorouter generates W3C HTTP headers unless they are provided
+by the client, as described in [Unique trace identification](../adminguide/distributed-tracing.html#unique-trace-id).
+For more information about W3C tracing, see the w3.org [Trace Context](https://www.w3.org/TR/trace-context/) standard.
+
+You can add W3C trace IDs to app logs to trace app requests and responses in <%= vars.app_runtime_abbr %>.
+
+After adding W3C HTTP headers to app logs, you can correlate the W3C trace IDs that the Gorouter logs with the W3C trace IDs that the app logs by running:
+
+```
+cf logs APP-NAME
+```
+
+Where `APP-NAME` is the name of the app.
+
+To correlate W3C trace IDs for a request through multiple apps, each app must forward appropriate
+values for the headers with requests to other apps.
+
+<%= vars.w3c_tracing_link %>
+
 ### <a id='app-instance-routing'></a> HTTP headers for app instance routing
 
 If you want to retrieve debug data for a specific instance of an app, you can use the HTTP header `X-Cf-App-Instance` to make a request to the app instance
