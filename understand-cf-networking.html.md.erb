@@ -109,7 +109,7 @@ Overlay networks are not externally routable, and traffic sent between container
 In older versions of <%= vars.app_runtime_abbr %>, the overlay network had to be one contiguous address range expressed as a single CIDR, for example `"10.255.0.0/18"`.
 Current versions also support setting the overlay network to a comma-separated list of multiple CIDR ranges, for example `["10.255.0.0/20", "10.255.96.0/21"]`, in addition to single CIDRs.
 
-The overlay network defaults to `"10.255.0.0/16"`. You can modify the setting to include any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range or ranges that meet the following requirements:
+The overlay network range defaults to `["10.255.0.0/16"]`. You can modify the default to include any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range that meets the following requirements:
 
 * The ranges are not used by services that app containers access.
 * The ranges are not used by the underlying <%= vars.app_runtime_abbr %> infrastructure.
