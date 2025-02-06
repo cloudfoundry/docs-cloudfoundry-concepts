@@ -100,13 +100,10 @@ Container-to-container networking uses an overlay network to manage communicatio
 
 Overlay networks are not externally routable, and traffic sent between containers does not exit the overlay. You can use the same overlay network range for different <%= vars.app_runtime_abbr %> deployments in your environment.
 
-In older versions of <%= vars.app_runtime_abbr %>, the overlay network had to be one contiguous address range expressed as a single CIDR, for example `"10.255.0.0/18"`.
-Current versions also support setting the overlay network to a comma-separated list of multiple CIDR ranges, for example `["10.255.0.0/20", "10.255.96.0/21"]`, in addition to single CIDRs.
+The overlay network range defaults to `["10.255.0.0/16"]`. You can modify the default to include any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range that meets the following requirements:
 
-The overlay network defaults to `"10.255.0.0/16"`. You can modify the setting to include any [RFC&nbsp;1918](https://tools.ietf.org/html/rfc1918) range or ranges that meet the following requirements:
-
-* The ranges are not used by services that app containers access.
-* The ranges are not used by the underlying <%= vars.app_runtime_abbr %> infrastructure.
+* The range is not used by services that app containers access.
+* The range is not used by the underlying <%= vars.app_runtime_abbr %> infrastructure.
 * The ranges do not overlap with each other.
 
 All Diego Cells in your <%= vars.app_runtime_abbr %> deployment share this overlay network. By default, each Diego Cell is allocated a /24 range that supports 254 containers per Diego Cell, one container for each of the usable IP addresses, `.1` through `.254`. To modify the number of Diego Cells your overlay network supports, see [Overlay Network](../devguide/deploy-apps/cf-networking.html#overlay) in _Configuring Container-to-Container Networking_.
