@@ -113,6 +113,7 @@ To make an HTTP request to a specific app instance:
 		curl APP-FQDN -H "X-Cf-App-Instance":"APP-GUID:INSTANCE-INDEX-NUMBER"
 
 	Where:
+
 	<ul>
 	<li><code>APP-FQDN</code> is the fully-qualified domain name (FQDN) of your app. For example, <code>app.example.com</code>.</li>
 	<li><code>APP-GUID</code> is the app GUID that you recorded in a previous step.</li>
@@ -142,14 +143,79 @@ To make an HTTP request to a specific app instance:
 	    <td>The value provided for <code>X-Cf-App-Instance</code> includes a correctly formatted app GUID, but the app instance index number was not found for
 				the requested route.</td>
 	    <td><code>400 Bad Request: Requested instance ('1') with guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route
-				('example-route.cf.com')</code></td>
+				('example-route.cf.example.com')</code></td>
 	  </tr>
 	</tbody>
 	</table>
 
 <p class="note">
-<span class="note__title"><strong>Note</strong></span>
-The <code>X-Cf-App-Instance</code> header is not effective for applications which have a route service configured.</p>
+The <code>X-Cf-App-Instance</code> header is not effective for applications that have a route service configured.</p>
+
+<p class="note">
+The <code>X-Cf-App-Instance</code> header is not supported for multi-process apps or apps that have undergone a <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/rolling-deploy.html#rolling">rolling or canary deployment</a>. For these apps, use the <code>X-Cf-Process-Instance</code> header instead.</p>
+
+### <a id='process-instance-routing'></a> HTTP headers for process instance routing
+
+<p class="note">
+The <code>X-Cf-Process-Instance</code> header requires routing-release 0.332.0 or higher.</p>
+
+Apps that have <a href="https://docs.cloudfoundry.org/devguide/multiple-processes.html">multiple processes</a> or apps that have been pushed with the rolling or canary deployment strategies cannot be reliably routed to using the <code>X-Cf-App-Instance</code> header. Users who wish to route to a specific instance of these apps should use the <code>X-Cf-Process-Instance</code> header.
+
+To make an HTTP request to a specific process instance:
+
+1. In a terminal window, retrieve the global unique identifier (GUID) of your app by running:
+
+		cf app APP-NAME --guid
+
+	Where `APP-NAME` is the name of your app.
+
+1. From the terminal output, record the GUID of your app.
+
+1. Retrieve the process GUIDs for your app by running:
+
+		cf curl /v3/<APP-GUID/processes
+
+1. From the terminal output, record the GUID of the process you are interested in.
+
+1. Make a request to the app route by running:
+
+       		curl APP-FQDN -H "X-Cf-Process-Instance":"PROCESS-GUID"
+		curl APP-FQDN -H "X-Cf-Process-Instance":"PROCESS-GUID:INSTANCE-INDEX-NUMBER"
+
+	Where:
+
+	<ul>
+	<li><code>APP-FQDN</code> is the fully-qualified domain name (FQDN) of your app. For example, <code>app.example.com</code>.</li>
+	<li><code>PROCESS-GUID</code> is the process GUID that you recorded in a previous step.</li>
+	<li><code>INSTANCE-INDEX-NUMBER</code> is the _optional_ process instance index number. If INSTANCE-INDEX-NUMBER is omitted, then Gorouter routes to all instances of the process.</li>
+	</ul>
+
+	If either of the values you provide in the above command are invalid, Gorouter returns a `400` error, and the response from Gorouter contains a
+	`X-Cf-Routererror` header with more information about the error. The following table describes the possible error responses:
+
+	<table>
+	<thead>
+	  <tr>
+	    <th width="30%">X-Cf-Routererror Value</th>
+	    <th width="30%">Reason for Error</th>
+	    <th width="40%">Response Body</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <tr>
+	    <td><code>invalid_cf_process_instance_header</code></td>
+	    <td>The value provided for <code>X-Cf-Process-Instance</code> includes an incorrectly formatted process GUID or index.</td>
+	    <td>None</td>
+	  </tr>
+	  <tr>
+	    <td><code>unknown_route</code></td>
+	    <td>The value provided for <code>X-Cf-App-Instance</code> includes a correctly formatted app GUID, but the app instance index number was not found for
+		the requested route.</td>
+	    <td><code>400 Bad Request: Requested instance ('1') with process guid ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') does not exist for route
+	        ('example-route.cf.example.com')</code></td>
+	  </tr>
+	</tbody>
+	</table>
 
 ### <a id='forward-client-cert'></a> Forwarding client certificate to apps
 
@@ -213,7 +279,7 @@ forwarding HTTP requests to a component, the component must include the followin
 
 * `"tls_port"`: The port to which the Gorouter opens a connection and initiates a TLS handshake.
 
-* `"server_cert_domain_san"`: An identifier for the back end which the Gorouter expects to find in the Domain Subject Alternative Name of the certificate
+* `"server_cert_domain_san"`: An identifier for the back end that the Gorouter expects to find in the Domain Subject Alternative Name of the certificate
 presented by the back end. This is used to prevent mis-routing for back ends whose IPs or ports are expected to change. See
 [Consistency](#consistency).
 
@@ -243,7 +309,7 @@ Network partitions or NATS failures can cause the Gorouter's routing table to fa
 containers across hosts to keep apps running. This can lead to routing of requests to incorrect destinations.
 
 Before forwarding traffic to an app instance, the Gorouter initiates a TLS handshake with an Envoy proxy running in each app container. In the TLS handshake,
-the Envoy proxy presents a certificate generated by Diego for each container which uniquely identifies the container using the same app instance identifier
+the Envoy proxy presents a certificate generated by Diego for each container that uniquely identifies the container using the same app instance identifier
 ent by the Route-Emitter, configured in the certificate as a domain Subject Alternative Name (SAN). For more information, see
 [Envoyproxy.io](https://www.envoyproxy.io/).
 
