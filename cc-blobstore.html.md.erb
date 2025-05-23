@@ -130,7 +130,7 @@ Enabling the native versioning feature on your blobstore increases the number of
 
 ### <a id='automatic-clean'></a> Automatic Orphaned Blob Cleanup
 
-Orphaned Blobs are blobs that are stored in the blobstore, but Cloud Controller does not list in its database. These are distinct from [Expired Blobs](#blobstore-expiry), which Cloud Controller can still link to a particular package, droplet, or buildpack.
+Orphaned Blobs are blobs that are stored in the blobstore, but which Cloud Controller does not list in its database. These are distinct from [Expired Blobs](#blobstore-expiry), which Cloud Controller can still link to a particular package, droplet, or buildpack.
 
 Orphaned Blobs are typically created after a blob deletion fails silently or something else goes wrong.
 
