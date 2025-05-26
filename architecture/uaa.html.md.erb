@@ -17,3 +17,52 @@ You must log in to each runtime or service separately.
 
 You can deploy UAA locally or to <%= vars.app_runtime_abbr %>.
 See also [Deploy UAA locally](/uaa/uaa-deploy-locally.html).
+
+## <a id='uaa-architecture'></a> UAA architecture
+
+The following diagram illustrates the architecture of UAA:
+
+![UAA architecture](../images/uaa-architecture.png)
+
+The following table describes the protocols UAA can use:
+
+| Protocol | Purpose | Profiles |
+| -------- | ------- | -------- |
+| OAuth 2.0 | Authorizes apps and APIs | Authorization Server, Relying Party |
+| OpenID Connect 1.0 | Federates to external identity providers (IDPs) and acts as an IDP for SSO | Identity Provider, Relying Party |
+| SAML 2.0 | Federates to external IDPs | Service Provider |
+| LDAP | Authenticates users in external user store | LDAP Client |
+| SCIM 1.0 | Manages users and groups | Identity Provisioning |
+
+
+## <a id="client-tools"></a> Client-side tools and libraries
+
+The following table describes the client-side tools and libraries UAA uses:
+
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Language</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><a href="https://github.com/cloudfoundry/cf-uaac">UAAC</a><br/>
+    <a href="https://github.com/cloudfoundry/cf-uaa-lib">CF-UAA-LIB</a></td>
+    <td>Ruby</td>
+  </tr>
+  <tr>
+    <td><a href="http://projects.spring.io/spring-security-oauth/">Spring Security OAuth</a></td>
+    <td>Java</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/cloudfoundry/cf-java-client">CF Java Client</a></td>
+    <td>Java</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/cloudfoundry/uaa-singular">UAA Javascript SDK (Singular)</a></td>
+    <td>JS</td>
+  </tr>
+</tbody>
+</table>
