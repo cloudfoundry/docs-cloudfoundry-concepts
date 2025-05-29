@@ -32,8 +32,7 @@ For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture
 
 Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container may use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers.
 
-<p cclass="note">
-<span class="note__title">Note</span>
+<p class="note">
 <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
 
 ### <a id='cpu'></a> CPU
@@ -111,7 +110,7 @@ process_cpu.shares = app_memory_in_mb + 32
 
 <% else %>
 The actual number of shares a cgroup gets can be read from the `cpu.shares` file of the cgroup configurations pseudo-file-system available in the container at `/sys/fs/cgroup/cpu`.
-The number of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest. 
+The number of shares given to an apps cgroup depends on the amount of memory the app declares to need in the manifest.
 <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory.
 
 The following algorithm is used to determine the number of CPU shares for an app:
