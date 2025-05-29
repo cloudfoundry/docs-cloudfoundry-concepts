@@ -139,7 +139,6 @@ Cloud Controller detects and removes Orphaned Blobs by scanning part of the blob
 Cloud Controller performs this automatic cleanup when the `cloud_controller_worker` job property `cc.perform_blob_cleanup` is set to `true`.
 
 <p class="note">
-<span class="note__title"><strong>Note</strong></span>
 Two instances of Cloud Foundry should <strong>not</strong> use the same blobstore buckets, as the uploaded blobs will be marked as 'orphaned' by the other Cloud Foundry instance and deleted.</p>
 
 ### <a id='manual-clean'></a>Manual blob cleanup
