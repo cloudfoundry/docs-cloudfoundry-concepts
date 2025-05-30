@@ -126,7 +126,7 @@ As new droplets and packages are created, the oldest ones associated with an app
 
 Each night, starting at midnight, Cloud Controller runs a series of jobs to delete the data associated with expired packages, droplets, and buildpacks.
 
-Enabling the native versioning feature on your blobstore increases the number of resources stored and costs. For more information, see [Using Versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) in the AWS documentation.
+Enabling the native versioning feature on your blobstore increases the number of resources stored and costs. Tanzu Platform for CF interacts with versioned s3 using object key only without versionID, the deleted objects from Tanzu Platform for CF will have an added "delete marker" in the s3 which should be handled by s3 object lifecycle policy to be deleted. For more information, see [Using Versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) in the AWS documentation.
 
 ### <a id='automatic-clean'></a> Automatic Orphaned Blob Cleanup
 
