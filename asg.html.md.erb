@@ -85,10 +85,7 @@ Typically, ASGs applied during the staging lifecycle are more permissive than th
 
 You use different commands to apply an ASG to each of the four sets.
 
-To apply a staging ASG to apps within a space, you must use
-cf CLI v6.28.0 or later.
-
-For more information, see [Managing ASGs with the cf CLI](#procedures).
+For more information, see [Managing ASGs with the Tanzu cf CLI](#procedures).
 
 ### <a id='creating-groups'></a> Structure and attributes of ASGs
 
@@ -111,7 +108,7 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 
 The following table outlines the flow of tasks that you implement over the lifecycle of ASGs.
 
-For information about procedures for each of these tasks, see [Managing ASGs with cf CLI](#procedures).
+For information about procedures for each of these tasks, see [Managing ASGs with Tanzu cf CLI](#procedures).
 
 | &nbsp; | Task | For more information, see: |
 | ------ | ---- | -------------------------- |
@@ -122,11 +119,11 @@ For information about procedures for each of these tasks, see [Managing ASGs wit
 | 5. | If you need to delete an ASG, first unbind it, then delete it. | [Unbind ASGs](#unbinding-asgs) and [Delete ASGs](#deleting-groups) |
 
 
-## <a id='procedures'></a> Managing ASGs with cf CLI
+## <a id='procedures'></a> Managing ASGs with Tanzu cf CLI
 
 Learn about the commands you need to create and manage ASGs.
 
-Many of the following procedures require the Cloud Foundry Command Line Interface (cf CLI).
+Many of the following procedures require the Tanzu cf CLI.
 To download the cf CLI, see [Installing the cf CLI](../operating/cf-cli/install-cf-cli.html).
 
 ### <a id='viewing'></a> Viewing ASGs

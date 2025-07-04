@@ -24,7 +24,7 @@ binary large object (blob) files:
 </tr>
 <tr>
 <td>Resource Cache</td>
-<td>Large files from app packages that the Cloud Controller stores with a SHA for later re-use. To save bandwidth, the <%= vars.app_runtime_abbr %> Command Line Interface (cf CLI) only uploads large application files that the Cloud Controller has not already stored in the resource cache.</td>
+<td>Large files from app packages that the Cloud Controller stores with a SHA for later re-use. To save bandwidth, the Tanzu cf CLI only uploads large application files that the Cloud Controller has not already stored in the resource cache.</td>
 <td><code>/cc-resources</code></td>
 </tr>
 <tr>
@@ -60,11 +60,11 @@ The following diagram illustrates how the staging process uses the blobstore.
 To walk through the same diagram in an app staging context, see [How Diego Stages Buildpack Apps](./how-applications-are-staged.html).
 The staging process for buildpack apps includes a developer and the following components: CF Command Line, Cloud Controller (CCNG), Blobstore, cc-uploader, Diego Cell (Staging), and Diego Cell (Running).
 
-* Step 1: cf push from Developer to CF CLI.
-* Step 2: Checksum source files from Developer to CF CLI.
-* Step 3: Resource Match from CF CLI to the CCNG.
+* Step 1: cf push from Developer to Tanzu cf CLI.
+* Step 2: Checksum source files from Developer to Tanzu cf CLI.
+* Step 3: Resource Match from Tanzu cf CLI to the CCNG.
 * Step 4: Check file existence from the CCNG to Blobstore.
-* Step 5: Upload unmatched files from CF CLI to CCNG.
+* Step 5: Upload unmatched files from Tanzu cf CLI to CCNG.
 * Step 6: Download cached files from Blobstore to CCNG.
 * Step 7: Upload complete package from CCNG to Blobstore.
 * Step 8: Download package and buildpack from Blobstore to Diego Cell (Staging).
@@ -79,19 +79,19 @@ The process in which the staging process uses the blobstore is as follows:
 
 1. **cf push:** A developer runs `cf push`.
 
-1. **Create app:** The Cloud Foundry Command Line Interface (cf CLI) gathers local source code files and computes a checksum of each.
+1. **Create app:** The Tanzu Tanzu cf CLI gathers local source code files and computes a checksum of each.
 
-1. **Store app metadata:** The cf CLI makes a `resource_matches` request, which matches resources to Cloud Controller. The request lists file names and their checksums. For more information and an example API request, see [Resource Matches](http://v3-apidocs.cloudfoundry.org/version/3.74.0/index.html#resource-matches) in the <%= vars.app_runtime_abbr %> API documentation.
+1. **Store app metadata:** The Tanzu cf CLI makes a `resource_matches` request, which matches resources to Cloud Controller. The request lists file names and their checksums. For more information and an example API request, see [Resource Matches](http://v3-apidocs.cloudfoundry.org/version/3.74.0/index.html#resource-matches) in the <%= vars.app_runtime_abbr %> API documentation.
 
 1. **Check file existence** includes the following:
     <ol type="a">
     <li>The Cloud Controller makes a series of `HEAD` requests to the blobstore to find out which files it has cached.</li>
     <li>Cloud Controller content-addresses its cached files so that changes to a file result in it being stored as a different object.</li>
-    <li>Cloud Controller computes which files it has and which it needs the cf CLI to upload. This process can take a long time.
-    <li>In response to the resource match request, Cloud Controller lists the files the cf CLI needs to upload.</li>
+    <li>Cloud Controller computes which files it has and which it needs the Tanzu cf CLI to upload. This process can take a long time.
+    <li>In response to the resource match request, Cloud Controller lists the files the Tanzu cf CLI needs to upload.</li>
     </ol>
 
-1. **Upload unmatched files:** The cf CLI compresses and uploads the unmatched files to Cloud Controller.
+1. **Upload unmatched files:** The Tanzu cf CLI compresses and uploads the unmatched files to Cloud Controller.
 
 1. **Download cached files:** Cloud Controller downloads, to its local disk, the matched files that are cached in the blobstore.
 

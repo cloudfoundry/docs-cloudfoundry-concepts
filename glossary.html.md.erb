@@ -21,7 +21,7 @@ This topic tells you about <%= vars.app_runtime_first %> terms and definitions.
 | Domains       | A domain name like `<%= vars.app_domain %>`. Domains can also be multi level and contain sub-domains like the "myapp" in `myapp.<%= vars.app_domain %>`. Domain objects belong to an org and are not directly bound to apps. |
 | Droplet       | An archive within <%= vars.app_runtime_abbr %> that contains the app ready to run on Diego. A droplet is the result of the application staging process. |
 | Managed Services | Services provided by third parties that are integrated into <%= vars.app_runtime_abbr %> through APIs so that <%= vars.app_runtime_abbr %> users can provision reserved resources and credentials on demand. Also called Custom Services. |
-| Management    | You can manage spaces and orgs with the Cloud Foundry Command Line Interface (cf CLI), the Cloud Controller API (CAPI), and the Cloud Foundry Eclipse Plug-in. |
+| Management    | You can manage spaces and orgs with the Tanzu cf CLI, the Cloud Controller API (CAPI), and the Cloud Foundry Eclipse Plug-in. |
 | Org | An org is the top-most meta object within the <%= vars.app_runtime_abbr %> infrastructure. Only an account with administrative privileges on a <%= vars.app_runtime_abbr %> instance can manage its orgs. |
 | Routes        | A route, based on a domain with an optional host as a prefix, can be associated with one or more apps. For example, `myapp` is the host and `<%= vars.app_domain %>` is the domain when using the route `myapp.<%= vars.app_domain %>`. You can have a route that represents `<%= vars.app_domain %>` without a host. Routes are children of domains and are directly bound to apps. |
 | Service       | A "factory" which produces service instances. |
