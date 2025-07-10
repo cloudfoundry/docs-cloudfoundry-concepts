@@ -353,7 +353,13 @@ experimental opsfile on GitHub.
 Gorouter can be configured to use different load balancing algorithms for routing incoming requests to app instances. The Gorouter maintains a dynamically
 updated list of app instances for each route. Depending on which algorithm is selected, it forwards to one of the app instances.
 
-To configure the behavior, you can change the value of `router.balancing_algorithm` manifest property to either of the following options:
+As a platform operator, you can configure the behavior by changing the value of `router.balancing_algorithm` manifest property.
+
+<% if vars.platform_code == 'CF' %>
+As an application developer, you can configure the load balancing algorithm by following the guide [Configuring per-route options](../devguide/custom-per-route-options.html) which describes how to specify load balancing algorithms scoped at the application level.
+<% end %>
+
+The possible options:
 
 * `round-robin`. For more information, see [Round-Robin Load Balancing](#round-robin).
 
