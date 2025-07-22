@@ -183,7 +183,7 @@ A third-party broker might offer a dashboard client in its catalog. Dashboard cl
 
 ## <a id='logging'></a> Security event logging and auditing
 
-For operators, <%= vars.app_runtime_abbr %> provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform. Additionally, operators can redirect <%= vars.app_runtime_abbr %> component logs to a standard syslog server using the `syslog_daemon_config` [propery](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
+For operators, <%= vars.app_runtime_abbr %> provides an audit trail through the `bosh tasks` command. This command shows all actions that an operator has taken with the platform. Additionally, operators can redirect <%= vars.app_runtime_abbr %> component logs to a standard syslog server using the `syslog_daemon_config` [property](http://docs.cloudfoundry.org/running/managing-cf/logging.html) in the `metron_agent` job of `cf-release`.
 
 For users, <%= vars.app_runtime_abbr %> records an audit trail of all relevant API invocations of an app. The Cloud Foundry Command Line Interface (cf CLI) command `cf events` returns this information.
 
