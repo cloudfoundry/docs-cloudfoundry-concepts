@@ -356,6 +356,7 @@ The following table describes examples of typical ASGs. Configure your ASGs in a
 | --- | ---
 | `dns` | DNS, either public or private |
 | `public-networks` | Public networks, excluding IaaS metadata endpoints |
+| `public_networks_ipv6` | Public IPV6 networks |
 | `private-networks` | Private networks in accordance with [RFC-1918](https://tools.ietf.org/html/rfc1918#section-3) |
 | `load-balancers` | The internal <%= vars.app_runtime_abbr %> load balancer and others |
 | `internal-proxies` | Internal proxies |
@@ -411,6 +412,22 @@ The following is an example `public_networks` ASG:
   },
   {
     "destination": "192.169.0.0-255.255.255.255",
+    "protocol": "all"
+  }
+]
+```
+
+### <a id='public-networks-ipv6-example'></a> Public IPv6 networks
+
+For IPv6-enabled environments, public repositories and services are generally accessible within the range 2000::/3.
+As this configuration is in an experimental phase, the provided range is intended for testing purposes only. Before deploying in production environments, additional research on IPs to exclude for enhanced security is recommended.
+
+The following is an example `public_networks_ipv6` ASG:
+
+```
+[
+  {
+    "destination": "2000::/3",
     "protocol": "all"
   }
 ]
