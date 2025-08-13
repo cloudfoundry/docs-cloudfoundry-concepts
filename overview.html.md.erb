@@ -108,11 +108,11 @@ For more information, see:
 
 This section describes how <%= vars.app_runtime_abbr %> organizes users and workspaces.
 
-<%= vars.app_runtime_abbr %> manages user accounts through two User Account and Authentication (UAA) servers, which support access control as OAuth2 services and can store user information internally, or connect to external user stores through LDAP or SAML.
+<%= vars.app_runtime_abbr %> manages user accounts through two User Account and Authentication (Tanzu UAA) servers, which support access control as OAuth2 services and can store user information internally, or connect to external user stores through LDAP or SAML.
 
 For more information, see [User Account and Authentication (UAA) Server](./architecture/uaa.html).
 
-The following table describes what the two UAA servers do:
+The following table describes what the two Tanzu UAA servers do:
 
 <table><thead>
   <tr>
@@ -120,11 +120,11 @@ The following table describes what the two UAA servers do:
     <th>Purpose</th>
   </tr></thead>
   <tbody><tr>
-    <td>First UAA server</td>
+    <td>First Tanzu UAA server</td>
     <td><ul><li>Grants access to BOSH</li><li>Holds accounts for <%= vars.ops_manager %> operators who deploy runtimes, services, and other software onto the BOSH layer directly</li></ul></td>
   </tr>
   <tr>
-    <td>Second UAA server</td>
+    <td>Second Tanzu UAA server</td>
     <td><ul><li>Controls access to the Cloud Controller</li><li>Defines user roles, such as admin, developer, or auditor, and grants them different sets of privileges to run <%= vars.app_runtime_abbr %> commands</li><li>Scopes the roles to separate, compartmentalized orgs and spaces within an installation to manage and track use</li></ul></td>
   </tr></tbody>
 </table>

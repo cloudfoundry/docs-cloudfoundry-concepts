@@ -20,13 +20,13 @@ These summaries are limited to the roles and responsibilities these components h
 
 | Component Name | Summary |
 |----------------|---------|
-| BOSH manifest | Used to configure route registrar with route(s) for system components such as UAA and Loggregator. |
+| BOSH manifest | Used to configure route registrar with route(s) for system components such as Tanzu UAA and Loggregator. |
 | Cloud Controller | Contains route metadata, including whether they are HTTP or TCP. |
 | Diego BBS | Contains IP and port metadata as well as route metadata from Cloud Controller, which route emitter discovers. |
 | Diego cell | Manages app instances and tasks and long-running processes related to them. A route emitter runs on each cell. |
 | Gorouter | Routes HTTP traffic coming into <%= vars.app_runtime_abbr %> to the appropriate component. Receives route updates through NATS. Routes that have not been updated in two minutes are pruned from the Gorouter's database. |
 | NATS | Receives routing configuration from route emitter and provides same to Gorouter. |
-| Route registrar | Sends routing metadata described in BOSH manifest for system components such as UAA and Loggregator to NATS. This is because the Diego cell does not have information about system components, only about user spaces. |
+| Route registrar | Sends routing metadata described in BOSH manifest for system components such as Tanzu UAA and Loggregator to NATS. This is because the Diego cell does not have information about system components, only about user spaces. |
 | Route emitter | Periodically emits route, IP, and port metadata to NATS or Routing API as registration and unregistration messages. Does not know about app instances on Diego cell, but knows what cell it belongs to and learns about what app instances are running on its cell by asking Diego BBS for information about app instances on the same cell. |
 | Routing API | Receives routing configuration from route emitter and other internal clients, and provides routing configuration for TCP router. |
 | Routing database | Saves some routing data from Routing API. If the Gorouter misses a message about an unmapped route from NATS, it does not get it again, so TCP router and Routing API can consult routing database for current state of routes. |
