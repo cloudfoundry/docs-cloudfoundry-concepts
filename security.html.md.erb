@@ -48,7 +48,7 @@ The diagram shows the following components:
 - Private vLANs
 	- Cloud Foundry vLAN
 		- Three Go Routers
-		- OAuth2 Server (UAA)
+		- OAuth2 Server (Tanzu Tanzu UAA)
 		- Login Server
 		- Cloud Controller
 		- nsync
@@ -86,7 +86,7 @@ The preceding diagram shows the following communications:
 
 ### <a id='protocols'></a> Protocols
 
-All traffic from the public internet to the Cloud Controller and UAA happens over HTTPS. Inside the boundary of the system, components communicate over a publish-subscribe (pub-sub) message bus NATS, HTTP, and SSL/TLS.
+All traffic from the public internet to the Cloud Controller and Tanzu UAA happens over HTTPS. Inside the boundary of the system, components communicate over a publish-subscribe (pub-sub) message bus NATS, HTTP, and SSL/TLS.
 
 ### <a id='bosh'></a> BOSH
 
@@ -132,14 +132,14 @@ For API commands related to isolation segments, see [Isolation Segments](http://
 
 ## <a id='auth'></a> Authentication and authorization
 
-[User Account and Authentication](./architecture/uaa.html) (UAA) is the central identity management service for <%= vars.app_runtime_abbr %> and its various components.
+[Tanzu User Account and Authentication](./architecture/uaa.html) (Tanzu UAA) is the central identity management service for <%= vars.app_runtime_abbr %> and its various components.
 
-UAA acts as an [OAuth2](https://oauth.net/2/) Authorization Server and issues access tokens for apps that request platform resources.
-The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by UAA.
+Tanzu UAA acts as an [OAuth2](https://oauth.net/2/) Authorization Server and issues access tokens for apps that request platform resources.
+The tokens are based on the [JSON Web Token](http://jwt.io/) and are digitally signed by Tanzu UAA.
 
-Operators can configure the identity store in UAA. If users register an account with the <%= vars.app_runtime_abbr %> platform, UAA acts as the user store and stores user passwords in the UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the <%= vars.app_runtime_abbr %> platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the <%= vars.app_runtime_abbr %> platform.
+Operators can configure the identity store in Tanzu UAA. If users register an account with the <%= vars.app_runtime_abbr %> platform, Tanzu UAA acts as the user store and stores user passwords in the Tanzu UAA database using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt). Tanzu UAA also supports connecting to external user stores through LDAP and SAML. Once an operator has configured the external user store, such as a corporate Microsoft Active Directory, users can use their LDAP credentials to gain access to the <%= vars.app_runtime_abbr %> platform instead of registering a separate account. Alternatively, operators can use SAML to connect to an external user store and enable single sign-on for users into the <%= vars.app_runtime_abbr %> platform.
 
-Standard <%= vars.app_runtime_abbr %> deployments based on [cf-deployment](https://github.com/cloudfoundry/cf-deployment) provide a UAA client `cf` that can be used to create OAuth 2 tokens using the Password Grant Flow for <%= vars.app_runtime_abbr %> users that are needed to access the CF API. This UAA client is also used by the Tanzu cf CLI. The UAA client `cf` doesn't require a `client_secret`.
+Standard <%= vars.app_runtime_abbr %> deployments based on [cf-deployment](https://github.com/cloudfoundry/cf-deployment) provide a Tanzu UAA client `cf` that can be used to create OAuth 2 tokens using the Password Grant Flow for <%= vars.app_runtime_abbr %> users that are needed to access the CF API. This Tanzu UAA client is also used by the Tanzu cf CLI. The Tanzu UAA client `cf` doesn't require a `client_secret`.
 
 ### <a id='rbac'></a> Managing user access with Role-Based Access Control
 
@@ -156,7 +156,7 @@ Service instances bound to an app contain credential data. Users specify the bin
 
 The selected third-party broker controls how securely to communicate managed service credentials.
 
-A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. <%= vars.app_runtime_abbr %> does not store this secret in the CCDB. Instead, <%= vars.app_runtime_abbr %> passes the secret to the UAA component for verification using HTTP or HTTPS.
+A third-party broker might offer a dashboard client in its catalog. Dashboard clients require a text string defined as a `client_secret`. <%= vars.app_runtime_abbr %> does not store this secret in the CCDB. Instead, <%= vars.app_runtime_abbr %> passes the secret to the Tanzu UAA component for verification using HTTP or HTTPS.
 
 
 ## <a id='vuln-manage'></a> Managing software vulnerabilities
@@ -168,7 +168,7 @@ A third-party broker might offer a dashboard client in its catalog. Dashboard cl
 
 <%= vars.app_runtime_abbr %> secures both the code and the configuration of an app using the following functions:
 
-* App developers push their code using the <%= vars.app_runtime_abbr %> API. <%= vars.app_runtime_abbr %> secures each call to the <%= vars.app_runtime_abbr %> API using the [UAA](#auth) and SSL.
+* App developers push their code using the <%= vars.app_runtime_abbr %> API. <%= vars.app_runtime_abbr %> secures each call to the <%= vars.app_runtime_abbr %> API using [UAA](#auth) and SSL.
 
 * The Cloud Controller uses [RBAC](#rbac) to ensure that only authorized users can access a particular app.
 
@@ -190,7 +190,7 @@ For users, <%= vars.app_runtime_abbr %> records an audit trail of all relevant A
 
 To help run a secure deployment, <%= vars.company_name %> recommends:
 
-* Configure UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.
+* Configure Tanzu UAA clients and users using a BOSH manifest. Limit and manage these clients and users as you would any other kind of privileged account.
 
 * Deploy within a VLAN that limits network traffic to individual VMs. This reduces the possibility of unauthorized access to the VMs within your BOSH-managed cloud.
 
