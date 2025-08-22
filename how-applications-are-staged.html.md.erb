@@ -103,25 +103,25 @@ The staging process for Docker images includes a developer and the following com
 
 [//]: https://docs.google.com/drawings/d/1ckWGbgTWhyc3LxP4QcVD1IgwnHu1w2XNvT28-r51Z3M/edit?usp=sharing
 
-The following steps describe each step in the process of staging a Docker image:
+The following describes each step in the process of staging a Docker image:
 
 1. A developer runs `cf push` and includes the name of a Docker image in an accessible Docker Registry.
 
-1. The Tanzu cf CLI tells the Cloud Controller to create a record for the Docker image.
+2. The Tanzu cf CLI tells the Cloud Controller to create a record for the Docker image.
 
-1. This step includes:
+3. This step includes:
 	<ol type="a">
 	<li> The Cloud Controller issues a staging request to Diego.</li>
 	<li> Diego schedules a Diego Cell to run the task.</li>
 	</ol>
 
-1. Diego Cell streams the output of the staging process. You might need to view the output to troubleshoot staging problems.
+4. Diego Cell streams the output of the staging process. You might need to view the output to troubleshoot staging problems.
 
-1. The task fetches the metadata associated with the Docker image and returns a portion of it to the Cloud Controller.
+5. The task fetches the metadata associated with the Docker image and returns a portion of it to the Cloud Controller.
 
-1. Cloud Controller stores the metadata in the Cloud Controller database.
+6. Cloud Controller stores the metadata in the Cloud Controller database.
 
-1. This step includes:
+7. This step includes:
 	<ol type="a">
 	<li> Cloud Controller uses the Docker image metadata to construct a LRP that runs the start command specified in the Dockerfile.</li>
 	<li> Cloud Controller submits the LRP to Diego.</li>
