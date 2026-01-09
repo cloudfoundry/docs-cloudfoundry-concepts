@@ -41,17 +41,16 @@ The [Cloud Controller](./cloud-controller.html) (CC) directs the deployment of a
 
 The Cloud Controller also maintain records of [orgs, spaces, user roles](../roles.html), services, and more.
 
-### <a id='nsync-bbs'></a> nsync, BBS, and Cell Reps
+### <a id='bbs'></a> BBS and Cell Reps
 
 To keep applications available, cloud deployments must constantly monitor their states and reconcile them with their expected states, starting and stopping processes as required.
 
-![<%= vars.app_runtime_abbr %> Architecture](../images/diego/app-monitor-sync-diego.png)
+![<%= vars.app_runtime_abbr %> Architecture](../images/diego/app-monitor-diego.png)
 
-The nsync, BBS, and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which might crash or become unavailable.
+The BBS and Cell Rep components work together along a chain to keep apps running. At one end is the user. At the other end are the instances of applications running on widely-distributed VMs, which might crash or become unavailable.
 
 Here is how the components work together:
 
-* **nsync** receives a message from the Cloud Controller when the user scales an app. It writes the number of instances into a `DesiredLRP` structure in the Diego BBS database.
 * **BBS** uses its convergence process to monitor the `DesiredLRP` and `ActualLRP` values. It runs or stops application instances as appropriate to ensure the `ActualLRP` count matches the `DesiredLRP` count.
 * **Cell Rep** monitors the containers and provides the `ActualLRP` value.
 
