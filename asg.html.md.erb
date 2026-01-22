@@ -356,6 +356,7 @@ The following table describes examples of typical ASGs. Configure your ASGs in a
 | --- | ---
 | `dns` | DNS, either public or private |
 | `public-networks` | Public networks, excluding IaaS metadata endpoints |
+| `public_networks_ipv6` | Public IPv6 networks |
 | `private-networks` | Private networks in accordance with [RFC-1918](https://tools.ietf.org/html/rfc1918#section-3) |
 | `load-balancers` | The internal <%= vars.app_runtime_abbr %> load balancer and others |
 | `internal-proxies` | Internal proxies |
@@ -415,6 +416,25 @@ The following is an example `public_networks` ASG:
   }
 ]
 ```
+
+### <a id='public-networks-ipv6-example'></a> Public IPv6 networks
+
+In IPv6 networking, the range 2000::/3 encompasses the entirety of the public IPv6 address space. Unlike IPv4, IPv6 lacks explicitly designated private address ranges, meaning that most addresses are public unless configured otherwise.
+
+Within your infrastructure, some IPs may serve internal functions, such as those for Diego cells or BOSH-managed nodes. To maintain security, these adresses should be excluded from ASG access settings, as they are protected from external requests via global firewall rules that apply for the CF foundation. 
+
+Example ASG configuration for testing purposes:
+
+```
+[
+  {
+    "destination": "2000::/3",
+    "protocol": "all"
+  }
+]
+```
+
+Ensure thorough assessment to identify and exclude any internal IPs before finalizing configurations for production environments.
 
 ### <a id='private-networks-example'></a> Private networks
 
