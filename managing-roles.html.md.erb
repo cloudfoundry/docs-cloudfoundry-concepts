@@ -1,0 +1,177 @@
+---
+title: Managing roles in Cloud Foundry
+owners: CAPI, Identity
+---
+
+This topic describes how to manage user roles in <%= vars.app_runtime_abbr %> using the cf CLI.
+
+For a description of the available roles and their permissions, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
+
+
+## <a id='prerequisites'></a> Prerequisites
+
+To manage roles, you must be logged in as a user with sufficient permissions:
+
+- Assigning and removing **org roles** requires admin or Org Manager privileges in the target org.
+- Assigning and removing **space roles** requires admin, Org Manager in the parent org, or Space Manager privileges in the target space.
+
+For more information, see [Permitted roles](https://v3-apidocs.cloudfoundry.org/index.html#create-a-role) in the Cloud Foundry API documentation.
+
+
+## <a id='view'></a> View users in an org or space
+
+To list the users with roles in an org:
+
+```
+cf org-users ORG
+```
+
+Where `ORG` is the name of the org.
+
+<pre class="terminal">
+$ cf org-users example-org
+Getting users in org example-org as admin...
+
+ORG MANAGER
+  alice<span>@</span>example.com
+
+BILLING MANAGER
+  huey<span>@</span>example.com
+
+ORG AUDITOR
+  louie<span>@</span>example.com
+</pre>
+
+To list the users with roles in a space:
+
+```
+cf space-users ORG SPACE
+```
+
+<pre class="terminal">
+$ cf space-users example-org example-space
+Getting users in org example-org / space example-space as admin...
+
+SPACE MANAGER
+  alice<span>@</span>example.com
+
+SPACE DEVELOPER
+  huey<span>@</span>example.com
+  dewey<span>@</span>example.com
+
+SPACE AUDITOR
+  louie<span>@</span>example.com
+</pre>
+
+
+## <a id='assign'></a> Assign a role
+
+### <a id='assign-org-role'></a> Assign an org role
+
+To assign an org role to a user:
+
+```
+cf set-org-role USERNAME ORG ROLE
+```
+
+Where:
+<ul>
+  <li>`USERNAME` is the username of the user.</li>
+  <li>`ORG` is the name of the org.</li>
+  <li>`ROLE` is the role to assign. Valid org roles are `OrgManager`, `OrgAuditor`, and `BillingManager`.</li>
+</ul>
+
+<pre class="terminal">
+$ cf set-org-role huey@example.com example-org OrgManager
+Assigning role OrgManager to user huey<span>@</span>example.com in org example-org as admin...
+OK
+</pre>
+
+### <a id='assign-space-role'></a> Assign a space role
+
+Before assigning a space role to a user or UAA client, you must first assign them an org role in the parent org. The space role assignment will fail with `error code: 1002` otherwise.
+
+To assign a space role to a user:
+
+```
+cf set-space-role USERNAME ORG SPACE ROLE
+```
+
+Where:
+<ul>
+  <li>`USERNAME` is the username of the user.</li>
+  <li>`ORG` is the name of the org that contains the space.</li>
+  <li>`SPACE` is the name of the space.</li>
+  <li>`ROLE` is the role to assign. Valid space roles are `SpaceDeveloper`, `SpaceManager`, `SpaceAuditor`, and `SpaceSupporter`.</li>
+</ul>
+
+<pre class="terminal">
+$ cf set-space-role huey@example.com example-org example-space SpaceDeveloper
+Assigning role SpaceDeveloper to user huey<span>@</span>example.com in org example-org / space example-space as admin...
+OK
+</pre>
+
+
+## <a id='remove'></a> Remove a role
+
+To remove an org role from a user:
+
+```
+cf unset-org-role USERNAME ORG ROLE
+```
+
+To remove a space role from a user:
+
+```
+cf unset-space-role USERNAME ORG SPACE ROLE
+```
+
+The arguments follow the same conventions as the corresponding `set-*-role` commands.
+
+
+## <a id='clients'></a> Assign roles to UAA clients
+
+UAA clients can be assigned org and space roles in the same way as users. The client's UAA client ID takes the place of the username, and you must pass the `--client` flag to indicate that the subject is a UAA client rather than a user. For more information about UAA clients, see [UAA clients](./roles.html#clients) in _Orgs, Spaces, Roles, and Permissions_.
+
+### <a id='assign-client-org-role'></a> Assign an org role to a client
+
+```
+cf set-org-role CLIENT_ID ORG ROLE --client
+```
+
+<pre class="terminal">
+$ cf set-org-role my-pipeline-client example-org OrgAuditor --client
+Assigning role OrgAuditor to user my-pipeline-client in org example-org as admin...
+OK
+</pre>
+
+### <a id='assign-client-space-role'></a> Assign a space role to a client
+
+```
+cf set-space-role CLIENT_ID ORG SPACE ROLE --client
+```
+
+<pre class="terminal">
+$ cf set-space-role my-pipeline-client example-org example-space SpaceDeveloper --client
+Assigning role SpaceDeveloper to user my-pipeline-client in org example-org / space example-space as admin...
+OK
+</pre>
+
+To remove a client role, use `cf unset-org-role` or `cf unset-space-role` with the `--client` flag in the same way.
+
+> **Note:** For automation that requires elevated platform-wide permissions, configure those scopes directly on the UAA client rather than assigning org or space roles. For more information, see [Creating and Managing Users with the UAA CLI (UAAC)](../uaa/uaa-user-management.html).
+
+
+## <a id='multi-origin'></a> Disambiguate users across multiple origins
+
+If a username corresponds to accounts in more than one identity provider — for example, a user exists in both the internal UAA store and an external LDAP store — running `cf set-org-role` or `cf unset-org-role` with only a username returns an error:
+
+<pre class="terminal">The user exists in multiple origins. Specify an origin for the requested user from: 'uaa', 'ldap'</pre>
+
+Pass the `--origin` flag to specify which origin's account to target:
+
+```
+cf set-org-role USERNAME ORG ROLE --origin ORIGIN
+```
+
+Where `ORIGIN` is the UAA origin key for the identity provider (for example, `uaa`, `ldap`, or `saml`).
