@@ -8,7 +8,7 @@ App Security Groups (ASGs) are a collection of egress rules that enable you to s
 ports, and IP address ranges where app or task instances send traffic.
 
 ASGs define **allow** rules, and their order of evaluation is unimportant when multiple ASGs apply to the same space or deployment. The platform sets up rules to filter and log outbound network traffic
-from app and task instances. ASGs apply to both buildpack-based and Docker-based apps and tasks.
+from app and task instances. ASGs apply to both buildpack-based and Docker-based apps and tasks. Since capi-release v1.212.0, IPv6 is supported in ASGs.
 
 ## <a id='staging-running'></a> Staging and running ASGs
 
@@ -94,18 +94,18 @@ For more information, see [Managing ASGs with the cf CLI](#procedures).
 
 ASG rules are specified as a JSON array of ASG objects. An ASG object has the following attributes:
 
-| Attribute | Description | Notes |
-| --------- | ----------- | ----- |
-| `protocol` | `tcp`, `udp`, `icmp`, or `all` | Required |
+| Attribute | Description                             | Notes |
+| --------- |-----------------------------------------| ----- |
+| `protocol` | `tcp`, `udp`, `icmp`, `icmpv6` or `all` | Required |
 <% if vars.platform_code == 'CF' %>
-| `destination` | A comma deliminated list of single IP addresses, IP address ranges like `192.0.2.0-192.0.2.50`, or CIDR blocks that can receive traffic | Destination lists became available in capi-release 1.180.0 and can be enabled by setting the `cc.security_groups.enable_comma_delimited_destinations` bosh property to true.  |
+| `destination` | A comma deliminated list of single IP addresses, IP address ranges like `192.0.2.0-192.0.2.50`, or CIDR blocks that can receive traffic | Destination lists became available in capi-release 1.180.0 and can be enabled by setting the `cc.security_groups.enable_comma_delimited_destinations` bosh property to true. IPv6 addresses, ranges and CIDR blocks are enabled if `cc.enable_ipv6` is true. For `icmp` you can only use IPv4 addresses and for `icmpv6` only IPv6 addresses. |
 <% end %>
 <% if vars.platform_code == 'PCF' %>
 | `destination` | A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block that can receive traffic |  |
 <% end %>
 | `ports` | A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081` | Only possible if `protocol` is `tcp` or `udp`. |
-| `code` | ICMP code | Required when `protocol` is `icmp`. A value of `-1` allows all codes. |
-| `type` | ICMP | Required when `protocol` is `icmp`. A value of `-1` allows all types.
+| `code` | ICMP code | Required when `protocol` is `icmp` or `icmpv6`. A value of `-1` allows all codes. |
+| `type` | ICMP | Required when `protocol` is `icmp` or `icmpv6`. A value of `-1` allows all types.
 | `log` | Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see [Using Log Management Services](../devguide/services/log-management.html). | Logging is only supported with protocol type `tcp`. |
 | `description` | An optional field for operators managing ASG rules |  |
 
@@ -160,7 +160,13 @@ following example, which allows ICMP traffic of code `1` and type `0` to all des
         "protocol": "icmp",
         "destination": "0.0.0.0/0",
         "type": 0,
-        "code": 0
+        "code": 1
+      },
+      {
+        "protocol": "icmpv6",
+        "destination": "::/0",
+        "type": 0,
+        "code": 1
       },
       {
         "protocol": "tcp",
@@ -411,6 +417,10 @@ The following is an example `public_networks` ASG:
   },
   {
     "destination": "192.169.0.0-255.255.255.255",
+    "protocol": "all"
+  },
+  {
+    "destination": "::/0",
     "protocol": "all"
   }
 ]
