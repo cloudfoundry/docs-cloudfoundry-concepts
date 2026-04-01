@@ -1,7 +1,4 @@
----
-title: HTTP routing
-owner: CF for VMs Networking
----
+# HTTP routing
 
 This topic tells you how the Gorouter, the main component in the <%= vars.app_runtime_first %> routing tier, routes HTTP traffic within
 <%= vars.app_runtime_abbr %>.
@@ -330,8 +327,8 @@ from the Gorouter's routing table. For more information, see [TLS to apps and ot
 
 Gorouter can validate app instance identity using TLS only when Diego Cells are configured appropriately. Because Diego Cells are configured for TLS
 through the instance group that they belong to, the Gorouter can run in different consistency modes with Diego Cells in different instance groups. For
-example, the Gorouter can communicate over TLS and validate the Diego Cells in one isolation segment, while communicating with Diego Cells in another
-isolation segment over plain text and without validating instance identity.
+example, the Gorouter can communicate over TLS and validate the Diego Cells in one <%= vars.segment_runtime_full %>, while communicating with Diego Cells in another
+<%= vars.segment_runtime_full %> over plain text and without validating instance identity.
 <% end %>
 
 Currently, only Linux cells support the Gorouter validating app instance identities using TLS by default. With Windows cells, the Gorouter connects to back

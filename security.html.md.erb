@@ -1,14 +1,4 @@
----
-title: Cloud Foundry security
-owner: Security
----
-
-<%# Reset page title based on product title %>
-<% if vars.platform_code != 'CF' %>
-
-<% set_title(vars.app_runtime_abbr, "Security") %>
-
-<% end %>
+# <%= vars.app_runtime_abbr %> Security
 
 This topic provides you with an overview of <%= vars.app_runtime_first %> security.
 For an overview of container security, see [Container Security](container-security.html).
@@ -105,13 +95,13 @@ BOSH includes the following capability for security:
 <p class="note important">
 BOSH does not encrypt data stored on BOSH VMs. Your IaaS might encrypt this data.</p>
 
-## <a id='isolation-segments'></a> Isolation segments
+## <a id='isolation-segments'></a> <%= vars.segment_runtime_full %>s
 
-Isolation segments provide dedicated pools of resources to which apps can be deployed to isolate workloads. Using isolation segments separates app resources as completely as if they were in different <%= vars.app_runtime_abbr %> deployments but avoids redundant management components and unneeded network complexity.
+<%= vars.segment_runtime_full %>s provide dedicated pools of resources to which apps can be deployed to isolate workloads. Using <%= vars.segment_runtime_full %>s separates app resources as completely as if they were in different <%= vars.app_runtime_abbr %> deployments but avoids redundant management components and unnecessary network complexity.
 
-You can designate isolation segments for exclusive use by orgs and spaces within <%= vars.app_runtime_abbr %>. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces. For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
+You can designate <%= vars.segment_runtime_full %>s for exclusive use by orgs and spaces within <%= vars.app_runtime_abbr %>. This guarantees that apps within the org or space use resources that are not also used by other orgs or spaces. For more information, see [Orgs, Spaces, Roles, and Permissions](./roles.html).
 
-Customers can use isolation segments for different reasons, including:
+Customers can use <%= vars.segment_runtime_full %>s for different reasons, including:
 
 * To follow regulatory restrictions that require separation between different types of apps. For example, a health care company might not be able to host medical records and billing systems on the same machines.
 
