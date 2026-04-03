@@ -87,7 +87,7 @@ The process in which the staging process uses the blobstore is as follows:
     <ol type="a">
     <li>The Cloud Controller makes a series of `HEAD` requests to the blobstore to find out which files it has cached.</li>
     <li>Cloud Controller content-addresses its cached files so that changes to a file result in it being stored as a different object.</li>
-    <li>Cloud Controller computes which files it has and which it needs the cf CLI to upload. This process can take a long time.
+    <li>Cloud Controller computes which files it has and which it needs the cf CLI to upload. This process can take a long time.</li>
     <li>In response to the resource match request, Cloud Controller lists the files the cf CLI needs to upload.</li>
     </ol>
 
