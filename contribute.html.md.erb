@@ -47,11 +47,13 @@ To submit a pull request:
 
 1. Click **Create pull request**.
 
+1. Please put your PR in "Draft" state until you are ready for the Docs Working Group to review and merge it. This prevents us merging it before you are done with it / before all the review comments are in. When you are ready to have it merged, change the state to "Ready for Review."
+
 ### <a id='issue'></a> Raising a GitHub issue
 
-If you do not have specific edits to make, but want start a discussion or make a general suggestion, you can raise a GitHub issue.
+If you do not have specific edits to make, but you want start a discussion or make a general suggestion, you can raise a GitHub issue.
 
-GitHub issues take longer to resolve than pull requests. But, if you describe the issue with helpful background information, and have specific and actionable instructions, the <%= vars.platform_name %> documentation team can quickly address it.
+GitHub issues take longer to resolve than pull requests. But if you describe the issue with helpful background information, and have specific and actionable instructions, the <%= vars.platform_name %> documentation team can quickly address it. Be sure to tag anyone who you think has more information or who will be interesting in helping with it.
 
 Vague or partially-baked GitHub issues might remain unaddressed for some time.
 
@@ -101,7 +103,9 @@ For further guidance, contact the <%= vars.platform_name %> documentation team o
 
 ## <a id='preview'></a> Previewing documentation changes
 
-The <%= vars.platform_name %> documentation team uses the tool [Bookbinder](https://github.com/pivotal-cf/bookbinder) to publish the <%= vars.platform_name %> documentation.
+> **Note** Since tbe Bookbinder instance has moved, this procedure is unlilkely to work for you. If you need support, or it's very important to preview your changs before publishing, please ask for help on the Cloud Foundry Slack, #cf-docs. All submissions are reviewed for syntax and coherence before merging, but the Doc WG does not have CF experts to verify technical changes.
+
+The <%= vars.platform_name %> documentation team uses the tool [Bookbinder](https://bosh.ci.cloudfoundry.org/teams/wg-docs/pipelines/cf-current) to publish the <%= vars.platform_name %> documentation.
 
 The following instructions explain how to use Bookbinder to preview your documentation changes locally. But you do not have to install or use Bookbinder in order to contribute to the <%= vars.platform_name %> documentation.
 
