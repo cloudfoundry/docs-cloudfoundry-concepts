@@ -1,19 +1,29 @@
 # Cloud Foundry Concepts Guide
 
-This repository contains the Cloud Foundry concepts guide, designed to help users and others understand how Cloud Foundry works.
+This repository contains the Cloud Foundry concepts guide, designed to help users understand how Cloud Foundry works. It also contains architecture and Container-to-Container Networking diagrams.
 
-The contents here are structured as a topic repository intended to be
-compiled into a larger document with
-[Bookbinder](http://github.com/cloudfoundry-incubator/bookbinder).
+This is a content repository in the [Cloud Foundry documentation set](https://github.com/cloudfoundry/docs-book-cloudfoundry).
 
-See the [docs-book-cloudfoundry](http://github.com/cloudfoundry/docs-book-cloudfoundry)
-repository for the complete list of open source documentation repositories, as well as
-information about the publishing process.
+> **Note:** The source files for the architecture and Container-to-Container Networking diagrams have been lost.
 
-## Container-to-Container Networking Diagrams
+## Published location
 
-If you are a contributor to this documentation and would like to modify or propose a modification to the diagrams used in the _Container-to-Container Networking_ topic, see the source Google Drawings below:
+This content is published at https://docs.cloudfoundry.org/concepts/.
 
-* Architecture: https://docs.google.com/drawings/d/1oc2kr5hmltsD2wCEAm5_KTNErf0KOfFwXjYLoXS6geM/edit
-* Before c2c: https://docs.google.com/drawings/d/1RIZ6NzpwvN0TINTY2XwNox0ctOzP56IBTHpDkg0n-Kc/edit
-* After c2c: https://docs.google.com/drawings/d/1PaquEmZCsHUBq2ACjrKKWMqlM1QMwKOxN_iMLsoTYd0/edit
+## Branch
+
+This repository uses only the `master` branch for the Cloud Foundry OSS documentation.
+
+## Template variables
+
+Template variables for this content are defined in the `docs-book-cloudfoundry` repository at [`config/template_variables.yml`](https://github.com/cloudfoundry/docs-book-cloudfoundry/blob/master/config/template_variables.yml). Update that file to change variables that appear across this content.
+
+## Contributing
+
+1. Fork this repository.
+2. Create a branch from `master`, make your changes, and submit a pull request to `master`.
+
+Only the CFF Docs WG lead can merge pull requests, build to staging, and publish the documentation.
+
+* **Staging site:** https://docs-staging.cloudfoundry.org/
+* **Published site:** https://docs.cloudfoundry.org/
