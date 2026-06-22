@@ -14,7 +14,10 @@ Admins, Org Managers, and Space Managers can assign user roles using the Cloud F
 
 An org is a development account that an individual or multiple collaborators can own and use. All collaborators access an org with user accounts, which have roles such as Org Manager, Org Auditor, and Org Billing Manager. Collaborators in an org share a resource quota plan, apps, services availability, and custom domains.
 
-By default, an org has the status of _active_. An admin can set the status of an org to _suspended_ for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services.
+An admin can suspend an org for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services.
+
+<p class="note">
+  In the v3 Cloud Controller API, this state is exposed as a boolean <code>suspended</code> field on the org. In the v2 Cloud Controller API, it was formerly known as the <code>status</code> field.</p>
 
 For more information about the actions that each role can perform, see [User Roles](#roles) and [User Role Permissions](#permissions).
 
@@ -25,7 +28,16 @@ For details on what activities are allowed for suspended orgs, see [Roles and Pe
 
 A space provides users with access to a shared location for app development, deployment, and maintenance. An org can contain multiple spaces. Every app, service, and route is scoped to a space. Roles provide access control for these resources and each space role applies only to a particular space.
 
-Org managers can set quotas on the following for a space:
+An admin or an Org Manager can suspend a space. When a space is suspended, only admins and Org Managers of the parent org can operate on the space. Other space roles cannot perform actions in the space until it is reactivated.
+
+The Org Manager role administers the org but does not by itself grant permission to push apps, bind services, or otherwise modify the contents of a space. To perform these actions in a suspended space, a user must hold the Org Manager role and an appropriate space role, such as Space Manager or Space Developer.
+
+<p class="note">
+  The v3 Cloud Controller API exposes this state as a boolean <code>suspended</code> field on the space. The v2 Cloud Controller API does not expose space suspension.</p>
+
+For details on what activities are allowed for suspended spaces, see [Roles and Permissions for Suspended Spaces](#suspendedspaceroles).
+
+Org Managers can set quotas on the following for a space:
 
 * Usage of paid services
 * Number of app instances
@@ -84,7 +96,7 @@ Before you assign a space role to a user or UAA client, you must first assign th
 
 ## <a id='permissions'></a> User role permissions
 
-Each user role includes different permissions in a <%= vars.app_runtime_abbr %> foundation. The following sections describe the permissions associated with each user role in both active and suspended orgs in <%= vars.app_runtime_abbr %>.
+Each user role includes different permissions in a <%= vars.app_runtime_abbr %> foundation. The following sections describe the permissions associated with each user role in active orgs, suspended orgs, and suspended spaces in <%= vars.app_runtime_abbr %>.
 
 ### <a id='activeroles'></a> Roles and permissions for active orgs
 
@@ -104,10 +116,20 @@ For more information, see <a href="../adminguide/listing-feature-flags.html">Usi
 
 ### <a id='suspendedroles'></a> Roles and permissions for suspended orgs
 
-The following table describes roles and permissions applied after an operator sets the status of an org to _suspended_.
+The following table describes roles and permissions applied after an admin suspends an org.
 
 <% if vars.platform_code == "CF" %>
 <%= partial 'suspended_org_roles_table' %>
 <% else %>
 <%= partial "/pcf/core/pcf_suspended_roles_table" %>
+<% end %>
+
+### <a id='suspendedspaceroles'></a> Roles and permissions for suspended spaces
+
+The following table describes roles and permissions applied after an admin or Org Manager suspends a space.
+
+<% if vars.platform_code == "CF" %>
+<%= partial 'suspended_space_roles_table' %>
+<% else %>
+<%= partial "/pcf/core/pcf_suspended_space_roles_table" %>
 <% end %>

@@ -1,0 +1,204 @@
+<table id='oss-suspended-space-roles-permissions'>
+<thead>
+    <tr>
+        <th>User Role</th>
+        <th>Admin</th>
+        <th>Admin Read-Only</th>
+        <th>Global Auditor</th>
+        <th>Org Manager</th>
+        <th>Org Auditor</th>
+        <th>Org Billing Manager</th>
+        <th>Org User</th>
+        <th>Space Manager</th>
+        <th>Space Developer</th>
+        <th>Space Auditor</th>
+        <th>Space Supporter</th>
+    </tr><tr>
+        <td>Scope of operation</td>
+        <td>Org</td>
+        <td>Org</td>
+        <td>Org</td>
+        <td>Org</td>
+        <td>Org</td>
+        <td>Org</td>
+        <td>Org</td>
+        <td>Space</td>
+        <td>Space</td>
+        <td>Space</td>
+        <td>Space</td>
+    </tr><tr>
+        <td>Assign space roles</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>View users and roles</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+    </tr><tr>
+        <td>View spaces</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+    </tr><tr>
+        <td>Edit and rename the space</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Delete the space</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Suspend or activate a space</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>View the status, number of instances, service bindings, and resource use of apps</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+    </tr><tr>
+        <td>View app logs</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+    </tr><tr>
+        <td>Deploy, run, and manage apps<sup><strong>1</strong></sup></td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Instantiate and bind services to apps<sup><strong>1</strong></sup></td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Associate routes<sup><strong>2</strong></sup>, modify resource allocation of apps<sup><strong>1</strong></sup></td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Rename apps<sup><strong>1</strong></sup></td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Manage Application Security Groups for the space</td>
+        <td>Yes</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</tbody>
+</table>
+
+<sup><strong>1</strong></sup>A user who holds the Org Manager role and an appropriate space role, such as Space Manager or Space Developer, has the same permissions in a suspended space as they would in an active space. The Org Manager role alone does not grant permission to deploy apps or otherwise modify the contents of any space.
+
+<sup><strong>2</strong></sup>Unless deactivated by feature flags.
