@@ -1,0 +1,308 @@
+---
+title: Identity-aware routing
+owner: CF for VMs Networking
+---
+
+This topic provides you with an overview of how identity-aware routing works in <%= vars.app_runtime_first %>.
+
+Identity-aware routing lets the Gorouter require and validate mutual TLS (mTLS) on a per-domain basis and route requests based on the caller's verified identity. It enables app-to-app traffic to flow _through the Gorouter_ — load-balanced and platform-enforced — while the platform authorizes each request from the caller's certificate rather than relying on the app to authenticate callers itself.
+
+Identity-aware routing has two tiers:
+
+* **Identity-aware domain (the headline use case).** An operator creates an mTLS domain with route-policy enforcement enabled. The Gorouter validates the caller's Diego _instance identity_ certificate, extracts the caller's app, space, and org, and enforces route policies with a default-deny model. This is the recommended way to do authenticated <%= vars.app_runtime_abbr %> app-to-app communication over the Gorouter.
+* **mTLS domain (a variant).** An operator creates an mTLS domain that requires and validates any client certificate signed by a configured certificate authority (CA), then forwards it to the app. Route policies are not enforced, so the _backend app does its own authorization_. This tier suits external, non-<%= vars.app_runtime_abbr %> clients.
+
+The `*.apps.identity` domain is to identity-aware routing what `*.apps.internal` is to container-to-container (C2C) networking: a conventional wildcard domain for app-to-app traffic. The key difference is the data path. Identity-aware traffic goes through the Gorouter, where it is load-balanced and centrally authorized, whereas C2C traffic flows directly between containers over an overlay network.
+
+<p class="note">
+For direct, low-latency app-to-app traffic over an overlay network instead of through the Gorouter, see <a href="understand-cf-networking.html">Container-to-container networking</a>.
+</p>
+
+
+## <a id='architecture'></a> Architecture
+
+Identity-aware routing combines four pieces: per-domain mTLS in the Gorouter, route policies stored by the Cloud Controller, the Diego instance identity that gives each app instance a verifiable certificate, and BOSH DNS for the `*.apps.identity` wildcard alias.
+
+To understand the components and how they work together, see the following diagram and table.
+
+![Identity-aware routing request flow: App A presents its instance identity certificate to the Gorouter, which validates it and enforces route policy before forwarding to App B](./images/identity-aware-routing-arch.svg)
+
+<table>
+<thead>
+  <tr>
+    <th>Part</th>
+    <th>Function</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Gorouter (per-domain mTLS)</td>
+    <td>Terminates mTLS for domains configured under <code>router.domains</code>. For each such domain it:
+      <ul>
+        <li>Requires a client certificate and validates it against the domain's configured CA (<code>ca_certs</code>), independent of the platform-wide client-certificate validation setting.</li>
+        <li>Extracts the caller's <%= vars.app_runtime_abbr %> identity from the certificate Subject.</li>
+        <li>Enforces the route's policies, denying the request if no policy allows the caller.</li>
+        <li>Forwards the request to the backend with the <code>X-Forwarded-Client-Cert</code> (XFCC) header.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>Cloud Controller</td>
+    <td>Stores route policies and the per-domain enforcement setting. It flattens policies into route options that are synced to Diego so the Gorouter can enforce them.</td>
+  </tr>
+  <tr>
+    <td>Diego instance identity</td>
+    <td>Issues every app instance a short-lived identity certificate. The Subject carries the caller's identity as organizational units, for example <code>CN=&lt;instance-id&gt;, OU=app:&lt;app-guid&gt;, OU=space:&lt;space-guid&gt;, OU=organization:&lt;org-guid&gt;</code>. The certificate and key are available to the app as <code>CF_INSTANCE_CERT</code> and <code>CF_INSTANCE_KEY</code>.</td>
+  </tr>
+  <tr>
+    <td>BOSH DNS</td>
+    <td>Resolves the <code>*.apps.identity</code> wildcard alias to the Gorouter so that callers reach the platform's mTLS listener.</td>
+  </tr>
+</tbody>
+</table>
+
+
+## <a id='how-it-works'></a> How app-to-app identity-aware routing works
+
+When one app calls another over an identity-aware domain, the request flows through the following steps. The numbers correspond to the architecture diagram above.
+
+1. The calling app (for example, `frontend-app`) makes an HTTPS request to the destination route, such as `https://backend.apps.identity`, presenting its Diego instance identity certificate as the client certificate. The certificate and key are mounted in the container as `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY`.
+1. The Gorouter terminates mTLS for the domain and validates the presented certificate against the domain's configured CA (the instance identity CA).
+1. The Gorouter extracts the caller's <%= vars.app_runtime_abbr %> identity from the certificate Subject organizational units: `OU=app:<app-guid>`, `OU=space:<space-guid>`, and `OU=organization:<org-guid>`.
+1. The Gorouter checks the destination route's policies. If no policy allows this caller, the Gorouter denies the request with an HTTP `403 Forbidden` response. This is the default-deny model.
+1. If a policy allows the caller, the Gorouter forwards the request to the backend app and sets the `X-Forwarded-Client-Cert` (XFCC) header so the backend can also see the verified caller identity. For more information, see [The client certificate header and identity](#xfcc).
+
+This model is _destination-controlled_: the policies that decide who may reach a route live on the destination route, not on the caller.
+
+
+## <a id='route-policies'></a> Route policies and the default-deny model
+
+Route policies determine which callers are allowed to reach a route on an identity-aware domain. They are _destination-controlled_: only a Space Developer in the route's own space manages them.
+
+![Default-deny route policies on *.apps.identity: App A is allowed to reach App B and App C by explicit policy, while App B to App C is denied by default](./images/identity-aware-routing-policy.svg)
+
+### <a id='enforcement'></a> Enabling enforcement
+
+Route-policy enforcement is turned on when the _domain_ is created, and it is immutable for the life of the domain. An operator or org manager creates the domain with `--enforce-route-policies`:
+
+<pre class="terminal">
+$ cf create-shared-domain apps.identity --enforce-route-policies
+$ cf create-private-domain my-org apps.identity --enforce-route-policies
+</pre>
+
+You can optionally bound the scope that policy sources may target with `--scope`, which accepts `any`, `org`, or `space`. The `--scope` flag is only valid together with `--enforce-route-policies`:
+
+<pre class="terminal">
+$ cf create-shared-domain apps.identity --enforce-route-policies --scope org
+</pre>
+
+When enforcement is on, every route on the domain denies all callers until a policy explicitly allows them.
+
+### <a id='policy-sources'></a> Policy sources
+
+A policy allows one source to reach a route. A source identifies the caller by its verified <%= vars.app_runtime_abbr %> identity and takes one of the following forms:
+
+<table>
+<thead>
+  <tr>
+    <th>Source</th>
+    <th>Friendly flag</th>
+    <th>Raw value</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>A specific app</td>
+    <td><code>--source-app APP</code></td>
+    <td><code>cf:app:&lt;app-guid&gt;</code></td>
+  </tr>
+  <tr>
+    <td>All apps in a space</td>
+    <td><code>--source-space SPACE</code></td>
+    <td><code>cf:space:&lt;space-guid&gt;</code></td>
+  </tr>
+  <tr>
+    <td>All apps in an org</td>
+    <td><code>--source-org ORG</code></td>
+    <td><code>cf:org:&lt;org-guid&gt;</code></td>
+  </tr>
+  <tr>
+    <td>Any authenticated <%= vars.app_runtime_abbr %> caller</td>
+    <td><code>--source-any</code></td>
+    <td><code>cf:any</code></td>
+  </tr>
+</tbody>
+</table>
+
+### <a id='managing-policies'></a> Managing policies
+
+Use the cf CLI to add, list, and remove route policies. For example, to allow `frontend-app` to reach the `backend` route, list the policies on the domain, and then remove the policy:
+
+<pre class="terminal">
+$ cf add-route-policy apps.identity --hostname backend --source-app frontend-app
+$ cf route-policies --domain apps.identity
+$ cf remove-route-policy apps.identity --hostname backend --source-app frontend-app
+</pre>
+
+You can express the same source with the raw `--source` form, for example `--source cf:app:<app-guid>`. To match a specific path, add `--path`.
+
+
+## <a id='xfcc'></a> The client certificate header and identity
+
+After the Gorouter validates the caller's certificate, it passes the certificate — or a digest of it — to the backend app in the `X-Forwarded-Client-Cert` (XFCC) header. This is the same mechanism <%= vars.app_runtime_abbr %> uses for forwarding client certificates in general. For more information, see <a href="http-routing.html#forward-client-cert">Forwarding client certificate to apps</a>.
+
+A `router.domains` entry sets how the certificate is forwarded with `xfcc_format`:
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Header contents</th>
+    <th>Approximate size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><code>raw</code> (default)</td>
+    <td>The full client certificate, base64-encoded PEM.</td>
+    <td>~1.5 KB</td>
+  </tr>
+  <tr>
+    <td><code>envoy</code></td>
+    <td>A compact representation, <code>Hash=&lt;sha256&gt;;Subject="&lt;DN&gt;"</code>.</td>
+    <td>~300 B</td>
+  </tr>
+</tbody>
+</table>
+
+The backend app reads the certificate Subject organizational units (`OU=app:<app-guid>`, `OU=space:<space-guid>`, `OU=organization:<org-guid>`) to learn the caller's app, space, and org. On an identity-aware domain the platform has already validated the certificate and authorized the request, so the XFCC header conveys an identity the app can trust for auditing or finer-grained, app-level decisions.
+
+<p class="note">
+Consuming the <code>envoy</code> (hashed) XFCC value in Java apps relies on the <code>java-buildpack-client-certificate-mapper</code> (cloudfoundry/java-buildpack-client-certificate-mapper#11). If that support is not yet released in your buildpack, prefer the <code>raw</code> format for Java backends.
+</p>
+
+
+## <a id='comparison'></a> Identity-aware routing, C2C networking, and ASGs
+
+Identity-aware routing, container-to-container (C2C) networking, and application security groups (ASGs) all control app connectivity, but they operate at different points and with different identity models.
+
+<table>
+<thead>
+  <tr>
+    <th></th>
+    <th>Identity-aware routing</th>
+    <th>C2C networking</th>
+    <th>ASGs</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Data path</td>
+    <td>Through the Gorouter (load-balanced)</td>
+    <td>Direct, over the overlay network</td>
+    <td>Egress firewall (no app-to-app path of its own)</td>
+  </tr>
+  <tr>
+    <td>Identity source</td>
+    <td>Verified client certificate (Diego instance identity; app, space, org OUs)</td>
+    <td>Source app GUID, tagged in the VXLAN GBP header</td>
+    <td>Source space</td>
+  </tr>
+  <tr>
+    <td>Granularity</td>
+    <td>Caller app, space, or org &rarr; a route</td>
+    <td>Source app &rarr; destination app</td>
+    <td>Space &rarr; destination IP range and ports</td>
+  </tr>
+  <tr>
+    <td>Enforcement point</td>
+    <td>Gorouter (per-domain mTLS)</td>
+    <td>VXLAN policy agent on the Diego Cell</td>
+    <td>Diego Cell egress</td>
+  </tr>
+  <tr>
+    <td>Default model</td>
+    <td>Deny until a policy allows</td>
+    <td>Deny until a policy allows</td>
+    <td>Deny until an ASG allows</td>
+  </tr>
+  <tr>
+    <td>Load balancing and access logs</td>
+    <td>Yes (Gorouter access logs)</td>
+    <td>No (direct connection)</td>
+    <td>Not applicable</td>
+  </tr>
+</tbody>
+</table>
+
+In short: use identity-aware routing for north-south app-to-app traffic over the Gorouter with a verified caller identity; use C2C networking for direct, low-latency east-west traffic; and use ASGs for coarse-grained egress control.
+
+
+## <a id='external-mtls'></a> External client certificates
+
+Not every caller is a <%= vars.app_runtime_abbr %> app. Partner systems, IoT devices, and other external clients present their own certificates, which do not carry a Diego instance identity. For these callers an operator configures a plain _mTLS domain_.
+
+In this configuration the operator adds a `router.domains` entry whose CA (`ca_certs`) is the external CA that issues the client certificates. The Gorouter requires and validates the client certificate against that CA and forwards it to the backend in the XFCC header. Because there is no <%= vars.app_runtime_abbr %> identity to evaluate, route policies are not used, and the _backend app authorizes the request_ from the certificate it receives.
+
+<p class="note warning">
+Do not pass <code>--enforce-route-policies</code> for a domain that serves non-<%= vars.app_runtime_abbr %> certificates. Route policies key off the <%= vars.app_runtime_abbr %> identity organizational units (app, space, org) in a Diego instance identity certificate, which external certificates do not have. Enforcement on such a domain would deny every caller.
+</p>
+
+
+## <a id='observability'></a> Observability
+
+The Gorouter records the outcome of mTLS validation and route-policy enforcement in its access logs. When the following fields are enabled as extra fields in the access-log configuration, each router (RTR) log line can include the verified caller identity and the policy decision:
+
+<table>
+<thead>
+  <tr>
+    <th>Field</th>
+    <th>Meaning</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><code>caller_cf_app</code></td>
+    <td>The caller's app GUID, from the validated client certificate.</td>
+  </tr>
+  <tr>
+    <td><code>caller_cf_space</code></td>
+    <td>The caller's space GUID.</td>
+  </tr>
+  <tr>
+    <td><code>caller_cf_org</code></td>
+    <td>The caller's org GUID.</td>
+  </tr>
+  <tr>
+    <td><code>route_policy</code></td>
+    <td>The route-policy rule that matched the request, for example <code>cf:app:&lt;app-guid&gt;</code>. It is <code>-</code> when no rule matched or enforcement is disabled.</td>
+  </tr>
+  <tr>
+    <td><code>tls_sni</code></td>
+    <td>The TLS Server Name Indication (SNI) value the caller requested.</td>
+  </tr>
+</tbody>
+</table>
+
+Each field is `-` when the request carried no verified identity or the field does not apply. For example, an allowed request to `backend.apps.identity` records the caller and the matching rule:
+
+<pre class="terminal">
+... 200 ... tls_sni:"backend.apps.identity" caller_cf_app:"app-guid-123" caller_cf_space:"space-guid-456" caller_cf_org:"org-guid-789" route_policy:"cf:app:app-guid-123"
+</pre>
+
+A request that is denied by the default-deny model records the verified caller but no matching rule, with an HTTP `403` status:
+
+<pre class="terminal">
+... 403 ... tls_sni:"backend.apps.identity" caller_cf_app:"app-guid-123" caller_cf_space:"space-guid-456" caller_cf_org:"org-guid-789" route_policy:"-"
+</pre>
+
+These fields let operators audit who reached a route and which policy decisions allowed or denied traffic.
+
+
+## <a id='references'></a> Related reading
+
+* [RFC-0055: Identity-Aware Routing for Gorouter](https://github.com/cloudfoundry/community/blob/main/toc/rfc/rfc-0055-identity-aware-routing-for-gorouter.md)
+* <a href="understand-cf-networking.html">Container-to-container networking</a>
+* <a href="http-routing.html#forward-client-cert">HTTP routing: Forwarding client certificate to apps</a>
+* Configuring identity-aware routing for apps (developer guide: `../devguide/deploy-apps/identity-aware-routing.html`) — available when the developer-guide update lands.
+* Enabling identity-aware routing (operator setup: `../deploying/cf-deployment/enable-identity-aware-routing.html`) — available when the deployment update lands.
