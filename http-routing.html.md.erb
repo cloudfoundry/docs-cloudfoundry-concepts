@@ -228,6 +228,10 @@ data path must trust that the back-end component has not allowed the header to b
 If you configure the load balancer to terminate TLS and set the XFCC header from the received client certificate, you must also configure the load balancer to
 strip this header if it is present in client requests. This configuration is required to prevent spoofing of the client certificate.
 
+<p class="note">
+To require and validate client certificates on a <strong>per-domain</strong> basis and enforce identity-based route policies, see <a href="identity-aware-routing.html">Identity-aware routing</a>.
+</p>
+
 The following sections describe supported deployment configurations.
 
 <% if vars.platform_code == 'CF' %>
