@@ -178,7 +178,7 @@ A `router.domains` entry sets how the certificate is forwarded with `xfcc_format
 The backend app reads the certificate Subject organizational units (`OU=app:<app-guid>`, `OU=space:<space-guid>`, `OU=organization:<org-guid>`) to learn the caller's app, space, and org. On an identity-aware domain the platform has already validated the certificate and authorized the request, so the XFCC header conveys an identity the app can trust for auditing or finer-grained, app-level decisions.
 
 <p class="note">
-Consuming the <code>envoy</code> (hashed) XFCC value in Java apps relies on the <code>java-buildpack-client-certificate-mapper</code> (cloudfoundry/java-buildpack-client-certificate-mapper#11). If that support is not yet released in your buildpack, prefer the <code>raw</code> format for Java backends.
+Consuming the <code>envoy</code> (hashed) XFCC value in Java apps relies on the <code>java-buildpack-client-certificate-mapper</code> (cloudfoundry/java-buildpack-client-certificate-mapper#11).
 </p>
 
 
