@@ -149,15 +149,18 @@ To make an HTTP request to a specific app instance:
 	</table>
 
 <p class="note">
-The <code>X-Cf-App-Instance</code> header is not effective for applications that have a route service configured.</p>
+The <code>X-Cf-App-Instance</code> header is not effective for applications that have a route service configured.
+</p>
 
 <p class="note">
-The <code>X-Cf-App-Instance</code> header is not supported for multi-process apps or apps that have undergone a <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/rolling-deploy.html#rolling">rolling or canary deployment</a>. For these apps, use the <code>X-Cf-Process-Instance</code> header instead.</p>
+The <code>X-Cf-App-Instance</code> header is not supported for multi-process apps or apps that have undergone a <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/rolling-deploy.html#rolling">rolling or canary deployment</a>. For these apps, use the <code>X-Cf-Process-Instance</code> header instead.
+</p>
 
 ### <a id='process-instance-routing'></a> HTTP headers for process instance routing
 
 <p class="note">
-The <code>X-Cf-Process-Instance</code> header requires routing-release 0.332.0 or higher.</p>
+The <code>X-Cf-Process-Instance</code> header requires routing-release 0.332.0 or higher.
+</p>
 
 Apps that have <a href="https://docs.cloudfoundry.org/devguide/multiple-processes.html">multiple processes</a> or apps that have been pushed with the rolling or canary deployment strategies cannot be reliably routed to using the <code>X-Cf-App-Instance</code> header. Users who wish to route to a specific instance of these apps should use the <code>X-Cf-Process-Instance</code> header.
 
