@@ -1,0 +1,8 @@
+flowchart LR
+    A["App A"]
+    B["App B<br/>billing.apps.identity"]
+    C["App C<br/>reports.apps.identity"]
+
+    A -->|"allowed: policy A to B"| B
+    A -->|"allowed: policy A to C"| C
+    B -.->|"denied by default"| C
