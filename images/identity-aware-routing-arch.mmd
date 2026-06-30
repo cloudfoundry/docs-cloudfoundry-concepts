@@ -1,0 +1,14 @@
+flowchart LR
+    A["App A<br/>presents client<br/>identity cert"]
+    GR["GoRouter<br/>per-domain mTLS<br/>on *.apps.identity"]
+    V{"Validate and<br/>authorize"}
+    B["App B<br/>route: my-api.apps.identity"]
+    D[("Diego<br/>instance identity CA")]
+    CC[("Cloud Controller<br/>route policies")]
+
+    A -->|"1 - HTTPS plus client identity cert"| GR
+    GR --> V
+    D -.->|"trust: instance identity CA"| V
+    CC -.->|"sync: route policies, default-deny"| V
+    V -->|"2 - cert valid, OU app/space/org allowed; forward plus XFCC"| B
+    V -.->|"denied: 403"| A
