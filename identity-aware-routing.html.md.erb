@@ -178,7 +178,7 @@ A `router.domains` entry sets how the certificate is forwarded with `xfcc_format
 The backend app reads the certificate Subject organizational units (`OU=app:<app-guid>`, `OU=space:<space-guid>`, `OU=organization:<org-guid>`) to learn the caller's app, space, and org. On an identity-aware domain, the platform has already validated the certificate and authorized the request, so the XFCC header conveys an identity the app can trust for auditing or finer-grained, app-level decisions.
 
 <p class="note">
-Consuming the <code>envoy</code> (hashed) XFCC value in Java apps relies on the <code>java-buildpack-client-certificate-mapper</code> (cloudfoundry/java-buildpack-client-certificate-mapper#11).
+Consuming the <code>envoy</code> (hashed) XFCC value in Java apps relies on the <code>java-buildpack-client-certificate-mapper</code> (cloudfoundry/java-buildpack-client-certificate-mapper#11). If that support is not yet released in your buildpack, prefer the <code>raw</code> format for Java backends.
 </p>
 
 
@@ -302,7 +302,7 @@ These fields let operators audit who reached a route and which policy decisions 
 ## <a id='references'></a> Related reading
 
 * [RFC-0055: Identity-Aware Routing for Gorouter](https://github.com/cloudfoundry/community/blob/main/toc/rfc/rfc-0055-identity-aware-routing-for-gorouter.md)
-* <a href="understand-cf-networking.html">Container-to-container networking</a>
-* <a href="http-routing.html#forward-client-cert">HTTP routing: Forwarding client certificate to apps</a>
+* [Container-to-container networking](understand-cf-networking.html)
+* [HTTP routing: Forwarding client certificate to apps](http-routing.html#forward-client-cert)
 * [Configuring identity-aware routing](../devguide/deploy-apps/identity-aware-routing.html) (developer how-to)
 * [Enabling identity-aware routing](../deploying/cf-deployment/enable-identity-aware-routing.html) (operator setup)
