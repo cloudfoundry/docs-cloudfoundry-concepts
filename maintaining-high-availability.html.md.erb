@@ -16,21 +16,21 @@ These layers include AZs, app health management, process monitoring, and VM resu
 
 ## <a id='azs-2'></a> Availability zones
 
-<%= vars.platform_name %> supports deploying apps instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.platform_name %> balances the apps you deploy across the AZs you defined. If an AZ goes down, you still have app instances running in another.
+<%= vars.app_runtime_abbr %> supports deploying apps instances across multiple AZs. This level of high availability requires that you define AZs in your IaaS. <%= vars.app_runtime_abbr %> balances the apps you deploy across the AZs you defined. If an AZ goes down, you still have app instances running in another.
 
 <%= vars.azs %>
 
 
 ## <a id='health-management-apps'></a> Health management for app instances
 
-If you lose app instances for any reason, such as a bug in the app or an AZ going down, <%= vars.platform_name %> restarts new instances to maintain capacity. Under Diego architecture, the BBS and Cell Rep components track the number of instances of each app that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new app instances.
+If you lose app instances for any reason, such as a bug in the app or an AZ going down, <%= vars.app_runtime_abbr %> restarts new instances to maintain capacity. Under Diego architecture, the BBS and Cell Rep components track the number of instances of each app that are running across all of the Diego cells. When these components detect a discrepancy between the actual state of the app instances in the cloud and the desired state as known by the Cloud Controller, they advise the Cloud Controller of the difference and the Cloud Controller initiates the deployment of new app instances.
 
 For more information about the BBS and Cell Rep components, see the [BBS and Cell Rep](./architecture/index.html#bbs) section of the _<%= vars.app_runtime_abbr %> Components_ topic.
 
 
 ## <a id='monitored-processes'></a> Process monitoring
 
-<%= vars.platform_name %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your apps running, such as BBS and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which starts the responders through plug-ins. For example, email notifications or paging.
+<%= vars.app_runtime_abbr %> uses a BOSH agent, monit, to monitor the processes on the component VMs that work together to keep your apps running, such as BBS and Cell Rep. If monit detects a failure, it restarts the process and notifies the BOSH agent on the VM. The BOSH agent notifies the BOSH Health Monitor, which starts the responders through plug-ins. For example, email notifications or paging.
 
 
 ## <a id='health-monitoring'></a> Resurrector VMs
