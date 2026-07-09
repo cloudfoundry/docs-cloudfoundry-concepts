@@ -32,8 +32,8 @@ For more information about GrootFS, see [Garden RootFS (GrootFS)](./architecture
 
 Resource control is managed using Linux control groups. Associating each container with its own cgroup or job object limits the amount of memory that the container might use. Linux cgroups also require the container to use a fair share of CPU compared to the relative CPU share of other containers.
 
-<p> <%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an
-inherent security issue with the way RedHat handles user namespacing and container isolation.</p>
+<%= vars.app_runtime_abbr %> does not support a RedHat Enterprise Linux OS stemcell. This is due to an
+inherent security issue with the way RedHat handles user namespacing and container isolation.
 
 ### <a id='cpu'></a> CPU
 
@@ -61,7 +61,7 @@ In <%= vars.app_runtime_abbr %>, cgroup shares range from 10 to 1024. The actual
 
 When the [Diego `containers.set_cpu_weight` bosh property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313) is set to false, then <%= vars.app_runtime_abbr %> scales the number of allocated shares linearly with the amount of memory, until the upper limit of 1024 shares (by default).
 
-<p>In this case, there are a handful of variables that play into the CPU shares calculation.</p>
+In this case, there are a handful of variables that play into the CPU shares calculation.
 
 | variable name | default value | configurable? | link to property |
 | ------------- | ------------- | ------------- | ---------------- |
@@ -101,12 +101,11 @@ process_cpu.shares = int( (1024 * 1) / 100) = int(10.24) = 10
 
 #### CPU Shares Algorithm 2
 
-When the [Diego containers.set_cpu_weight BOSH
-property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313)
+When the [Diego containers.set_cpu_weight BOSH property](https://github.com/cloudfoundry/diego-release/blob/d051f8f94f652369d02db4cf66712645600d5b4a/jobs/rep/spec#L311-L313)
 is set to true, then <%= vars.app_runtime_abbr %> scales the number of
 allocated shares linearly with the amount of memory
 
-<p>In this case, there are two variables that play into the CPU shares calculation.</p>
+In this case, there are two variables that play into the CPU shares calculation.
 
 | variable name | default value | configurable? | link to property |
 | ------------- | ------------- | ------------- | ---------------- |

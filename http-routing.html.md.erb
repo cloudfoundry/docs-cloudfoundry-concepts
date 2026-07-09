@@ -445,10 +445,10 @@ CF routing tier uses the `VCAP_ID` cookie to forward client requests to the same
 app instance to enable session continuity. If the app instance identified by the `VCAP_ID` crashes, the Gorouter attempts to route the request to a different
 instance of the app. If the Gorouter finds a healthy instance of the app, it initiates a new sticky session.
 
-<p> <%= vars.app_runtime_abbr %> does not persist or replicate HTTP session data across app instances. If an app
+<%= vars.app_runtime_abbr %> does not persist or replicate HTTP session data across app instances. If an app
 instance crashes or is stopped, the session data for that instance is lost. If you require session data to
 persist across crashed or stopped instances, or to be shared by all instances of an app, store the session data
-in a <%= vars.app_runtime_abbr %> marketplace service that offers data persistence.</p>
+in a <%= vars.app_runtime_abbr %> marketplace service that offers data persistence.
 
 For more information, see [Session Affinity](https://github.com/cloudfoundry/routing-release/blob/develop/docs/03-how-to-use-session-affinity.md) on GitHub.
 

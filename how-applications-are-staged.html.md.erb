@@ -122,11 +122,12 @@ The following describes each step in the process of staging a Docker image:
 6. Cloud Controller stores the metadata in the Cloud Controller database.
 
 7. This step includes:
+
 	<ol type="a">
 	<li> Cloud Controller uses the Docker image metadata to construct a LRP that runs the start command specified in the Dockerfile.</li>
 	<li> Cloud Controller submits the LRP to Diego.</li>
 	<li> Diego schedules the LRP on one or more Diego Cells.</li>
 	<li> Cloud Controller instructs Diego and the Gorouter to route traffic to the Docker image.</li>
 	</ol>
-	<p> Cloud Controller takes into account any user-specified overrides specified in the Dockerfile, such as
-	environment variables.</p>
+
+	Cloud Controller takes into account any user-specified overrides specified in the Dockerfile, such as environment variables.
