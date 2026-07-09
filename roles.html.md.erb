@@ -105,34 +105,26 @@ Each user role includes different permissions in a <%= vars.app_runtime_abbr %> 
 
 The following table describes the default permissions for various <%= vars.app_runtime_abbr %> roles in active orgs.
 
-<% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
+<% if vars.platform_code == "CF" %>
 
 You can use feature flags to edit some of the default permissions in the following table.
 For more information, see <a href="../adminguide/listing-feature-flags.html">Using Feature Flags</a>.
 <% end %>
 
-<% if vars.platform_code == "CF" %>
+
 <%= partial 'oss_roles_table' %>
-<% else %>
-<%= partial "/pcf/core/pcf_roles_table" %>
-<% end %>
+
 
 ### <a id='suspendedroles'></a> Roles and permissions for suspended orgs
 
 The following table describes roles and permissions applied after an admin suspends an org.
 
-<% if vars.platform_code == "CF" %>
 <%= partial 'suspended_org_roles_table' %>
-<% else %>
-<%= partial "/pcf/core/pcf_suspended_roles_table" %>
-<% end %>
+
 
 ### <a id='suspendedspaceroles'></a> Roles and permissions for suspended spaces
 
 The following table describes roles and permissions applied after an admin or Org Manager suspends a space.
 
-<% if vars.platform_code == "CF" %>
 <%= partial 'suspended_space_roles_table' %>
-<% else %>
-<%= partial "/pcf/core/pcf_suspended_space_roles_table" %>
-<% end %>
+
