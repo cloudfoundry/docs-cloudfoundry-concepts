@@ -17,6 +17,7 @@ An org is a development account that an individual or multiple collaborators can
 An admin can suspend an org for various reasons such as failure to provide payment or misuse. When an org is suspended, users cannot perform certain activities within the org, such as push apps, modify spaces, or bind services.
 
 <p class="note">
+<span class="note__title"><strong>Note</strong></span>
 In the v3 Cloud Controller API, this state is exposed as a boolean <code>suspended</code> field on the org. In the v2 Cloud Controller API, it was formerly known as the <code>status</code> field.
 </p>
 
@@ -34,6 +35,7 @@ An admin or an Org Manager can suspend a space. When a space is suspended, only 
 The Org Manager role administers the org but does not by itself grant permission to push apps, bind services, or otherwise modify the contents of a space. To perform these actions in a suspended space, a user must hold the Org Manager role and an appropriate space role, such as Space Manager or Space Developer.
 
 <p class="note">
+<span class="note__title"><strong>Note</strong></span>
 The v3 Cloud Controller API exposes this state as a boolean <code>suspended</code> field on the space. The v2 Cloud Controller API does not expose space suspension.
 </p>
 
@@ -88,6 +90,7 @@ information.
 * **Space Supporters**: Troubleshoot and debug apps and service bindings in a space.
 
 <p class="note">
+<span class="note__title"><strong>Note</strong></span>
 The Space Supporter role is only available for the Cloud Controller V3 API. If a user with this role tries
 to access a V2 endpoint, the API returns a 403.
 </p>
