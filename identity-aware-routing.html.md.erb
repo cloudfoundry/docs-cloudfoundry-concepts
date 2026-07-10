@@ -15,6 +15,7 @@ Identity-aware routing has two tiers:
 The `*.apps.identity` domain is to identity-aware routing what `*.apps.internal` is to container-to-container (C2C) networking: a conventional wildcard domain for app-to-app traffic. The key difference is the data path. Identity-aware traffic goes through the Gorouter, where it is load-balanced and centrally authorized, whereas C2C traffic flows directly between containers over an overlay network.
 
 <p class="note">
+<span class="note__title"><strong>Note</strong></span>
 For direct, low-latency app-to-app traffic over an overlay network instead of through the Gorouter, see <a href="understand-cf-networking.html">Container-to-container networking</a>.
 </p>
 
@@ -178,6 +179,7 @@ A `router.domains` entry sets how the certificate is forwarded with `xfcc_format
 The backend app reads the certificate Subject organizational units (`OU=app:<app-guid>`, `OU=space:<space-guid>`, `OU=organization:<org-guid>`) to learn the caller's app, space, and org. On an identity-aware domain, the platform has already validated the certificate and authorized the request, so the XFCC header conveys an identity the app can trust for auditing or finer-grained, app-level decisions.
 
 <p class="note">
+<span class="note__title"><strong>Note</strong></span>
 Consuming the <code>envoy</code> (hashed) XFCC value in Java apps relies on the <code>java-buildpack-client-certificate-mapper</code> (cloudfoundry/java-buildpack-client-certificate-mapper#11). If that support is not yet released in your buildpack, prefer the <code>raw</code> format for Java backends.
 </p>
 
@@ -245,6 +247,7 @@ Not every caller is a <%= vars.app_runtime_abbr %> app. Partner systems, IoT dev
 In this configuration the operator adds a `router.domains` entry whose CA (`ca_certs`) is the external CA that issues the client certificates. The Gorouter requires and validates the client certificate against that CA and forwards it to the backend in the XFCC header. Because there is no <%= vars.app_runtime_abbr %> identity to evaluate, route policies are not used, and the _backend app authorizes the request_ from the certificate it receives.
 
 <p class="note caution">
+<span class="note__title"><strong>Caution</strong></span>
 Do not pass <code>--enforce-route-policies</code> for a domain that serves non-<%= vars.app_runtime_abbr %> certificates. Route policies key off the <%= vars.app_runtime_abbr %> identity organizational units (app, space, org) in a Diego instance identity certificate, which external certificates do not have. Enforcement on such a domain would deny every caller.
 </p>
 

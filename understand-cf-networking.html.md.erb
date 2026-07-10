@@ -11,6 +11,7 @@ The container-to-container networking feature enables app instances to communica
 <%= vars.cf_networking %>
 
 <p class="note">
+<span class="note__title"><strong>Note</strong></span>
 To route app-to-app traffic <strong>through the Gorouter</strong> with platform-enforced, identity-based authorization (rather than a direct overlay network), see <a href="identity-aware-routing.html">Identity-aware routing</a>.
 </p>
 
@@ -124,11 +125,13 @@ All Diego Cells in your <%= vars.app_runtime_abbr %> deployment share this overl
 <%= vars.app_runtime_abbr %> container networking is currently supported only on Linux.
 
 <p class="note caution">
+<span class="note__title"><strong>Caution</strong></span>
 The overlay network IP address range must not conflict with any other IP addresses in the network. If a
 conflict exists, Diego Cells cannot reach any endpoint that has a conflicting IP address.
 </p>
 
 <p class="note caution">
+<span class="note__title"><strong>Caution</strong></span>
 Updating the overlay network causes container-to-container networking
 downtime during the deploy while the network update is rolling out across Diego
 Cells.
