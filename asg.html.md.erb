@@ -46,17 +46,9 @@ for the apps that allow those service subnets, while denying access to any VM ho
 
 For examples of typical ASGs, see [Typical ASGs](#typical-groups).
 
-<% if vars.platform_code == 'CF' %>
 ### <a id='default-asg'></a> Default ASGs
 
 <%= partial "default_asg_oss" %>
-<% end %>
-
-<% if vars.platform_code == "PCF" %>
-### <a id='default-asg'></a> Default ASGs
-
-<%= partial "/core/default_asg" %>
-<% end %>
 
 ### <a id="asg-sets"></a> ASG sets
 
@@ -94,20 +86,13 @@ ASG rules are specified as a JSON array of ASG objects. An ASG object has the fo
 | Attribute | Description | Notes |
 | --------- | ----------- | ----- |
 | `protocol` | `tcp`, `udp`, `icmp`, or `all` | Required |
-<% if vars.platform_code == 'CF' %>
 | `destination` | A comma deliminated list of single IP addresses, IP address ranges like `192.0.2.0-192.0.2.50`, or CIDR blocks that can receive traffic | Destination lists became available in capi-release 1.180.0 and can be enabled by setting the `cc.security_groups.enable_comma_delimited_destinations` bosh property to true.  |
-<% end %>
-<% if vars.platform_code == 'PCF' %>
-| `destination` | A single IP address, an IP address range like `192.0.2.0-192.0.2.50`, or a CIDR block that can receive traffic |  |
-<% end %>
 | `ports` | A single port, multiple comma-separated ports, or a single range of ports that can receive traffic. Examples: `443`, `80,8080,8081`, `8080-8081` | Only possible if `protocol` is `tcp` or `udp`. |
 | `code` | ICMP code | Required when `protocol` is `icmp`. A value of `-1` allows all codes. |
 | `type` | ICMP | Required when `protocol` is `icmp`. A value of `-1` allows all types.
 | `log` | Set to `true` to enable logging. For more information about how to configure system logs to be sent to a syslog drain, see [Using Log Management Services](../devguide/services/log-management.html). | Logging is only supported with protocol type `tcp`. |
 | `description` | An optional field for operators managing ASG rules |  |
 
-
-<% if vars.platform_code == "CF" || vars.platform_code == "PCF" %>
 
 ## <a id="process"></a> Managing ASGs
 
@@ -161,12 +146,7 @@ following example, which allows ICMP traffic of code `1` and type `0` to all des
       },
       {
         "protocol": "tcp",
-<% if vars.platform_code == 'CF' %>
         "destination": "10.0.11.0/24,8.8.8.8",
-<% end %>
-<% if vars.platform_code == 'PCF' %>
-        "destination": "10.0.11.0/24",
-<% end %>
         "ports": "80,443",
         "log": true,
         "description": "Allow http and https traffic to ZoneA"
@@ -462,6 +442,3 @@ The ASG Creator is a command line tool that you can use to create JSON rules fil
 In turn, the JSON file is the input for the `cf create-security-group` command that creates an ASG.
 
 To download the latest release of the ASG Creator, see the [Cloud Foundry Incubator](https://github.com/cloudfoundry-incubator/asg-creator/releases/latest) repository on GitHub.
-
-
-<% end %>
