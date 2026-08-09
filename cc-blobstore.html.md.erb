@@ -39,8 +39,8 @@ binary large object (blob) files:
 </tr></tbody>
 </table>
 
-<%= vars.app_runtime_abbr %> blobstores use the [Fog](http://fog.io/) Ruby gem to store blobs in
-services like Amazon S3, WebDAV, or the NFS filesystem. The file system location of an internal blobstore is `/var/vcap/store/shared`.
+<%= vars.app_runtime_abbr %> blobstores use the [storage-cli](https://github.com/cloudfoundry/storage-cli) tool to store blobs in
+services like Amazon S3, Google Cloud Storage, Azure Blobstorage, Alibaba Cloud Object Storage Service, or WebDAV.
 
 A single blobstore typically stores all five types of blobs, but you can configure the Cloud Controller to use separate blobstores for each type.
 This topic references staging and treats all blobstores as generic object stores.
@@ -165,7 +165,7 @@ Parallel BOSH deployments of Diego Cells can also generate significant read load
 
 ## <a id='blobstore-timeouts'></a> Blobstore interaction timeouts
 
-Cloud Controller inherits default blobstore operation timeouts from Excon.
-Excon defaults to 60 second read, write, and connect timeouts.
+Cloud Controller inherits default blobstore operation timeouts from the IaaS provider SDKs used by [storage-cli](https://github.com/cloudfoundry/storage-cli).
+Typical defaults are 60 second read, write, and connect timeouts.
 
-For more information, see the [excon](https://github.com/excon/excon) repository on GitHub.
+For more information, see the IaaS specific README.md files in the [storage-cli](https://github.com/cloudfoundry/storage-cli) repository on GitHub.
